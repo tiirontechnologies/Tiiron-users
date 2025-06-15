@@ -1,13 +1,13 @@
 import MainLayout from "@layouts/MainLayout";
 import { appRoutes } from "./appRoutess";
 import { globalRoutes } from "./globalRoutes";
-import React from "react";
+import { authRoutes } from "./authRoutes";
 export const routeConfig = [
   {
-    element: React.createElement(MainLayout),
+    element: <MainLayout />,
     children: [...appRoutes, ...globalRoutes],
   },
-  {
-    // auth route come here
-  },
+
+  ...authRoutes,
 ];
+console.log(routeConfig, "routeConfig");

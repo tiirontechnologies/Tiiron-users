@@ -1,6 +1,6 @@
 // AppRouter.tsx
 import { useRoutes } from "react-router-dom";
-import { routeConfig } from "./index";
+import { routeConfig } from "./index.tsx";
 
 const AppRouter = () => {
   const routes = useRoutes(routeConfig);

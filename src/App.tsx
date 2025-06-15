@@ -1,6 +1,7 @@
 import AppRouter from "@routes/AppRouter";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
+import { AppThemeProvider } from "./theme/theme";
 const App = () => {
   return (
     // <Router>
@@ -19,9 +20,11 @@ const App = () => {
     //     </Route>
     //   </Routes>
     // </Router>
-    <BrowserRouter>
-      <AppRouter />
-    </BrowserRouter>
+    <AppThemeProvider>
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
+    </AppThemeProvider>
   );
 };
 
