@@ -3,8 +3,8 @@ import type { ChangeEvent } from "react";
 
 interface CustomTextFieldProps {
   name: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   type?: string;
   labelText?: string;
