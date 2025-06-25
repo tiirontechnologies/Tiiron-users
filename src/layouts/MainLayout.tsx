@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Drawer } from "@mui/material";
+import { Box, Drawer, useMediaQuery, useTheme } from "@mui/material";
 import SidebarMenu from "../components/Sidebar/Sidebar";
 import LogoAndName from "../components/Sidebar/LogoAndName";
 import Header from "../components/Header/Header";
@@ -11,39 +11,73 @@ const drawerWidth = 240;
 const collapsedWidth = 72;
 
 const MainLayout = () => {
-  const [open, setOpen] = useState(true);
-  const handleToggleMenu = () => setOpen(!open);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [desktopOpen, setDesktopOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleToggleDesktopMenu = () => setDesktopOpen((prev) => !prev);
+  const handleToggleMobileMenu = () => setMobileOpen((prev) => !prev);
 
   return (
     <Box sx={{ display: "flex" }}>
-      <Drawer
-        variant="permanent"
-        open={open}
-        sx={{
-          width: open ? drawerWidth : collapsedWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: open ? drawerWidth : collapsedWidth,
-            boxSizing: "border-box",
-            transition: "width 0.3s ease",
-            overflowX: "hidden",
-          },
-        }}
-      >
-        <LogoAndName toggleMenu={handleToggleMenu} open={open} />
-        <Box
+      {/* ✅ MOBILE DRAWER */}
+      {isMobile && (
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleToggleMobileMenu}
+          ModalProps={{ keepMounted: true }}
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            height: "100vh",
+            display: { xs: "block", md: "none" },
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              boxSizing: "border-box",
+            },
           }}
         >
-          <SidebarMenu routes={appRoutes} open={open} />
-          <SidebarMenu routes={globalRoutes} open={open} />
-        </Box>
-      </Drawer>
+          <LogoAndName toggleMenu={handleToggleMobileMenu} open={true} />
+          <SidebarMenu routes={appRoutes} open={true} />
+          <SidebarMenu routes={globalRoutes} open={true} />
+        </Drawer>
+      )}
 
+      {/* ✅ DESKTOP DRAWER */}
+      {!isMobile && (
+        <Drawer
+          variant="permanent"
+          open={desktopOpen}
+          sx={{
+            width: desktopOpen ? drawerWidth : collapsedWidth,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: desktopOpen ? drawerWidth : collapsedWidth,
+              boxSizing: "border-box",
+              transition: "width 0.3s ease",
+              overflowX: "hidden",
+            },
+          }}
+        >
+          <LogoAndName
+            toggleMenu={handleToggleDesktopMenu}
+            open={desktopOpen}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100vh",
+            }}
+          >
+            <SidebarMenu routes={appRoutes} open={desktopOpen} />
+            <SidebarMenu routes={globalRoutes} open={desktopOpen} />
+          </Box>
+        </Drawer>
+      )}
+
+      {/* ✅ MAIN CONTENT */}
       <Box
         sx={{
           flexGrow: 1,
@@ -56,10 +90,14 @@ const MainLayout = () => {
           sx={{
             position: "fixed",
             top: 0,
-            left: open ? `${drawerWidth}px` : `${collapsedWidth}px`,
-            width: open
-              ? `calc(100% - ${drawerWidth}px)`
-              : `calc(100% - ${collapsedWidth}px)`,
+            left: !isMobile
+              ? desktopOpen
+                ? `${drawerWidth}px`
+                : `${collapsedWidth}px`
+              : 0,
+            width: !isMobile
+              ? `calc(100% - ${desktopOpen ? drawerWidth : collapsedWidth}px)`
+              : "100%",
             zIndex: 1100,
             backgroundColor: "rgba(241, 242, 244, 1)",
             display: "flex",
@@ -67,7 +105,12 @@ const MainLayout = () => {
             justifyContent: "space-between",
           }}
         >
-          <Header />
+          <Header
+            onHamburgerClick={
+              isMobile ? handleToggleMobileMenu : handleToggleDesktopMenu
+            }
+            isSidebarOpen={isMobile ? mobileOpen : desktopOpen}
+          />
         </Box>
 
         <Box
@@ -75,8 +118,9 @@ const MainLayout = () => {
           sx={{
             flexGrow: 1,
             padding: 2,
-            marginTop: "72px", // same as header height
+            marginTop: "106px", // same as header height
             overflow: "auto",
+            background: "rgba(241, 242, 244, 1)",
           }}
         >
           <Outlet />

@@ -1,5 +1,6 @@
 import { TextField, Typography, Box } from "@mui/material";
 import type { ChangeEvent } from "react";
+import React from "react";
 
 interface CustomTextFieldProps {
   name: string;
@@ -8,6 +9,8 @@ interface CustomTextFieldProps {
   placeholder?: string;
   type?: string;
   labelText?: string;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  inputSx?: object;
 }
 
 const CustomTextField = ({
@@ -17,6 +20,8 @@ const CustomTextField = ({
   placeholder,
   type = "text",
   labelText,
+  onKeyDown,
+  inputSx,
 }: CustomTextFieldProps) => {
   return (
     <Box mb={2}>
@@ -38,6 +43,7 @@ const CustomTextField = ({
         fullWidth
         size="small"
         variant="outlined"
+        onKeyDown={onKeyDown}
         InputProps={{
           sx: {
             backgroundColor: "#fff",
@@ -55,6 +61,7 @@ const CustomTextField = ({
               color: "#94A3B8",
               opacity: 1,
             },
+            ...inputSx,
           },
         }}
       />

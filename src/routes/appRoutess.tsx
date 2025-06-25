@@ -10,7 +10,7 @@ export const appRoutes: Route[] = [
     children: [
       {
         label: "My Courses",
-        path: "/settings/profile",
+        path: "my-courses",
         element: <MyCourses />,
       },
       { label: "Question Bank", path: "/settings/account" },
