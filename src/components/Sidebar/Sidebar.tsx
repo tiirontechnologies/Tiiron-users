@@ -1,14 +1,22 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { useState } from "react";
+import {
+  Box,
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SidebarMenu = ({ routes, open }: any) => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
   const navigate = useNavigate();
   const isRouteActive = (route: any): boolean => {
+    console.dir(route, { depth: null });
     if (route.path) return location.pathname === route.path;
-
+    console.log(route.path, location.pathname);
     if (route.children) {
       return route.children.some(
         (child: any) => child.path && location.pathname.startsWith(child.path)
@@ -44,9 +52,23 @@ const SidebarMenu = ({ routes, open }: any) => {
               <ListItemIcon
                 sx={{
                   minWidth: !open ? "min-content" : "35px",
-                  color: isRouteActive(route)
-                    ? "rgba(106, 66, 171, 1)"
-                    : "rgba(28, 28, 28, 1)",
+                  // color: isRouteActive(route)
+                  //   ? "rgba(106, 66, 171, 1)"
+                  //   : "rgba(28, 28, 28, 1)",
+                  path: {
+                    stroke:
+                      route.label === "Learning" && isRouteActive(route)
+                        ? "rgba(106, 66, 171, 1)" // active Learning route stroke color
+                        : "", // default stroke color
+
+                    fill:
+                      route.label === "Learning"
+                        ? undefined // no fill override for Learning (use default SVG fill)
+                        : isRouteActive(route)
+                        ? "rgba(106, 66, 171, 1)" // active non-Learning route fill color
+                        : "", // default fill color
+                  },
+
                   // "&.MuiListItemIcon-root": {
                   //   minWidth: "35px",
                   // },
@@ -107,4 +129,4 @@ const SidebarMenu = ({ routes, open }: any) => {
   );
 };
 
-export default SidebarMenu
+export default SidebarMenu;

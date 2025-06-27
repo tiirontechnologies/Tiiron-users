@@ -25,31 +25,33 @@ const MyCourses = () => {
   const [tagInput, setTagInput] = useState("");
 
   return (
-    <PageToolbarLayout title="Courses">
-      <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-        <AddNewCourseCard
-          image={image}
-          setImage={setImage}
-          title={title}
-          setTitle={setTitle}
-          tags={tags}
-          setTags={setTags}
-          tagInput={tagInput}
-          setTagInput={setTagInput}
-        />
-
-        {MyCoursesData.map((course) => (
-          <CourseCard
-            key={course.courseId}
-            thumbnailSrc={course.courseThumbnailSrc}
-            tags={course.courseTags}
-            title={course.courseName}
-            lessons={course.lessons}
-            rating={course.rating}
+    <Box sx={{ padding: "24px" }}>
+      <PageToolbarLayout title="Courses">
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          <AddNewCourseCard
+            image={image}
+            setImage={setImage}
+            title={title}
+            setTitle={setTitle}
+            tags={tags}
+            setTags={setTags}
+            tagInput={tagInput}
+            setTagInput={setTagInput}
           />
-        ))}
-      </Box>
-    </PageToolbarLayout>
+
+          {MyCoursesData.map((course) => (
+            <CourseCard
+              key={course.courseId}
+              thumbnailSrc={course.courseThumbnailSrc}
+              tags={course.courseTags}
+              title={course.courseName}
+              lessons={course.lessons}
+              rating={course.rating}
+            />
+          ))}
+        </Box>
+      </PageToolbarLayout>
+    </Box>
   );
 };
 

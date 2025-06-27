@@ -117,7 +117,7 @@ const MainLayout = () => {
           component="main"
           sx={{
             flexGrow: 1,
-            padding: 2,
+            // padding: 2,
             marginTop: "106px", // same as header height
             overflow: "auto",
             background: "rgba(241, 242, 244, 1)",

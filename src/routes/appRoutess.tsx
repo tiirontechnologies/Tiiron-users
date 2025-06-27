@@ -1,4 +1,5 @@
 import MyCourses from "../pages/my-courses";
+import EditCourse from "../pages/edit-course";
 import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
@@ -10,8 +11,17 @@ export const appRoutes: Route[] = [
     children: [
       {
         label: "My Courses",
-        path: "my-courses",
-        element: <MyCourses />,
+        path: "/courses",
+        children: [
+          {
+            path: "",
+            element: <MyCourses />,
+          },
+          {
+            path: "edit",
+            element: <EditCourse />,
+          },
+        ],
       },
       { label: "Question Bank", path: "/settings/account" },
     ],
@@ -24,5 +34,6 @@ export const appRoutes: Route[] = [
   {
     label: "Reports",
     icon: <DollerIcon />,
+    path: "/reports",
   },
 ];
