@@ -8,7 +8,6 @@ import SettingsIcon from "@icons/SettingsIcon";
 import Lessons from "./tabs/Lessons";
 const CourseMetaTabs = () => {
   const [value, setValue] = useState(0);
-
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -106,7 +105,7 @@ const CourseMetaTabs = () => {
       </Tabs>
 
       {/* Right-side tab panels */}
-      <Box sx={{ flexGrow: 1, mx: "24px" }}>
+      <Box sx={{ flexGrow: 1, mx: "24px", width: "600px" }}>
         {tabdata.map((tab, index) => (
           <TabPanel key={index} value={value} index={index}>
             {tab.content}
