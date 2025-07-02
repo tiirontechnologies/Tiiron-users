@@ -53,6 +53,21 @@ const theme = createTheme({
   },
 });
 
+declare module "@mui/material/styles" {
+  interface Palette {
+    custom: {
+      highlight: string;
+      danger: string;
+    };
+  }
+  interface PaletteOptions {
+    custom?: {
+      highlight: string;
+      danger: string;
+    };
+  }
+}
+
 // Optional: App-level wrapper
 export const AppThemeProvider = ({ children }: { children: ReactNode }) => (
   <ThemeProvider theme={theme}>
