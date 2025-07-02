@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import ToolBar from "./ToolBar";
+import ToolBar from "./toolbar";
 
 import CourseMetadataEditor from "./CourseMetadataEditor";
 import CourseMetaTabs from "./CourseMetaTabs";
@@ -10,7 +10,7 @@ const Index = () => {
       <ToolBar />
       <Box sx={{ display: "flex", height: "100vh", p: "24px" }}>
         <CourseMetaTabs />
-        <CourseMetadataEditor />
+        {/* <CourseMetadataEditor /> */}
       </Box>
     </Box>
   );
