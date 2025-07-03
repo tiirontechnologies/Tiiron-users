@@ -6,6 +6,7 @@ import ProfileTwoUserIcon from "@icons/ProfileTwoUserIcon";
 import InfoCircleIcon from "@icons/InfoCircleIcon";
 import SettingsIcon from "@icons/SettingsIcon";
 import Lessons from "./tabs/Lessons";
+import Reports from "./tabs/Reports";
 const CourseMetaTabs = () => {
   const [value, setValue] = useState(0);
 
@@ -34,7 +35,7 @@ const CourseMetaTabs = () => {
     {
       title: "Report",
       icon: <ReportIcon />,
-      content: <Typography>This is the Report tab content</Typography>,
+      content: <Reports />,
     },
     {
       title: "Learners",
