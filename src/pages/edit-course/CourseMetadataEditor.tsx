@@ -2,13 +2,11 @@ import AttacthmentIcon from "@icons/AttacthmentIcon";
 import BrandingIcon from "@icons/BrandingIcon";
 import PersonIcon from "@icons/PersonIcon";
 import TagsIcon from "@icons/TagsIcon";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import {
   Box,
   ClickAwayListener,
   MenuItem,
   Paper,
-  Select,
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
