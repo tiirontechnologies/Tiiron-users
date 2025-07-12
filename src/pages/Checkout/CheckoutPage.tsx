@@ -9,9 +9,7 @@ import {
     Paper,
     Button,
     Divider,
-    Collapse,
 } from '@mui/material';
-import { useState } from 'react';
 import { Link } from "react-router-dom"
 
 export default function CheckoutPage() {
@@ -19,7 +17,6 @@ export default function CheckoutPage() {
         <Box
             paddingInline={{ xs: "16px", sm: "40px", md: "80px" }}
             bgcolor={"#fff"}
-            display={"flex"}
         >
             <Box
                 sx={{
@@ -27,6 +24,8 @@ export default function CheckoutPage() {
                     mx: "auto",
                     fontFamily: 'Inter, sans-serif',
                     width: "100%",
+                    display:"grid",
+                    justifyContent:"center"
                 }}
             >
                 {/* Header */}
