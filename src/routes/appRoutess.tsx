@@ -6,6 +6,7 @@ import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
 import CourseGlossary from "@pages/CourseGlossary";
 import CheckoutPage from "@pages/Checkout";
+import UploadPage from "@pages/upload-box";
 export const appRoutes: Route[] = [
   {
     label: "Learning",
@@ -49,5 +50,11 @@ export const appRoutes: Route[] = [
     element:<CheckoutPage />,
     icon: <DollerIcon />,
     path: "/checkout",
+  },
+  {
+    label: "Upload Box",
+    element:<UploadPage />,
+    icon: <DollerIcon />,
+    path: "/upload-box",
   },
 ];
