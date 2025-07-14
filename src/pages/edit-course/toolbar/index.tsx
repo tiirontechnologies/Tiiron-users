@@ -14,7 +14,7 @@ import WestIcon from "@mui/icons-material/West";
 
 import MoreButton from "./MoreButton";
 import PublishButton from "./PublishButton";
-const ToolBar = () => {
+const ToolBar = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box>
       {/* Header */}
@@ -39,84 +39,90 @@ const ToolBar = () => {
           </Typography>
         </Box>
         {/* right side  */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            height: "48px",
-          }}
-        >
-          <PublishButton />
-          <Button
-            variant="outlined"
-            sx={{
-              padding: "12px 32px",
-              height: "48px",
-              color: "#6A42AB",
-              border: "1px solid #6A42AB",
-              borderRadius: "8px",
-              backgroundColor: "transparent",
-              textTransform: "none", // keeps "Preview" as-is
-              "&:hover": {
-                border: "2px solid #6A42AB",
-                backgroundColor: "rgba(255, 255, 255, 0.1)", // subtle hover
-              },
-              "&:focus": {
-                outline: "none",
-                boxShadow: "none",
-              },
-              "&:active": {
-                border: "1px solid #6A42AB",
-                boxShadow: "none",
-              },
-            }}
-          >
-            Preview
-          </Button>
-          <MoreButton />
-          <Divider
-            orientation="vertical"
-            flexItem
-            sx={{
-              borderColor: "#B3B3B3", // sets the line color
-              height: "48px", // sets custom height
-              borderWidth: "0.8px", // optional: control thickness
-            }}
-          />
-          <Box>
-            <Rating
-              size="small"
-              name="simple-uncontrolled"
-              readOnly
-              defaultValue={0}
-              sx={{
-                "& .MuiRating-iconEmpty": {
-                  color: "#808080", // 🎯 your custom color here (e.g., #ccc, white, etc.)
-                },
-                "& .MuiRating-iconFilled": {
-                  color: "gold", // optional: change selected star color
-                },
-              }}
-            />
-            <Typography sx={{ color: "#808080", fontSize: "12px" }}>
-              No Rating
-            </Typography>
-          </Box>
-          <Typography sx={{ color: "#000000" }}>/</Typography>
-          <Box sx={{ textAlign: "center", color: "#000000" }}>
-            <Typography>2</Typography>
-            <Typography>Lessons</Typography>
-          </Box>
-          <Typography sx={{ color: "#000000" }}>/</Typography>
-          <Box sx={{ textAlign: "center", color: "#000000" }}>
-            <Typography>2</Typography>
-            <Typography>Learners</Typography>
-          </Box>
-        </Box>
+        {children}
       </Box>
     </Box>
   );
 };
 
 export default ToolBar;
+
+export const RightSideTools = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        height: "48px",
+      }}
+    >
+      <PublishButton />
+      <Button
+        variant="outlined"
+        sx={{
+          padding: "12px 32px",
+          height: "48px",
+          color: "#6A42AB",
+          border: "1px solid #6A42AB",
+          borderRadius: "8px",
+          backgroundColor: "transparent",
+          textTransform: "none", // keeps "Preview" as-is
+          "&:hover": {
+            border: "2px solid #6A42AB",
+            backgroundColor: "rgba(255, 255, 255, 0.1)", // subtle hover
+          },
+          "&:focus": {
+            outline: "none",
+            boxShadow: "none",
+          },
+          "&:active": {
+            border: "1px solid #6A42AB",
+            boxShadow: "none",
+          },
+        }}
+      >
+        Preview
+      </Button>
+      <MoreButton />
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{
+          borderColor: "#B3B3B3", // sets the line color
+          height: "48px", // sets custom height
+          borderWidth: "0.8px", // optional: control thickness
+        }}
+      />
+      <Box>
+        <Rating
+          size="small"
+          name="simple-uncontrolled"
+          readOnly
+          defaultValue={0}
+          sx={{
+            "& .MuiRating-iconEmpty": {
+              color: "#808080", // 🎯 your custom color here (e.g., #ccc, white, etc.)
+            },
+            "& .MuiRating-iconFilled": {
+              color: "gold", // optional: change selected star color
+            },
+          }}
+        />
+        <Typography sx={{ color: "#808080", fontSize: "12px" }}>
+          No Rating
+        </Typography>
+      </Box>
+      <Typography sx={{ color: "#000000" }}>/</Typography>
+      <Box sx={{ textAlign: "center", color: "#000000" }}>
+        <Typography>2</Typography>
+        <Typography>Lessons</Typography>
+      </Box>
+      <Typography sx={{ color: "#000000" }}>/</Typography>
+      <Box sx={{ textAlign: "center", color: "#000000" }}>
+        <Typography>2</Typography>
+        <Typography>Learners</Typography>
+      </Box>
+    </Box>
+  );
+};

@@ -1,4 +1,4 @@
-const ListAddIcon = () => {
+const ListAddIcon = ({ color = "#6A42AB" }) => {
   return (
     <svg
       width="24"
@@ -9,7 +9,7 @@ const ListAddIcon = () => {
     >
       <path
         d="M3 17H10M15 16H18M18 16H21M18 16V19M18 16V13M3 12H14M3 7H14"
-        stroke="#6A42AB"
+        stroke={color}
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

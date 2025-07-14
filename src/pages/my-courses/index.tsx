@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import AddNewCourseCard from "./AddNewCourseCard";
 import CourseCard from "./CourseCard";
 import PageToolbarLayout from "@layouts/PageToolbarLayout";
