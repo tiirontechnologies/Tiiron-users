@@ -6,7 +6,10 @@ import ProfileTwoUserIcon from "@icons/ProfileTwoUserIcon";
 import InfoCircleIcon from "@icons/InfoCircleIcon";
 import SettingsIcon from "@icons/SettingsIcon";
 import Lessons from "./tabs/Lessons";
+import Settings from "./tabs/Settings";
+import Learners from "./tabs/Learners";
 import Reports from "./tabs/Reports";
+
 const CourseMetaTabs = () => {
   const [value, setValue] = useState(0);
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -34,21 +37,18 @@ const CourseMetaTabs = () => {
     {
       title: "Report",
       icon: <ReportIcon />,
-      content: <Reports />,
+      content:<Reports />,
     },
     {
       title: "Learners",
       icon: <ProfileTwoUserIcon />,
-      content: <Typography>This is the Learners tab content</Typography>,
+      content: <Learners />,
     },
     {
       title: "Settings",
       icon: <SettingsIcon />,
       content: (
-        <Box>
-          <Typography variant="h6">Settings</Typography>
-          <Typography variant="body2">Adjust your preferences here.</Typography>
-        </Box>
+        <Settings />
       ),
     },
   ];
@@ -139,3 +139,4 @@ function TabPanel(props: TabPanelProps) {
     </div>
   );
 }
+
