@@ -31,7 +31,7 @@ const PageToolbarLayout: React.FC<PageToolbarLayoutProps> = ({
         <Typography
           sx={{
             color: "#000000",
-            fontSize: "40px",
+            fontSize: { xs: "24px", md: "40px" },
             fontWeight: 700,
             m: 0, // resets margin
             lineHeight: 1, // tightens vertical spacing

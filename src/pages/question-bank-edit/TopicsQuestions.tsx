@@ -11,6 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import CollapseRightIcon from "@icons/CollapseRightIcon";
+import { SettingsTab } from "@pages/edit-course/tabs/Settings/Settings";
+import MessageIcon from "@icons/MessageIcon";
+import TimerIcon from "@icons/TimerIcon";
+import ClipboardIcon from "@icons/ClipboardIcon";
+import FileEditIcon from "@icons/FileEditIcon";
 
 const TopicsQuestions = ({
   TopicsData,
@@ -171,6 +176,9 @@ export const QuestionEditMain = () => {
           borderRadius: "16px",
           bgcolor: "#fff",
           border: "1px solid #E6E6E6",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
@@ -186,6 +194,7 @@ export const QuestionEditMain = () => {
             Question 1 is [()], [()]
           </Typography>
         </Box>
+        <FileEditIcon />
       </Box>
       <Box
         sx={{
@@ -242,6 +251,32 @@ export const QuestionEditMain = () => {
         >
           Optional Settings
         </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "24px" , mt:`16px` }}>
+          <SettingsTab
+            title="Custom Feedback"
+            subTitle="Provide a feedback to the learner on answering this questions"
+            icon={<MessageIcon />}
+            iconBgColor="#ECFDF8"
+          >
+            Custom Feedback
+          </SettingsTab>
+          <SettingsTab
+            title="Question Time Limit"
+            subTitle="Set a countdown timer for this question"
+            icon={<TimerIcon color="#E47934" size="25" />}
+            iconBgColor="#FEECE1"
+          >
+            Question Time Limit
+          </SettingsTab>
+          <SettingsTab
+            title="Question Score"
+            subTitle="Set a score for this question"
+            icon={<ClipboardIcon />}
+            iconBgColor="#EBF0FF"
+          >
+            Question Score
+          </SettingsTab>
+        </Box>
       </Box>
     </Box>
   );

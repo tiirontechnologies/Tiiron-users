@@ -2,6 +2,8 @@ import { Box, Button, IconButton, Typography } from "@mui/material";
 import MoreVert from "@mui/icons-material/MoreVert";
 import { Question, Topic } from ".";
 import ListAddIcon from "@icons/ListAddIcon";
+import EditIcon2 from "@icons/EditIcon2";
+import CheckBoxIcon from "@icons/CheckBoxIcon";
 
 const Topics = ({
   TopicsData,
@@ -81,6 +83,13 @@ export const QuestionsSideList = ({
           }}
           onClick={() => setSelectedId(question.questionId)}
         >
+          <Box sx={{ mr: 2 }}>
+            {selectedId === question.questionId ? (
+              <EditIcon2 />
+            ) : (
+              <CheckBoxIcon />
+            )}
+          </Box>
           <Typography>{question.question}</Typography>
           <Typography sx={{ ml: "auto" }}>{question.score}</Typography>
           <IconButton>

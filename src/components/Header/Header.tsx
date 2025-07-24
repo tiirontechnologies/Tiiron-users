@@ -15,6 +15,7 @@ const Header = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box
@@ -24,7 +25,8 @@ const Header = ({
         justifyContent: "space-between",
         alignItems: "center",
         width: "100%",
-        padding: "24px",
+        // padding: "24px",
+        padding: isMobile ? "24px 8px" : "24px",
         boxSizing: "border-box",
       }}
     >
@@ -45,12 +47,14 @@ const Header = ({
             color: "#fff",
             padding: "12px 48px",
             borderRadius: "12px",
+            display: { xs: "none", sm: "block" },
           }}
         >
           Upgrade
         </Button>
-        <AboutIcon />
-        <Avatar src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fHww" />
+        {!isSm ? <AboutIcon /> : null}
+
+        {/* <Avatar src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fHww" /> */}
       </Box>
     </Box>
   );

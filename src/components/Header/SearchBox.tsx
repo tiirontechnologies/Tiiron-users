@@ -8,7 +8,7 @@ const SearchBox = () => {
       placeholder="Search your course here...."
       size="small"
       sx={{
-        minWidth: "516px",
+        minWidth: {xs: "230px", sm: "200px", md: "200px", lg: "516px" },
         // background: "#fff",
         "& .MuiOutlinedInput-root": {
           background: "#fff",
