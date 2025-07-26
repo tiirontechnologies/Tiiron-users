@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Popover, Box, Typography } from "@mui/material";
+import { Popover, Box } from "@mui/material";
 
 interface BlendedPopoverProps {
   trigger: React.ReactElement; // trigger button/element

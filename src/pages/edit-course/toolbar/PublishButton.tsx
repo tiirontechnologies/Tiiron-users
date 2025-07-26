@@ -1,24 +1,16 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormControlLabel,
-  MenuItem,
-  Select,
-  styled,
-  Switch,
-  SwitchProps,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { ReusablePopper } from "@components/popper/ReusablePopper";
 import SingleRadioButton from "@components/SingleRadioButton";
 import IOSSwitch from "@components/popper/IOSSwitch";
 
 const PublishButton = () => {
-  const [subscribe, setSubscribe] = useState("yes");
-  const [mode, setMode] = useState("dark");
+  const [_subscribe, setSubscribe] = useState("yes");
   return (
     <ReusablePopper
       content={

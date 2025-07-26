@@ -2,11 +2,8 @@ import {
   Box,
   Button,
   Divider,
-  FormControl,
   IconButton,
-  MenuItem,
   Rating,
-  Select,
   Typography,
 } from "@mui/material";
 // icons
