@@ -1,11 +1,9 @@
-import { Box, Button,  IconButton, InputBase, MenuItem, Paper, Select, Tab, Table, TableBody, TableCell, TableHead, TableRow, Tabs, Tooltip, Typography } from "@mui/material";
+import { Box, Button,  IconButton, MenuItem, Paper, Select, Tab, Table, TableBody, TableCell, TableHead, TableRow, Tabs, Tooltip, Typography } from "@mui/material";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import React, { ReactNode } from "react";
 import FilterListIcon from '@mui/icons-material/FilterList';
-import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import AddIcon from '@mui/icons-material/Add';
 export default function Reports() {
     return (
         <Box display={"grid"} gap={"40px"}>
@@ -152,7 +150,7 @@ export default function Reports() {
 export function ReportStatistics({ tabList }: { tabList: Array<string> }) {
     const [value, setValue] = React.useState<string>(tabList[0]?.toLowerCase());
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
     return <Box

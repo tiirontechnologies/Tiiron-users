@@ -1,7 +1,7 @@
 import CustomTextField from "@components/textfields/CustomTextField";
 import LoginPng from "@images/login.png";
 import AuthLayout from "@layouts/AuthLayout";
-import { Box, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 /**
  *
  * @author Vishal

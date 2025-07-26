@@ -29,7 +29,7 @@ import MessageQuestionIcon from "@icons/MessageQuestionIcon";
 import ImportIcon from "@icons/ImportIcon";
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
-))(({ theme }) => ({
+))(() => ({
   borderRadius: "16px",
   backgroundColor: "#F9FAFA",
   overflow: "hidden",

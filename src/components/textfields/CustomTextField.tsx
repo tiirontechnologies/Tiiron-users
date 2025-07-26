@@ -9,7 +9,7 @@ interface CustomTextFieldProps {
   placeholder?: string;
   type?: string;
   labelText?: string;
-  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   inputSx?: object;
 }
 

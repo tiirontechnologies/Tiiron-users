@@ -7,7 +7,6 @@ import {
   ClickAwayListener,
   MenuItem,
   Paper,
-  SelectChangeEvent,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -69,9 +68,6 @@ const ListItem: React.FC<ListItemProps> = ({
   onChange,
 }) => {
   const [open, setOpen] = useState(false);
-  const handleChange = (event: SelectChangeEvent) => {
-    onChange?.(event.target.value);
-  };
   const handleSelect = (selected: string) => {
     onChange?.(selected);
     setOpen(false);
