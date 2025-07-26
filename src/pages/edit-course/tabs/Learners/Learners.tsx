@@ -215,7 +215,7 @@ const LearnersTab = () => {
 export default function Learners() {
     const [value, setValue] = React.useState('users');
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
 

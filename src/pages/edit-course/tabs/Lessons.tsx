@@ -17,7 +17,7 @@ import FileIcon from "@icons/FileIcon";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
-))(({ theme }) => ({
+))(() => ({
   borderRadius: "16px",
   backgroundColor: "#F9FAFA",
   overflow: "hidden",
