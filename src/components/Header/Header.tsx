@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, IconButton, useMediaQuery } from "@mui/material";
+import {  Box, Button, IconButton, useMediaQuery } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchBox from "./SearchBox";

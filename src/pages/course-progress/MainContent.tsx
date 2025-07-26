@@ -1,6 +1,5 @@
 import ScoreSvg from "@icons/Score.svg";
 import DummyCodeImage from "@images/main.jpg";
-import { CheckBox } from "@mui/icons-material";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import {
   AccordionDetails,
@@ -232,7 +231,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => {
   },
 }));
 
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+const StyledAccordionDetails = styled(AccordionDetails)(() => ({
   backgroundColor: "transparent", // match Accordion background or change as needed
   // padding: theme.spacing(2),
   padding: "0",

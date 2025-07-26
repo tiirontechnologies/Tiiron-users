@@ -54,7 +54,7 @@ const index = () => {
             tagInput={tagInput}
             setTagInput={setTagInput}
           />
-          {QuestionBankData.map((course, index) => (
+          {QuestionBankData.map((course) => (
             <QuestionCard
               key={course.questionId}
               thumbnailSrc={course.courseThumbnailSrc}

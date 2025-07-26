@@ -1,6 +1,5 @@
 // CustomEditor.tsx
 import React from "react";
-import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 // import "./CustomEditor.css";
 
@@ -27,7 +26,7 @@ const CustomEditor: React.FC = () => {
   return (
     <div>
       <CustomToolbar />
-      <ReactQuill
+      {/* <ReactQuill
         theme="snow"
         modules={{
           toolbar: {
@@ -35,7 +34,7 @@ const CustomEditor: React.FC = () => {
           },
         }}
         formats={["bold", "italic", "underline"]}
-      />
+      /> */}
     </div>
   );
 };
