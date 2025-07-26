@@ -20,7 +20,7 @@ jobs:
 
     - name: Install dependencies & build (optional)
       run: |
-        npm ci
+        npm ci --legacy-peer-deps
         npm run build
 
     - name: Set up Google Cloud CLI
