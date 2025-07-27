@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 const initialState: { id: string } = { id: "" }
 
 export const globalId = createSlice({
-    name: 'counter',
+    name: 'globalId',
     initialState,
     reducers: {
         setGlobalId: (state, action: PayloadAction<{ id: string }>) => {

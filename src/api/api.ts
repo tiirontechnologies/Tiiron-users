@@ -34,6 +34,12 @@ export const authApi = createApi({
     endpoints: (builder) => ({
         authLogin: builder.mutation({
             ...authEndpoints.login,
+        }),
+        registerOrganization: builder.mutation({
+            ...authEndpoints.registerOrganization,
+        }),
+        registerUser: builder.mutation({
+            ...authEndpoints.registerUser,
         })
     }),
 })
@@ -41,4 +47,7 @@ export const authApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const { } = api;
-export const { } = authApi;
+export const { 
+    useRegisterOrganizationMutation,
+    useRegisterUserMutation,
+ } = authApi;

@@ -20,6 +20,7 @@ interface AuthLayoutProps {
   dividerText: string;
   onSubmit: () => void;
   renderFormFields: ReactNode;
+  isLoading?:boolean;
 }
 
 const AuthLayout = ({
@@ -30,6 +31,7 @@ const AuthLayout = ({
   dividerText,
   onSubmit,
   renderFormFields,
+  isLoading
 }: AuthLayoutProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -106,6 +108,7 @@ const AuthLayout = ({
                 px: 3,
                 fontWeight: 600,
               }}
+              loading={isLoading}
             >
               {submitButtonText}
             </Button>

@@ -22,6 +22,7 @@ const CustomTextField = ({
   labelText,
   onKeyDown,
   inputSx,
+  ...rest
 }: CustomTextFieldProps) => {
   return (
     <Box mb={2}>
@@ -44,6 +45,7 @@ const CustomTextField = ({
         size="small"
         variant="outlined"
         onKeyDown={onKeyDown}
+        {...rest}
         InputProps={{
           sx: {
             backgroundColor: "#fff",
