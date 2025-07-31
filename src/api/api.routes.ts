@@ -1,10 +1,11 @@
 import { IOrganisationRegister } from "types/user.types";
 import { AUTH_URL, BASE_URL } from "../constants/constants";
+import { TAuth } from "types/auth.types";
 
 export const authEndpoints = {
   login: {
-    query: ({ body }: { body: { username: string; password: string } }) => ({
-      url: BASE_URL,
+    query: ({ body }: { body: TAuth }) => ({
+      url: AUTH_URL + "/login",
       body,
       method: "POST",
     }),
@@ -39,7 +40,7 @@ export const authEndpoints = {
 
 export const getEndpoints = {
   getDummy: {
-    query: ({ body }: { body: { username: string; password: string } }) => ({
+    query: ({ body }: { body: TAuth }) => ({
       url: BASE_URL,
       body,
       method: "POST",

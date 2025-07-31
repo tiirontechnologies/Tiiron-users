@@ -1,5 +1,6 @@
 import NotificationsIcon from "@icons/NotificationsIcon";
 import SettingsIcon from "@icons/SettingsIcon";
+import { SvgIcon } from "@icons/SignOut";
 import type { Route } from "types/routes";
 
 export const globalRoutes: Route[] = [
@@ -10,5 +11,9 @@ export const globalRoutes: Route[] = [
   {
     label: "Notification",
     icon: <NotificationsIcon />,
+  },
+  {
+    label: "Sign Out",
+    icon: <SvgIcon />,
   },
 ];

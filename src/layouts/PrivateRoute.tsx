@@ -7,13 +7,11 @@ interface PrivateRouteProps {
 
 export default function PrivateRoute({ children }: PrivateRouteProps) {
     const location = useLocation();
-    const [isAuthenticated, setIsAuthenticated] = useState(
-        !!localStorage.getItem("accessToken")
-    );
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
 
     useEffect(() => {
         // re-check token on every location change
-        setIsAuthenticated(!!localStorage.getItem("accessToken"));
+        setIsAuthenticated(!!localStorage.getItem("token"));
     }, [location]);
 
     if (!isAuthenticated) {

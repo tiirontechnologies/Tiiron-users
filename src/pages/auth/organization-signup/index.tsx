@@ -39,7 +39,7 @@ const Step1 = ({
         defaultValue=""
         rules={{ required: "Organization name is required" }}
         render={({ field }) => (
-          <CustomTextField {...field} labelText="Organization Name" />
+          <CustomTextField placeholder="Organization Name"  {...field} labelText="Organization Name" />
         )}
       />
       <p style={{ color: "red" }}>{errors.orgName?.message}</p>
@@ -56,7 +56,7 @@ const Step1 = ({
           },
         }}
         render={({ field }) => (
-          <CustomTextField {...field} labelText="Organization Email" />
+          <CustomTextField placeholder="Organization Email" {...field} labelText="Organization Email" />
         )}
       />
       <p style={{ color: "red" }}>{errors.email?.message}</p>
@@ -208,6 +208,8 @@ const index = () => {
     <AuthLayout
       imageSrc={LoginPng}
       imageOnLeft={true}
+      isUserSignUp={true}
+      isLogin={true}
       titleText="Create your account"
       submitButtonText={`${!stepChange ? "Continue" : "Create Account"} →`}
       dividerText="Sign in with"

@@ -48,6 +48,7 @@ const CustomTextField = ({
         {...rest}
         InputProps={{
           sx: {
+            py:"10px",
             backgroundColor: "#fff",
             borderRadius: "6px",
             "& .MuiOutlinedInput-notchedOutline": {

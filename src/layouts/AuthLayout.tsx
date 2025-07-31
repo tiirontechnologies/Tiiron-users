@@ -11,6 +11,7 @@ import { ReactNode } from "react";
 import Microsoft from "@icons/MicroSoftIcon.svg";
 import Google from "@icons/google.svg";
 import Facebook from "@icons/facebook.svg";
+import { Link } from "react-router-dom";
 
 interface AuthLayoutProps {
   imageSrc: string;
@@ -18,9 +19,14 @@ interface AuthLayoutProps {
   titleText: string;
   submitButtonText: string;
   dividerText: string;
+  signUpBtnText?: string;
+  signInBtnTxt?: string;
   onSubmit: () => void;
   renderFormFields: ReactNode;
-  isLoading?:boolean;
+  isLoading?: boolean;
+  isOrgSignUp?: boolean;
+  isUserSignUp?: boolean;
+  isLogin?: boolean;
 }
 
 const AuthLayout = ({
@@ -28,10 +34,15 @@ const AuthLayout = ({
   imageOnLeft = false,
   titleText,
   submitButtonText,
+  signUpBtnText,
   dividerText,
   onSubmit,
   renderFormFields,
-  isLoading
+  isLoading,
+  signInBtnTxt,
+  isOrgSignUp = false,
+  isUserSignUp = false,
+  isLogin = false
 }: AuthLayoutProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -144,6 +155,55 @@ const AuthLayout = ({
             >
               Microsoft
             </Button>
+          </Box>
+          <Box display={"flex"} gap={2} width={"100%"}>
+            <Box width={"100%"} >
+              {isOrgSignUp && <Box display="flex" gap={2} mt={3} width={"100%"} flexWrap="nowrap">
+                <Link
+                  to={"/organization/create-account"}
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                  >
+                    Sign Up as Organization
+                  </Button>
+                </Link>
+              </Box>}
+              {isUserSignUp && <Box display="flex" gap={2} mt={3} flexWrap="nowrap">
+                <Link
+                  to={"/sign-up"}
+                  style={{
+                    width: "100%"
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                  >
+                    {signUpBtnText ?? "Sign Up as User"}
+                  </Button>
+                </Link>
+              </Box>}
+            </Box>
+            {isLogin && <Box display="flex" gap={2} width={"100%"} mt={3} flexWrap="nowrap">
+              <Link
+                to={"/login"}
+                style={{
+                  width: "100%"
+                }}
+              >
+                <Button
+                  variant="contained"
+                  fullWidth
+                >
+                  {signInBtnTxt ?? "Sign In"}
+                </Button>
+              </Link>
+            </Box>}
           </Box>
         </Box>
       </Grid>

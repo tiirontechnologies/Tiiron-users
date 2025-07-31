@@ -51,15 +51,17 @@ const Index = () => {
       submitButtonText="Create Account →"
       dividerText="Sign up with"
       isLoading={isLoading}
+      isOrgSignUp={true}
+      isLogin={true}
       onSubmit={handleSubmit(onSubmit)} // Trigger RHF handleSubmit
       renderFormFields={
         <Grid container spacing={2}>
           <Grid size={{ xs: 12 }}>
-            <Typography variant="subtitle2" fontWeight={500} mb={0.5}>
-              Full Name
-            </Typography>
             <Grid container spacing={2}>
               <Grid size={{ md: 6, xs: 12 }}>
+                <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
+                  Full Name
+                </Typography>
                 <Controller
                   name="firstName"
                   control={control}
@@ -77,6 +79,9 @@ const Index = () => {
                 </span>
               </Grid>
               <Grid size={{ md: 6, xs: 12 }}>
+                <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
+                  Last Name
+                </Typography>
                 <Controller
                   name="lastName"
                   control={control}
@@ -95,6 +100,9 @@ const Index = () => {
           </Grid>
 
           <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
+              User Name
+            </Typography>
             <Controller
               name="username"
               control={control}
@@ -109,26 +117,29 @@ const Index = () => {
             />
             <span style={{ color: "red" }}>{errors.username?.message}</span>
           </Grid>
-
           <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
+              Email
+            </Typography>
             <Controller
               name="email"
               control={control}
-              rules={{
-                required: "Email is required",
-                pattern: {
-                  value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                  message: "Invalid email format",
-                },
-              }}
+              rules={{ required: "Email is required" }}
               render={({ field }) => (
-                <CustomTextField {...field} type="email" placeholder="Email" />
+                <CustomTextField
+                  {...field}
+                  type="text"
+                  placeholder="mail@example.com"
+                />
               )}
             />
             <span style={{ color: "red" }}>{errors.email?.message}</span>
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
+              Password
+            </Typography>
             <Controller
               name="password"
               control={control}
@@ -145,6 +156,9 @@ const Index = () => {
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
+            <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
+              Confirm Password
+            </Typography>
             <Controller
               name="confirmPassword"
               control={control}
