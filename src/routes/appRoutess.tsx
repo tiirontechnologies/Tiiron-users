@@ -23,7 +23,7 @@ export const appRoutes: Route[] = [
             element: <MyCourses />,
           },
           {
-            path: "edit",
+            path: "edit/:courseId",
             element: <EditCourse />,
           },
         ],

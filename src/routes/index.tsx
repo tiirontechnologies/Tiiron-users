@@ -3,15 +3,15 @@ import { appRoutes } from "./appRoutess";
 import { globalRoutes } from "./globalRoutes";
 import { authRoutes } from "./authRoutes";
 import CourseProgress from "@pages/course-progress";
+import PrivateRoute from "@layouts/PrivateRoute";
 export const routeConfig = [
   {
-    element: <MainLayout />,
+    element: <PrivateRoute><MainLayout /></PrivateRoute>,
     children: [...appRoutes, ...globalRoutes],
   },
   {
     path: "course-progress/:courseId",
-    element: <CourseProgress />,
+    element: <PrivateRoute><CourseProgress /></PrivateRoute>,
   },
   ...authRoutes,
 ];
-console.log(routeConfig, "routeConfig");

@@ -1,23 +1,75 @@
 // components/CourseCard.tsx
-import { Box, Typography, Chip, Divider } from "@mui/material";
+import { Box, Typography, Chip, Divider, Dialog, DialogTitle, DialogContentText, DialogContent, Button, DialogActions, IconButton } from "@mui/material";
 import DocumentIcon from "@icons/DocumentIcon";
 import StarFilledIcon from "@icons/StarFilledIcon";
+import { UPLOADS } from "../../constants/constants";
+import { useDeleteCourseMutation } from "../../api/api";
+import { useState } from "react";
+import DeleteIcon from "@icons/DeleteIcon";
+import { Link } from "react-router-dom";
 
 interface CourseCardProps {
-  thumbnailSrc: string;
-  tags: string[];
+  thumbnailSrc?: string;
+  tags?: string[];
   title: string;
-  lessons: number;
-  rating: number;
+  chapters?: number;
+  rating?: number;
+  id: number;
+  setSnackbarSeverity: React.Dispatch<React.SetStateAction<"success" | "error">>;
+  setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
+  setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 const CourseCard = ({
   thumbnailSrc,
   tags,
   title,
-  lessons,
+  chapters,
   rating,
+  id,
+  setSnackbarSeverity,
+  setSnackbarMessage,
+  setSnackbarOpen,
 }: CourseCardProps) => {
+  const [deleteCourse, { isLoading }] = useDeleteCourseMutation();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState<number | null>(id);
+
+
+  const handleOpenDeleteModal = (courseId: number) => {
+    setSelectedCourseId(courseId);
+    setOpenDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setSelectedCourseId(null);
+    setOpenDeleteModal(false);
+  };
+
+
+  const handleDelete = async () => {
+    if (!selectedCourseId) return;
+
+    try {
+      const response = await deleteCourse({ id }).unwrap();
+      setSnackbarSeverity("success");
+      setSnackbarMessage(response?.message || "Course Deleted successfully");
+      setSnackbarOpen(true);
+    } catch (err: any) {
+      console.error("Delete failed", err);
+      const errorMessage =
+        err?.data?.errors?.map((e: any) => e.message).join(", ") ||
+        "Something went wrong!";
+      setSnackbarSeverity("error");
+      setSnackbarMessage(errorMessage);
+      setSnackbarOpen(true);
+    } finally {
+      handleCloseDeleteModal();
+    }
+  };
+
+
   return (
     <Box
       sx={{
@@ -44,7 +96,7 @@ const CourseCard = ({
       >
         {thumbnailSrc ? (
           <img
-            src={thumbnailSrc}
+            src={UPLOADS + thumbnailSrc}
             alt={title}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
@@ -64,24 +116,48 @@ const CourseCard = ({
           </Box>
         )}
       </Box>
-
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: "10px" }}>
-        {tags.map((tag, idx) => (
-          <Chip key={idx} label={tag} size="small" />
+        {tags?.map((tag, idx) => (
+          <Chip key={idx} label={tag} size="small" sx={{
+            fontSize: "10px",
+            backgroundColor: "#E2D5FF",
+            color: "#452B80",
+
+          }} />
         ))}
       </Box>
-      <Typography
-        sx={{
+      <Link
+        to={`edit/${id}`}
+        style={{
           fontWeight: 600,
           fontSize: 16,
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          mt: "10px",
+          marginTop: "10px",
+          textDecoration: "none",
+          color: "black"
         }}
       >
         {title}
-      </Typography>
+      </Link>
+      <IconButton
+        size="small"
+        sx={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+          zIndex: 1,
+          background: "#fff",
+          "&:hover": { background: "#eee" },
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleOpenDeleteModal(id);
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
       <Divider
         sx={{
           position: "absolute",
@@ -104,7 +180,7 @@ const CourseCard = ({
         <Box sx={{ display: "flex", gap: "7px", alignItems: "center" }}>
           <DocumentIcon />
           <Typography sx={{ fontSize: "12px", color: "#666666" }}>
-            {lessons} Lessons
+            {chapters} Chapters
           </Typography>
         </Box>
         <Box sx={{ display: "flex", gap: "7px", alignItems: "center" }}>
@@ -114,6 +190,23 @@ const CourseCard = ({
           </Typography>
         </Box>
       </Box>
+      <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
+        <DialogTitle>Delete Course</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this course? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="error" variant="contained" disabled={isLoading}>
+            {isLoading ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Box>
   );
 };

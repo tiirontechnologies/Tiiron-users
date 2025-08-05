@@ -1,7 +1,10 @@
 // components/AddNewCourseCard.tsx
-import { Box, Chip, Divider } from "@mui/material";
+import { Alert, Box, Button, Chip, Divider, Modal, Snackbar, TextField, Typography } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import React from "react";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { ICreateCourse } from "types/course.types";
+import { useCreateCourseMutation } from "../../api/api";
 
 type Props = {
   image: string | null;
@@ -9,34 +12,87 @@ type Props = {
   title: string;
   setTitle: (val: string) => void;
   tags: string[];
-  setTags: (tags: string[]) => void;
+  setTags: React.Dispatch<React.SetStateAction<string[]>>;
   tagInput: string;
   setTagInput: (val: string) => void;
 };
 
 const AddNewCourseCard = ({
-  image,
-  setImage,
-  title,
-  setTitle,
   tags,
   setTags,
   tagInput,
   setTagInput,
 }: Props) => {
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setImage(reader.result as string);
-      reader.readAsDataURL(file);
+  const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+  const [createCourse, { isLoading }] = useCreateCourseMutation();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<ICreateCourse>({ mode: "onBlur" });
+
+  const handleAddTag = (): void => {
+    const trimmed = tagInput.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags((prev) => [...prev, trimmed]);
+    }
+    setTagInput("");
+  };
+
+  const handleRemoveTag = (tagToRemove: string): void => {
+    setTags((prev) => prev.filter((tag) => tag !== tagToRemove));
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      handleAddTag();
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && tagInput.trim()) {
-      setTags([...tags, tagInput.trim()]);
-      setTagInput("");
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
+  const onSubmit = async (data: ICreateCourse) => {
+    try {
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+
+      // Append image only if present
+      if (data.image) {
+        formData.append("image", data.image);
+      }
+
+      // Append each tag
+      tags.forEach((tag) => {
+        formData.append("tags[]", tag);
+      });
+
+      // 🔥 Send data to server via RTK hook
+      const response = await createCourse({ body: formData }).unwrap();
+      setSnackbarSeverity("success");
+      setSnackbarMessage(response?.message || "Course Created successfully");
+      setSnackbarOpen(true);
+      setOpen(false);
+      // ✅ Success handler
+      console.log("Course created successfully:", response);
+    } catch (error: any) {
+      // ❌ Error handler
+      console.error("Error creating course:", error);
+      const errorMessage =
+        error?.data?.errors?.map((e: any) => e.message).join(", ") ||
+        "Something went wrong!";
+      setSnackbarSeverity("error");
+      setSnackbarMessage(errorMessage);
+      setSnackbarOpen(true);
     }
   };
 
@@ -56,7 +112,6 @@ const AddNewCourseCard = ({
         background: "#fff",
       }}
     >
-      {/* Image Upload */}
       <Box
         sx={{
           background: "#E2D5FF",
@@ -72,34 +127,9 @@ const AddNewCourseCard = ({
           top: 0,
           zIndex: 2,
         }}
+        onClick={() => setOpen(true)}
       >
-        {image ? (
-          <img
-            src={image}
-            alt="Course"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        ) : (
-          <>
-            <AddRoundedIcon sx={{ color: "#452B80", fontSize: 40 }} />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                opacity: 0,
-                cursor: "pointer",
-              }}
-            />
-          </>
-        )}
+        <AddRoundedIcon sx={{ color: "#452B80", fontSize: 40 }} />
       </Box>
 
       <Divider
@@ -127,55 +157,7 @@ const AddNewCourseCard = ({
           },
         }}
       >
-        {/* Tags */}
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-          {tags.map((tag, i) => (
-            <Chip
-              key={i}
-              label={tag}
-              size="small"
-              onDelete={() => setTags(tags.filter((_, index) => index !== i))}
-            />
-          ))}
-        </Box>
-
-        {/* Tag Input */}
-        <input
-          type="text"
-          value={tagInput}
-          onChange={(e) => setTagInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Add tag"
-          style={{
-            width: "100%",
-            padding: "2px 0",
-            fontWeight: 500,
-            fontSize: 16,
-            border: "none",
-            outline: "none",
-            backgroundColor: "transparent",
-            marginTop: 6,
-            marginBottom: 12,
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.border = "1px solid #6A42AB";
-            e.currentTarget.style.borderRadius = "4px";
-            e.currentTarget.style.backgroundColor = "white";
-            e.currentTarget.style.padding = "4px 8px";
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.border = "none";
-            e.currentTarget.style.backgroundColor = "transparent";
-            e.currentTarget.style.padding = "2px 0";
-          }}
-        />
-
-        {/* Title Input */}
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Add New Course"
+        <Typography
           style={{
             width: "100%",
             fontSize: 16,
@@ -185,21 +167,11 @@ const AddNewCourseCard = ({
             backgroundColor: "transparent",
             padding: "4px 0",
           }}
-          onFocus={(e) => {
-            e.currentTarget.style.border = "1px solid #6A42AB";
-            e.currentTarget.style.borderRadius = "4px";
-            e.currentTarget.style.backgroundColor = "white";
-            e.currentTarget.style.padding = "6px 8px";
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.border = "none";
-            e.currentTarget.style.backgroundColor = "transparent";
-            e.currentTarget.style.padding = "4px 0";
-          }}
-        />
+        >
+          Add A New Course
+        </Typography>
       </Box>
 
-      {/* Bottom Box placeholder */}
       <Box
         sx={{
           position: "absolute",
@@ -212,6 +184,144 @@ const AddNewCourseCard = ({
           bgcolor: "#fff",
         }}
       ></Box>
+
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            bgcolor: "background.paper",
+            borderRadius: "10px",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Add Course
+          </Typography>
+
+          <Box
+            component="form"
+            sx={{ mt: 2 }}
+            noValidate
+            autoComplete="off"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <TextField
+              fullWidth
+              label="Course Name"
+              variant="outlined"
+              margin="normal"
+              {...register("title", {
+                required: "Course name is required",
+                minLength: { value: 2, message: "Minimum 2 characters required" },
+              })}
+              error={!!errors.title}
+              helperText={errors.title?.message}
+            />
+
+            <TextField
+              fullWidth
+              label="Course Description"
+              variant="outlined"
+              margin="normal"
+              multiline
+              rows={4}
+              {...register("description", {
+                required: "Description is required",
+              })}
+              error={!!errors.description}
+              helperText={errors.description?.message}
+            />
+
+            <Controller
+              name="image"
+              control={control}
+              rules={{
+                validate: {
+                  acceptedFormats: (file) => {
+                    if (!file) return true;
+                    const isValid =
+                      file.type === "image/png" || file.type === "image/jpeg";
+                    return isValid || "Only JPG/PNG files are allowed";
+                  },
+                },
+              }}
+              render={({ field }) => (
+                <>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      field.onChange(file); // Send single File, not FileList
+                    }}
+                    style={{ marginTop: 16 }}
+                  />
+                  {errors.image && (
+                    <Typography variant="body2" color="error" mt={1}>
+                      {errors.image.message}
+                    </Typography>
+                  )}
+                </>
+              )}
+            />
+
+
+            <TextField
+              fullWidth
+              label="Add Tag"
+              variant="outlined"
+              margin="normal"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={handleTagKeyDown}
+              placeholder="Press Enter or , to add"
+            />
+
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+              {tags.map((tag) => (
+                <Chip
+                  key={tag}
+                  label={tag}
+                  onDelete={() => handleRemoveTag(tag)}
+                  color="primary"
+                />
+              ))}
+            </Box>
+
+            <Box display="flex" justifyContent="end" gap="10px" mt={3}>
+              <Button variant="outlined" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="contained" type="submit" disabled={isLoading}>
+                {isLoading ? "Submitting" : "Submit"}
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -14,9 +14,7 @@ const SidebarMenu = ({ routes, open }: any) => {
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
   const navigate = useNavigate();
   const isRouteActive = (route: any): boolean => {
-    console.dir(route, { depth: null });
     if (route.path) return location.pathname === route.path;
-    console.log(route.path, location.pathname);
     if (route.children) {
       return route.children.some(
         (child: any) => child.path && location.pathname.startsWith(child.path)
@@ -29,7 +27,6 @@ const SidebarMenu = ({ routes, open }: any) => {
   const toggleExpand = (label: string) => {
     setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
   };
-
   return (
     <List>
       {routes.map((route: any) => {
@@ -39,7 +36,9 @@ const SidebarMenu = ({ routes, open }: any) => {
           <Box key={route.label}>
             <ListItemButton
               onClick={() => {
-                if (hasChildren) {
+                if (route.onClick) {
+                  route.onClick();
+                } else if (hasChildren) {
                   toggleExpand(route.label);
                 } else if (route.path) {
                   navigate(route.path);

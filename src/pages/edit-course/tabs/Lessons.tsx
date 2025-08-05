@@ -102,10 +102,10 @@ const LessonItem = styled(Box)(() => ({
   padding: "16px",
 }));
 
-const Lessons = () => {
+const Lessons = ({ data }: { data: any }) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-      <Accordion>
+      {/* <Accordion>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
           <Typography component="span" sx={{ color: "#000", fontWeight: 600 }}>
             Chapter 1
@@ -148,7 +148,43 @@ const Lessons = () => {
             </IconButton>
           </Box>
         </AccordionDetails>
-      </Accordion>
+      </Accordion> */}
+      {data?.chapters?.map((chapter:any) => (
+        <Accordion key={chapter.id}>
+          <AccordionSummary
+            aria-controls={`panel${chapter.id}-content`}
+            id={`panel${chapter.id}-header`}
+          >
+            <Typography component="span" sx={{ color: "#000", fontWeight: 600 }}>
+              {chapter.title}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              {chapter.units.map((unit:any) => (
+                <LessonItem key={unit.id}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <DragIndicatorIcon sx={{ color: "#999999", mr: "10px" }} />
+                    <FileIcon />
+                    <Typography sx={{ color: "#000000", fontSize: "16px", ml: 1 }}>
+                      {unit.title}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Button variant="outlined">Edit Content</Button>
+                    <IconButton sx={{ color: "#4D4D4D", ml: "auto" }}>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Box>
+                </LessonItem>
+              ))}
+              <IconButton sx={{ m: "auto", border: "1px solid #E6E6E6" }}>
+                <AddRoundedIcon sx={{ color: "#4D4D4D" }} />
+              </IconButton>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      ))}
       <LessonItem>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <DragIndicatorIcon sx={{ color: "#999999", mr: "10px" }} />

@@ -22,6 +22,7 @@ const CustomTextField = ({
   labelText,
   onKeyDown,
   inputSx,
+  ...rest
 }: CustomTextFieldProps) => {
   return (
     <Box mb={2}>
@@ -44,8 +45,10 @@ const CustomTextField = ({
         size="small"
         variant="outlined"
         onKeyDown={onKeyDown}
+        {...rest}
         InputProps={{
           sx: {
+            py:"10px",
             backgroundColor: "#fff",
             borderRadius: "6px",
             "& .MuiOutlinedInput-notchedOutline": {
