@@ -6,4 +6,5 @@ export interface Route {
   path?: string;
   element?: React.ReactNode | JSX.Element;
   children?: Route[];
+  onClick?:()=>void;
 }

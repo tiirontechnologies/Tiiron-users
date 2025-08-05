@@ -1,5 +1,5 @@
 import { IOrganisationRegister } from "types/user.types";
-import { AUTH_URL, BASE_URL } from "../constants/constants";
+import { AUTH_URL, SERVER_URL } from "../constants/constants";
 import { TAuth } from "types/auth.types";
 
 export const authEndpoints = {
@@ -39,12 +39,37 @@ export const authEndpoints = {
 };
 
 export const getEndpoints = {
-  getDummy: {
-    query: ({ body }: { body: TAuth }) => ({
-      url: BASE_URL,
-      body,
-      method: "POST",
+  getCourse: {
+    query: ({ page = 1, limit = 10 }: { page?: number, limit?: number }) => ({
+      url: SERVER_URL + "/org/course",
+      method: "GET",
+      params: { page, limit }
+    }),
+  },
+  getChapters: {
+    query: ({ page = 1, limit = 10, id }: { page?: number, limit?: number; id: string }) => ({
+      url: SERVER_URL + "/org/chapter/" + id,
+      method: "GET",
+      params: { page, limit }
     }),
   },
 };
 
+export const addEndpoints = {
+  createCourse: {
+    query: ({ body }: { body: FormData }) => ({
+      url: SERVER_URL + "/org/course",
+      body,
+      method: "POST",
+    }),
+  }
+}
+
+export const deleteEndpoints = {
+  deleteCourse: {
+    query: ({ id }: { id: number }) => ({
+      url: SERVER_URL + "/org/course/" + id,
+      method: "DELETE",
+    }),
+  }
+}

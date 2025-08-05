@@ -10,7 +10,7 @@ import Settings from "./tabs/Settings";
 import Learners from "./tabs/Learners";
 import Reports from "./tabs/Reports";
 
-const CourseMetaTabs = () => {
+const CourseMetaTabs = ({ data }: { data: any }) => {
   const [value, setValue] = useState(0);
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -20,7 +20,7 @@ const CourseMetaTabs = () => {
     {
       title: "Lessons",
       icon: <EditIcon />,
-      content: <Lessons />,
+      content: <Lessons data={data} />,
     },
     {
       title: "Overview",
@@ -37,7 +37,7 @@ const CourseMetaTabs = () => {
     {
       title: "Report",
       icon: <ReportIcon />,
-      content:<Reports />,
+      content: <Reports />,
     },
     {
       title: "Learners",

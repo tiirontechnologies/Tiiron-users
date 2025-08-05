@@ -1,0 +1,31 @@
+interface ICreateCourse {
+    title: string;
+    description: string;
+    tags?: string[];
+    image?: File;
+}
+
+
+interface ICourse {
+    id: number;
+    title: string;
+    description: string;
+    permaLink: string;
+    tags?:string[];
+    image: string;
+    duration: number;
+    createdAt: string; // or Date if you're parsing it
+    updatedAt: string; // or Date
+    orgCode: string;
+    _count: {
+        chapters: number;
+    };
+    createdBy: {
+        id: number;
+        username: string;
+    };
+    totalChapters: number;
+}
+
+
+export type { ICreateCourse, ICourse }

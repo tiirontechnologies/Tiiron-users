@@ -32,8 +32,7 @@ const MoreButton = () => {
       color: "#C54644",
     },
   ];
-  const handleItemClick = (item: ClockItem) => {
-    console.log("Clicked:", item.title);
+  const handleItemClick = (_item: ClockItem) => {
   };
   return (
     <ReusablePopper

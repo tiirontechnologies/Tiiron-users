@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authApi } from "../api/api";
+import { api, authApi } from "../api/api";
 import globalIdReducer from "../slices/globalid.slice";
 import loginFormReducer from "../slices/login.slice";
 
@@ -8,9 +8,10 @@ export const store = configureStore({
     globalIdSlice: globalIdReducer,
     loginFormSlice: loginFormReducer,
     [authApi.reducerPath]: authApi.reducer,
+    [api.reducerPath]: api.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware).concat(api.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

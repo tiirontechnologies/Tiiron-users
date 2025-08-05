@@ -1,21 +1,11 @@
 import { useState } from "react";
-import { Box } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import AddNewCourseCard from "./AddNewCourseCard";
 import CourseCard from "./CourseCard";
 import PageToolbarLayout from "@layouts/PageToolbarLayout";
-
-const MyCoursesData = [
-  {
-    courseId: 1,
-    courseThumbnailSrc:
-      "data:image/jpeg;base64,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", // your image
-    courseTags: ["frontend", "react"],
-    courseName: "React Js",
-    lessons: 10,
-    rating: 5.5,
-  },
-  // ...other courses
-];
+import { useGetCourseQuery } from "../../api/api";
+import { ICourse } from "types/course.types";
+import Loader from "@components/ui/Spinner";
 
 const MyCourses = () => {
   // Optional state for "Add New Course" if you want to manage it here
@@ -23,7 +13,25 @@ const MyCourses = () => {
   const [title, setTitle] = useState("Add New Course");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const { data, isFetching, isError } = useGetCourseQuery({ limit: 10, page: 1 }) as {
+    data: {
+      data: {
+        courses: ICourse[];
+      }
+    };
+    isFetching: boolean;
+    isError: boolean;
+  };
 
+  /**SNACKBAR */
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
   return (
     <Box sx={{ padding: "24px" }}>
       <PageToolbarLayout title="Courses">
@@ -39,17 +47,36 @@ const MyCourses = () => {
             setTagInput={setTagInput}
           />
 
-          {MyCoursesData.map((course) => (
-            <CourseCard
-              key={course.courseId}
-              thumbnailSrc={course.courseThumbnailSrc}
-              tags={course.courseTags}
-              title={course.courseName}
-              lessons={course.lessons}
-              rating={course.rating}
-            />
-          ))}
+          {isFetching ? (<Loader />) : isError ? (<div>Some error occurred...</div>) : (
+            data?.data?.courses?.map((course) => (
+              <CourseCard
+                key={course.id}
+                id={course.id}
+                thumbnailSrc={course.image}
+                tags={course.tags}
+                title={course.title}
+                chapters={course.totalChapters}
+                setSnackbarOpen={setSnackbarOpen}
+                setSnackbarMessage={setSnackbarMessage}
+                setSnackbarSeverity={setSnackbarSeverity}
+              // rating={course.rating}
+              />
+            ))
+          )}
         </Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity={snackbarSeverity}
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </PageToolbarLayout>
     </Box>
   );
