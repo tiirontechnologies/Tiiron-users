@@ -11,6 +11,7 @@ import WestIcon from "@mui/icons-material/West";
 
 import MoreButton from "./MoreButton";
 import PublishButton from "./PublishButton";
+import { Link } from "react-router-dom";
 const ToolBar = ({ children }: { children: React.ReactNode }) => {
   return (
     <Box>
@@ -29,7 +30,7 @@ const ToolBar = ({ children }: { children: React.ReactNode }) => {
         {/* left side  */}
         <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <IconButton sx={{ color: "#000000" }}>
-            <WestIcon sx={{ fontSize: "20px" }} />
+            <Link to={"/courses"} style={{textDecoration:"none",color:"black"}}><WestIcon /></Link>
           </IconButton>
           <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
             Course Name

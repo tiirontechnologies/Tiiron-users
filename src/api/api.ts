@@ -60,6 +60,14 @@ export const api = createApi({
             ...addEndpoints.createCourse,
             invalidatesTags: ["Course"]
         }),
+        createChapter: builder.mutation({
+            ...addEndpoints.createChapter,
+            invalidatesTags: ["Chapter"]
+        }),
+        createUnit: builder.mutation({
+            ...addEndpoints.createUnit,
+            invalidatesTags: ["Chapter"]
+        }),
         deleteCourse: builder.mutation({
             ...deleteEndpoints.deleteCourse,
             invalidatesTags: ["Course"]
@@ -105,7 +113,9 @@ export const {
     useGetCourseQuery,                          // Get Query
     useGetChaptersQuery,
     useCreateCourseMutation,                    // POST / Add QUERY
-    useDeleteCourseMutation,
+    useCreateChapterMutation,                   
+    useCreateUnitMutation,
+    useDeleteCourseMutation,                    // Delete Query
 } = api;
 export const {
     useAuthLoginMutation,

@@ -10,7 +10,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr({
+    svgrOptions: {
+      icon: true,
+      // This will transform your SVG to a React component
+      exportType: "named",
+      namedExport: "ReactComponent",
+    },
+  }),],
+  preview: {
+    port:3002
+  },
   resolve: {
     alias: {
       "@components": path.resolve(__dirname, "src/components"),
