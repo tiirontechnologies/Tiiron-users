@@ -1,5 +1,5 @@
 // components/CourseCard.tsx
-import { Box, Typography, Chip, Divider, Dialog, DialogTitle, DialogContentText, DialogContent, Button, DialogActions, IconButton } from "@mui/material";
+import { Box, Typography, Chip, Divider, Button, IconButton, Modal } from "@mui/material";
 import DocumentIcon from "@icons/DocumentIcon";
 import StarFilledIcon from "@icons/StarFilledIcon";
 import { UPLOADS } from "../../constants/constants";
@@ -190,23 +190,42 @@ const CourseCard = ({
           </Typography>
         </Box>
       </Box>
-      <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
-        <DialogTitle>Delete Course</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this course? This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteModal} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="error" variant="contained" disabled={isLoading}>
-            {isLoading ? "Deleting..." : "Delete"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
+      <Modal
+        open={openDeleteModal}
+        onClose={handleCloseDeleteModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            bgcolor: "background.paper",
+            borderRadius: "10px",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Delete Course
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            You are about to permanently delete this course. Are you sure you
+            want to delete it?
+          </Typography>
+          <Box display={"flex"} gap={"10px"} justifyContent={"end"} mt={2}>
+            <Button variant="outlined" onClick={handleCloseDeleteModal}>
+              Cancel
+            </Button>
+            <Button onClick={handleDelete} color="error" variant="contained" disabled={isLoading}>
+              {isLoading ? "Deleting..." : "Delete"}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };

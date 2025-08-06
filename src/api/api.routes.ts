@@ -62,7 +62,21 @@ export const addEndpoints = {
       body,
       method: "POST",
     }),
-  }
+  },
+  createChapter: {
+    query: ({ body }: { body: { title: string, courseId: number } }) => ({
+      url: SERVER_URL + "/org/chapter",
+      body,
+      method: "POST",
+    }),
+  },
+  createUnit: {
+    query: ({ body }: { body: { title: string, content: string; chapterId: number } }) => ({
+      url: SERVER_URL + "/org/unit",
+      body,
+      method: "POST",
+    }),
+  },
 }
 
 export const deleteEndpoints = {
