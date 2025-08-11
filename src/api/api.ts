@@ -56,6 +56,10 @@ export const api = createApi({
             ...getEndpoints.getChapters,
             providesTags: ["Chapter"]
         }),
+        getCourseByCourseId: builder.query({
+            ...getEndpoints.getCourseByCourseId,
+            providesTags: ["Course"]
+        }),
         createCourse: builder.mutation({
             ...addEndpoints.createCourse,
             invalidatesTags: ["Course"]
@@ -112,6 +116,7 @@ export const authApi = createApi({
 export const {
     useGetCourseQuery,                          // Get Query
     useGetChaptersQuery,
+    useGetCourseByCourseIdQuery,
     useCreateCourseMutation,                    // POST / Add QUERY
     useCreateChapterMutation,                   
     useCreateUnitMutation,

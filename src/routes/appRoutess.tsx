@@ -6,7 +6,6 @@ import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
-import CourseGlossary from "@pages/CourseGlossary";
 import CheckoutPage from "@pages/Checkout";
 import UploadPage from "@pages/upload-box";
 export const appRoutes: Route[] = [
@@ -54,12 +53,12 @@ export const appRoutes: Route[] = [
     icon: <DollerIcon />,
     path: "/reports",
   },
-  {
-    label: "Course Glossary",
-    element:<CourseGlossary />,
-    icon: <DollerIcon />,
-    path: "/course-glossary",
-  },
+  // {
+  //   label: "Course Glossary",
+  //   element:<CourseGlossary />,
+  //   icon: <DollerIcon />,
+  //   path: "/course-glossary",
+  // },
   {
     label: "Checkout",
     element:<CheckoutPage />,
