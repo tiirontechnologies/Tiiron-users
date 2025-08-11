@@ -53,6 +53,12 @@ export const getEndpoints = {
       params: { page, limit }
     }),
   },
+  getCourseByCourseId: {
+    query: ({ id }: { id: string }) => ({
+      url: SERVER_URL + "/org/course/" + id,
+      method: "GET",
+    }),
+  },
 };
 
 export const addEndpoints = {

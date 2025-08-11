@@ -1,15 +1,22 @@
-import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, Button, Container, IconButton, Typography } from "@mui/material";
 import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useParams } from "react-router-dom";
+import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api";
+import Loader from "@components/ui/Spinner";
 
 export default function CourseGlossary() {
+  const { courseId } = useParams();
+  if (!courseId) return <Box>No Course Found or Invalid Course Id...</Box>;
+  const { data, isLoading, isError } = useGetCourseByCourseIdQuery({ id: courseId || "1" });
+  const { data: chapters } = useGetChaptersQuery({ id: courseId || "1" });
+  console.log(data, chapters);
   return (
-    <div style={{ backgroundColor: "white", height: "100%" }}>
-      <Header />
-      <Box sx={{ width: "840px", paddingInlineStart: "80px", paddingBlockStart: "40px", }}>
+    <Container style={{ backgroundColor: "white", height: "100%" }} maxWidth="xl">
+      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Header course={data?.data} />}
+      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Box sx={{ width: "840px", paddingInlineStart: "80px", paddingBlockStart: "40px" }}>
         <Box sx={{ borderBottom: "1px solid gray", paddingBlock: "24px", display: "flex", gap: "24px" }}>
           <Button
             disableElevation
@@ -79,9 +86,9 @@ export default function CourseGlossary() {
         </Box>
         <Box sx={{ borderBottom: "1px solid gray", paddingBlock: "24px", display: "grid", gap: "14px" }}>
           <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>Lessons</Typography>
-          <CourseGlossaryAccordion />
+          <CourseGlossaryAccordion chapters={chapters?.data?.chapters} />
         </Box>
-      </Box>
+      </Box>}
       <Box sx={{ borderBottom: "1px solid gray", paddingInlineStart: "80px", paddingBlockStart: "40px", display: "grid", gap: "24px", width: "100%" }}>
         <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>Learner Reviews</Typography>
         <Box sx={{ display: "flex", gap: "139px" }}>
@@ -115,10 +122,10 @@ export default function CourseGlossary() {
           </Box>
         </Box>
       </Box>
-    </div>
+    </Container>
   )
 }
-export function Header() {
+export function Header({ course }: { course: any }) {
   return <Box sx={{ bgcolor: "#FBF8FF", paddingInline: "80px", display: "flex" }}>
     <Box sx={{ paddingBlock: "40px", paddingBottom: "93px", gap: "24px", display: "flex", flexDirection: "column", }}>
       <Box sx={{ width: "840px", display: "flex", flexDirection: "column", gap: "17px" }}>
@@ -127,10 +134,10 @@ export function Header() {
           mb={0.5}
           sx={{ color: "#0F172A", fontWeight: 700, fontSize: "40px" }}
         >
-          Introduction to User Experience Design
+          {course?.title}
         </Typography>
         <Typography variant="body1" sx={{ width: "729px" }}>
-          This course is meticulously crafted to provide you with a foundational understanding of the principles, methodologies, and tools that drive exceptional user experiences in the digital landscape.
+          {course?.description}
         </Typography>
       </Box>
       <Box sx={{ width: "840px", display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -156,7 +163,7 @@ export function Header() {
               sx={{ width: 40, height: 40 }}
             />
           </Box>
-          Created by Ronal Richards
+          Created by {course?.createdBy}
         </Typography>
         <Typography variant="body1" sx={{ width: "729px", display: "flex", alignItems: "center", gap: "8px" }}>
           <Box
@@ -350,13 +357,14 @@ export function ProductCard() {
   );
 }
 
-export function CourseGlossaryAccordion() {
+export function CourseGlossaryAccordion({ chapters }: { chapters?: any[] }) {
   return (
     <div>
-      <Accordion>
+      {chapters?.length && chapters?.map((item, idx) => (<Accordion>
         <AccordionSummary
           aria-controls="panel1-content"
           id="panel1-header"
+          key={idx}
         >
           <Box
             sx={{
@@ -369,76 +377,33 @@ export function CourseGlossaryAccordion() {
             {/* Left side: Icon + Title */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <ExpandMoreIcon />
-              <Typography sx={{ py: '18px' }}>Accordion 1</Typography>
+              <Typography sx={{ py: '18px' }}>{item?.title}</Typography>
             </Box>
 
             {/* Right-aligned text */}
-            <Typography sx={{ color: "gray", fontSize: "14px" }} color="text.secondary">5 Lessons 1 Hour</Typography>
+            <Typography sx={{ color: "gray", fontSize: "14px" }} color="text.secondary">{item?.units?.length} Lessons</Typography>
           </Box>
         </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <ExpandMoreIcon />
-              <Typography sx={{ py: '18px' }}>Accordion 2</Typography>
+        {item?.units?.length && item?.units?.map((unit: any, idx: number) => (
+          <AccordionDetails key={idx}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                border: '1px solid lightgray',
+                borderRadius: '8px',
+                padding: '12px 24px',
+                backgroundColor: '#f9f9f9',
+              }}
+            >
+              <Typography>{unit?.title}</Typography>
+              <Button variant="contained" color="primary">Start</Button>
             </Box>
+          </AccordionDetails>
+        ))}
 
-            <Typography sx={{ color: "gray", fontSize: "14px" }} color="text.secondary">5 Lessons 1 Hour</Typography>
-          </Box>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion defaultExpanded>
-        <AccordionSummary
-          aria-controls="panel3-content"
-          id="panel3-header"
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <ExpandMoreIcon />
-              <Typography sx={{ py: '18px' }}>Accordion Actions</Typography>
-            </Box>
-
-            <Typography sx={{ color: "gray", fontSize: "14px" }} color="text.secondary">5 Lessons 1 Hour</Typography>
-          </Box>
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-        <AccordionActions>
-          <Button>Cancel</Button>
-          <Button>Agree</Button>
-        </AccordionActions>
-      </Accordion>
+      </Accordion>))}
     </div>
   );
 }

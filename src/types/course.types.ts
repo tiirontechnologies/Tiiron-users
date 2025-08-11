@@ -20,10 +20,7 @@ interface ICourse {
     _count: {
         chapters: number;
     };
-    createdBy: {
-        id: number;
-        username: string;
-    };
+    createdBy: string;
     totalChapters: number;
 }
 
