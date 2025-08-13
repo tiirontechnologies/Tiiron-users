@@ -3,6 +3,7 @@ interface ICreateCourse {
     description: string;
     tags?: string[];
     image?: File;
+    price:string;
 }
 
 

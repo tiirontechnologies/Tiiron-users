@@ -9,18 +9,15 @@ import {
   Modal,
   Snackbar,
   styled,
-  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import ListAddIcon from "@icons/ListAddIcon";
 import { ReusablePopper } from "@components/popper/ReusablePopper";
 import FileAddIcon from "@icons/FileAddIcon";
 import FileUploadIcon from "@icons/FileUploadIcon";
@@ -32,9 +29,8 @@ import CodeCircleIcon from "@icons/CodeCircleIcon";
 import MessageQuestionIcon from "@icons/MessageQuestionIcon";
 import ImportIcon from "@icons/ImportIcon";
 import Loader from "@components/ui/Spinner";
-import { ReactComponent as BlockIcon } from "../../../assets/icons/element-3.svg?react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCreateChapterMutation, useCreateUnitMutation } from "../../../api/api";
 import { CourseContext } from "..";
 import RichTextEditor from "@components/RichTextEditor";
@@ -100,6 +96,8 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => {
     transform: "rotate(90deg)",
   },
 }));
+
+
 const LessonItem = styled(Box)(() => ({
   display: "flex",
   justifyContent: "space-between",
@@ -109,22 +107,6 @@ const LessonItem = styled(Box)(() => ({
   borderRadius: "8px",
   padding: "16px",
 }));
-
-const itemBoxStyle = {
-  border: "1px solid #E6E6E6",
-  borderRadius: "8px",
-  padding: "12px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  textAlign: "center",
-  gap: "6px",
-  cursor: "pointer",
-  '&:hover': {
-    backgroundColor: '#f5f5f5'
-  }
-};
 
 const Lessons = () => {
 
@@ -174,9 +156,6 @@ const Lessons = () => {
   } = useForm<{ title: string; content: string }>();
   const onSubmitEditorForm: SubmitHandler<{ title: string, content: string }> = async (data: { title: string; content: string; }) => {
     try {
-      // Here you would typically call an API to save the chapter
-      // For now, we just log the data
-      console.log("Chapter data submitted:", data, openEditorChapterId);
       const response = await createUnit({
         body: {
           title: data.title,
@@ -200,6 +179,7 @@ const Lessons = () => {
       setOpenEditorChapterId(null);
     }
   };
+  const navigate = useNavigate();
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {!openEditorChapterId &&
@@ -225,32 +205,7 @@ const Lessons = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                          <ReusablePopper
-                            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                            transformOrigin={{ vertical: "top", horizontal: "center" }}
-                            content={
-                              <Box sx={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(3, 1fr)",
-                                gap: "12px",
-                                p: 2,
-                                minWidth: 200
-                              }}>
-                                <Box sx={itemBoxStyle}><VideoCircleIcon /><Typography>Video</Typography></Box>
-                                <Box sx={itemBoxStyle}><SvgIcon component={BlockIcon} /><Typography>Block</Typography></Box>
-                                <Box sx={itemBoxStyle}><TextBlockIcon /><Typography>Text</Typography></Box>
-                                <Box sx={itemBoxStyle}><CodeCircleIcon /><Typography>Code</Typography></Box>
-                                <Box sx={itemBoxStyle}><VideoCircleIcon /><Typography>Tasks</Typography></Box>
-                                <Box sx={itemBoxStyle}><ImportIcon /><Typography>Bank</Typography></Box>
-                              </Box>
-                            }
-                            trigger={
-                              <Button variant="contained" size="small">Add Content</Button>
-                            }
-                          />
-                          <IconButton sx={{ color: "#4D4D4D", ml: "auto" }}>
-                            <MoreVertIcon />
-                          </IconButton>
+                          <Button variant="contained" size="small" onClick={()=>navigate("/question-bank")}>Add Topics</Button>
                         </Box>
                       </LessonItem>
                     )) : (
@@ -303,13 +258,10 @@ const Lessons = () => {
                   startIcon={<AddRoundedIcon />}
                   endIcon={<KeyboardArrowDownRoundedIcon />}
                 >
-                  Add Lesson
+                  Add Chapter
                 </Button>
               }
             />
-            <Button startIcon={<ListAddIcon />} variant="outlined">
-              Add Lesson
-            </Button>
           </Box>
         </Fragment>
       }

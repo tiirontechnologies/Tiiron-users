@@ -21,7 +21,7 @@ const Login = () => {
   const onSubmit: SubmitHandler<TAuth> = async (data) => {
     try {
       const res = await authLogin({ ...data }).unwrap();
-      navigate("/course-glossary");
+      navigate("/courses");
       setSnackbarSeverity("success");
       setSnackbarMessage(res?.message || "User registered successfully");
       setSnackbarOpen(true);
