@@ -6,16 +6,16 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useParams } from "react-router-dom";
 import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api";
 import Loader from "@components/ui/Spinner";
+import { UPLOADS } from "../../constants/constants";
 
 export default function CourseGlossary() {
   const { courseId } = useParams();
   if (!courseId) return <Box>No Course Found or Invalid Course Id...</Box>;
   const { data, isLoading, isError } = useGetCourseByCourseIdQuery({ id: courseId || "1" });
   const { data: chapters } = useGetChaptersQuery({ id: courseId || "1" });
-  console.log(data, chapters);
   return (
     <Container style={{ backgroundColor: "white", height: "100%" }} maxWidth="xl">
-      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Header course={data?.data} />}
+      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Header course={data?.data} chapters={chapters?.data?.chapters} />}
       {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Box sx={{ width: "840px", paddingInlineStart: "80px", paddingBlockStart: "40px" }}>
         <Box sx={{ borderBottom: "1px solid gray", paddingBlock: "24px", display: "flex", gap: "24px" }}>
           <Button
@@ -125,7 +125,7 @@ export default function CourseGlossary() {
     </Container>
   )
 }
-export function Header({ course }: { course: any }) {
+export function Header({ course, chapters }: { course: any; chapters: any }) {
   return <Box sx={{ bgcolor: "#FBF8FF", paddingInline: "80px", display: "flex" }}>
     <Box sx={{ paddingBlock: "40px", paddingBottom: "93px", gap: "24px", display: "flex", flexDirection: "column", }}>
       <Box sx={{ width: "840px", display: "flex", flexDirection: "column", gap: "17px" }}>
@@ -146,7 +146,7 @@ export function Header({ course }: { course: any }) {
           mb={0.5}
           sx={{ color: "#0F172A", fontWeight: 500, fontSize: "14px" }}
         >
-          4.6 {Array(5).fill(null).map(_ => <img src="src/assets/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. 155 Lectures. All levels
+          4.6 {Array(5).fill(null).map(_ => <img src="src/assets/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. {chapters?.length}. All levels
         </Typography>
         <Typography variant="body1" sx={{ width: "729px", display: "flex", alignItems: "center", gap: "8px" }}>
           <Box
@@ -186,12 +186,12 @@ export function Header({ course }: { course: any }) {
     </Box>
     <Box sx={{ paddingBlock: "40px", width: "100%", gap: "24px", display: "flex", flexDirection: "column", position: "relative" }}>
       <Box sx={{ position: "absolute", top: "90px", right: 20 }}>
-        <ProductCard />
+        <ProductCard data={course} />
       </Box>
     </Box>
   </Box>
 }
-export function ProductCard() {
+export function ProductCard({ data }: { data?: any }) {
   return (
     <Box
       sx={{
@@ -205,8 +205,8 @@ export function ProductCard() {
     >
       <Box
         component="img"
-        src="https://storage.googleapis.com/a1aa/image/f118b4ff-1d1d-4866-b19b-3fed21951cfb.jpg"
-        alt="Man sitting at desk with laptop, Figma logo and UI design on screen"
+        src={UPLOADS + data?.image}
+        alt="img"
         sx={{
           width: '100%',
           height: 200,

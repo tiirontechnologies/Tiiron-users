@@ -65,6 +65,7 @@ const AddNewCourseCard = ({
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("description", data.description);
+      formData.append("price", data.price.toString());
 
       // Append image only if present
       if (data.image) {
@@ -226,6 +227,19 @@ const AddNewCourseCard = ({
               })}
               error={!!errors.title}
               helperText={errors.title?.message}
+            />
+            <TextField
+              fullWidth
+              type="number"
+              label="Price"
+              variant="outlined"
+              margin="normal"
+              {...register("price", {
+                valueAsNumber: true,
+                validate: (value) => parseInt(value) > 0 || "Price must be greater than 0",
+              })}
+              error={!!errors.price}
+              helperText={errors.price?.message}
             />
 
             <TextField
