@@ -13,87 +13,152 @@ export default function CourseGlossary() {
   if (!courseId) return <Box>No Course Found or Invalid Course Id...</Box>;
   const { data, isLoading, isError } = useGetCourseByCourseIdQuery({ id: courseId || "1" });
   const { data: chapters } = useGetChaptersQuery({ id: courseId || "1" });
+
   return (
-    <Container style={{ backgroundColor: "white", height: "100%" }} maxWidth="xl">
+    <Container
+      maxWidth="xl"
+      sx={{
+        backgroundColor: "white",
+        minHeight: "100vh",
+        px: { xs: 3, sm: 2, md: 4, lg: 8 },
+        py: { xs: 3, sm: 2, md: 4, lg: 6 },
+        boxSizing: "border-box",
+      }}
+    >
       {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Header course={data?.data} chapters={chapters?.data?.chapters} />}
-      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Box sx={{ width: "840px", paddingInlineStart: "80px", paddingBlockStart: "40px" }}>
-        <Box sx={{ borderBottom: "1px solid gray", paddingBlock: "24px", display: "flex", gap: "24px" }}>
-          <Button
-            disableElevation
-            sx={{
-              backgroundColor: '#F1E5FF',
-              color: '#333',
-              fontSize: '14px',
-              padding: '18px 40px',
-              textTransform: 'none',
-              boxShadow: 'none',
-              '&:hover': {
-                backgroundColor: '#e8d7fa', // Optional softer hover
+      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : (
+        <Box
+          sx={{
+            width: { xs: "100%", md: "60%" },
+            maxWidth: { xs: "100%", sm: "100%", md: "100%", lg: "1040px", xl: "1240px", "2xl": "1440px" },
+            px: { xs: 0, sm: 2, md: 4, lg: 0 },
+            pt: { xs: 2, md: "40px" },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: { xs: "center", md: "flex-start" },
+            boxSizing: "border-box",
+            gap: { xs: 2, md: "24px" },
+          }}
+        >
+          {/* Tabs */}
+          <Box sx={{
+            borderBottom: "1px solid #e0e0e0", paddingBlock: "24px", display: "grid", gridTemplateColumns: {
+              xs: "repeat(2,1fr)",
+              md: "repeat(3,1fr)"
+            }, gap: "24px", width: "100%", boxSizing: "border-box", justifyContent: "center"
+          }}>
+            <Button
+              disableElevation
+              sx={{
+                backgroundColor: '#F1E5FF',
+                color: '#333',
+                fontSize: '14px',
+                padding: '18px 40px',
+                textTransform: 'none',
                 boxShadow: 'none',
-              },
-            }}
-          >
-            Overview
-          </Button>
-          <Button
-            disableElevation
-            sx={{
-              backgroundColor: "transparent",
-              color: "#000",
-              fontSize: "14px",
-              padding: "18px 40px",
-              textTransform: "none",
-              border: "1px solid #e0e0e0",
-              boxShadow: "none",
-              '&:hover': {
-                backgroundColor: "rgba(255, 255, 255, 0.05)",
+                '&:hover': {
+                  backgroundColor: '#e8d7fa', // Optional softer hover
+                  boxShadow: 'none',
+                },
+              }}
+            >
+              Overview
+            </Button>
+            <Button
+              disableElevation
+              sx={{
+                backgroundColor: "transparent",
+                color: "#000",
+                fontSize: "14px",
+                padding: "18px 40px",
+                textTransform: "none",
+                border: "1px solid #e0e0e0",
                 boxShadow: "none",
-                borderColor: "#d5d5d5",
-              },
-            }}
+                '&:hover': {
+                  backgroundColor: "rgba(255, 255, 255, 0.05)",
+                  boxShadow: "none",
+                  borderColor: "#d5d5d5",
+                },
+              }}
 
-          >
-            Lessons
-          </Button>
-          <Button
-            disableElevation
-            sx={{
-              backgroundColor: "transparent",
-              color: "#000",
-              fontSize: "14px",
-              padding: "18px 40px",
-              textTransform: "none",
-              border: "1px solid #e0e0e0",
-              boxShadow: "none",
-              '&:hover': {
-                backgroundColor: "rgba(255, 255, 255, 0.05)",
+            >
+              Lessons
+            </Button>
+            <Button
+              disableElevation
+              sx={{
+                backgroundColor: "transparent",
+                color: "#000",
+                fontSize: "14px",
+                padding: "18px 40px",
+                textTransform: "none",
+                border: "1px solid #e0e0e0",
                 boxShadow: "none",
-                borderColor: "#d5d5d5",
-              },
+                '&:hover': {
+                  backgroundColor: "rgba(255, 255, 255, 0.05)",
+                  boxShadow: "none",
+                  borderColor: "#d5d5d5",
+                },
 
+              }}
+            >
+              Reviews
+            </Button>
+          </Box>
+          {/* Overview */}
+          <Box
+            sx={{
+              borderBottom: "1px solid #e0e0e0",
+              pb: { xs: 2, md: "24px" },
+              width: "100%",
+              boxSizing: "border-box",
             }}
           >
-            Reviews
-          </Button>
+            <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Overview</Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                fontSize: { xs: "14px", md: "16px", lg: "18px" },
+                mt: 1,
+                wordBreak: "break-word",
+                width: { xs: "100%", md: "90%", lg: "80%" },
+                maxWidth: "100%",
+              }}
+            >
+              {data?.data?.description}
+            </Typography>
+          </Box>
+          {/* Lessons */}
+          <Box
+            sx={{
+              borderBottom: "1px solid #e0e0e0",
+              pb: { xs: 2, md: "24px" },
+              display: "grid",
+              gap: { xs: "8px", md: "14px" },
+              width: "100%",
+              boxSizing: "border-box",
+            }}
+          >
+            <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Lessons</Typography>
+            <CourseGlossaryAccordion chapters={chapters?.data?.chapters} />
+          </Box>
         </Box>
-        <Box sx={{ borderBottom: "1px solid gray", paddingBlock: "24px" }}>
-          <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>Overview</Typography>
-          <Typography variant="body1" sx={{ fontSize: "16px" }}>
-            This course is meticulously crafted to provide you with a
-            foundational understanding of the principles, methodologies, and tools that drive exceptional
-            user experiences in the digital landscape.
-          </Typography>
-        </Box>
-        <Box sx={{ borderBottom: "1px solid gray", paddingBlock: "24px", display: "grid", gap: "14px" }}>
-          <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>Lessons</Typography>
-          <CourseGlossaryAccordion chapters={chapters?.data?.chapters} />
-        </Box>
-      </Box>}
-      <Box sx={{ borderBottom: "1px solid gray", paddingInlineStart: "80px", paddingBlockStart: "40px", display: "grid", gap: "24px", width: "100%" }}>
-        <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>Learner Reviews</Typography>
-        <Box sx={{ display: "flex", gap: "139px" }}>
+      )}
+      {/* Reviews Section */}
+      <Box
+        sx={{
+          px: { xs: 0, md: "0px", lg: "0px" },
+          pt: { xs: 2, md: "40px" },
+          display: "grid",
+          gap: { xs: "16px", md: "48px", lg: "50px" },
+          width: "100%",
+          boxSizing: "border-box",
+        }}
+      >
+        <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Learner Reviews</Typography>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: { xs: 2, md: "48px", lg: "139px" }, width: "100%" }}>
           <StarRatings />
-          <Box sx={{ display: "grid", gap: "16px" }}>
+          <Box sx={{ display: "grid", gap: { xs: "8px", md: "16px" }, width: "100%" }}>
             <UserTestimonial />
             <UserTestimonial />
             <UserTestimonial />
@@ -103,11 +168,11 @@ export default function CourseGlossary() {
               <Button
                 variant="outlined"
                 sx={{
-                  border: "1px solid black",
+                  border: "1px solid gray",
                   backgroundColor: "white",
                   color: "black",
-                  fontSize: "14px",
-                  padding: "13px 24px",
+                  fontSize: { xs: "12px", md: "14px" },
+                  padding: { xs: "8px 12px", md: "13px 24px" },
                   textTransform: "none",
                   fontWeight: 500,
                   '&:hover': {
@@ -125,82 +190,171 @@ export default function CourseGlossary() {
     </Container>
   )
 }
+
+// Header component
 export function Header({ course, chapters }: { course: any; chapters: any }) {
-  return <Box sx={{ bgcolor: "#FBF8FF", paddingInline: "80px", display: "flex" }}>
-    <Box sx={{ paddingBlock: "40px", paddingBottom: "93px", gap: "24px", display: "flex", flexDirection: "column", }}>
-      <Box sx={{ width: "840px", display: "flex", flexDirection: "column", gap: "17px" }}>
+  return (
+    <Box
+      sx={{
+        bgcolor: "#FBF8FF",
+        flexDirection: { xs: "column", md: "row" },
+        display: "flex",
+        gap: { xs: 2, md: "24px" },
+        alignItems: { xs: "center", md: "flex-start" },
+        boxSizing: "border-box",
+      }}
+    >
+      <Box
+        sx={{
+          py: { xs: 2, md: "40px" },
+          pb: { xs: 2, md: "93px" },
+          gap: { xs: 2, md: "24px" },
+          display: "flex",
+          flexDirection: "column",
+          width: { xs: "100%", md: "70%", lg: "840px" },
+          maxWidth: "100%",
+        }}
+      >
         <Typography
           variant="subtitle2"
           mb={0.5}
-          sx={{ color: "#0F172A", fontWeight: 700, fontSize: "40px" }}
+          sx={{
+            color: "#0F172A",
+            fontWeight: 700,
+            fontSize: { xs: "24px", md: "40px" },
+            wordBreak: "break-word",
+          }}
         >
           {course?.title}
         </Typography>
-        <Typography variant="body1" sx={{ width: "729px" }}>
+        <Typography
+          variant="body1"
+          sx={{
+            width: "100%",
+            fontSize: { xs: "14px", md: "16px" },
+            wordBreak: "break-word",
+          }}
+        >
           {course?.description}
         </Typography>
-      </Box>
-      <Box sx={{ width: "840px", display: "flex", flexDirection: "column", gap: "24px" }}>
-        <Typography
-          variant="subtitle2"
-          mb={0.5}
-          sx={{ color: "#0F172A", fontWeight: 500, fontSize: "14px" }}
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: { xs: 2, md: "24px" },
+          }}
         >
-          4.6 {Array(5).fill(null).map(_ => <img src="src/assets/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. {chapters?.length}. All levels
-        </Typography>
-        <Typography variant="body1" sx={{ width: "729px", display: "flex", alignItems: "center", gap: "8px" }}>
-          <Box
+          <Typography
+            variant="subtitle2"
+            mb={0.5}
             sx={{
-              width: 40,
-              height: 40,
-              overflow: 'hidden',
-              borderRadius: '50%',
+              color: "#0F172A",
+              fontWeight: 500,
+              fontSize: { xs: "12px", md: "14px" },
+              wordBreak: "break-word",
             }}
           >
-            <Avatar
-              alt="Lindsey Curtis"
-              src="src/assets/images/avatarUser.png"
-              sx={{ width: 40, height: 40 }}
-            />
-          </Box>
-          Created by {course?.createdBy}
-        </Typography>
-        <Typography variant="body1" sx={{ width: "729px", display: "flex", alignItems: "center", gap: "8px" }}>
-          <Box
+            4.6 {Array(5).fill(null).map((_, i) => <img key={i} src="src/assets/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. {chapters?.length}. All levels
+          </Typography>
+          <Typography
+            variant="body1"
             sx={{
-              width: 20,
-              height: 20,
-              overflow: 'hidden',
-              borderRadius: '50%',
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              fontSize: { xs: "12px", md: "16px" },
+              wordBreak: "break-word",
             }}
           >
-            <Avatar
-              alt="Lindsey Curtis"
-              src="src/assets/icons/Icon.svg"
-              sx={{ width: 20, height: 20 }}
-            />
-          </Box>
-          English, Spanish, Italian, German
-        </Typography>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                overflow: 'hidden',
+                borderRadius: '50%',
+              }}
+            >
+              <Avatar
+                alt="Lindsey Curtis"
+                src="src/assets/images/avatarUser.png"
+                sx={{ width: 40, height: 40 }}
+              />
+            </Box>
+            Created by {course?.createdBy}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              fontSize: { xs: "12px", md: "16px" },
+              wordBreak: "break-word",
+            }}
+          >
+            <Box
+              sx={{
+                width: 20,
+                height: 20,
+                overflow: 'hidden',
+                borderRadius: '50%',
+              }}
+            >
+              <Avatar
+                alt="Lindsey Curtis"
+                src="src/assets/icons/Icon.svg"
+                sx={{ width: 20, height: 20 }}
+              />
+            </Box>
+            English, Spanish, Italian, German
+          </Typography>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          py: { xs: 2, md: "40px" },
+          width: { xs: "100%", md: "30%", lg: "400px" },
+          minWidth: { xs: "100%", md: "300px", lg: "400px" },
+          gap: { xs: 2, md: "24px" },
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          alignItems: { xs: "center", md: "flex-end" },
+        }}
+      >
+        <Box
+          sx={{
+            position: { xs: "static", md: "absolute" },
+            top: { md: "70px" },
+            left: { sm: 20, md: -80, lg: 50 },
+            width: { xs: "100%", md: "100%", lg: "400px" },
+            mb: { xs: 2, md: 0 },
+            maxWidth: "100%",
+          }}
+        >
+          <ProductCard data={course} />
+        </Box>
       </Box>
     </Box>
-    <Box sx={{ paddingBlock: "40px", width: "100%", gap: "24px", display: "flex", flexDirection: "column", position: "relative" }}>
-      <Box sx={{ position: "absolute", top: "90px", right: 20 }}>
-        <ProductCard data={course} />
-      </Box>
-    </Box>
-  </Box>
+  );
 }
+
+// ProductCard component
 export function ProductCard({ data }: { data?: any }) {
   return (
     <Box
       sx={{
-        maxWidth: "400px",
-        width: '400px',
+        maxWidth: { xs: "100%", md: "400px" },
+        width: { xs: "100%", md: "400px" },
         borderRadius: 2,
         border: '1px solid #d1d5db',
-        p: 3,
-        bgcolor: "white"
+        p: { xs: 2, md: 3 },
+        bgcolor: "white",
+        mx: { xs: "auto", md: 0 },
+        boxSizing: "border-box",
       }}
     >
       <Box
@@ -209,7 +363,7 @@ export function ProductCard({ data }: { data?: any }) {
         alt="img"
         sx={{
           width: '100%',
-          height: 200,
+          height: { xs: 120, md: 200 },
           objectFit: 'cover',
           borderRadius: 2,
           mb: 2,
@@ -221,10 +375,11 @@ export function ProductCard({ data }: { data?: any }) {
           alignItems: 'center',
           gap: 1.5,
           mb: 2,
+          flexWrap: "wrap",
         }}
       >
         <Typography variant="h5" fontWeight="600">
-          $49.5
+          ${data?.price}
         </Typography>
         <Typography
           variant="body1"
@@ -246,6 +401,7 @@ export function ProductCard({ data }: { data?: any }) {
           color: '#fff',
           py: 1.5,
           mb: 2,
+          fontSize: { xs: "12px", md: "16px" },
           '&:hover': { bgcolor: '#6A42AB' },
         }}
       >
@@ -259,6 +415,7 @@ export function ProductCard({ data }: { data?: any }) {
           color: 'black',
           py: 1.5,
           mb: 2,
+          fontSize: { xs: "12px", md: "16px" },
           '&:hover': {
             bgcolor: '#f3f4f6',
             borderColor: 'black',
@@ -357,113 +514,123 @@ export function ProductCard({ data }: { data?: any }) {
   );
 }
 
+// CourseGlossaryAccordion component
 export function CourseGlossaryAccordion({ chapters }: { chapters?: any[] }) {
   return (
     <div>
-      {chapters?.length && chapters?.map((item, idx) => (<Accordion>
-        <AccordionSummary
-          aria-controls="panel1-content"
-          id="panel1-header"
-          key={idx}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-            }}
+      {chapters?.length && chapters?.map((item, idx) => (
+        <Accordion key={idx}>
+          <AccordionSummary
+            aria-controls="panel1-content"
+            id="panel1-header"
           >
-            {/* Left side: Icon + Title */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <ExpandMoreIcon />
-              <Typography sx={{ py: '18px' }}>{item?.title}</Typography>
-            </Box>
-
-            {/* Right-aligned text */}
-            <Typography sx={{ color: "gray", fontSize: "14px" }} color="text.secondary">{item?.units?.length} Lessons</Typography>
-          </Box>
-        </AccordionSummary>
-        {item?.units?.length && item?.units?.map((unit: any, idx: number) => (
-          <AccordionDetails key={idx}>
             <Box
               sx={{
                 display: 'flex',
-                alignItems: 'center',
                 justifyContent: 'space-between',
-                border: '1px solid lightgray',
-                borderRadius: '8px',
-                padding: '12px 24px',
-                backgroundColor: '#f9f9f9',
+                alignItems: 'center',
+                width: '100%',
+                flexDirection: { xs: "column", sm: "row" },
+                gap: { xs: 1, sm: 0 },
               }}
             >
-              <Typography>{unit?.title}</Typography>
-              <Button variant="contained" color="primary">Start</Button>
+              {/* Left side: Icon + Title */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <ExpandMoreIcon />
+                <Typography sx={{ py: { xs: 1, md: '18px' }, fontSize: { xs: "14px", md: "16px" } }}>{item?.title}</Typography>
+              </Box>
+              {/* Right-aligned text */}
+              <Typography sx={{ color: "gray", fontSize: { xs: "12px", md: "14px" } }} color="text.secondary">{item?.units?.length} Lessons</Typography>
             </Box>
-          </AccordionDetails>
-        ))}
-
-      </Accordion>))}
+          </AccordionSummary>
+          {item?.units?.length && item?.units?.map((unit: any, idx: number) => (
+            <AccordionDetails key={idx}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  border: '1px solid lightgray',
+                  borderRadius: '8px',
+                  padding: { xs: '8px 12px', md: '12px 24px' },
+                  backgroundColor: '#f9f9f9',
+                  flexDirection: { xs: "column", sm: "row" },
+                  gap: { xs: 1, sm: 0 },
+                  width: "100%",
+                  boxSizing: "border-box",
+                }}
+              >
+                <Typography sx={{ fontSize: { xs: "13px", md: "16px" } }}>{unit?.title}</Typography>
+                <Button variant="contained" color="primary" sx={{ fontSize: { xs: "12px", md: "14px" }, mt: { xs: 1, sm: 0 }, width: { xs: "100%", sm: "auto" } }}>Start</Button>
+              </Box>
+            </AccordionDetails>
+          ))}
+        </Accordion>
+      ))}
     </div>
   );
 }
 
+// UserTestimonial component
 export function UserTestimonial() {
-  return <Box
-    sx={{
-      maxWidth: '949px', // ~1024px (Tailwind's max-w-4xl)
-      width: '949px',
-      bgcolor: 'white',
-      border: '1px solid #e5e7eb',
-      borderRadius: 3,
-      p: 3,
-      display: 'flex',
-      gap: 3,
-      boxShadow: 1,
-      paddingBlock: "24px",
-      paddingInline: "22px"
-    }}
-  >
-    <Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, width: "272px" }}>
+  return (
+    <Box
+      sx={{
+        maxWidth: "100%",
+        width: "100%",
+        bgcolor: 'white',
+        border: '1px solid #e5e7eb',
+        borderRadius: 3,
+        p: { xs: 2, md: 3 },
+        display: 'flex',
+        flexDirection: { xs: "column", md: "row" },
+        gap: { xs: 2, md: 3 },
+        boxShadow: 1,
+        paddingBlock: { xs: "12px", md: "24px" },
+        paddingInline: { xs: "12px", md: "22px" },
+        alignItems: { xs: "flex-start", md: "center" },
+        wordBreak: "break-word",
+      }}
+    >
+      <Box sx={{ minWidth: 0, width: { xs: "100%", md: "272px" }, display: "flex", alignItems: "center", gap: 1.5 }}>
         <Avatar
           src="https://storage.googleapis.com/a1aa/image/5147a9f3-030f-476c-1cb6-9f5e4c04e342.jpg"
           alt="Mark Doe"
           sx={{ width: 60, height: 60, flexShrink: 0 }}
         />
-        <Typography fontWeight={600} color="text.primary" fontSize={16} lineHeight={1.5}>
+        <Typography fontWeight={600} color="text.primary" fontSize={16} lineHeight={1.5} sx={{ wordBreak: "break-word" }}>
           Mark Doe
         </Typography>
       </Box>
-
-    </Box>
-    {/* Review Section */}
-    <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3, flex: 1, width: "631px" }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: '4px' }}>
-          <Avatar
-            alt="Lindsey Curtis"
-            src="src/assets/icons/Vector.svg"
-            sx={{ width: 16, height: 16 }}
-          />
-          <Typography fontWeight={600} sx={{ color: 'black', fontWeight: 700, fontSize: 16 }}>
-            5
+      {/* Review Section */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', ml: { xs: 0, md: 3 }, flex: 1, width: "100%" }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1, flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: '4px' }}>
+            <Avatar
+              alt="Lindsey Curtis"
+              src="../../assets/icons/Vector.svg"
+              sx={{ width: 16, height: 16 }}
+            />
+            <Typography fontWeight={600} sx={{ color: 'black', fontWeight: 700, fontSize: 16 }}>
+              5
+            </Typography>
+          </Box>
+          <Typography color="text.secondary" fontSize={14}>
+            Reviewed on 22nd March, 2024
           </Typography>
         </Box>
-        <Typography color="text.secondary" fontSize={14}>
-          Reviewed on 22nd March, 2024
+        <Typography color="text.primary" fontSize={16} lineHeight={1.7} sx={{ wordBreak: "break-word" }}>
+          I was initially apprehensive, having no prior design experience. But the instructor,
+          John Doe, did an amazing job of breaking down complex concepts into easily digestible
+          modules. The video lectures were engaging, and the real-world examples really helped
+          solidify my understanding.
         </Typography>
       </Box>
-      <Typography color="text.primary" fontSize={16} lineHeight={1.7}>
-        I was initially apprehensive, having no prior design experience. But the instructor,
-        John Doe, did an amazing job of breaking down complex concepts into easily digestible
-        modules. The video lectures were engaging, and the real-world examples really helped
-        solidify my understanding.
-      </Typography>
     </Box>
-  </Box>
+  );
 }
 
+// StarRatings component
 export function StarRatings() {
   const ratings = [
     { stars: 5, percent: 80 },
@@ -518,5 +685,4 @@ export function StarRatings() {
       </Box>
     </Box>
   );
-
 }
