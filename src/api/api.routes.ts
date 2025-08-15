@@ -59,6 +59,28 @@ export const getEndpoints = {
       method: "GET",
     }),
   },
+  /**
+   * @description
+   * This API is for student to read and practice question of a course;
+   */
+  getCourseForStudent: {
+    query: ({ id }: { id: string }) => ({
+      url: SERVER_URL + "/student/course/" + id,
+      method: "GET",
+    }),
+  },
+  /**
+   * @description
+   * This API is for student to read and practice question of a unit
+   * This API fetches the Units;
+   */
+  getUnitsWithQuestions: {
+    query: ({ unitId }: { unitId: string }) => ({
+      url: SERVER_URL + "/student/unit",
+      method: "GET",
+      params: { unitId }
+    }),
+  },
 };
 
 export const addEndpoints = {

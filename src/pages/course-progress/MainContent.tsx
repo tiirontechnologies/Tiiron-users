@@ -46,7 +46,7 @@ const AllQuestions = [
   },
 ];
 
-const MainContent: React.FC = () => {
+const MainContent: React.FC<any> = ({ data }: { data: any }) => {
   return (
     <Box
       sx={{
@@ -57,47 +57,7 @@ const MainContent: React.FC = () => {
         overflowY: "auto",
       }}
     >
-      <Typography
-        component="h1"
-        sx={{ color: "#000", fontWeight: "500", fontSize: "22px" }}
-      >
-        Article 1
-      </Typography>
-      <Typography sx={{ color: "#000", fontWeight: "400", fontSize: "16px" }}>
-        Lorem ipsum dolor sit amet consectetur. Porta consectetur integer sit
-        tristique feugiat et. Ultricies congue ornare diam cras. Eu eget libero
-        cras enim. Et tempus nullam nullam sagittis turpis. At sit neque enim
-        nisl egestas nullam habitasse quis lectus. Pharetra massa et nulla elit
-        diam amet. Felis ullamcorper id nec pulvinar a eu amet ultricies eget.
-        Vulputate urna nisi sit quam quis suspendisse ornare. Lorem malesuada
-        sed aliquam viverra non faucibus gravida enim. Id orci semper aliquet
-        iaculis at massa. Nulla nullam aliquam condimentum venenatis elementum
-        eu nunc sed habitant. Dolor nunc nunc at fusce sagittis facilisi. Donec
-        ut varius ullamcorper amet nisi sed quam. Semper tellus cras malesuada
-        maecenas proin id nunc blandit cursus. Sed arcu sit non sagittis.
-        Commodo velit viverra duis interdum habitant ac maecenas volutpat. Orci
-        pellentesque netus est consectetur ipsum. Cursus ac scelerisque vivamus
-        imperdiet. Sapien iaculis vitae turpis imperdiet nibh eget mi.
-      </Typography>
-      <Box
-        component="video"
-        controls
-        width="100%"
-        sx={{
-          display: "flex",
-          borderRadius: 2,
-          boxShadow: 2,
-          maxWidth: "640px",
-          margin: "auto",
-          my: "32px",
-        }}
-      >
-        <source
-          src="https://www.w3schools.com/html/mov_bbb.mp4"
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </Box>
+      <Box sx={{ color: "#000", fontWeight: "400", fontSize: "16px" }} dangerouslySetInnerHTML={{ __html: data?.unit?.content }} />
       <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {AllQuestions.map((item) => (
           <Accordion>
@@ -169,7 +129,7 @@ export default MainContent;
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
-))(({}) => ({
+))(({ }) => ({
   borderRadius: "16px",
   backgroundColor: "transparent",
   overflow: "hidden",

@@ -6,6 +6,7 @@ import CourseProgress from "@pages/course-progress";
 import PrivateRoute from "@layouts/PrivateRoute";
 import CourseGlossary from "@pages/CourseGlossary";
 import DollerIcon from "@icons/DollerIcon";
+import { Box } from "@mui/material";
 export const routeConfig = [
   {
     element: <PrivateRoute><MainLayout /></PrivateRoute>,
@@ -22,4 +23,8 @@ export const routeConfig = [
     path: "/course-glossary/:courseId",
   },
   ...authRoutes,
+  {
+    path: "*",  // Catch-all for unmatched routes
+    element: <Box>Not Found...</Box>,  // Render 404 page
+  }
 ];

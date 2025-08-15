@@ -12,48 +12,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import ProgressBar from "@components/CustomProgress";
-const navItems = [
-  {
-    label: "Course 1",
-    children: [
-      {
-        label: "Lesson 1",
-        onClick: () => alert("Clicked Lesson 1"),
-      },
-      {
-        label: "Lesson 2",
-        onClick: () => alert("Clicked Lesson 2"),
-      },
-    ],
-  },
-  {
-    label: "Course 2",
-    children: [
-      {
-        label: "Lesson 1",
-        onClick: () => alert("Clicked Lesson 1"),
-      },
-      {
-        label: "Lesson 2",
-        onClick: () => alert("Clicked Lesson 2"),
-      },
-    ],
-  },
-  {
-    label: "Course 3",
-    children: [
-      {
-        label: "Lesson 1",
-        onClick: () => alert("Clicked Lesson 1"),
-      },
-      {
-        label: "Lesson 2",
-        onClick: () => alert("Clicked Lesson 2"),
-      },
-    ],
-  },
-];
-const Sidebar = () => {
+
+const Sidebar = ({ data, setQuery }: { data: any; setQuery: React.Dispatch<string> }) => {
   return (
     <Box
       sx={{
@@ -96,26 +56,16 @@ const Sidebar = () => {
       <Typography sx={{ fontSize: "14px", color: "#000000", fontWeight: 400 }}>
         25% completed
       </Typography>
-      <NavList items={navItems} />
+      <NavList items={data?.data} setQuery={setQuery} />
     </Box>
   );
 };
 
 export default Sidebar;
 
-// collaps item icon
-interface NavItem {
-  label: string;
-  children?: NavItem[]; // For collapsible items
-  onClick?: () => void;
-}
-
-interface NavListProps {
-  items: NavItem[];
-}
 
 // ---------- Component ----------
-const NavList: React.FC<NavListProps> = ({ items }) => {
+const NavList: React.FC<any> = ({ items, setQuery }: { items: any; setQuery: React.Dispatch<string> }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const handleToggle = (index: number) => {
@@ -124,23 +74,23 @@ const NavList: React.FC<NavListProps> = ({ items }) => {
 
   return (
     <List component="nav" sx={{ mt: "48px" }}>
-      {items.map((item, index) => {
-        const hasChildren = item.children && item.children.length > 0;
+      {items?.chapters?.map((item: any, index: number) => {
+        const hasChildren = item?.units && item?.units?.length > 0;
         const isOpen = openIndex === index;
 
         return (
-          <React.Fragment key={item.label}>
+          <React.Fragment key={item?.id}>
             <ListItemButton
               onClick={() => {
                 if (hasChildren) {
                   handleToggle(index);
                 } else {
-                  item.onClick?.();
+                  item?.onClick?.();
                 }
               }}
             >
               <ListItemText
-                primary={item.label}
+                primary={item?.title}
                 sx={{ color: "#1C1C1C", fontSize: "16px" }}
               />
               {hasChildren &&
@@ -154,16 +104,18 @@ const NavList: React.FC<NavListProps> = ({ items }) => {
             {hasChildren && (
               <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  {item.children &&
-                    item.children.map((child) => (
+                  {item?.units &&
+                    item?.units?.map((child: any) => (
                       <ListItemButton
-                        key={child.label}
+                        key={child.title}
                         sx={{ pl: 4 }}
-                        onClick={child.onClick}
+                        onClick={() => {
+                          setQuery(child.id)
+                        }}
                       >
                         <ListItemText
                           sx={{ color: "#1C1C1C", fontSize: "16px" }}
-                          primary={child.label}
+                          primary={child.title}
                         />
                       </ListItemButton>
                     ))}
