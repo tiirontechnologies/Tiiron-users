@@ -60,6 +60,12 @@ export const api = createApi({
             ...getEndpoints.getCourseByCourseId,
             providesTags: ["Course"]
         }),
+        getCourseForStudent: builder.query({
+            ...getEndpoints.getCourseForStudent,
+        }),
+        getUnitsWithQuestions: builder.query({
+            ...getEndpoints.getUnitsWithQuestions,
+        }),
         createCourse: builder.mutation({
             ...addEndpoints.createCourse,
             invalidatesTags: ["Course"]
@@ -117,6 +123,8 @@ export const {
     useGetCourseQuery,                          // Get Query
     useGetChaptersQuery,
     useGetCourseByCourseIdQuery,
+    useGetCourseForStudentQuery,
+    useGetUnitsWithQuestionsQuery,
     useCreateCourseMutation,                    // POST / Add QUERY
     useCreateChapterMutation,                   
     useCreateUnitMutation,
