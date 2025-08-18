@@ -1,10 +1,7 @@
-import { AnswerOption, Question, Topic } from ".";
 import {
   Box,
   Button,
-  Checkbox,
   Divider,
-  FormControlLabel,
   List,
   ListItem,
   ListItemText,
@@ -16,13 +13,16 @@ import MessageIcon from "@icons/MessageIcon";
 import TimerIcon from "@icons/TimerIcon";
 import ClipboardIcon from "@icons/ClipboardIcon";
 import FileEditIcon from "@icons/FileEditIcon";
+import AddQuestionForm from "./AddQuestionForm";
 
 const TopicsQuestions = ({
-  TopicsData,
   selectedId,
   setSwitchView,
+  formType,
+  setFormType
 }: {
-  TopicsData: Topic[];
+  formType: "multiple_choice" | "single_choice" | "fill_up" | null;
+  setFormType: (type: "multiple_choice" | "single_choice" | "fill_up" | null) => void;
   selectedId: number;
   setSwitchView?: (view: string) => void;
 }) => {
@@ -72,90 +72,13 @@ const TopicsQuestions = ({
           </Button>
         </Box>
       </Box>
-      {TopicsData.map(
-        (topic: Topic) =>
-          selectedId === topic.topicId &&
-          topic.question.map((question: Question, index: number) => (
-            <Box
-              sx={{
-                background: "#fff",
-                borderRadius: "16px",
-                p: "16px",
-                mb: "16px",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  mb: "16px",
-                }}
-              >
-                <Box>
-                  <Typography sx={{ color: "#000000", fontWeight: "600" }}>
-                    {index + 1}. {question.question}
-                  </Typography>
-                  <Typography sx={{ fontWeight: "300" }}>
-                    Score :{question.score}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    bgcolor: "#E3DCFF",
-                    borderRadius: "8px",
-                    color: "#000",
-                    p: "8px 12px",
-                    width: "fit-content",
-                    height: "fit-content",
-                    fontSize: "14px",
-                    mb: "32px",
-                  }}
-                >
-                  {question.questionType}
-                </Box>
-              </Box>
-              <Box sx={{ display: "flex", gap: "16px" }}>
-                {question.answerOptions?.map((option: AnswerOption) => (
-                  <Box
-                    key={option.optionId}
-                    sx={{
-                      flex: 1,
-                      border: `1px solid ${"#42B285"}`,
-                      p: "8px",
-                      borderRadius: "8px",
-                      display: "flex",
-                      alignItems: "center",
-                      mb: 2,
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          size="small"
-                          checked={true}
-                          onChange={() => {}}
-                          sx={{
-                            "& .MuiSvgIcon-root": {
-                              borderRadius: "4px",
-                            },
-                            "&.Mui-checked .MuiSvgIcon-root": {
-                              color: "#ffffff",
-                              backgroundColor: "#42B285",
-                            },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography sx={{ color: "#000" }}>
-                          {option.option}
-                        </Typography>
-                      }
-                    />
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          ))
+      {formType && (
+        <AddQuestionForm
+          type={formType}
+          unit={selectedId}         // or whichever unit id you want to pass
+          courseId={1}       // replace with actual course id from props/context
+          onClose={() => setFormType(null)}
+        />
       )}
     </>
   );
@@ -251,7 +174,7 @@ export const QuestionEditMain = () => {
         >
           Optional Settings
         </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "24px" , mt:`16px` }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "24px", mt: `16px` }}>
           <SettingsTab
             title="Custom Feedback"
             subTitle="Provide a feedback to the learner on answering this questions"

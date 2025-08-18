@@ -11,8 +11,8 @@ import WestIcon from "@mui/icons-material/West";
 
 import MoreButton from "./MoreButton";
 import PublishButton from "./PublishButton";
-import { Link } from "react-router-dom";
-const ToolBar = ({ children }: { children: React.ReactNode }) => {
+import { Link, useNavigate, useParams } from "react-router-dom";
+const ToolBar = ({ children, courseName }: { courseName?: string; children: React.ReactNode }) => {
   return (
     <Box>
       {/* Header */}
@@ -30,10 +30,10 @@ const ToolBar = ({ children }: { children: React.ReactNode }) => {
         {/* left side  */}
         <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <IconButton sx={{ color: "#000000" }}>
-            <Link to={"/courses"} style={{textDecoration:"none",color:"black"}}><WestIcon /></Link>
+            <Link to={"/courses"} style={{ textDecoration: "none", color: "black" }}><WestIcon /></Link>
           </IconButton>
           <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
-            Course Name
+            {courseName || "Course Name"}
           </Typography>
         </Box>
         {/* right side  */}
@@ -46,6 +46,8 @@ const ToolBar = ({ children }: { children: React.ReactNode }) => {
 export default ToolBar;
 
 export const RightSideTools = () => {
+  const navigate = useNavigate();
+  const { courseId } = useParams();
   return (
     <Box
       sx={{
@@ -58,6 +60,7 @@ export const RightSideTools = () => {
       <PublishButton />
       <Button
         variant="outlined"
+        onClick={() => navigate(`/course-progress/${courseId}`)}
         sx={{
           padding: "12px 32px",
           height: "48px",

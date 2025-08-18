@@ -6,7 +6,7 @@ import { TAuth } from 'types/auth.types';
 
 // Define a service using a base URL and expected endpoints
 const baseUrl = BASE_URL;
-const TAGS = ["Course", "Chapter"] as const;
+const TAGS = ["Course", "Chapter", "Questions"] as const;
 
 const baseQuery = fetchBaseQuery({
     baseUrl,
@@ -66,6 +66,10 @@ export const api = createApi({
         getUnitsWithQuestions: builder.query({
             ...getEndpoints.getUnitsWithQuestions,
         }),
+        getAllQuestions: builder.query({
+            ...getEndpoints.getAllQuestions,
+            providesTags: ["Questions"]
+        }),
         createCourse: builder.mutation({
             ...addEndpoints.createCourse,
             invalidatesTags: ["Course"]
@@ -77,6 +81,10 @@ export const api = createApi({
         createUnit: builder.mutation({
             ...addEndpoints.createUnit,
             invalidatesTags: ["Chapter"]
+        }),
+        createQuestion: builder.mutation({
+            ...addEndpoints.createQuestion,
+            invalidatesTags: ["Questions"]
         }),
         deleteCourse: builder.mutation({
             ...deleteEndpoints.deleteCourse,
@@ -125,9 +133,11 @@ export const {
     useGetCourseByCourseIdQuery,
     useGetCourseForStudentQuery,
     useGetUnitsWithQuestionsQuery,
+    useGetAllQuestionsQuery,
     useCreateCourseMutation,                    // POST / Add QUERY
-    useCreateChapterMutation,                   
+    useCreateChapterMutation,
     useCreateUnitMutation,
+    useCreateQuestionMutation,
     useDeleteCourseMutation,                    // Delete Query
 } = api;
 export const {
