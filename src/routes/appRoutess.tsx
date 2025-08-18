@@ -36,7 +36,7 @@ export const appRoutes: Route[] = [
             element: <QuestionBank />,
           },
           {
-            path: "edit",
+            path: "create",
             element: <EditQuestionBank />,
           },
         ],

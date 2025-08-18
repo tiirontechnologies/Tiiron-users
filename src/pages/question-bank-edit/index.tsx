@@ -7,6 +7,8 @@ import Topics from "./Topics";
 import TopicsQuestions from "./TopicsQuestions";
 import { useState } from "react";
 import QuestionEdit from "./QuestionEdit";
+import { useGetAllQuestionsQuery } from "../../api/api";
+import Loader from "@components/ui/Spinner";
 export interface AnswerOption {
   optionId: number;
   option: string;
@@ -29,65 +31,27 @@ export interface Topic {
   question: Question[];
 }
 
-const TopicsData: Topic[] = [
-  {
-    topicId: 1,
-    topicName: "Topic 1",
-    totalQuestions: 2,
-    bankName: "Bank 1",
-    question: [
-      {
-        questionId: 1,
-        question: "Question 1",
-        score: 2,
-        questionType: "Multiple Choice",
-        answerOptions: [
-          {
-            optionId: 1,
-            option: "Option 1",
-          },
-          {
-            optionId: 2,
-            option: "Option 2",
-          },
-        ],
-        correctOptionId: 1,
-      },
-    ],
-  },
-  {
-    topicId: 2,
-    topicName: "Topic 2",
-    totalQuestions: 2,
-    bankName: "Bank 2",
-    question: [
-      {
-        questionId: 1,
-        question: "Question 2 is ______",
-        score: 2,
-        questionType: "Fill in the blank",
-        answerOptions: null,
-        correctOptionId: 1,
-      },
-    ],
-  },
-];
 
 const index = () => {
-  const [selectedId, setSelectedId] = useState(TopicsData[0].topicId);
+  const { data, isFetching, isError } = useGetAllQuestionsQuery('');
+
+  const [selectedId, setSelectedId] = useState(data?.data[0].id);
   const [switchView, setSwitchView] = useState("topic-edit");
+  const [formType, setFormType] = useState<null | "multiple_choice" | "single_choice" | "fill_up">(null);
+
   return switchView === "topic-edit" ? (
     <Box>
       <ToolBar>
         <RightSideTools />
       </ToolBar>
       <Box sx={{ display: "flex", height: "100vh", p: "24px" }}>
-        <QuestionBankLayout
-          heading="Topics"
+        {isFetching ? <Loader /> : isError ? <Box>Some Error occured...</Box> : data?.data && <QuestionBankLayout
+          heading="Questions"
           mainContent={
             <>
               <TopicsQuestions
-                TopicsData={TopicsData}
+                setFormType={setFormType}
+                formType={formType}
                 selectedId={selectedId}
                 setSwitchView={setSwitchView}
               />
@@ -95,18 +59,19 @@ const index = () => {
           }
           sidebarContent={
             <Topics
-              TopicsData={TopicsData}
+              setFormType={setFormType}
+              TopicsData={data?.data}
               selectedId={selectedId}
               setSelectedId={setSelectedId}
             />
           }
-        />
+        />}
       </Box>
     </Box>
   ) : (
     <QuestionEdit
       QuestionData={
-        (TopicsData.find((t) => t.topicId === selectedId)?.question ??
+        (data?.data.find((t: any) => t.topicId === selectedId)?.question ??
           []) as Question[]
       }
     />

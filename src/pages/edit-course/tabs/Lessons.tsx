@@ -30,10 +30,11 @@ import MessageQuestionIcon from "@icons/MessageQuestionIcon";
 import ImportIcon from "@icons/ImportIcon";
 import Loader from "@components/ui/Spinner";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useCreateChapterMutation, useCreateUnitMutation } from "../../../api/api";
 import { CourseContext } from "..";
 import RichTextEditor from "@components/RichTextEditor";
+import AddQuestionForm from "@pages/question-bank-edit/AddQuestionForm";
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
 ))(() => ({
@@ -114,6 +115,8 @@ const Lessons = () => {
 
   const { courseId } = useParams();
   const [open, setOpen] = useState<boolean>(false);
+  const [openQuestionModal, setOpenQuestionModal] = useState<{ open: boolean; unitId: number | null }>({ open: false, unitId: null });
+  const [questionType, setQuestionType] = useState<"multiple_choice" | "single_choice" | "fill_up" | "">("");
   const { register, handleSubmit, formState: { errors }, reset } = useForm<{ title: string }>();
   const [createChapter, { isLoading: isCreating }] = useCreateChapterMutation();
   const [_editorValue, setEditorValue] = useState('');
@@ -178,8 +181,7 @@ const Lessons = () => {
       resetEditorForm();
       setOpenEditorChapterId(null);
     }
-  };
-  const navigate = useNavigate();
+  }; 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {!openEditorChapterId &&
@@ -205,7 +207,7 @@ const Lessons = () => {
                           </Typography>
                         </Box>
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                          <Button variant="contained" size="small" onClick={()=>navigate("/question-bank")}>Add Topics</Button>
+                          <Button variant="contained" size="small" onClick={() => setOpenQuestionModal({ open: true, unitId: unit?.id })}>Add Questions</Button>
                         </Box>
                       </LessonItem>
                     )) : (
@@ -395,6 +397,58 @@ const Lessons = () => {
               </Button>
             </Box>
           </Box>
+        </Box>
+      </Modal>
+      {/* 
+      Modal for adding questions
+      */}
+      <Modal
+        open={openQuestionModal.open}
+        onClose={() => {
+          setOpenQuestionModal({ open: false, unitId: null });
+          setQuestionType("");
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            bgcolor: "background.paper",
+            borderRadius: "10px",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Add Question
+          </Typography>
+          {/* Step 1: Select question type */}
+          {!questionType && (
+            <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+              <Button variant="outlined" onClick={() => setQuestionType("multiple_choice")}>Multiple Choice</Button>
+              <Button variant="outlined" onClick={() => setQuestionType("single_choice")}>Single Choice</Button>
+              <Button variant="outlined" onClick={() => setQuestionType("fill_up")}>Fill Up</Button>
+            </Box>
+          )}
+          {/* Step 2: Show AddQuestionForm */}
+          {questionType && openQuestionModal.unitId && (
+            <Box sx={{ mt: 2 }}>
+              <AddQuestionForm
+                type={questionType}
+                unit={openQuestionModal.unitId}
+                courseId={Number(courseId)}
+                onClose={() => {
+                  setOpenQuestionModal({ open: false, unitId: null });
+                  setQuestionType("");
+                }}
+              />
+            </Box>
+          )}
         </Box>
       </Modal>
       <Snackbar

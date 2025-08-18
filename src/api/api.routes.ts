@@ -1,6 +1,7 @@
 import { IOrganisationRegister } from "types/user.types";
 import { AUTH_URL, SERVER_URL } from "../constants/constants";
 import { TAuth } from "types/auth.types";
+import { ICreateQuestion } from "types/questioncreate.types";
 
 export const authEndpoints = {
   login: {
@@ -81,6 +82,17 @@ export const getEndpoints = {
       params: { unitId }
     }),
   },
+  /**
+   * @description
+   * This API is retrieve all questions of a organization
+   * This API fetches the questions;
+   */
+  getAllQuestions: {
+    query: () => ({
+      url: SERVER_URL + "/org/question",
+      method: "GET",
+    }),
+  },
 };
 
 export const addEndpoints = {
@@ -101,6 +113,13 @@ export const addEndpoints = {
   createUnit: {
     query: ({ body }: { body: { title: string, content: string; chapterId: number } }) => ({
       url: SERVER_URL + "/org/unit",
+      body,
+      method: "POST",
+    }),
+  },
+  createQuestion: {
+    query: ({ body }: { body: ICreateQuestion }) => ({
+      url: SERVER_URL + "/org/question",
       body,
       method: "POST",
     }),

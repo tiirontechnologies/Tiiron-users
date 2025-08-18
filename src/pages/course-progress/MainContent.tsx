@@ -1,52 +1,18 @@
-import ScoreSvg from "@icons/Score.svg";
-import DummyCodeImage from "@images/main.jpg";
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import {
+  Accordion,
   AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Checkbox,
   FormControlLabel,
-  styled,
   Typography,
 } from "@mui/material";
-import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionSummary, {
-  accordionSummaryClasses,
-  AccordionSummaryProps,
-} from "@mui/material/AccordionSummary";
 import { useState } from "react";
-
-const AllQuestions = [
-  {
-    questionId: 1,
-    question:
-      "Lorem ipsum dolor sit amet consectetur. Eget morbi commodo ornare non. Ultricies mi integer.",
-    answerOptions: (
-      <>
-        <img src={DummyCodeImage} />
-      </>
-    ),
-  },
-  {
-    questionId: 2,
-    question:
-      "Lorem ipsum dolor sit amet consectetur. Eget morbi commodo ornare non. Ultricies mi integer.",
-    answerOptions: <CheckExample />,
-  },
-  {
-    questionId: 3,
-    question:
-      "Lorem ipsum dolor sit amet consectetur. Eget morbi commodo ornare non. Ultricies mi integer.",
-    answerOptions: (
-      <>
-        <CheckExample />
-      </>
-    ),
-  },
-];
-
+import Scoresvg from "@icons/Score.svg";
 const MainContent: React.FC<any> = ({ data }: { data: any }) => {
+  const [showAnswers, setShowAnswers] = useState(false);
+
   return (
     <Box
       sx={{
@@ -57,38 +23,165 @@ const MainContent: React.FC<any> = ({ data }: { data: any }) => {
         overflowY: "auto",
       }}
     >
-      <Box sx={{ color: "#000", fontWeight: "400", fontSize: "16px" }} dangerouslySetInnerHTML={{ __html: data?.unit?.content }} />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        {AllQuestions.map((item) => (
-          <Accordion>
-            <AccordionSummary>
-              <Typography
-                sx={{ color: "#0F172A", fontWeight: "600", fontSize: "180x" }}
-              >
-                `{`Practice Question ${item.questionId}`}`
-              </Typography>
-            </AccordionSummary>
-            <StyledAccordionDetails>
-              <Typography
-                sx={{
-                  color: "#000000",
-                  fontsize: "16px",
-                  fontWeight: "600",
-                  mt: "16px",
-                  mb: "24px",
-                }}
-              >
-                Question -
-                <Typography component="span" sx={{ fontWeight: "500" }}>
-                  {item.question}
-                </Typography>
-              </Typography>
-              <Box>{item.answerOptions}</Box>
-            </StyledAccordionDetails>
-          </Accordion>
-        ))}
-      </Box>
+      <Box
+        sx={{ color: "#000", fontWeight: "400", fontSize: "16px" }}
+        dangerouslySetInnerHTML={{ __html: data?.unit?.content }}
+      />
 
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        {Array.isArray(data?.unit?.questions) && data.unit.questions.length > 0 ? (
+          data.unit.questions.map((question: any, idx: number) => (
+            <Accordion
+              key={question.id || idx}
+              sx={{
+                background: "#fff",
+                borderRadius: "16px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                mb: 2,
+              }}
+            >
+              <AccordionSummary>
+                <Typography
+                  sx={{ color: "#0F172A", fontWeight: "600", fontSize: "18px" }}
+                >
+                  {`Practice Question ${idx + 1}`}
+                </Typography>
+              </AccordionSummary>
+
+              <AccordionDetails>
+                <Box sx={{ mb: 2 }}>
+                  <Typography sx={{ fontWeight: 600, fontSize: "16px", mb: 1 }}>
+                    <span dangerouslySetInnerHTML={{ __html: question.text }} />
+                  </Typography>
+
+                  <Typography sx={{ fontSize: "14px", color: "#666", mb: 2 }}>
+                    Type: {question.type.replace("_", " ")}, Score: {question.score}
+                  </Typography>
+
+                  {/* Multiple Choice: Checkbox */}
+                  {question.type === "multiple_choice" && Array.isArray(question.options) && (
+                    <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mt: 2 }}>
+                      {question.options.map((opt: any, oidx: number) => (
+                        <Box
+                          key={oidx}
+                          sx={{
+                            flex: 1,
+                            minWidth: 180,
+                            border: `1px solid ${showAnswers && opt.isCorrect ? "#42B285" : "#E6E6E6"}`,
+                            p: "12px 16px",
+                            borderRadius: "8px",
+                            display: "flex",
+                            alignItems: "center",
+                            mb: 1,
+                            background: showAnswers && opt.isCorrect ? "#ECFDF8" : "#F9FAFA",
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={showAnswers ? opt.isCorrect : false}
+                            disabled
+                            style={{
+                              marginRight: 12,
+                              accentColor: showAnswers && opt.isCorrect ? "#42B285" : "#E6E6E6",
+                            }}
+                          />
+                          <Typography
+                            sx={{ fontSize: "15px", color: "#222", fontWeight: 500 }}
+                          >
+                            {opt.text}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+
+                  {/* Single Choice: Radio */}
+                  {question.type === "single_choice" && Array.isArray(question.options) && (
+                    <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mt: 2 }}>
+                      {question.options.map((opt: any, oidx: number) => (
+                        <Box
+                          key={oidx}
+                          sx={{
+                            flex: 1,
+                            minWidth: 180,
+                            border: `1px solid ${showAnswers && opt.isCorrect ? "#42B285" : "#E6E6E6"}`,
+                            p: "12px 16px",
+                            borderRadius: "8px",
+                            display: "flex",
+                            alignItems: "center",
+                            mb: 1,
+                            background: showAnswers && opt.isCorrect ? "#ECFDF8" : "#F9FAFA",
+                          }}
+                        >
+                          <input
+                            type="radio"
+                            checked={showAnswers ? opt.isCorrect : false}
+                            disabled
+                            style={{
+                              marginRight: 12,
+                              accentColor: showAnswers && opt.isCorrect ? "#42B285" : "#E6E6E6",
+                            }}
+                          />
+                          <Typography
+                            sx={{ fontSize: "15px", color: "#222", fontWeight: 500 }}
+                          >
+                            {opt.text}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+
+                  {/* Fill Up: Input field */}
+                  {question.type === "fill_up" && (
+                    <Box
+                      sx={{
+                        mt: 2,
+                        p: 2,
+                        borderRadius: "8px",
+                        background: "#F9FAFA",
+                        border: "1px solid #E6E6E6",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "15px",
+                          color: "#42B285",
+                          fontWeight: 600,
+                          mr: 2,
+                        }}
+                      >
+                        Correct Answer:
+                      </Typography>
+                      <input
+                        type="text"
+                        value={showAnswers ? question.correctAnswer || "" : ""}
+                        disabled
+                        style={{
+                          padding: "8px 12px",
+                          borderRadius: "6px",
+                          border: "1px solid #42B285",
+                          background: "#fff",
+                          fontWeight: 500,
+                          color: "#222",
+                          minWidth: 120,
+                        }}
+                      />
+                    </Box>
+                  )}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          ))
+        ) : (
+          <Typography sx={{ color: "#999", fontSize: "15px" }}>
+            No questions found for this unit.
+          </Typography>
+        )}
+      </Box>
       <Box>
         <Box
           sx={{
@@ -103,7 +196,7 @@ const MainContent: React.FC<any> = ({ data }: { data: any }) => {
           <Box
             sx={{ mr: 2, display: "flex", alignItems: "center", gap: "14px" }}
           >
-            <img src={ScoreSvg} alt="" />
+            <img src={Scoresvg} alt="" />
             <Box>
               <Typography
                 sx={{ color: "#000000", fontWeight: "500", fontSize: "16px" }}
@@ -118,7 +211,7 @@ const MainContent: React.FC<any> = ({ data }: { data: any }) => {
             </Box>
           </Box>
           <Button>Complete</Button>
-          <Button variant="outlined">Check Answer</Button>
+          <Button variant="outlined" onClick={() => setShowAnswers(true)}>Check Answer</Button>
         </Box>
       </Box>
     </Box>
@@ -126,78 +219,6 @@ const MainContent: React.FC<any> = ({ data }: { data: any }) => {
 };
 
 export default MainContent;
-
-const Accordion = styled((props: AccordionProps) => (
-  <MuiAccordion disableGutters elevation={0} {...props} />
-))(({ }) => ({
-  borderRadius: "16px",
-  backgroundColor: "transparent",
-  overflow: "hidden",
-  borderTop: "1px solid #F2F2F2",
-  borderBottom: "1px solid #F2F2F2",
-
-  // padding: "4px",
-  "&:not(:last-child)": {
-    // borderBottom: 0,
-  },
-  "&::before": {
-    display: "none",
-  },
-  "&:first-of-type": {
-    borderTopLeftRadius: "16px",
-    borderTopRightRadius: "16px",
-    bordeRadius: "16px",
-  },
-}));
-
-const AccordionSummary = styled((props: AccordionSummaryProps) => {
-  const { children, ...other } = props;
-  return (
-    <MuiAccordionSummary {...other} expandIcon={null}>
-      <Box
-        sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}
-      >
-        <ArrowForwardIosSharpIcon
-          sx={{
-            fontWeight: 600,
-            color: "#0F172A",
-            fontSize: "0.9rem",
-            transition: "transform 0.3s",
-            transform: props["aria-expanded"]
-              ? "rotate(90deg)"
-              : "rotate(90deg)",
-          }}
-          className="custom-expand-icon"
-        />
-        {children}
-        <Typography sx={{ color: "#334155", ml: "auto" }}>
-          Score : 10 points
-        </Typography>
-      </Box>
-    </MuiAccordionSummary>
-  );
-})(({ theme }) => ({
-  backgroundColor: "#fff",
-  flexDirection: "row",
-  borderRadius: "16px", // 👈 fully rounded corners
-  [`& .${accordionSummaryClasses.content}`]: {
-    marginLeft: theme.spacing(1),
-  },
-  [`& .custom-expand-icon`]: {
-    transition: "transform 0.3s",
-  },
-  [`&.Mui-expanded .custom-expand-icon`]: {
-    transform: "rotate(-90deg)",
-  },
-}));
-
-const StyledAccordionDetails = styled(AccordionDetails)(() => ({
-  backgroundColor: "transparent", // match Accordion background or change as needed
-  // padding: theme.spacing(2),
-  padding: "0",
-  paddingBottom: "15px",
-  color: "#0F172A", // optional: text color
-}));
 
 export function CheckExample() {
   const [checked1, setChecked1] = useState(false);

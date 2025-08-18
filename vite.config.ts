@@ -18,8 +18,11 @@ export default defineConfig({
       namedExport: "ReactComponent",
     },
   }),],
+  server: {
+    port: 3000
+  },
   preview: {
-    port:3002
+    port: 3002
   },
   resolve: {
     alias: {
