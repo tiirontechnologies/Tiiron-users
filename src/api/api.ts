@@ -31,10 +31,9 @@ export const api = createApi({
             if (errorData?.message === "Invalid token.") {
                 // Handle the invalid token case
                 localStorage.removeItem("token"); // Remove token from local storage
-                api.dispatch(localStorage.clear()); // Dispatch logout action to clear user state (optional)
 
                 // Redirect user to the login page
-                window.location.href = "/sign-in"; // Or use router.push('/login') if using react-router
+                window.location.href = "/login"; // Or use router.push('/login') if using react-router
 
                 // Return a custom error message
                 return { error: new Error("Session expired. Please log in again.") };
