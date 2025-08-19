@@ -21,10 +21,17 @@ const Login = () => {
   const onSubmit: SubmitHandler<TAuth> = async (data) => {
     try {
       const res = await authLogin({ ...data }).unwrap();
-      navigate("/courses");
-      setSnackbarSeverity("success");
-      setSnackbarMessage(res?.message || "User registered successfully");
-      setSnackbarOpen(true);
+      const { token } = res?.user;
+      console.log(token)
+      if (res?.success === true && token) {
+        console.log("INSIDE TOKEN OBJECT")
+        localStorage.setItem("token", token); // Store access token in localStorage 
+        navigate("/courses");
+        setSnackbarSeverity("success");
+        setSnackbarMessage(res?.message || "User registered successfully");
+        setSnackbarOpen(true);
+        // Optionally redirect or do something after successful login
+      }
     }
     catch (err: any) {
       // On failure
