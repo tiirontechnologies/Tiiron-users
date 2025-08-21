@@ -4,7 +4,7 @@ import MainContent from "./MainContent";
 import Sidebar from "./Sidebar";
 import { useGetCourseForStudentQuery, useGetUnitsWithQuestionsQuery } from "../../api/api";
 import { useParams } from "react-router-dom";
-import Loader from "@components/ui/Spinner";
+import Loader from "@components/Template/ui/Spinner";
 import { useState } from "react";
 
 const CourseProgress = () => {

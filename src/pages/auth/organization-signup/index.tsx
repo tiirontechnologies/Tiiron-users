@@ -1,7 +1,7 @@
 /**
  * @author Vishal
  */
-import CustomTextField from "@components/textfields/CustomTextField";
+import CustomTextField from "@components/Template/textfields/CustomTextField";
 import LoginPng from "@images/login.png";
 import AuthLayout from "@layouts/AuthLayout";
 import {

@@ -1,4 +1,4 @@
-import { ReusablePopper } from "@components/popper/ReusablePopper";
+import { ReusablePopper } from "@components/Template/popper/ReusablePopper";
 import InfoCircleIcon from "@icons/InfoCircleIcon";
 import DeleteIcon from "@icons/DeleteIcon";
 import DocumentCopyIcon from "@icons/DocumentCopyIcon";

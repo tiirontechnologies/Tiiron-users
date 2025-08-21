@@ -5,7 +5,7 @@ import ReportIcon from "@icons/ReportIcon";
 import ProfileTwoUserIcon from "@icons/ProfileTwoUserIcon";
 import InfoCircleIcon from "@icons/InfoCircleIcon";
 import SettingsIcon from "@icons/SettingsIcon";
-import Lessons from "./tabs/Lessons";
+import Lessons from "./tabs/Lessons/index"
 import Settings from "./tabs/Settings";
 import Learners from "./tabs/Learners";
 import Reports from "./tabs/Reports";

@@ -1,14 +1,14 @@
 import { Box, Typography } from "@mui/material";
-import ToolBar from "@pages/edit-course/toolbar";
-import MoreButton from "@pages/edit-course/toolbar/MoreButton";
-import PublishButton from "@pages/edit-course/toolbar/PublishButton";
+import ToolBar from "@pages/EditCourse/toolbar";
+import MoreButton from "@pages/EditCourse/toolbar/MoreButton";
+import PublishButton from "@pages/EditCourse/toolbar/PublishButton";
 import QuestionBankLayout from "./QuestionBankLayout";
 import Topics from "./Topics";
 import TopicsQuestions from "./TopicsQuestions";
 import { useState } from "react";
 import QuestionEdit from "./QuestionEdit";
 import { useGetAllQuestionsQuery } from "../../api/api";
-import Loader from "@components/ui/Spinner";
+import Loader from "@components/Template/ui/Spinner";
 export interface AnswerOption {
   optionId: number;
   option: string;

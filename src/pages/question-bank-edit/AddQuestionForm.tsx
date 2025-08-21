@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
     Box,
     Button,
@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import { Controller, SubmitHandler, useFieldArray, useForm, useWatch } from "react-hook-form";
 import CloseIcon from "@mui/icons-material/Close";
-import RichTextEditor from "@components/RichTextEditor";
+import RichTextEditor from "@components/Template/RichTextEditor";
 import { ICreateQuestion } from "types/questioncreate.types";
 import { useCreateQuestionMutation } from "../../api/api";
-import { CourseContext } from "@pages/edit-course";
+import { useSnackbar } from "@layouts/Snackbar/SnackBarProvider";
 
 type QuestionType = "multiple_choice" | "single_choice" | "fill_up";
 
@@ -24,15 +24,13 @@ interface AddQuestionFormProps {
     onClose: () => void;
 }
 
-
-
 const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
     type,
     unit,
     courseId,
     onClose,
 }) => {
-    const contextData = useContext(CourseContext);
+    const { showSnackbar } = useSnackbar();
     const {
         control,
         register,
@@ -87,17 +85,11 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
         }
         try {
             const res = await createQuestion({ body: payload }).unwrap();
-            contextData?.setSnackbarSeverity("success");
-            contextData?.setSnackbarMessage(res?.message || "Question created successfully");
-            contextData?.setSnackbarOpen(true);
+            showSnackbar({ message: res?.message, severity: "success" });
         } catch (error: any) {
             console.error("Error creating Unit:", error);
-            const errorMessage =
-                error?.data?.errors?.map((e: any) => e.message).join(", ") ||
-                "Something went wrong!";
-            contextData?.setSnackbarSeverity("error");
-            contextData?.setSnackbarMessage(errorMessage);
-            contextData?.setSnackbarOpen(true);
+            const errorMessage = error?.data?.errors?.map((e: any) => e.message).join(", ") || "Something went wrong!";
+            showSnackbar({ message: errorMessage, severity: "error" });
         }
         finally {
             onClose();

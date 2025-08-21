@@ -5,9 +5,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import { ReusablePopper } from "@components/popper/ReusablePopper";
-import SingleRadioButton from "@components/SingleRadioButton";
-import IOSSwitch from "@components/popper/IOSSwitch";
+import { ReusablePopper } from "@components/Template/popper/ReusablePopper";
+import SingleRadioButton from "@components/Template/SingleRadioButton";
+import IOSSwitch from "@components/Template/popper/IOSSwitch";
 
 const PublishButton = () => {
   const [_subscribe, setSubscribe] = useState("yes");

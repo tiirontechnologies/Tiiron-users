@@ -5,7 +5,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useParams } from "react-router-dom";
 import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api";
-import Loader from "@components/ui/Spinner";
+import Loader from "@components/Template/ui/Spinner";
 import { UPLOADS } from "../../constants/constants";
 
 export default function CourseGlossary() {

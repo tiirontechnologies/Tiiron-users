@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
-import ToolBar from "@pages/edit-course/toolbar";
-import MoreButton from "@pages/edit-course/toolbar/MoreButton";
-import PublishButton from "@pages/edit-course/toolbar/PublishButton";
+import ToolBar from "@pages/EditCourse/toolbar";
+import MoreButton from "@pages/EditCourse/toolbar/MoreButton";
+import PublishButton from "@pages/EditCourse/toolbar/PublishButton";
 import QuestionBankLayout from "./QuestionBankLayout";
 import { QuestionsSideList } from "./Topics";
 import { useState } from "react";
