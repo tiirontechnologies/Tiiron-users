@@ -4,7 +4,7 @@ import ToolBar, { RightSideTools } from "./toolbar";
 import CourseMetaTabs from "./CourseMetaTabs";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api";
-import Loader from "@components/ui/Spinner";
+import Loader from "@components/Template/ui/Spinner";
 import { createContext, useState } from "react";
 
 export const CourseContext = createContext<any>("");

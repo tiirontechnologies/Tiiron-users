@@ -1,4 +1,4 @@
-import { IOSSwitch } from "@components/ui/Switch/IOSswitch";
+import { IOSSwitch } from "@components/Template/ui/Switch/IOSswitch";
 import SettingsIcon from "@icons/SettingsIcon";
 import { DeleteOutline } from "@mui/icons-material";
 import {

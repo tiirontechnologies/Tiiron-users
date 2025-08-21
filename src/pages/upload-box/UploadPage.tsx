@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import UploadBox from '@components/ui/uploadbox/UploadBox';
+import UploadBox from '@components/Template/ui/uploadbox/UploadBox';
 import { Box } from '@mui/material'
 import CloudUploadIcon from '@mui/icons-material/PlayCircleOutline';
 

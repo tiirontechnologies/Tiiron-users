@@ -1,4 +1,4 @@
-import { CustomTabs } from "@components/CustomTabPanel";
+import { CustomTabs } from "@components/Template/CustomTabPanel";
 import ClockIcon from "@icons/ClockIcon";
 import ProfileIcon from "@icons/ProfileIcon";
 import SandTimerIcon from "@icons/SandTimerIcon";

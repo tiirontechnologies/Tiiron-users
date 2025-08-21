@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import CollapseRightIcon from "@icons/CollapseRightIcon";
-import { SettingsTab } from "@pages/edit-course/tabs/Settings/Settings";
+import { SettingsTab } from "@pages/EditCourse/tabs/Settings/Settings";
 import MessageIcon from "@icons/MessageIcon";
 import TimerIcon from "@icons/TimerIcon";
 import ClipboardIcon from "@icons/ClipboardIcon";

@@ -1,6 +1,5 @@
-import MyCourses from "../pages/my-courses";
 import QuestionBank from "../pages/question-bank";
-import EditCourse from "../pages/edit-course";
+import EditCourse from "../pages/EditCourse";
 import EditQuestionBank from "../pages/question-bank-edit";
 import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
@@ -8,6 +7,7 @@ import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
 import CheckoutPage from "@pages/Checkout";
 import UploadPage from "@pages/upload-box";
+import Courses from "../pages/Courses";
 export const appRoutes: Route[] = [
   {
     label: "Learning",
@@ -19,7 +19,7 @@ export const appRoutes: Route[] = [
         children: [
           {
             path: "",
-            element: <MyCourses />,
+            element: <Courses />,
           },
           {
             path: "edit/:courseId",

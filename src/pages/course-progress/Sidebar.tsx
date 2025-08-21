@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import ProgressBar from "@components/CustomProgress";
+import ProgressBar from "@components/Template/CustomProgress";
 
 const Sidebar = ({ data, setQuery }: { data: any; setQuery: React.Dispatch<string> }) => {
   return (

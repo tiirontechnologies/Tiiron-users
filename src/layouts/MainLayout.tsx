@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Box, Drawer, useMediaQuery, useTheme } from "@mui/material";
-import SidebarMenu from "../components/Sidebar/Sidebar";
-import LogoAndName from "../components/Sidebar/LogoAndName";
-import Header from "../components/Header/Header";
+import SidebarMenu from "../components/Template/Sidebar/Sidebar";
+import LogoAndName from "../components/Template/Sidebar/LogoAndName";
+import Header from "../components/Template/Header/Header";
 import { Outlet } from "react-router-dom";
 import { appRoutes } from "../routes/appRoutess";
 import { globalRoutes } from "../routes/globalRoutes";

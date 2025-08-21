@@ -3,7 +3,7 @@ interface ICreateCourse {
     description: string;
     tags?: string[];
     image?: File;
-    price:string;
+    price: string;
 }
 
 
@@ -12,7 +12,7 @@ interface ICourse {
     title: string;
     description: string;
     permaLink: string;
-    tags?:string[];
+    tags?: string[];
     image: string;
     duration: number;
     createdAt: string; // or Date if you're parsing it
@@ -26,4 +26,13 @@ interface ICourse {
 }
 
 
-export type { ICreateCourse, ICourse }
+interface ICourseCardProps {
+    thumbnailSrc?: string;
+    tags?: string[];
+    title: string;
+    chapters?: number;
+    rating?: number;
+    id: number;
+
+}
+export type { ICreateCourse, ICourse,ICourseCardProps }
