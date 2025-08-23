@@ -26,7 +26,8 @@
       "@routes/*": ["routes/*"],
       "@icons/*": ["assets/icons/*"],
       "@utils/*": ["utils/*"],
-      "@images": ["assets/images/*"]
+      "@images": ["assets/images/*"],
+      "@hooks/*": ["hooks/*"]
     }
   },
   "include": ["src"]
