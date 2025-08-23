@@ -9,11 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import ProgressBar from "@components/Template/CustomProgress";
 
-const Sidebar = ({ data, setQuery }: { data: any; setQuery: React.Dispatch<string> }) => {
+export default function Sidebar({ data, setQuery }: { data: any; setQuery: React.Dispatch<string>; }) {
+  const { courseId } = useParams();
   return (
     <Box
       sx={{
@@ -31,7 +32,7 @@ const Sidebar = ({ data, setQuery }: { data: any; setQuery: React.Dispatch<strin
       <Button
         variant="text"
         component={Link}
-        to="/"
+        to={`/course-glossary/${courseId}`}
         startIcon={<KeyboardBackspaceIcon sx={{ color: "#000000" }} />}
         sx={{
           bgcolor: "#D9D9D9",
@@ -59,10 +60,7 @@ const Sidebar = ({ data, setQuery }: { data: any; setQuery: React.Dispatch<strin
       <NavList items={data?.data} setQuery={setQuery} />
     </Box>
   );
-};
-
-export default Sidebar;
-
+}
 
 // ---------- Component ----------
 const NavList: React.FC<any> = ({ items, setQuery }: { items: any; setQuery: React.Dispatch<string> }) => {

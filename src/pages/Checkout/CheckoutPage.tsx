@@ -149,7 +149,7 @@ export default function CheckoutPage() {
                                 </Box>
                                 <Box
                                     component="img"
-                                    src="src/assets/images/visa.png"
+                                    src="images/visa.png"
                                     alt="Visa/Mastercard"
                                     height={28.5}
                                     width={72.25}
@@ -220,7 +220,7 @@ export default function CheckoutPage() {
                                 </Box>
                                 <Box
                                     component="img"
-                                    src="src/assets/icons/paypal.svg"
+                                    src="icons/paypal.svg"
                                     alt="PayPal logo"
                                     height={28.5}
                                     width={72.25}
@@ -259,7 +259,7 @@ export default function CheckoutPage() {
                         >
                             <Box
                                 component="img"
-                                src="src/assets/images/chekoutPage_image.png"
+                                src="images/chekoutPage_image.png"
                                 alt="Course"
                                 sx={{
                                     width: 131,
@@ -316,7 +316,7 @@ export default function CheckoutPage() {
                                     gap: "10px"
                                 }}
                             >
-                                <img src="src/assets/icons/coupon.svg" alt="" />
+                                <img src="icons/coupon.svg" alt="" />
                                 APPLY COUPON CODE
                             </Typography>
                         </Paper>
@@ -395,7 +395,7 @@ export function BreadCrumb({ items }: {
                     ) : (
                         <span>{item?.label}</span>
                     )}
-                    {index < items.length - 1 && <img src="src/assets/icons/right_arrow.png" style={{ margin: '0 8px' }} />}
+                    {index < items.length - 1 && <img src="icons/right_arrow.png" style={{ margin: '0 8px' }} />}
                 </li>
             ))}
         </ol>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import {
     Box,
     Button,
@@ -17,27 +17,17 @@ import { useSnackbar } from "@layouts/Snackbar/SnackBarProvider";
 
 type QuestionType = "multiple_choice" | "single_choice" | "fill_up";
 
-interface AddQuestionFormProps {
+interface IAddQuestionFormProps {
     type: QuestionType;
     unit: number;
     courseId: number;
     onClose: () => void;
 }
 
-const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
-    type,
-    unit,
-    courseId,
-    onClose,
-}) => {
+export default function AddQuestionForm({type, unit, courseId, onClose,}:IAddQuestionFormProps) {
     const { showSnackbar } = useSnackbar();
     const {
-        control,
-        register,
-        handleSubmit,
-        clearErrors,
-        setError,
-        formState: { errors },
+        control, register, handleSubmit, clearErrors, setError, formState: { errors },
     } = useForm<ICreateQuestion>({
         defaultValues: {
             text: "",
@@ -100,11 +90,10 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
     const validateAtLeastOneCorrect = () => {
         const isCorrect = watchedOptions.some((o: any) => o.isCorrect);
         if (!isCorrect) {
-            watchedOptions.forEach((_: any, idx: number) =>
-                setError(`options.${idx}.isCorrect`, {
-                    type: "custom",
-                    message: "Mark at least one as correct",
-                })
+            watchedOptions.forEach((_: any, idx: number) => setError(`options.${idx}.isCorrect`, {
+                type: "custom",
+                message: "Mark at least one as correct",
+            })
             );
             return false;
         }
@@ -112,12 +101,29 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
     };
 
     return (
-        <Box sx={{ bg: "#fff", p: 3, borderRadius: 2, mb: 2 }}>
-            <Box display="flex" justifyContent="space-between" mb={2}>
-                <Typography fontWeight={600} fontSize={18}>
+        <Box sx={{ 
+            bg: "#fff", 
+            p: { xs: 2, sm: 3 },  // Responsive padding
+            borderRadius: 2,
+            mb: 2,
+            maxWidth: "100%"  // Ensure content doesn't overflow
+        }}>
+            <Box display="flex" 
+                justifyContent="space-between" 
+                alignItems="center"
+                mb={2}
+            >
+                <Typography 
+                    fontWeight={600} 
+                    fontSize={{ xs: 16, sm: 18 }}  // Responsive font size
+                    sx={{ wordBreak: "break-word" }}  // Handle long text
+                >
                     Add {type.replace("_", " ")} Question
                 </Typography>
-                <IconButton onClick={onClose}>
+                <IconButton 
+                    onClick={onClose}
+                    sx={{ ml: 1 }}  // Add some space between title and button
+                >
                     <CloseIcon />
                 </IconButton>
             </Box>
@@ -141,11 +147,9 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
                             onChange={(value) => {
                                 clearErrors("text");
                                 field.onChange(value);
-                            }}
-                            placeholder="Write question..."
-                        />
-                    )}
-                />
+                            } }
+                            placeholder="Write question..." />
+                    )} />
                 {errors.text && (
                     <Typography color="error">{errors.text.message}</Typography>
                 )}
@@ -158,8 +162,7 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
                     {...register("score", {
                         required: "Score is required",
                         min: { value: 1, message: "Score must be greater 0" },
-                    })}
-                />
+                    })} />
                 {errors.score && (
                     <Typography color="error">{errors.score.message}</Typography>
                 )}
@@ -171,7 +174,14 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
                         {fields.map((field, idx) => (
                             <Box
                                 key={field.id}
-                                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+                                sx={{ 
+                                    display: "flex", 
+                                    flexDirection: { xs: "column", sm: "row" },
+                                    alignItems: { xs: "stretch", sm: "center" },
+                                    gap: 1, 
+                                    mb: 2,
+                                    position: "relative"
+                                }}
                             >
                                 <Controller
                                     control={control}
@@ -182,6 +192,7 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
                                             {...field}
                                             placeholder={`Option ${idx + 1}`}
                                             fullWidth
+                                            size="small"
                                             onChange={(e) => {
                                                 clearErrors(`options.${idx}.text`);
                                                 clearErrors(`options.${idx}.isCorrect`);
@@ -190,11 +201,16 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
                                         />
                                     )}
                                 />
-                                <Controller
-                                    control={control}
-                                    name={`options.${idx}.isCorrect`}
-                                    render={({ field }) =>
-                                        type === "multiple_choice" ? (
+                                <Box sx={{ 
+                                    display: "flex", 
+                                    alignItems: "center", 
+                                    justifyContent: { xs: "flex-end", sm: "flex-start" },
+                                    mt: { xs: 1, sm: 0 }
+                                }}>
+                                    <Controller
+                                        control={control}
+                                        name={`options.${idx}.isCorrect`}
+                                        render={({ field }) => type === "multiple_choice" ? (
                                             <Checkbox
                                                 checked={field.value}
                                                 onChange={(e) => {
@@ -210,14 +226,21 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
                                                     field.onChange(e.target.checked);
                                                 }}
                                             />
-                                        )
-                                    }
-                                />
-                                {fields.length > 2 && (
-                                    <IconButton onClick={() => remove(idx)}>
-                                        <CloseIcon />
-                                    </IconButton>
-                                )}
+                                        )}
+                                    />
+                                    {fields.length > 2 && (
+                                        <IconButton 
+                                            onClick={() => remove(idx)}
+                                            sx={{ 
+                                                ml: 1,
+                                                position: { xs: "static", sm: "absolute" },
+                                                right: { sm: -40 }
+                                            }}
+                                        >
+                                            <CloseIcon />
+                                        </IconButton>
+                                    )}
+                                </Box>
 
                                 {/* Errors */}
                                 <Box>
@@ -260,22 +283,27 @@ const AddQuestionForm: React.FC<AddQuestionFormProps> = ({
                                     onChange={(e) => {
                                         clearErrors("correctAnswer");
                                         field.onChange(e.target.value);
-                                    }}
-                                />
-                            )}
-                        />
+                                    } } />
+                            )} />
                         {errors.correctAnswer && (
                             <Typography color="error">{errors.correctAnswer.message}</Typography>
                         )}
                     </>
                 )}
 
-                <Button fullWidth sx={{ mt: 3 }} type="submit" variant="contained" loading={isLoading}>
-                    Save Question
+                <Button 
+                    fullWidth 
+                    sx={{ 
+                        mt: 3,
+                        mb: { xs: 2, sm: 0 }  // Add bottom margin on mobile
+                    }} 
+                    type="submit" 
+                    variant="contained" 
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Saving..." : "Save Question"}
                 </Button>
             </form>
         </Box>
     );
-};
-
-export default AddQuestionForm;
+}

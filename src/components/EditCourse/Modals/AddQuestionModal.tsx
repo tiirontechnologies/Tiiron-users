@@ -35,10 +35,26 @@ export const AddQuestionModal: React.FC<AddQuestionModalProps> = ({
                     left: "50%",
                     transform: "translate(-50%, -50%)",
                     width: 500,
+                    maxHeight: "90vh", // Maximum 90% of viewport height
                     bgcolor: "background.paper",
                     borderRadius: "10px",
                     boxShadow: 24,
                     p: 4,
+                    overflowY: "auto", // Enable vertical scrolling
+                    "&::-webkit-scrollbar": {
+                        width: "8px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                        background: "#f1f1f1",
+                        borderRadius: "4px",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        background: "#888",
+                        borderRadius: "4px",
+                        "&:hover": {
+                            background: "#555",
+                        },
+                    },
                 }}
             >
                 <Typography id="modal-modal-title" variant="h6" component="h2">

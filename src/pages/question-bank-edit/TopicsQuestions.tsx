@@ -8,10 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import CollapseRightIcon from "@icons/CollapseRightIcon";
-import { SettingsTab } from "@pages/EditCourse/tabs/Settings/Settings";
-import MessageIcon from "@icons/MessageIcon";
-import TimerIcon from "@icons/TimerIcon";
-import ClipboardIcon from "@icons/ClipboardIcon";
 import FileEditIcon from "@icons/FileEditIcon";
 import AddQuestionForm from "./AddQuestionForm";
 
@@ -174,7 +170,7 @@ export const QuestionEditMain = () => {
         >
           Optional Settings
         </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "24px", mt: `16px` }}>
+        {/* <Box sx={{ display: "flex", flexDirection: "column", gap: "24px", mt: `16px` }}>
           <SettingsTab
             title="Custom Feedback"
             subTitle="Provide a feedback to the learner on answering this questions"
@@ -199,7 +195,7 @@ export const QuestionEditMain = () => {
           >
             Question Score
           </SettingsTab>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );
