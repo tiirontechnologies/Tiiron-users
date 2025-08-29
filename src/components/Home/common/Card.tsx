@@ -1,23 +1,31 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, ReactNode, HTMLAttributes, AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 
-/**
- * Card
- *
- * Props:
- * - title?: string
- * - description?: string
- * - icon?: ReactNode (icon element or component)
- * - image?: string (image src placed at top)
- * - badge?: string (small label displayed top-right)
- * - footer?: ReactNode (custom footer)
- * - actions?: Array<{ label, href?, onClick?, variant? }>
- * - href?: string (if provided, card becomes an anchor)
- * - onClick?: fn (if provided, card becomes a button)
- * - variant?: 'elevated' | 'outlined' | 'glass'
- * - children?: ReactNode (body content)
- * - className?: string
- */
-const Card = forwardRef(
+interface CardAction {
+  label: string;
+  href?: string;
+  onClick?: () => void;
+  variant?: "primary" | "ghost" | "secondary";
+}
+
+interface BaseCardProps {
+  title?: string;
+  description?: string;
+  icon?: ReactNode | React.ComponentType<{ className?: string }>;
+  image?: string;
+  badge?: string;
+  footer?: ReactNode;
+  actions?: CardAction[];
+  variant?: "elevated" | "outlined" | "glass";
+  children?: ReactNode;
+  className?: string;
+}
+
+type CardProps = BaseCardProps & {
+  href?: string;
+  onClick?: () => void;
+} & HTMLAttributes<HTMLDivElement>;
+
+const Card = forwardRef<any, CardProps>(
   (
     {
       title,
@@ -62,7 +70,7 @@ const Card = forwardRef(
           variants[variant] ?? variants.elevated
         } ${contentPadding} ${className}`}
         {...(isButton ? { type: "button" } : {})}
-        {...props}
+        {...(props as any)}
       >
         {/* image (optional) */}
         {image && (
@@ -114,7 +122,7 @@ const Card = forwardRef(
           {/* actions */}
           {actions.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-3">
-              {actions.map((act, i) => {
+              {actions.map((act: CardAction, i: number) => {
                 const {
                   label,
                   href: aHref,

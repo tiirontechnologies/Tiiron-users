@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, CSSProperties } from "react";
 import {
   GraduationCap,
   Users,
@@ -120,9 +120,8 @@ const OrbitalVisualization = () => {
                 style={{
                   animation: `orbit 30s linear infinite`,
                   transformOrigin: "50% 50%",
-                  "--radius": "130px",
                   animationDelay: item.delay,
-                }}
+                } as any}
               >
                 <div className="flex flex-col items-center gap-2">
                   <Icon
@@ -165,9 +164,8 @@ const OrbitalVisualization = () => {
                 style={{
                   animation: `orbit-reverse 40s linear infinite`,
                   transformOrigin: "50% 50%",
-                  "--radius": "210px",
                   animationDelay: item.delay,
-                }}
+                } as any}
               >
                 <div className="flex flex-col items-center gap-1">
                   <Icon
@@ -229,7 +227,7 @@ const OrbitalVisualization = () => {
 
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes orbit {
           0% {
             transform: rotate(0deg) translateX(var(--radius)) rotate(0deg);

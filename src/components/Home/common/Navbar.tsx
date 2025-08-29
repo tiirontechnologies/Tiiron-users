@@ -1,8 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, AnchorHTMLAttributes } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 
+interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  to: string;
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+}
+
 // Simulated Link component
-const Link = ({ to, children, className, onClick, ...props }) => (
+const Link = ({ to, children, className, onClick, ...props }: LinkProps) => (
   <a href={to} className={className} onClick={onClick} {...props}>
     {children}
   </a>

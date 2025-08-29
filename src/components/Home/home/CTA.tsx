@@ -1,4 +1,4 @@
-import React from "react";
+// CTA Component
 import { Users, Check, ArrowRight } from "lucide-react";
 
 const CTA = () => {

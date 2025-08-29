@@ -187,7 +187,7 @@ const Footer = () => {
                   <a
                     key={i}
                     href={s.href}
-                    aria-label={s.icon}
+                    aria-label={s.label}
                     className="p-2 rounded-md border border-gray-700 text-gray-400 hover:text-red-500 hover:border-red-500 transition flex items-center justify-center"
                   >
                     <Icon className="w-5 h-5" />

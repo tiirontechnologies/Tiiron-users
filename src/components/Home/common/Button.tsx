@@ -1,14 +1,24 @@
-import React, { forwardRef } from "react";
-import { Loader2 } from "lucide-react";
+import { forwardRef, ButtonHTMLAttributes, ReactNode } from "react";
+import { Loader2, LucideIcon } from "lucide-react";
 
-const Button = forwardRef(
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  size?: "sm" | "md" | "lg";
+  loading?: boolean;
+  fullWidth?: boolean;
+  leftIcon?: LucideIcon | null;
+  rightIcon?: LucideIcon | null;
+}
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       children,
       onClick,
       type = "button",
-      variant = "primary", // primary | secondary | outline | ghost
-      size = "md", // sm | md | lg
+      variant = "primary",
+      size = "md",
       className = "",
       disabled = false,
       loading = false,

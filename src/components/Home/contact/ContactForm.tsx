@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { Mail, Phone, Check, Loader2, AlertCircle } from "lucide-react";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,7 +13,7 @@ const ContactForm = () => {
     website: "", // honeypot (should stay empty)
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [statusMsg, setStatusMsg] = useState("");
@@ -29,7 +29,7 @@ const ContactForm = () => {
   }, [submitted]);
 
   const validate = () => {
-    const e = {};
+    const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = "Please enter your name.";
     if (!form.email.trim()) e.email = "Please enter your email.";
     else if (!EMAIL_RE.test(form.email.trim()))
@@ -43,13 +43,13 @@ const ContactForm = () => {
     return e;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setErrors({});
     const eObj = validate();
@@ -78,7 +78,7 @@ const ContactForm = () => {
     }
   };
 
-  const isDisabled = loading || Object.keys(validate()).length > 0;
+  // const isDisabled = loading || Object.keys(validate()).length > 0;
 
   return (
     <section className="w-full bg-gray-50 py-12 px-4 sm:px-6 md:px-12">
@@ -104,7 +104,7 @@ const ContactForm = () => {
             value={form.website}
             onChange={handleChange}
             autoComplete="off"
-            tabIndex="-1"
+            tabIndex={-1}
             style={{ display: "none" }}
             aria-hidden="true"
           />
@@ -223,7 +223,7 @@ const ContactForm = () => {
             <textarea
               id="message"
               name="message"
-              rows="5"
+              rows={5}
               value={form.message}
               onChange={handleChange}
               className={`w-full px-4 py-3 rounded-lg border resize-none focus:outline-none focus:ring-2 ${

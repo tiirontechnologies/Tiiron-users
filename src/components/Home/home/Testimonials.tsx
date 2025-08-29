@@ -86,7 +86,7 @@ const Testimonials = () => {
         let nearestIdx = 0;
         let nearestDist = Infinity;
         cards.forEach((c, i) => {
-          const cCenter = c.offsetLeft + c.clientWidth / 2;
+          const cCenter = (c as HTMLElement).offsetLeft + (c as HTMLElement).clientWidth / 2;
           const d = Math.abs(center - cCenter);
           if (d < nearestDist) {
             nearestDist = d;
