@@ -12,7 +12,7 @@ import WestIcon from "@mui/icons-material/West";
 import MoreButton from "./MoreButton";
 import PublishButton from "./PublishButton";
 import { Link, useNavigate, useParams } from "react-router-dom";
-const ToolBar = ({ children, courseName }: { courseName?: string; children: React.ReactNode }) => {
+const ToolBar = ({ children, courseName,previousPage }: { courseName?: string; children: React.ReactNode; previousPage?: string }) => {
   return (
     <Box>
       {/* Header */}
@@ -30,7 +30,7 @@ const ToolBar = ({ children, courseName }: { courseName?: string; children: Reac
         {/* left side  */}
         <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <IconButton sx={{ color: "#000000" }}>
-            <Link to={"/courses"} style={{ textDecoration: "none", color: "black" }}><WestIcon /></Link>
+            <Link to={previousPage || "/courses"} style={{ textDecoration: "none", color: "black" }}><WestIcon /></Link>
           </IconButton>
           <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
             {courseName || "Course Name"}

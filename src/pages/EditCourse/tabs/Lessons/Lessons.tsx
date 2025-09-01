@@ -99,7 +99,7 @@ export default function Lessons() {
                             openModal();
                           }}
                         >
-                          Add Questions
+                          Add Content
                         </Button>
                       </Box>
                     </LessonItem>

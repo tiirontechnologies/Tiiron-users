@@ -71,8 +71,7 @@ const TopicsQuestions = ({
       {formType && (
         <AddQuestionForm
           type={formType}
-          unit={selectedId}         // or whichever unit id you want to pass
-          courseId={1}       // replace with actual course id from props/context
+          questionBankId={selectedId}
           onClose={() => setFormType(null)}
         />
       )}

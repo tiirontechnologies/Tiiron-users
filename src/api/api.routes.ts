@@ -1,7 +1,6 @@
 import { IOrganisationRegister } from "types/user.types";
 import { AUTH_URL, SERVER_URL } from "../constants/constants";
 import { TAuth } from "types/auth.types";
-import { ICreateQuestion } from "types/questioncreate.types";
 
 export const authEndpoints = {
   login: {
@@ -47,6 +46,13 @@ export const getEndpoints = {
       params: { page, limit }
     }),
   },
+  getQuestionBanks: {
+    query: ({ page = 1, limit = 10 }: { page?: number, limit?: number }) => ({
+      url: SERVER_URL + "/org/question-bank",
+      method: "GET",
+      params: { page, limit }
+    }),
+  },
   getChapters: {
     query: ({ page = 1, limit = 10, id }: { page?: number, limit?: number; id: string }) => ({
       url: SERVER_URL + "/org/chapter/" + id,
@@ -88,9 +94,23 @@ export const getEndpoints = {
    * This API fetches the questions;
    */
   getAllQuestions: {
-    query: () => ({
+    query: ({ page = 1, limit = 10, questionBankId }: { page?: number, limit?: number, questionBankId?: number }) => ({
       url: SERVER_URL + "/org/question",
       method: "GET",
+      params: { page, limit, ...(questionBankId && { questionBankId }) }
+    }),
+  },
+  getQuestionBankById: {
+    query: ({ id }: { id: number }) => ({
+      url: SERVER_URL + "/org/question-bank/" + id,
+      method: "GET",
+    }),
+  },
+  getQuestionBankQuestions: {
+    query: ({ id, page = 1, limit = 10 }: { id: number, page?: number, limit?: number }) => ({
+      url: SERVER_URL + "/org/question-bank/" + id + "/questions-list",
+      method: "GET",
+      params: { page, limit }
     }),
   },
 };
@@ -118,10 +138,34 @@ export const addEndpoints = {
     }),
   },
   createQuestion: {
-    query: ({ body }: { body: ICreateQuestion }) => ({
+    query: ({ body }: { body: { text: string; type: string; questionBankId: number; score: number; options?: { text: string; isCorrect: boolean }[]; correctAnswer?: string } }) => ({
       url: SERVER_URL + "/org/question",
       body,
       method: "POST",
+    }),
+  },
+  createQuestionBank: {
+    query: ({ body }: { body: { name: string; description: string; tags: string[] } }) => ({
+      url: SERVER_URL + "/org/question-bank",
+      body,
+      method: "POST",
+    }),
+  },
+}
+
+export const updateEndpoints = {
+  updateQuestionBank: {
+    query: ({ id, body }: { id: number; body: { name: string; description: string; tags: string[] } }) => ({
+      url: SERVER_URL + "/org/question-bank/" + id,
+      body,
+      method: "PUT",
+    }),
+  },
+  updateQuestion: {
+    query: ({ id, body }: { id: number; body: { text: string; type: string; questionBankId: number; score: number; options?: { text: string; isCorrect: boolean }[]; correctAnswer?: string } }) => ({
+      url: SERVER_URL + "/org/question/" + id,
+      body,
+      method: "PUT",
     }),
   },
 }
@@ -130,6 +174,18 @@ export const deleteEndpoints = {
   deleteCourse: {
     query: ({ id }: { id: number }) => ({
       url: SERVER_URL + "/org/course/" + id,
+      method: "DELETE",
+    }),
+  },
+  deleteQuestionBank: {
+    query: ({ id }: { id: number }) => ({
+      url: SERVER_URL + "/org/question-bank/" + id,
+      method: "DELETE",
+    }),
+  },
+  deleteQuestion: {
+    query: ({ id }: { id: number }) => ({
+      url: SERVER_URL + "/org/question/" + id,
       method: "DELETE",
     }),
   }

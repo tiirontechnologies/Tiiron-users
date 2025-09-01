@@ -1,12 +1,12 @@
 // Need to use the React-specific entry point to import createApi
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { AUTH_URL, BASE_URL } from '../constants/constants';
-import { addEndpoints, authEndpoints, deleteEndpoints, getEndpoints } from './api.routes';
+import { addEndpoints, authEndpoints, deleteEndpoints, getEndpoints, updateEndpoints } from './api.routes';
 import { TAuth } from 'types/auth.types';
 
 // Define a service using a base URL and expected endpoints
 const baseUrl = BASE_URL;
-const TAGS = ["Course", "Chapter", "Questions"] as const;
+const TAGS = ["Course", "Chapter", "Questions", "QuestionBank"] as const;
 
 const baseQuery = fetchBaseQuery({
     baseUrl,
@@ -69,6 +69,18 @@ export const api = createApi({
             ...getEndpoints.getAllQuestions,
             providesTags: ["Questions"]
         }),
+        getQuestionBanks: builder.query({
+            ...getEndpoints.getQuestionBanks,
+            providesTags: ["QuestionBank"]
+        }),
+        getQuestionBankById: builder.query({
+            ...getEndpoints.getQuestionBankById,
+            providesTags: ["QuestionBank"]
+        }),
+        getQuestionBankQuestions: builder.query({
+            ...getEndpoints.getQuestionBankQuestions,
+            providesTags: ["Questions"]
+        }),
         createCourse: builder.mutation({
             ...addEndpoints.createCourse,
             invalidatesTags: ["Course"]
@@ -85,9 +97,29 @@ export const api = createApi({
             ...addEndpoints.createQuestion,
             invalidatesTags: ["Questions"]
         }),
+        createQuestionBank: builder.mutation({
+            ...addEndpoints.createQuestionBank,
+            invalidatesTags: ["QuestionBank"]
+        }),
         deleteCourse: builder.mutation({
             ...deleteEndpoints.deleteCourse,
             invalidatesTags: ["Course"]
+        }),
+        deleteQuestionBank: builder.mutation({
+            ...deleteEndpoints.deleteQuestionBank,
+            invalidatesTags: ["QuestionBank"]
+        }),
+        updateQuestionBank: builder.mutation({
+            ...updateEndpoints.updateQuestionBank,
+            invalidatesTags: ["QuestionBank"]
+        }),
+        updateQuestion: builder.mutation({
+            ...updateEndpoints.updateQuestion,
+            invalidatesTags: ["Questions"]
+        }),
+        deleteQuestion: builder.mutation({
+            ...deleteEndpoints.deleteQuestion,
+            invalidatesTags: ["Questions"]
         }),
     }),
 })
@@ -133,11 +165,19 @@ export const {
     useGetCourseForStudentQuery,
     useGetUnitsWithQuestionsQuery,
     useGetAllQuestionsQuery,
+    useGetQuestionBanksQuery,
+    useGetQuestionBankByIdQuery,
+    useGetQuestionBankQuestionsQuery,
     useCreateCourseMutation,                    // POST / Add QUERY
     useCreateChapterMutation,
     useCreateUnitMutation,
     useCreateQuestionMutation,
+    useCreateQuestionBankMutation,
+    useUpdateQuestionBankMutation,              // Update Query
+    useUpdateQuestionMutation,
     useDeleteCourseMutation,                    // Delete Query
+    useDeleteQuestionBankMutation,
+    useDeleteQuestionMutation,
 } = api;
 export const {
     useAuthLoginMutation,

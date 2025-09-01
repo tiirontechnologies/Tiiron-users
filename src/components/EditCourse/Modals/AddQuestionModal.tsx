@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Modal, Typography } from "@mui/material";
-import AddQuestionForm from "@pages/question-bank-edit/AddQuestionForm";
+import AddQuestionForm from "@pages/QuestionBankEdit/AddQuestionForm";
 import { useParams } from 'react-router-dom';
 
 interface AddQuestionModalProps {
@@ -77,8 +77,7 @@ export const AddQuestionModal: React.FC<AddQuestionModalProps> = ({
                     <Box sx={{ mt: 2 }}>
                         <AddQuestionForm
                             type={questionType}
-                            unit={unitId}
-                            courseId={Number(courseId!)}
+                            questionBankId={Number(courseId!)}
                             onClose={handleClose}
                         />
                     </Box>
