@@ -1,6 +1,6 @@
 import { useState, useEffect, ReactNode, AnchorHTMLAttributes } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
-import Login from "@pages/auth/login";
+
 interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
   children: ReactNode;
@@ -82,13 +82,13 @@ const Navbar = () => {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <Link
-                to="/Login"
+                to="/login"
                 className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center"
               >
                 Login
               </Link>
               <Link
-                to="/LoginSignup"
+                to="/loginsignup"
                 className="px-6 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-full hover:from-red-600 hover:to-pink-600 transition-all duration-200"
               >
                 Get Started for Free →
@@ -132,17 +132,15 @@ const Navbar = () => {
             ))}
 
             <div className="pt-4 border-t border-gray-200 space-y-3">
-              <a
-                href="http://tiiron.com/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to="/login"
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center"
               >
                 Login
-              </a>
+              </Link>
               <Link
-                to="/LoginSignup"
+                to="/loginsignup"
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-full hover:from-red-600 hover:to-pink-600 text-center"
               >

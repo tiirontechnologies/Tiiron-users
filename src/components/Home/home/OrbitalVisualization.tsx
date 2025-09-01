@@ -1,4 +1,4 @@
-import { useState, useEffect, CSSProperties } from "react";
+import React, { useState, useEffect, FC } from "react";
 import {
   GraduationCap,
   Users,
@@ -12,22 +12,46 @@ import {
   Star,
   Award,
   Clock,
+  LucideIcon,
 } from "lucide-react";
 
-const OrbitalVisualization = () => {
-  const [isVisible, setIsVisible] = useState(false);
+// ---------- Types ----------
+interface OrbitItem {
+  icon: LucideIcon;
+  label: string;
+  color: string;
+  delay: string;
+}
+
+interface StatItem {
+  icon: LucideIcon;
+  value: string;
+  label: string;
+  color: string;
+}
+
+interface FloatingDot {
+  size: string;
+  position: string;
+  gradient: string;
+  animation: string;
+}
+
+// ---------- Component ----------
+const OrbitalVisualization: FC = () => {
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  const innerOrbitItems = [
+  const innerOrbitItems: OrbitItem[] = [
     { icon: Users, label: "Personalized", color: "sky", delay: "0s" },
     { icon: Play, label: "Interactive", color: "fuchsia", delay: "-10s" },
     { icon: Zap, label: "Analytics", color: "violet", delay: "-20s" },
   ];
 
-  const outerOrbitItems = [
+  const outerOrbitItems: OrbitItem[] = [
     { icon: Target, label: "Tests", color: "orange", delay: "0s" },
     { icon: BookOpen, label: "Courses", color: "emerald", delay: "-8s" },
     { icon: Brain, label: "AI", color: "rose", delay: "-16s" },
@@ -35,13 +59,13 @@ const OrbitalVisualization = () => {
     { icon: Globe, label: "Global", color: "indigo", delay: "-32s" },
   ];
 
-  const stats = [
+  const stats: StatItem[] = [
     { icon: Star, value: "10k+", label: "Active Students", color: "sky" },
     { icon: Award, value: "500+", label: "Live Courses", color: "fuchsia" },
     { icon: Clock, value: "98%", label: "Success Rate", color: "violet" },
   ];
 
-  const floatingDots = [
+  const floatingDots: FloatingDot[] = [
     {
       size: "h-2 w-2",
       position: "top-1/4 left-1/4",
@@ -120,8 +144,10 @@ const OrbitalVisualization = () => {
                 style={{
                   animation: `orbit 30s linear infinite`,
                   transformOrigin: "50% 50%",
+                  // @ts-expect-error -- Custom CSS variable
+                  "--radius": "130px",
                   animationDelay: item.delay,
-                } as any}
+                }}
               >
                 <div className="flex flex-col items-center gap-2">
                   <Icon
@@ -164,8 +190,10 @@ const OrbitalVisualization = () => {
                 style={{
                   animation: `orbit-reverse 40s linear infinite`,
                   transformOrigin: "50% 50%",
+                  // @ts-expect-error -- Custom CSS variable
+                  "--radius": "210px",
                   animationDelay: item.delay,
-                } as any}
+                }}
               >
                 <div className="flex flex-col items-center gap-1">
                   <Icon
@@ -224,7 +252,6 @@ const OrbitalVisualization = () => {
             </line>
           </svg>
         </div>
-
       </div>
 
       <style>{`
