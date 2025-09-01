@@ -29,11 +29,13 @@ const CTA = () => {
         <div className="text-center md:text-left">
           <h2
             id="cta-heading"
-            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight"
+            className="text-3xl sm:text-4xl md:text-4xl font-extrabold text-gray-900 leading-tight"
           >
-            Ready To Experience The Future Of Learning?
+            Get Ready To Experience 
+              <span className="pl-2 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 text-transparent bg-clip-text">
+                The Future Of Learning?
+              </span>
           </h2>
-
           <p className="mt-4 text-gray-600 text-base sm:text-lg max-w-2xl">
             Join thousands of educators, trainers, and organizations using{" "}
             <span className="font-semibold">Tiiron</span> to make learning
