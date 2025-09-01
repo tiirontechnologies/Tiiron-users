@@ -54,8 +54,10 @@ const Integrations = ({ items = defaultIntegrations }) => {
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-            Integrations
+          <h2 className="text-4xl md:text-5xl font-extrabold">            
+            <span className="bg-gradient-to-r from-indigo-700 via-purple-600 to-fuchsia-700 text-transparent bg-clip-text">
+              Integrations
+            </span>
           </h2>
           <p className="mt-2 text-gray-600 max-w-2xl mx-auto">
             Tiiron connects with the tools you already use — integrate,

@@ -92,7 +92,7 @@ const Footer: React.FC = () => {
       href: "https://www.facebook.com/inacademic_official",
       label: "Facebook",
     },
-    { icon: Youtube, href: "https://youtube.com/tiiron", label: "YouTube" },
+    { icon: Youtube, href: "https://www.youtube.com/@inacademic", label: "YouTube" },
     {
       icon: MapPin,
       href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6",
@@ -171,7 +171,7 @@ const Footer: React.FC = () => {
                   <a
                     key={i}
                     href={c.href}
-                    className="inline-flex items-center gap-3 text-gray-400 hover:text-white transition"
+                    className="inline-flex items-center gap-1 pr-5 text-gray-400 hover:text-white transition"
                   >
                     <span className="p-2 rounded-md bg-gray-800 text-gray-400">
                       <Icon className="w-4 h-4" />

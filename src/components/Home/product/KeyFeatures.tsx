@@ -27,9 +27,12 @@ const KeyFeatures = ({ items = DEFAULT_FEATURES }) => {
         <div className="text-center max-w-3xl mx-auto mb-10">
           <h2
             id="features-heading"
-            className="text-3xl md:text-4xl font-extrabold text-white"
+            className="text-4xl md:text-5xl font-extrabold text-white"
           >
-            Key Features
+            Key 
+            <span className="bg-gradient-to-r pl-3 from-green-500 via-lime-400 to-teal-400 text-transparent bg-clip-text">
+              Features
+            </span>
           </h2>
           <p className="mt-3 text-gray-300">
             Built for teams and educators — Tiiron gives you the tools to

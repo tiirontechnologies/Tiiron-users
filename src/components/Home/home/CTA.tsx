@@ -31,7 +31,7 @@ const CTA = () => {
             id="cta-heading"
             className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight"
           >
-            Ready to experience the future of learning?
+            Ready To Experience The Future Of Learning?
           </h2>
 
           <p className="mt-4 text-gray-600 text-base sm:text-lg max-w-2xl">

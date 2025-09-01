@@ -15,7 +15,7 @@ export default function HeroSection() {
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
             The best LMS for{" "}
             <span className="bg-gradient-to-r from-sky-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-              personalised learning
+              Personalised Learning
             </span>
           </h1>
 
@@ -30,7 +30,7 @@ export default function HeroSection() {
               href="#demo"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-400 via-purple-500 to-pink-500 text-white font-semibold shadow-lg hover:opacity-90 transition"
             >
-              Schedule a Demo
+              Schedule Demo
             </a>
             <a
               href="#features"

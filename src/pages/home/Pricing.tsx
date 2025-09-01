@@ -41,9 +41,18 @@ const Pricing = () => {
     <>
       <PricingHighlights />
       <main className="px-6 py-16 text-center bg-gradient-to-br from-sky-50 via-purple-50 to-pink-50">
-        <h1 className="text-4xl font-bold mb-6 text-gray-900">
-          Our Pricing Plans
-        </h1>
+        <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <span className="bg-gradient-to-r from-indigo-700 via-purple-600 to-fuchsia-700 text-transparent bg-clip-text">
+            Our
+          </span>
+          <span className="bg-gradient-to-r px-3 from-teal-600 via-lime-500 to-green-600 text-transparent bg-clip-text">
+            Pricing
+          </span>
+          <span className="bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 text-transparent bg-clip-text">
+            Plans
+          </span>
+
+        </h2>
         <p className="text-lg text-gray-600 mb-12">
           Choose the plan that fits your needs. Upgrade or cancel anytime.
         </p>
