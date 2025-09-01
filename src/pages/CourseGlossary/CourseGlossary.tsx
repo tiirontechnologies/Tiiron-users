@@ -248,6 +248,8 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
           <Typography
             variant="subtitle2"
             mb={0.5}
+            display={"flex"}
+            gap={1}
             sx={{
               color: "#0F172A",
               fontWeight: 500,
@@ -255,7 +257,7 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
               wordBreak: "break-word",
             }}
           >
-            4.6 {Array(5).fill(null).map((_, i) => <img key={i} src="src/assets/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. {chapters?.length}. All levels
+            4.6 {Array(5).fill(null).map((_, i) => <img key={i} src="/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. {chapters?.length}. All levels
           </Typography>
           <Typography
             variant="body1"
@@ -278,7 +280,7 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
             >
               <Avatar
                 alt="Lindsey Curtis"
-                src="src/assets/images/avatarUser.png"
+                src="/images/avatarUser.png"
                 sx={{ width: 40, height: 40 }}
               />
             </Box>
@@ -305,7 +307,7 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
             >
               <Avatar
                 alt="Lindsey Curtis"
-                src="src/assets/icons/Icon.svg"
+                src="/icons/Icon.svg"
                 sx={{ width: 20, height: 20 }}
               />
             </Box>
@@ -405,23 +407,6 @@ export function ProductCard({ data }: { data?: any }) {
           '&:hover': { bgcolor: '#6A42AB' },
         }}
       >
-        Add To Cart
-      </Button>
-      <Button
-        variant="outlined"
-        fullWidth
-        sx={{
-          borderColor: 'black',
-          color: 'black',
-          py: 1.5,
-          mb: 2,
-          fontSize: { xs: "12px", md: "16px" },
-          '&:hover': {
-            bgcolor: '#f3f4f6',
-            borderColor: 'black',
-          },
-        }}
-      >
         Buy Now
       </Button>
 
@@ -443,7 +428,7 @@ export function ProductCard({ data }: { data?: any }) {
         >
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/facebook.svg"
+            src="/icons/facebook.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>
@@ -458,7 +443,7 @@ export function ProductCard({ data }: { data?: any }) {
         >
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/Icon.svg"
+            src="/icons/Icon.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>
@@ -473,7 +458,7 @@ export function ProductCard({ data }: { data?: any }) {
         >
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/google.svg"
+            src="/icons/google.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>
@@ -489,7 +474,7 @@ export function ProductCard({ data }: { data?: any }) {
           {/* Replace this with actual X (Twitter) icon if needed */}
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/MicroSoftIcon.svg"
+            src="/icons/MicroSoftIcon.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>

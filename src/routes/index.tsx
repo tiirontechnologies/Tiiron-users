@@ -6,8 +6,8 @@ import {homeRoutes} from "./homeRoutes";
 import CourseProgress from "@pages/course-progress";
 import PrivateRoute from "@layouts/PrivateRoute";
 import CourseGlossary from "@pages/CourseGlossary";
-import DollerIcon from "@icons/DollerIcon";
 import { Box } from "@mui/material";
+import DollerIcon from "../assets/icons/DollerIcon";
 
 export const routeConfig = [
   {

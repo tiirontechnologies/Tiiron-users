@@ -5,7 +5,6 @@ import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
-import CheckoutPage from "@pages/Checkout";
 import Courses from "../pages/Courses";
 export const appRoutes: Route[] = [
   {

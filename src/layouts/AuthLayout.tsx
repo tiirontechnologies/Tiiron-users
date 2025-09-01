@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Microsoft from "@icons/MicroSoftIcon.svg";
 import Google from "@icons/google.svg";
 import Facebook from "@icons/facebook.svg";
@@ -79,137 +79,143 @@ const AuthLayout = ({
       />
     </Grid>
   );
-
+  // Handle to remove the user token if he comes to sign-in page
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
   return (
-    <Grid container sx={{ minHeight: "100vh" }}>
-      {!isSmallScreen && imageOnLeft && ImageSection}
+    <form>
+      <Grid container sx={{ minHeight: "100vh" }}>
+        {!isSmallScreen && imageOnLeft && ImageSection}
 
-      <Grid
-        size={{ md: 6, xs: 12 }}
-        sx={{
-          p: 4,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <Box maxWidth="750px" mx="auto" width="100%">
-          {/* Title */}
-          <Typography
-            variant="h4"
-            fontWeight={600}
-            mb={4}
-            fontSize={32}
-            textAlign="center"
-          >
-            {titleText}
-          </Typography>
-
-          {/* Form Fields */}
-          {renderFormFields}
-
-          {/* Submit Button */}
-          <Box display="flex" alignItems="center" gap={2} mt={2} mb={3}>
-            <Button
-              variant="contained"
-              onClick={onSubmit}
-              sx={{
-                backgroundColor: "#6A42AB",
-                textTransform: "none",
-                px: 3,
-                fontWeight: 600,
-              }}
-              loading={isLoading}
+        <Grid
+          size={{ md: 6, xs: 12 }}
+          sx={{
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <Box maxWidth="750px" mx="auto" width="100%">
+            {/* Title */}
+            <Typography
+              variant="h4"
+              fontWeight={600}
+              mb={4}
+              fontSize={32}
+              textAlign="center"
             >
-              {submitButtonText}
-            </Button>
-          </Box>
+              {titleText}
+            </Typography>
 
-          {/* Divider Text */}
-          <Divider>{dividerText}</Divider>
+            {/* Form Fields */}
+            {renderFormFields}
 
-          {/* Social Buttons */}
-          <Box display="flex" gap={2} mt={3} flexWrap="wrap">
-            <Button
-              sx={{ ...socialButtonStyle, color: "#0866FF" }}
-              variant="outlined"
-              startIcon={
-                <img src={Facebook} alt="Facebook" style={iconStyle} />
-              }
-            >
-              Facebook
-            </Button>
-            <Button
-              sx={{ ...socialButtonStyle, color: "#EA4335" }}
-              variant="outlined"
-              startIcon={<img src={Google} alt="Google" style={iconStyle} />}
-            >
-              Google
-            </Button>
-            <Button
-              sx={{ ...socialButtonStyle, color: "#000000" }}
-              variant="outlined"
-              startIcon={
-                <img src={Microsoft} alt="Microsoft" style={iconStyle} />
-              }
-            >
-              Microsoft
-            </Button>
-          </Box>
-          <Box display={"flex"} gap={2} width={"100%"}>
-            <Box width={"100%"} >
-              {isOrgSignUp && <Box display="flex" gap={2} mt={3} width={"100%"} flexWrap="nowrap">
+            {/* Submit Button */}
+            <Box display="flex" alignItems="center" gap={2} mt={2} mb={3}>
+              <Button
+                variant="contained"
+                onClick={onSubmit}
+                sx={{
+                  backgroundColor: "#6A42AB",
+                  textTransform: "none",
+                  px: 3,
+                  fontWeight: 600,
+                }}
+                type="submit"
+                loading={isLoading}
+              >
+                {submitButtonText}
+              </Button>
+            </Box>
+
+            {/* Divider Text */}
+            <Divider>{dividerText}</Divider>
+
+            {/* Social Buttons */}
+            <Box display="flex" gap={2} mt={3} flexWrap="wrap">
+              <Button
+                sx={{ ...socialButtonStyle, color: "#0866FF" }}
+                variant="outlined"
+                startIcon={
+                  <img src={Facebook} alt="Facebook" style={iconStyle} />
+                }
+              >
+                Facebook
+              </Button>
+              <Button
+                sx={{ ...socialButtonStyle, color: "#EA4335" }}
+                variant="outlined"
+                startIcon={<img src={Google} alt="Google" style={iconStyle} />}
+              >
+                Google
+              </Button>
+              <Button
+                sx={{ ...socialButtonStyle, color: "#000000" }}
+                variant="outlined"
+                startIcon={
+                  <img src={Microsoft} alt="Microsoft" style={iconStyle} />
+                }
+              >
+                Microsoft
+              </Button>
+            </Box>
+            <Box display={"flex"} gap={2} width={"100%"}>
+              <Box width={"100%"} >
+                {isOrgSignUp && <Box display="flex" gap={2} mt={3} width={"100%"} flexWrap="nowrap">
+                  <Link
+                    to={"/organization/create-account"}
+                    style={{
+                      width: "100%"
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      fullWidth
+                    >
+                      Sign Up as Organization
+                    </Button>
+                  </Link>
+                </Box>}
+                {isUserSignUp && <Box display="flex" gap={2} mt={3} flexWrap="nowrap">
+                  <Link
+                    to={"/sign-up"}
+                    style={{
+                      width: "100%"
+                    }}
+                  >
+                    <Button
+                      variant="outlined"
+                      fullWidth
+                    >
+                      {signUpBtnText ?? "Sign Up as User"}
+                    </Button>
+                  </Link>
+                </Box>}
+              </Box>
+              {isLogin && <Box display="flex" gap={2} width={"100%"} mt={3} flexWrap="nowrap">
                 <Link
-                  to={"/organization/create-account"}
+                  to={"/login"}
                   style={{
                     width: "100%"
                   }}
                 >
                   <Button
-                    variant="outlined"
+                    variant="contained"
                     fullWidth
                   >
-                    Sign Up as Organization
-                  </Button>
-                </Link>
-              </Box>}
-              {isUserSignUp && <Box display="flex" gap={2} mt={3} flexWrap="nowrap">
-                <Link
-                  to={"/sign-up"}
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                  >
-                    {signUpBtnText ?? "Sign Up as User"}
+                    {signInBtnTxt ?? "Sign In"}
                   </Button>
                 </Link>
               </Box>}
             </Box>
-            {isLogin && <Box display="flex" gap={2} width={"100%"} mt={3} flexWrap="nowrap">
-              <Link
-                to={"/login"}
-                style={{
-                  width: "100%"
-                }}
-              >
-                <Button
-                  variant="contained"
-                  fullWidth
-                >
-                  {signInBtnTxt ?? "Sign In"}
-                </Button>
-              </Link>
-            </Box>}
           </Box>
-        </Box>
-      </Grid>
+        </Grid>
 
-      {!isSmallScreen && !imageOnLeft && ImageSection}
-    </Grid>
+        {!isSmallScreen && !imageOnLeft && ImageSection}
+      </Grid>
+    </form>
   );
 };
 
