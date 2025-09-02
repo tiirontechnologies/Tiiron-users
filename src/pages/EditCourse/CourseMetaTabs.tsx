@@ -9,6 +9,7 @@ import Lessons from "./tabs/Lessons/index"
 import Settings from "./tabs/Settings/Settings";
 import Learners from "./tabs/Learners";
 import Reports from "./tabs/Reports";
+import Dashboard from "./tabs/Dashboard";
 
 const CourseMetaTabs = () => {
   const [value, setValue] = useState(0);
@@ -28,14 +29,7 @@ const CourseMetaTabs = () => {
     {
       title: "Overview",
       icon: <InfoCircleIcon />,
-      content: (
-        <Box>
-          <Typography variant="h6">Overview Section</Typography>
-          <Typography variant="body2">
-            More details about the course here...
-          </Typography>
-        </Box>
-      ),
+      content: <Dashboard />
     },
     {
       title: "Report",
