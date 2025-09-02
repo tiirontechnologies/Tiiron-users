@@ -56,9 +56,9 @@ const Index = () => {
       onSubmit={handleSubmit(onSubmit)} // Trigger RHF handleSubmit
       renderFormFields={
         <Grid container spacing={2}>
-          <Grid size={{ xs: 12 }}>
+          <Grid>
             <Grid container spacing={2}>
-              <Grid size={{ md: 6, xs: 12 }}>
+              <Grid>
                 <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
                   Full Name
                 </Typography>
@@ -78,7 +78,7 @@ const Index = () => {
                   {errors.firstName?.message}
                 </span>
               </Grid>
-              <Grid size={{ md: 6, xs: 12 }}>
+              <Grid>
                 <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
                   Last Name
                 </Typography>
@@ -99,7 +99,7 @@ const Index = () => {
             </Grid>
           </Grid>
 
-          <Grid size={{ xs: 12 }}>
+          <Grid>
             <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
               User Name
             </Typography>
@@ -117,7 +117,7 @@ const Index = () => {
             />
             <span style={{ color: "red" }}>{errors.username?.message}</span>
           </Grid>
-          <Grid size={{ xs: 12 }}>
+          <Grid>
             <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
               Email
             </Typography>
@@ -136,7 +136,7 @@ const Index = () => {
             <span style={{ color: "red" }}>{errors.email?.message}</span>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid>
             <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
               Password
             </Typography>
@@ -155,7 +155,7 @@ const Index = () => {
             <span style={{ color: "red" }}>{errors.password?.message}</span>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid>
             <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
               Confirm Password
             </Typography>

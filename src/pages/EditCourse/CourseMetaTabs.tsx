@@ -22,14 +22,14 @@ const CourseMetaTabs = () => {
 
   const tabdata = [
     {
-      title: "Lessons",
-      icon: <EditIcon />,
-      content: <Lessons />,
-    },
-    {
       title: "Overview",
       icon: <InfoCircleIcon />,
       content: <Dashboard />
+    },
+    {
+      title: "Lessons",
+      icon: <EditIcon />,
+      content: <Lessons />,
     },
     {
       title: "Report",

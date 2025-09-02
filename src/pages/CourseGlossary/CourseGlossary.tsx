@@ -630,7 +630,7 @@ export function StarRatings() {
       <Box display="flex" alignItems="center" gap={1}>
         <Avatar
           alt="Lindsey Curtis"
-          src="src/assets/icons/Vector.svg"
+          src="/icons/Vector.svg"
           sx={{ width: 20, height: 20 }}
         />
         <Typography fontWeight={600} fontSize={20} lineHeight={1}>
@@ -650,13 +650,13 @@ export function StarRatings() {
                 i < rating.stars ? (
                   <Avatar
                     alt="Lindsey Curtis"
-                    src="src/assets/icons/Vector.svg"
+                    src="/icons/Vector.svg"
                     sx={{ width: 14, height: 14 }}
                   />
                 ) : (
                   <Avatar
                     alt="Lindsey Curtis"
-                    src="src/assets/icons/Vector.svg"
+                    src="/icons/Vector.svg"
                     sx={{ width: 14, height: 14 }}
                   />
                 )
