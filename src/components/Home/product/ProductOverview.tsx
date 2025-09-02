@@ -57,7 +57,12 @@ const ProductOverview = () => {
   return (
     <section className="w-full py-20 bg-slate-950 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white text-center relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-4xl font-bold mb-6">Product Overview</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <span className="bg-gradient-to-r pr-3 from-red-400 via-pink-500 to-yellow-400 text-transparent    bg-clip-text">
+            Product  
+          </span>
+          Overview
+        </h2>
         <p className="text-lg text-gray-300 mb-12 max-w-3xl mx-auto">
           Tiiron is designed to simplify workflows and unlock the full potential
           of your business. Whether you’re scaling fast or just starting, Tiiron
