@@ -68,7 +68,7 @@ const AuthLayout = ({
   };
 
   const ImageSection = (
-    <Grid size={{ md: 6 }}>
+    <Grid md={6}>
       <Box
         sx={{
           height: "100%",
@@ -85,7 +85,8 @@ const AuthLayout = ({
       {!isSmallScreen && imageOnLeft && ImageSection}
 
       <Grid
-        size={{ md: 6, xs: 12 }}
+        md={6}
+        xs={12}
         sx={{
           p: 4,
           display: "flex",
@@ -113,13 +114,13 @@ const AuthLayout = ({
             <Button
               variant="contained"
               onClick={onSubmit}
+              disabled={isLoading}
               sx={{
                 backgroundColor: "#6A42AB",
                 textTransform: "none",
                 px: 3,
                 fontWeight: 600,
               }}
-              loading={isLoading}
             >
               {submitButtonText}
             </Button>
