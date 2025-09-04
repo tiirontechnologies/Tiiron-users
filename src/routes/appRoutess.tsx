@@ -6,6 +6,7 @@ import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
 import Courses from "../pages/Courses";
+import NotificationsIcon from "@icons/NotificationsIcon";
 export const appRoutes: Route[] = [
   {
     label: "Learning",
@@ -54,5 +55,9 @@ export const appRoutes: Route[] = [
     label: "Reports",
     icon: <DollerIcon />,
     path: "/reports",
+  },
+  {
+    label: "Notification",
+    icon: <NotificationsIcon />,
   },
 ];

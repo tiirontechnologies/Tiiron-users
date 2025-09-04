@@ -11,6 +11,7 @@ import {
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import { CloudUpload as CloudUploadIcon, Code as CodeIcon, Quiz as QuizIcon } from "@mui/icons-material";
 import FileAddIcon from "@icons/FileAddIcon";
 import FileUploadIcon from "@icons/FileUploadIcon";
 import Loader from "@components/Template/ui/Spinner";
@@ -23,7 +24,7 @@ import {
 import { ReusablePopper } from "@components/Template/popper/ReusablePopper";
 import { AddLessonPopperItem } from "@components/EditCourse/Components/AddLessonPopperItem";
 import { useModal } from "../../../../hooks/useModal";
-import { AddQuestionModal } from "@components/EditCourse/Modals/AddQuestionModal";
+import { AddContentModal } from "@components/EditCourse/Modals/AddContentModal";
 import { AddChapterModal } from "@components/EditCourse/Modals/AddChapterModal";
 import { AddUnitForm } from "@components/EditCourse/Components/AddUnitForm";
 
@@ -173,7 +174,11 @@ export default function Lessons() {
           </Box>
         </Fragment>}
       {openEditorChapterId !== null && (<AddUnitForm chapterId={openEditorChapterId} onClose={() => setOpenEditorChapterId(null)} />)}
-      <AddQuestionModal onClose={closeModal} open={isOpen} unitId={unitId} />
+      <AddContentModal 
+        onClose={closeModal} 
+        open={isOpen} 
+        unitId={unitId}
+      />
       <AddChapterModal onClose={closeChapterModal} open={isChapterModalOpen} />
     </Box>
   );

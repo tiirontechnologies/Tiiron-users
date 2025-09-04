@@ -1,4 +1,4 @@
-import {  Box, Button, IconButton, useMediaQuery } from "@mui/material";
+import {  Avatar, Box, Button, IconButton, useMediaQuery } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchBox from "./SearchBox";
@@ -52,7 +52,7 @@ const Header = ({
         >
           Upgrade
         </Button>
-        {!isSm ? <AboutIcon /> : null}
+        {!isSm ? <Avatar src="" /> : null}
 
         {/* <Avatar src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fHww" /> */}
       </Box>
