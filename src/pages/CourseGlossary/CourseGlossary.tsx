@@ -3,7 +3,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api";
 import Loader from "@components/Template/ui/Spinner";
 import { UPLOADS } from "../../constants/constants";
@@ -395,20 +395,22 @@ export function ProductCard({ data }: { data?: any }) {
         </Typography>
       </Box>
 
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{
-          bgcolor: '#6A42AB',
-          color: '#fff',
-          py: 1.5,
-          mb: 2,
-          fontSize: { xs: "12px", md: "16px" },
-          '&:hover': { bgcolor: '#6A42AB' },
-        }}
-      >
-        Buy Now
-      </Button>
+      <Link to="/checkout" style={{ textDecoration: 'none', width: '100%' }}>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{
+            bgcolor: '#6A42AB',
+            color: '#fff',
+            py: 1.5,
+            mb: 2,
+            fontSize: { xs: "12px", md: "16px" },
+            '&:hover': { bgcolor: '#6A42AB' },
+          }}
+        >
+          Checkout
+        </Button>
+      </Link>
 
       <hr />
 

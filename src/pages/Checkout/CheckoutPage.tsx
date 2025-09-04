@@ -368,7 +368,7 @@ export default function CheckoutPage() {
                                 },
                             }}
                         >
-                            Proceed to Checkout
+                            Buy Now
                         </Button>
                     </Box>
                 </Box>
