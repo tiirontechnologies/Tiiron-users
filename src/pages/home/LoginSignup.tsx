@@ -6,6 +6,10 @@ const LoginSignup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 via-purple-50 to-pink-50 px-4">
+      {/* Background gradient glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-1/2 top-[-15rem] h-[35rem] w-[35rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-sky-400/10 via-fuchsia-400/10 to-violet-400/10 blur-3xl" />
+      </div>
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-10">
         {/* Header */}
         <div className="text-center mb-8">

@@ -117,8 +117,7 @@ const Testimonials = () => {
             </span>
           </h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-            Real feedback from educators and teams using Tiiron to accelerate
-            learning and scale training.
+            See how Tiiron is helping educators and teams scale learning like never before.
           </p>
         </div>
 
@@ -132,7 +131,7 @@ const Testimonials = () => {
             >
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white font-semibold">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-700 via-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
                     {t.name
                       .split(" ")
                       .map((n) => n[0])
@@ -157,7 +156,7 @@ const Testimonials = () => {
                         <Star
                           key={s}
                           className={`w-4 h-4 ${
-                            s < t.rating ? "text-yellow-400" : "text-gray-200"
+                            s < t.rating ? "text-yellow-500" : "text-gray-200"
                           }`}
                         />
                       ))}
@@ -165,8 +164,8 @@ const Testimonials = () => {
                   </div>
 
                   <blockquote className="mt-4 text-gray-700 italic relative pl-5">
-                    <Quote className="absolute -left-1 top-0 w-5 h-5 text-gray-300" />
-                    “{t.feedback}”
+                    <Quote className="absolute -left-1 top-0 w-5 h-5 text-stone-400" />
+                    {t.feedback}
                   </blockquote>
                 </div>
               </div>

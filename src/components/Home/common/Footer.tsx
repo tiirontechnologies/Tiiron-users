@@ -133,7 +133,7 @@ const Footer: React.FC = () => {
             />
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold hover:from-red-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-red-700 transition"
+              className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold hover:from-red-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-red-700 transition"
             >
               Subscribe
               <ArrowRight className="w-4 h-4" />
