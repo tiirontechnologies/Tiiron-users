@@ -18,6 +18,7 @@ const Link = ({ to, children, className, onClick, ...props }: LinkProps) => (
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null); // mobile accordion
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,8 +32,24 @@ const Navbar = () => {
     { name: "Features", href: "/features", highlight: true },
     { name: "Product", href: "/product" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Resources", href: "/resources", hasDropdown: true },
-    { name: "How It Works", href: "/how-it-works", hasDropdown: true },
+    {
+      name: "Explore",
+      hasDropdown: true,
+      dropdown: [
+        { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
+        { name: "Who It’s For", desc: "See who benefits from us", href: "/whomfor" },
+        { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
+      ],
+    },
+    {
+      name: "Resources",
+      hasDropdown: true,
+      dropdown: [
+        { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
+        { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
+        { name: "Community", desc: "Join our community space", href: "/community" },
+      ],
+    },
   ];
 
   return (
@@ -40,7 +57,7 @@ const Navbar = () => {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? "bg-white shadow-md border-b border-gray-200"
+            ? "bg-white/90 backdrop-blur-md shadow-md border-b border-gray-200"
             : "bg-white"
         }`}
       >
@@ -48,7 +65,7 @@ const Navbar = () => {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-md bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">T</span>
               </div>
               <span className="text-xl font-bold text-gray-900">Tiiron</span>
@@ -59,10 +76,35 @@ const Navbar = () => {
               {navigationItems.map((item) => (
                 <div key={item.name} className="relative group">
                   {item.hasDropdown ? (
-                    <button className="flex items-center space-x-1 text-gray-800 hover:text-gray-900 font-medium transition-colors duration-200">
-                      <span>{item.name}</span>
-                      <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 duration-300" />
-                    </button>
+                    <>
+                      <button className="flex items-center space-x-1 text-gray-800 hover:text-gray-900 font-medium transition-colors duration-200">
+                        <span>{item.name}</span>
+                        <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180 duration-300" />
+                      </button>
+
+                      {/* Dropdown Menu */}
+                      <div className="absolute left-0 mt-3 w-64 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-2 group-hover:translate-y-0 transform transition-all duration-300 ease-out">
+                        <div className="p-3 space-y-1">
+                          {item.dropdown?.map((drop) => (
+                            <Link
+                              key={drop.name}
+                              to={drop.href}
+                              className="group/item relative block px-4 py-3 rounded-lg transition-all duration-200 hover:bg-gray-50"
+                            >
+                              {/* cool hover accent */}
+                              <span className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-red-500 to-pink-500 rounded-r opacity-0 group-hover/item:opacity-100 transition-opacity duration-300"></span>
+
+                              <p className="text-sm font-semibold text-gray-800">
+                                {drop.name}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                {drop.desc}
+                              </p>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <Link
                       to={item.href}
@@ -83,7 +125,7 @@ const Navbar = () => {
             <div className="hidden lg:flex items-center space-x-4">
               <Link
                 to="/login"
-                className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center"
+                className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center transition"
               >
                 Login
               </Link>
@@ -115,27 +157,70 @@ const Navbar = () => {
             isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="bg-white border-t border-gray-200 px-6 py-6 space-y-3">
+          <div className="bg-white border-t border-gray-200 px-6 py-6 space-y-4">
             {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                onClick={() => setIsOpen(false)}
-                className={`block px-3 py-2 rounded-md font-medium ${
-                  item.highlight
-                    ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                {item.name}
-              </Link>
+              <div key={item.name}>
+                {item.hasDropdown ? (
+                  <div>
+                    <button
+                      onClick={() =>
+                        setOpenDropdown(
+                          openDropdown === item.name ? null : item.name
+                        )
+                      }
+                      className="w-full flex justify-between items-center px-3 py-2 rounded-md font-medium text-gray-800 hover:bg-gray-50 transition"
+                    >
+                      {item.name}
+                      <ChevronDown
+                        className={`w-4 h-4 transform transition-transform ${
+                          openDropdown === item.name ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {/* Dropdown items for mobile */}
+                    {openDropdown === item.name && (
+                      <div className="pl-4 mt-2 space-y-2">
+                        {item.dropdown?.map((drop) => (
+                          <Link
+                            key={drop.name}
+                            to={drop.href}
+                            onClick={() => setIsOpen(false)}
+                            className="block px-4 py-2 rounded-md bg-gray-50 hover:bg-gray-100 transition"
+                          >
+                            <p className="text-sm font-medium text-gray-800">
+                              {drop.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {drop.desc}
+                            </p>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`block px-3 py-2 rounded-md font-medium ${
+                      item.highlight
+                        ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500"
+                        : "text-gray-800 hover:bg-gray-50"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                )}
+              </div>
             ))}
 
+            {/* Mobile CTA */}
             <div className="pt-4 border-t border-gray-200 space-y-3">
               <Link
                 to="/login"
                 onClick={() => setIsOpen(false)}
-                className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center"
+                className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center transition"
               >
                 Login
               </Link>

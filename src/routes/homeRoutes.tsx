@@ -10,17 +10,26 @@ import Contact from "@pages/home/Contact";
 import NotFound from "@pages/home/NotFound";
 import LoginSignup from "@pages/home/LoginSignup";
 
+import WhyTiiron from "@pages/home/Explore/WhyTiiron";
+import OurPlatform from "@pages/home/Explore/OurPlatform";
+import WhomFor from "@pages/home/Explore/WhomFor";
+
 export const homeRoutes: Route[] = [
   {
     element: <Layout />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/features", element: <Features /> },
-      { path: "/about", element: <About /> },
       { path: "/product", element: <Product /> },
       { path: "/pricing", element: <Pricing /> },
+      { path: "/about", element: <About /> },
       { path: "/contact", element: <Contact /> },
       { path: "/loginsignup", element: <LoginSignup /> },
+
+      // Explore Dropdown routes
+      { path: "/whytiiron", element: <WhyTiiron /> },
+      { path: "/whomfor", element: <WhomFor/> },
+      { path: "/ourplatform", element: <OurPlatform /> },
     ],
   },
   // Fallback

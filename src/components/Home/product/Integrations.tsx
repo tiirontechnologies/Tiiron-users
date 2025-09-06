@@ -112,14 +112,14 @@ const Integrations = ({ items = defaultIntegrations }) => {
         {/* CTA Row */}
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
-            href="/integrations"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow hover:from-red-600 hover:to-pink-600 transition"
+            href="/product"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-semibold shadow hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition"
           >
             View all integrations
           </a>
           <a
-            href="/docs/integrations"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+            href="/product"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-200 transition"
           >
             See developer docs & API
           </a>
