@@ -83,8 +83,9 @@ const AuthLayout = ({
   return (
     <Grid container sx={{ minHeight: "100vh" }}>
       {!isSmallScreen && imageOnLeft && ImageSection}
-
-      <Grid item md={6} xs={12}
+      <Grid item
+        md={6}
+        xs={12}
         sx={{
           p: 4,
           display: "flex",
