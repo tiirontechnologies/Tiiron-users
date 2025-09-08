@@ -75,12 +75,12 @@ const Step2 = ({
 }) => {
   return (
     <Grid container spacing={2}>
-      <Grid xs={12}>
+      <Grid>
         <Typography variant="subtitle2" fontWeight={500} mb={0.5}>
           Full Name
         </Typography>
         <Grid container spacing={2}>
-          <Grid md={6} xs={12}>
+          <Grid>
             <Controller
               name="firstName"
               control={control}
@@ -92,7 +92,7 @@ const Step2 = ({
             />
             <p style={{ color: "red" }}>{errors.firstName?.message}</p>
           </Grid>
-          <Grid md={6} xs={12}>
+          <Grid>
             <Controller
               name="lastName"
               control={control}
@@ -106,7 +106,7 @@ const Step2 = ({
           </Grid>
         </Grid>
       </Grid>
-      <Grid xs={12}>
+      <Grid>
         <Controller
           name="username"
           control={control}
@@ -118,7 +118,7 @@ const Step2 = ({
         />
         <p style={{ color: "red" }}>{errors.username?.message}</p>
       </Grid>
-      <Grid xs={12} md={6}>
+      <Grid>
         <Controller
           name="password"
           control={control}
@@ -130,7 +130,7 @@ const Step2 = ({
         />
         <p style={{ color: "red" }}>{errors.password?.message}</p>
       </Grid>
-      <Grid xs={12} md={6}>
+      <Grid>
         <Controller
           name="confirmPassword"
           control={control}

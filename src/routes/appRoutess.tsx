@@ -1,13 +1,14 @@
-import QuestionBank from "../pages/question-bank";
+import QuestionBank from "@pages/QuestionBank";
 import EditCourse from "../pages/EditCourse";
-import EditQuestionBank from "../pages/question-bank-edit";
+import EditQuestionBank from "@pages/QuestionBankEdit";
+import CreateCourseContent from "@pages/CreateCourseContent";
+import CourseQuestionEdit from "@pages/CourseQuestionEdit";
 import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
-import CheckoutPage from "@pages/Checkout";
-import UploadPage from "@pages/upload-box";
 import Courses from "../pages/Courses";
+import NotificationsIcon from "@icons/NotificationsIcon";
 export const appRoutes: Route[] = [
   {
     label: "Learning",
@@ -25,6 +26,14 @@ export const appRoutes: Route[] = [
             path: "edit/:courseId",
             element: <EditCourse />,
           },
+          {
+            path: "content/create",
+            element: <CreateCourseContent />, 
+          },
+          {
+            path: "edit/:courseId/:unitId/questions",
+            element: <CourseQuestionEdit />,
+          },
         ],
       },
       {
@@ -37,6 +46,10 @@ export const appRoutes: Route[] = [
           },
           {
             path: "create",
+            element: <EditQuestionBank />,
+          },
+          {
+            path: ":questionBankId/questions",
             element: <EditQuestionBank />,
           },
         ],
@@ -53,22 +66,8 @@ export const appRoutes: Route[] = [
     icon: <DollerIcon />,
     path: "/reports",
   },
-  // {
-  //   label: "Course Glossary",
-  //   element:<CourseGlossary />,
-  //   icon: <DollerIcon />,
-  //   path: "/course-glossary",
-  // },
   {
-    label: "Checkout",
-    element:<CheckoutPage />,
-    icon: <DollerIcon />,
-    path: "/checkout",
-  },
-  {
-    label: "Upload Box",
-    element:<UploadPage />,
-    icon: <DollerIcon />,
-    path: "/upload-box",
+    label: "Notification",
+    icon: <NotificationsIcon />,
   },
 ];

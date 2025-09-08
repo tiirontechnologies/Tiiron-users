@@ -7,10 +7,18 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
+  Menu,
+  // MenuItem // not needed
 } from "@mui/material";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CodeIcon from "@mui/icons-material/Code";
+import QuizIcon from "@mui/icons-material/Quiz";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import ArticleIcon from "@mui/icons-material/Article";
 import FileAddIcon from "@icons/FileAddIcon";
 import FileUploadIcon from "@icons/FileUploadIcon";
 import Loader from "@components/Template/ui/Spinner";
@@ -23,7 +31,7 @@ import {
 import { ReusablePopper } from "@components/Template/popper/ReusablePopper";
 import { AddLessonPopperItem } from "@components/EditCourse/Components/AddLessonPopperItem";
 import { useModal } from "../../../../hooks/useModal";
-import { AddQuestionModal } from "@components/EditCourse/Modals/AddQuestionModal";
+import { useNavigate } from "react-router-dom";
 import { AddChapterModal } from "@components/EditCourse/Modals/AddChapterModal";
 import { AddUnitForm } from "@components/EditCourse/Components/AddUnitForm";
 
@@ -33,14 +41,14 @@ export default function Lessons() {
 
   const contextData = useContext(CourseContext);
   const [openEditorChapterId, setOpenEditorChapterId] = useState<number | null>(null);
-  const { isOpen, closeModal, openModal } = useModal();
   const { isOpen: isChapterModalOpen, closeModal: closeChapterModal, openModal: openChapterModal } = useModal();
-  const [unitId, setUnitId] = useState<number | null>(null);
-
+  const [addContentAnchor, setAddContentAnchor] = useState<{ anchorEl: HTMLElement | null, chapterId: string, unitId: string } | null>(null);
+  const navigate = useNavigate();
+  // Remove unitId state, not needed anymore
   return (
-    <Box sx={{ 
-      display: "flex", 
-      flexDirection: "column", 
+    <Box sx={{
+      display: "flex",
+      flexDirection: "column",
       gap: { xs: "12px", md: "16px" },
       p: { xs: 1, sm: 2, md: 0 }
     }}>
@@ -57,20 +65,20 @@ export default function Lessons() {
                 <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                   {chapter?.units?.length > 0 ? chapter?.units.map((unit: any) => (
                     <LessonItem key={unit?.id}>
-                      <Box sx={{ 
-                        display: "flex", 
+                      <Box sx={{
+                        display: "flex",
                         alignItems: "center",
                         flex: 1,
                         minWidth: 0
                       }}>
-                        <DragIndicatorIcon sx={{ 
-                          color: "#999999", 
+                        <DragIndicatorIcon sx={{
+                          color: "#999999",
                           mr: { xs: "6px", md: "10px" },
                           fontSize: { xs: 18, md: 24 }
                         }} />
-                        <Typography sx={{ 
-                          color: "#000000", 
-                          fontSize: { xs: "14px", md: "16px" }, 
+                        <Typography sx={{
+                          color: "#000000",
+                          fontSize: { xs: "14px", md: "16px" },
                           ml: 1,
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -79,14 +87,14 @@ export default function Lessons() {
                           {unit?.title}
                         </Typography>
                       </Box>
-                      <Box sx={{ 
-                        display: "flex", 
-                        alignItems: "center", 
+                      <Box sx={{
+                        display: "flex",
+                        alignItems: "center",
                         gap: 1,
                         flexShrink: 0
                       }}>
-                        <Button 
-                          variant="contained" 
+                        <Button
+                          variant="contained"
                           size={isSmallScreen ? "small" : "medium"}
                           sx={{
                             fontSize: { xs: '12px', md: '14px' },
@@ -94,12 +102,11 @@ export default function Lessons() {
                             py: { xs: 0.5, md: 1 },
                             whiteSpace: 'nowrap'
                           }}
-                          onClick={() => {
-                            setUnitId(unit?.id);
-                            openModal();
+                          onClick={(e) => {
+                            setAddContentAnchor({ anchorEl: e.currentTarget, chapterId: chapter.id, unitId: unit.id });
                           }}
                         >
-                          Add Questions
+                          Add Content
                         </Button>
                       </Box>
                     </LessonItem>
@@ -107,8 +114,8 @@ export default function Lessons() {
                     <Box sx={{ display: "grid", placeItems: "center", p: 10 }}>No Units Found</Box>
                   )}
                   <IconButton
-                    sx={{ 
-                      m: "auto", 
+                    sx={{
+                      m: "auto",
                       border: "1px solid #E6E6E6",
                       p: { xs: 1, md: 1.5 }
                     }}
@@ -116,7 +123,7 @@ export default function Lessons() {
                       setOpenEditorChapterId(chapter?.id);
                     }}
                   >
-                    <AddRoundedIcon sx={{ 
+                    <AddRoundedIcon sx={{
                       color: "#4D4D4D",
                       fontSize: { xs: 20, md: 24 }
                     }} />
@@ -128,9 +135,9 @@ export default function Lessons() {
           ) : (
             <Box sx={{ display: "grid", placeItems: "center", p: 10 }}>No Data Found...</Box>
           )}
-          <Box sx={{ 
-            m: "auto", 
-            display: "flex", 
+          <Box sx={{
+            m: "auto",
+            display: "flex",
             gap: { xs: "12px", md: "24px" },
             flexDirection: { xs: 'column', sm: 'row' },
             alignItems: 'center',
@@ -173,8 +180,77 @@ export default function Lessons() {
           </Box>
         </Fragment>}
       {openEditorChapterId !== null && (<AddUnitForm chapterId={openEditorChapterId} onClose={() => setOpenEditorChapterId(null)} />)}
-      <AddQuestionModal onClose={closeModal} open={isOpen} unitId={unitId} />
+      {/* Add Content Dropdown */}
+      <Menu
+        anchorEl={addContentAnchor?.anchorEl || null}
+        open={!!addContentAnchor}
+        onClose={() => setAddContentAnchor(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            p: 2,
+            borderRadius: 2,
+            minWidth: 320,
+            maxWidth: 400,
+            mt: 1.5, // margin from button
+          }
+        }}
+      >
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 2,
+            p: 1,
+            minWidth: 300,
+            maxWidth: 400,
+          }}
+        >
+          {[
+            { value: 'video', label: 'Video', icon: OndemandVideoIcon },
+            { value: 'quiz', label: 'Quiz', icon: QuizIcon },
+            { value: 'assignment', label: 'Assignment', icon: AssignmentIcon },
+            { value: 'code', label: 'Code', icon: CodeIcon },
+            { value: 'blog', label: 'Blog', icon: ArticleIcon },
+          ].map((opt) => {
+            const IconComp = opt.icon;
+            return (
+              <Box
+                key={opt.value}
+                onClick={() => {
+                  setAddContentAnchor(null);
+                  navigate(`/courses/edit/${addContentAnchor?.chapterId}/${addContentAnchor?.unitId}/questions`, {
+                    state: { type: opt.value }
+                  });
+                }}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  p: 2,
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  background: '#f5f5f5',
+                  transition: 'background 0.2s, box-shadow 0.2s',
+                  boxShadow: 0,
+                  '&:hover': {
+                    background: '#ede7f6',
+                    boxShadow: 2,
+                  },
+                  minWidth: 80,
+                  minHeight: 80,
+                }}
+              >
+                <IconComp sx={{ fontSize: 32, color: 'primary.main' }} />
+                <Typography sx={{ mt: 1, fontSize: 14, fontWeight: 500, textAlign: 'center' }}>{opt.label}</Typography>
+              </Box>
+            );
+          })}
+        </Box>
+      </Menu>
       <AddChapterModal onClose={closeChapterModal} open={isChapterModalOpen} />
-    </Box>
+    </Box >
   );
 }

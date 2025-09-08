@@ -3,10 +3,11 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api";
 import Loader from "@components/Template/ui/Spinner";
 import { UPLOADS } from "../../constants/constants";
+import Navbar from "@components/Home/common/Navbar";
 
 export default function CourseGlossary() {
   const { courseId } = useParams();
@@ -15,179 +16,182 @@ export default function CourseGlossary() {
   const { data: chapters } = useGetChaptersQuery({ id: courseId || "1" });
 
   return (
-    <Container
-      maxWidth="xl"
-      sx={{
-        backgroundColor: "white",
-        minHeight: "100vh",
-        px: { xs: 3, sm: 2, md: 4, lg: 8 },
-        py: { xs: 3, sm: 2, md: 4, lg: 6 },
-        boxSizing: "border-box",
-      }}
-    >
-      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Header course={data?.data} chapters={chapters?.data?.chapters} />}
-      {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : (
-        <Box
-          sx={{
-            width: { xs: "100%", md: "60%" },
-            maxWidth: { xs: "100%", sm: "100%", md: "100%", lg: "1040px", xl: "1240px", "2xl": "1440px" },
-            px: { xs: 0, sm: 2, md: 4, lg: 0 },
-            pt: { xs: 2, md: "40px" },
-            display: "flex",
-            flexDirection: "column",
-            alignItems: { xs: "center", md: "flex-start" },
-            boxSizing: "border-box",
-            gap: { xs: 2, md: "24px" },
-          }}
-        >
-          {/* Tabs */}
-          <Box sx={{
-            borderBottom: "1px solid #e0e0e0", paddingBlock: "24px", display: "grid", gridTemplateColumns: {
-              xs: "repeat(2,1fr)",
-              md: "repeat(3,1fr)"
-            }, gap: "24px", width: "100%", boxSizing: "border-box", justifyContent: "center"
-          }}>
-            <Button
-              disableElevation
-              sx={{
-                backgroundColor: '#F1E5FF',
-                color: '#333',
-                fontSize: '14px',
-                padding: '18px 40px',
-                textTransform: 'none',
-                boxShadow: 'none',
-                '&:hover': {
-                  backgroundColor: '#e8d7fa', // Optional softer hover
-                  boxShadow: 'none',
-                },
-              }}
-            >
-              Overview
-            </Button>
-            <Button
-              disableElevation
-              sx={{
-                backgroundColor: "transparent",
-                color: "#000",
-                fontSize: "14px",
-                padding: "18px 40px",
-                textTransform: "none",
-                border: "1px solid #e0e0e0",
-                boxShadow: "none",
-                '&:hover': {
-                  backgroundColor: "rgba(255, 255, 255, 0.05)",
-                  boxShadow: "none",
-                  borderColor: "#d5d5d5",
-                },
-              }}
-
-            >
-              Lessons
-            </Button>
-            <Button
-              disableElevation
-              sx={{
-                backgroundColor: "transparent",
-                color: "#000",
-                fontSize: "14px",
-                padding: "18px 40px",
-                textTransform: "none",
-                border: "1px solid #e0e0e0",
-                boxShadow: "none",
-                '&:hover': {
-                  backgroundColor: "rgba(255, 255, 255, 0.05)",
-                  boxShadow: "none",
-                  borderColor: "#d5d5d5",
-                },
-
-              }}
-            >
-              Reviews
-            </Button>
-          </Box>
-          {/* Overview */}
-          <Box
-            sx={{
-              borderBottom: "1px solid #e0e0e0",
-              pb: { xs: 2, md: "24px" },
-              width: "100%",
-              boxSizing: "border-box",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Overview</Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: { xs: "14px", md: "16px", lg: "18px" },
-                mt: 1,
-                wordBreak: "break-word",
-                width: { xs: "100%", md: "90%", lg: "80%" },
-                maxWidth: "100%",
-              }}
-            >
-              {data?.data?.description}
-            </Typography>
-          </Box>
-          {/* Lessons */}
-          <Box
-            sx={{
-              borderBottom: "1px solid #e0e0e0",
-              pb: { xs: 2, md: "24px" },
-              display: "grid",
-              gap: { xs: "8px", md: "14px" },
-              width: "100%",
-              boxSizing: "border-box",
-            }}
-          >
-            <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Lessons</Typography>
-            <CourseGlossaryAccordion chapters={chapters?.data?.chapters} />
-          </Box>
-        </Box>
-      )}
-      {/* Reviews Section */}
-      <Box
+    <Box>
+      <Navbar />
+      <Container
+        maxWidth="xl"
         sx={{
-          px: { xs: 0, md: "0px", lg: "0px" },
-          pt: { xs: 2, md: "40px" },
-          display: "grid",
-          gap: { xs: "16px", md: "48px", lg: "50px" },
-          width: "100%",
+          backgroundColor: "white",
+          minHeight: "100vh",
+          px: { xs: 3, sm: 2, md: 4, lg: 8 },
+          py: { xs: 3, sm: 2, md: 4, lg: 6 },
           boxSizing: "border-box",
         }}
       >
-        <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Learner Reviews</Typography>
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: { xs: 2, md: "48px", lg: "139px" }, width: "100%" }}>
-          <StarRatings />
-          <Box sx={{ display: "grid", gap: { xs: "8px", md: "16px" }, width: "100%" }}>
-            <UserTestimonial />
-            <UserTestimonial />
-            <UserTestimonial />
-            <UserTestimonial />
-            <UserTestimonial />
-            <Box>
+        {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Header course={data?.data} chapters={chapters?.data?.chapters} />}
+        {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : (
+          <Box
+            sx={{
+              width: { xs: "100%", md: "60%" },
+              maxWidth: { xs: "100%", sm: "100%", md: "100%", lg: "1040px", xl: "1240px", "2xl": "1440px" },
+              px: { xs: 0, sm: 2, md: 4, lg: 0 },
+              pt: { xs: 2, md: "40px" },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: { xs: "center", md: "flex-start" },
+              boxSizing: "border-box",
+              gap: { xs: 2, md: "24px" },
+            }}
+          >
+            {/* Tabs */}
+            <Box sx={{
+              borderBottom: "1px solid #e0e0e0", paddingBlock: "24px", display: "grid", gridTemplateColumns: {
+                xs: "repeat(2,1fr)",
+                md: "repeat(3,1fr)"
+              }, gap: "24px", width: "100%", boxSizing: "border-box", justifyContent: "center"
+            }}>
               <Button
-                variant="outlined"
+                disableElevation
                 sx={{
-                  border: "1px solid gray",
-                  backgroundColor: "white",
-                  color: "black",
-                  fontSize: { xs: "12px", md: "14px" },
-                  padding: { xs: "8px 12px", md: "13px 24px" },
-                  textTransform: "none",
-                  fontWeight: 500,
+                  backgroundColor: '#F1E5FF',
+                  color: '#333',
+                  fontSize: '14px',
+                  padding: '18px 40px',
+                  textTransform: 'none',
+                  boxShadow: 'none',
                   '&:hover': {
-                    backgroundColor: "#f5f5f5",
-                    borderColor: "black",
+                    backgroundColor: '#e8d7fa', // Optional softer hover
+                    boxShadow: 'none',
                   },
                 }}
               >
-                View more reviews
+                Overview
               </Button>
+              <Button
+                disableElevation
+                sx={{
+                  backgroundColor: "transparent",
+                  color: "#000",
+                  fontSize: "14px",
+                  padding: "18px 40px",
+                  textTransform: "none",
+                  border: "1px solid #e0e0e0",
+                  boxShadow: "none",
+                  '&:hover': {
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",
+                    boxShadow: "none",
+                    borderColor: "#d5d5d5",
+                  },
+                }}
+
+              >
+                Lessons
+              </Button>
+              <Button
+                disableElevation
+                sx={{
+                  backgroundColor: "transparent",
+                  color: "#000",
+                  fontSize: "14px",
+                  padding: "18px 40px",
+                  textTransform: "none",
+                  border: "1px solid #e0e0e0",
+                  boxShadow: "none",
+                  '&:hover': {
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",
+                    boxShadow: "none",
+                    borderColor: "#d5d5d5",
+                  },
+
+                }}
+              >
+                Reviews
+              </Button>
+            </Box>
+            {/* Overview */}
+            <Box
+              sx={{
+                borderBottom: "1px solid #e0e0e0",
+                pb: { xs: 2, md: "24px" },
+                width: "100%",
+                boxSizing: "border-box",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Overview</Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: { xs: "14px", md: "16px", lg: "18px" },
+                  mt: 1,
+                  wordBreak: "break-word",
+                  width: { xs: "100%", md: "90%", lg: "80%" },
+                  maxWidth: "100%",
+                }}
+              >
+                {data?.data?.description}
+              </Typography>
+            </Box>
+            {/* Lessons */}
+            <Box
+              sx={{
+                borderBottom: "1px solid #e0e0e0",
+                pb: { xs: 2, md: "24px" },
+                display: "grid",
+                gap: { xs: "8px", md: "14px" },
+                width: "100%",
+                boxSizing: "border-box",
+              }}
+            >
+              <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Lessons</Typography>
+              <CourseGlossaryAccordion chapters={chapters?.data?.chapters} />
+            </Box>
+          </Box>
+        )}
+        {/* Reviews Section */}
+        <Box
+          sx={{
+            px: { xs: 0, md: "0px", lg: "0px" },
+            pt: { xs: 2, md: "40px" },
+            display: "grid",
+            gap: { xs: "16px", md: "48px", lg: "50px" },
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          <Typography sx={{ fontSize: { xs: "18px", md: "20px", lg: "24px" }, fontWeight: "700" }}>Learner Reviews</Typography>
+          <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: { xs: 2, md: "48px", lg: "139px" }, width: "100%" }}>
+            <StarRatings />
+            <Box sx={{ display: "grid", gap: { xs: "8px", md: "16px" }, width: "100%" }}>
+              <UserTestimonial />
+              <UserTestimonial />
+              <UserTestimonial />
+              <UserTestimonial />
+              <UserTestimonial />
+              <Box>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    border: "1px solid gray",
+                    backgroundColor: "white",
+                    color: "black",
+                    fontSize: { xs: "12px", md: "14px" },
+                    padding: { xs: "8px 12px", md: "13px 24px" },
+                    textTransform: "none",
+                    fontWeight: 500,
+                    '&:hover': {
+                      backgroundColor: "#f5f5f5",
+                      borderColor: "black",
+                    },
+                  }}
+                >
+                  View more reviews
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   )
 }
 
@@ -248,6 +252,8 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
           <Typography
             variant="subtitle2"
             mb={0.5}
+            display={"flex"}
+            gap={1}
             sx={{
               color: "#0F172A",
               fontWeight: 500,
@@ -255,7 +261,7 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
               wordBreak: "break-word",
             }}
           >
-            4.6 {Array(5).fill(null).map((_, i) => <img key={i} src="src/assets/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. {chapters?.length}. All levels
+            4.6 {Array(5).fill(null).map((_, i) => <img key={i} src="/icons/Vector.svg" />)} (651651 rating) | 22 Total Hours. {chapters?.length}. All levels
           </Typography>
           <Typography
             variant="body1"
@@ -278,7 +284,7 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
             >
               <Avatar
                 alt="Lindsey Curtis"
-                src="src/assets/images/avatarUser.png"
+                src="/images/avatarUser.png"
                 sx={{ width: 40, height: 40 }}
               />
             </Box>
@@ -305,7 +311,7 @@ export function Header({ course, chapters }: { course: any; chapters: any }) {
             >
               <Avatar
                 alt="Lindsey Curtis"
-                src="src/assets/icons/Icon.svg"
+                src="/icons/Icon.svg"
                 sx={{ width: 20, height: 20 }}
               />
             </Box>
@@ -393,37 +399,22 @@ export function ProductCard({ data }: { data?: any }) {
         </Typography>
       </Box>
 
-      <Button
-        variant="contained"
-        fullWidth
-        sx={{
-          bgcolor: '#6A42AB',
-          color: '#fff',
-          py: 1.5,
-          mb: 2,
-          fontSize: { xs: "12px", md: "16px" },
-          '&:hover': { bgcolor: '#6A42AB' },
-        }}
-      >
-        Add To Cart
-      </Button>
-      <Button
-        variant="outlined"
-        fullWidth
-        sx={{
-          borderColor: 'black',
-          color: 'black',
-          py: 1.5,
-          mb: 2,
-          fontSize: { xs: "12px", md: "16px" },
-          '&:hover': {
-            bgcolor: '#f3f4f6',
-            borderColor: 'black',
-          },
-        }}
-      >
-        Buy Now
-      </Button>
+      <Link to="/checkout" style={{ textDecoration: 'none', width: '100%' }}>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{
+            bgcolor: '#6A42AB',
+            color: '#fff',
+            py: 1.5,
+            mb: 2,
+            fontSize: { xs: "12px", md: "16px" },
+            '&:hover': { bgcolor: '#6A42AB' },
+          }}
+        >
+          Checkout
+        </Button>
+      </Link>
 
       <hr />
 
@@ -443,7 +434,7 @@ export function ProductCard({ data }: { data?: any }) {
         >
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/facebook.svg"
+            src="/icons/facebook.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>
@@ -458,7 +449,7 @@ export function ProductCard({ data }: { data?: any }) {
         >
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/Icon.svg"
+            src="/icons/Icon.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>
@@ -473,7 +464,7 @@ export function ProductCard({ data }: { data?: any }) {
         >
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/google.svg"
+            src="/icons/google.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>
@@ -489,7 +480,7 @@ export function ProductCard({ data }: { data?: any }) {
           {/* Replace this with actual X (Twitter) icon if needed */}
           <Avatar
             alt="Lindsey Curtis"
-            src="src/assets/icons/MicroSoftIcon.svg"
+            src="/icons/MicroSoftIcon.svg"
             sx={{ width: 20, height: 20 }}
           />
         </IconButton>
@@ -645,7 +636,7 @@ export function StarRatings() {
       <Box display="flex" alignItems="center" gap={1}>
         <Avatar
           alt="Lindsey Curtis"
-          src="src/assets/icons/Vector.svg"
+          src="/icons/Vector.svg"
           sx={{ width: 20, height: 20 }}
         />
         <Typography fontWeight={600} fontSize={20} lineHeight={1}>
@@ -665,13 +656,13 @@ export function StarRatings() {
                 i < rating.stars ? (
                   <Avatar
                     alt="Lindsey Curtis"
-                    src="src/assets/icons/Vector.svg"
+                    src="/icons/Vector.svg"
                     sx={{ width: 14, height: 14 }}
                   />
                 ) : (
                   <Avatar
                     alt="Lindsey Curtis"
-                    src="src/assets/icons/Vector.svg"
+                    src="/icons/Vector.svg"
                     sx={{ width: 14, height: 14 }}
                   />
                 )

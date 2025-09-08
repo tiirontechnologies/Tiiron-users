@@ -120,6 +120,7 @@ const AuthLayout = ({
                 px: 3,
                 fontWeight: 600,
               }}
+              type="submit"
             >
               {isLoading ? "Loading..." : submitButtonText}
             </Button>

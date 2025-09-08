@@ -1,7 +1,8 @@
 // components/AddNewQuestionCard.tsx
 import { Box, Divider } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import React from "react";
+import { useState } from "react";
+import { CreateQuestionBankModal } from "../../components/QuestionBank/Modals/CreateQuestionBankModal";
 
 type Props = {
   image: string | null;
@@ -14,14 +15,15 @@ type Props = {
   setTagInput: (val: string) => void;
 };
 
-const AddNewQuestionCard = ({ image, setImage, title, setTitle }: Props) => {
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setImage(reader.result as string);
-      reader.readAsDataURL(file);
-    }
+export default function AddNewQuestionCard({ title, setTitle }: Props) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -40,7 +42,7 @@ const AddNewQuestionCard = ({ image, setImage, title, setTitle }: Props) => {
         background: "#fff",
       }}
     >
-      {/* Image Upload */}
+      {/* Add Question Bank Button */}
       <Box
         sx={{
           background: "#E2D5FF",
@@ -56,34 +58,9 @@ const AddNewQuestionCard = ({ image, setImage, title, setTitle }: Props) => {
           top: 0,
           zIndex: 2,
         }}
+        onClick={handleOpenModal}
       >
-        {image ? (
-          <img
-            src={image}
-            alt="Course"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        ) : (
-          <>
-            <AddRoundedIcon sx={{ color: "#452B80", fontSize: 40 }} />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                opacity: 0,
-                cursor: "pointer",
-              }}
-            />
-          </>
-        )}
+        <AddRoundedIcon sx={{ color: "#452B80", fontSize: 40 }} />
       </Box>
 
       <Divider
@@ -92,8 +69,7 @@ const AddNewQuestionCard = ({ image, setImage, title, setTitle }: Props) => {
           bottom: 37,
           left: 12,
           right: 12,
-        }}
-      />
+        }} />
 
       <Box
         sx={{
@@ -131,16 +107,19 @@ const AddNewQuestionCard = ({ image, setImage, title, setTitle }: Props) => {
             e.currentTarget.style.borderRadius = "4px";
             e.currentTarget.style.backgroundColor = "white";
             e.currentTarget.style.padding = "6px 8px";
-          }}
+          } }
           onBlur={(e) => {
             e.currentTarget.style.border = "none";
             e.currentTarget.style.backgroundColor = "transparent";
             e.currentTarget.style.padding = "4px 0";
-          }}
-        />
+          } } />
       </Box>
+
+      {/* Question Bank Creation Modal */}
+      <CreateQuestionBankModal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+      />
     </Box>
   );
-};
-
-export default AddNewQuestionCard;
+}

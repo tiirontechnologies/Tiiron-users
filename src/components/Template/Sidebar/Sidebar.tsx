@@ -99,10 +99,9 @@ const SidebarMenu = ({ routes, open }: any) => {
                   {route.children.map((child: any) => (
                     <ListItemButton
                       key={child.label}
-                      sx={{ pl: 4 }}
                       onClick={() => navigate(child.path)}
                     >
-                      <ListItemIcon sx={{ color: "rgba(51, 51, 51, 1)" }}>
+                      <ListItemIcon sx={{ color: "rgba(51, 51, 51, 1)", minWidth: "35px" }}>
                         {child.icon}
                       </ListItemIcon>
                       {open && (

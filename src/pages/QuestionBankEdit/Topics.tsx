@@ -6,17 +6,14 @@ import EditIcon2 from "@icons/EditIcon2";
 import CheckBoxIcon from "@icons/CheckBoxIcon";
 import { useState } from "react";
 
-const Topics = ({
-  TopicsData,
-  selectedId,
-  setSelectedId,
-  setFormType
+export default function Topics({
+  TopicsData, selectedId, setSelectedId, setFormType
 }: {
   setFormType: (type: "multiple_choice" | "single_choice" | "fill_up" | null) => void;
   TopicsData: Topic[];
   selectedId: number;
   setSelectedId: (id: number) => void;
-}) => {
+}) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -33,15 +30,13 @@ const Topics = ({
       {TopicsData?.map((question: any) => (
         <Box
           sx={{
-            border:
-              selectedId === question.topicId
-                ? "1px solid #6A42AB"
-                : "1px solid #CCCCCC",
+            border: selectedId === question.topicId
+              ? "1px solid #6A42AB"
+              : "1px solid #CCCCCC",
             p: "16px",
-            borderLeft:
-              selectedId === question.topicId
-                ? "4px solid #6A42AB"
-                : "1px solid #CCCCCC",
+            borderLeft: selectedId === question.topicId
+              ? "4px solid #6A42AB"
+              : "1px solid #CCCCCC",
             borderRadius: "8px",
             display: "flex",
             alignItems: "center",
@@ -51,8 +46,8 @@ const Topics = ({
           }}
           onClick={() => setSelectedId(question.topicId)}
         >
-          <Typography>{question?.text?.length > 20 ? question?.text?.slice(0,20) + "..." : question?.text}</Typography>
-          <Typography sx={{ ml: "auto",textTransform:"capitalize" }}>{question?.type}</Typography>
+          <Typography>{question?.text?.length > 20 ? question?.text?.slice(0, 20) + "..." : question?.text}</Typography>
+          <Typography sx={{ ml: "auto", textTransform: "capitalize" }}>{question?.type}</Typography>
           <IconButton>
             <MoreVert sx={{ fontSize: "20px" }} />
           </IconButton>
@@ -73,7 +68,7 @@ const Topics = ({
           onClick={() => {
             handleMenuClose();
             setFormType("multiple_choice");
-          }}
+          } }
         >
           Multiple Choice
         </MenuItem>
@@ -81,7 +76,7 @@ const Topics = ({
           onClick={() => {
             handleMenuClose();
             setFormType("single_choice");
-          }}
+          } }
         >
           Single Choice
         </MenuItem>
@@ -89,15 +84,14 @@ const Topics = ({
           onClick={() => {
             handleMenuClose();
             setFormType("fill_up");
-          }}
+          } }
         >
           Fill Ups
         </MenuItem>
       </Menu>
     </>
   );
-};
-
+}
 
 export const QuestionsSideList = ({
   QuestionsData,
@@ -151,4 +145,3 @@ export const QuestionsSideList = ({
     </>
   );
 };
-export default Topics;

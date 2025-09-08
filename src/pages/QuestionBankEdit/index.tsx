@@ -7,8 +7,9 @@ import Topics from "./Topics";
 import TopicsQuestions from "./TopicsQuestions";
 import { useState } from "react";
 import QuestionEdit from "./QuestionEdit";
-import { useGetAllQuestionsQuery } from "../../api/api";
+import { useGetAllQuestionsQuery, useGetQuestionBankByIdQuery, useGetQuestionBankQuestionsQuery } from "../../api/api";
 import Loader from "@components/Template/ui/Spinner";
+import { useParams } from "react-router-dom";
 export interface AnswerOption {
   optionId: number;
   option: string;
@@ -31,54 +32,46 @@ export interface Topic {
   question: Question[];
 }
 
+export default function index() {
+  const { questionBankId } = useParams<{ questionBankId: string }>();
 
-const index = () => {
-  const { data, isFetching, isError } = useGetAllQuestionsQuery('');
+  // Use specific endpoint for question bank questions, fallback to all questions for create mode
+  const { data, isFetching, isError } = questionBankId 
+    ? useGetQuestionBankQuestionsQuery({ id: Number(questionBankId), page: 1, limit: 100 })
+    : useGetAllQuestionsQuery({ page: 1, limit: 100 });
 
-  const [selectedId, setSelectedId] = useState(data?.data[0].id);
+  const [selectedId, setSelectedId] = useState(data?.data[0]?.id);
   const [switchView, setSwitchView] = useState("topic-edit");
   const [formType, setFormType] = useState<null | "multiple_choice" | "single_choice" | "fill_up">(null);
-
+  const { data: questionBank } = useGetQuestionBankByIdQuery({ id: Number(questionBankId) });
   return switchView === "topic-edit" ? (
     <Box>
-      <ToolBar>
+      <ToolBar previousPage="/question-bank" courseName={questionBank?.data?.name}>
         <RightSideTools />
       </ToolBar>
       <Box sx={{ display: "flex", height: "100vh", p: "24px" }}>
         {isFetching ? <Loader /> : isError ? <Box>Some Error occured...</Box> : data?.data && <QuestionBankLayout
           heading="Questions"
-          mainContent={
-            <>
-              <TopicsQuestions
-                setFormType={setFormType}
-                formType={formType}
-                selectedId={selectedId}
-                setSwitchView={setSwitchView}
-              />
-            </>
-          }
-          sidebarContent={
-            <Topics
+          mainContent={<>
+            <TopicsQuestions
               setFormType={setFormType}
-              TopicsData={data?.data}
-              selectedId={selectedId}
-              setSelectedId={setSelectedId}
-            />
-          }
-        />}
+              formType={formType}
+              selectedId={questionBankId ? Number(questionBankId) : selectedId}
+              setSwitchView={setSwitchView} />
+          </>}
+          sidebarContent={<Topics
+            setFormType={setFormType}
+            TopicsData={data?.data}
+            selectedId={selectedId}
+            setSelectedId={setSelectedId} />} />}
       </Box>
     </Box>
   ) : (
     <QuestionEdit
-      QuestionData={
-        (data?.data.find((t: any) => t.topicId === selectedId)?.question ??
-          []) as Question[]
-      }
-    />
+      QuestionData={(data?.data.find((t: any) => t.topicId === selectedId)?.question ??
+        []) as Question[]} />
   );
-};
-
-export default index;
+}
 
 export const RightSideTools = () => {
   return (
