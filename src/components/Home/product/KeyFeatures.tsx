@@ -72,7 +72,7 @@ const KeyFeatures = ({ items = DEFAULT_FEATURES }) => {
         <div className="mt-10 text-center">
           <a
             href="/features"
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow hover:from-red-600 hover:to-pink-600 transition"
+            className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-green-400 via-lime-300 to-teal-300 text-black font-semibold shadow hover:from-green-500 hover:via-lime-400 hover:to-teal-400 transition"
           >
             View all features
             <svg

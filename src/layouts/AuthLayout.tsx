@@ -68,7 +68,7 @@ const AuthLayout = ({
   };
 
   const ImageSection = (
-    <Grid md={6}>
+    <Grid item md={6} xs={12}>
       <Box
         sx={{
           height: "100%",
@@ -83,8 +83,7 @@ const AuthLayout = ({
   return (
     <Grid container sx={{ minHeight: "100vh" }}>
       {!isSmallScreen && imageOnLeft && ImageSection}
-
-      <Grid
+      <Grid item
         md={6}
         xs={12}
         sx={{
@@ -122,7 +121,7 @@ const AuthLayout = ({
                 fontWeight: 600,
               }}
             >
-              {submitButtonText}
+              {isLoading ? "Loading..." : submitButtonText}
             </Button>
           </Box>
 

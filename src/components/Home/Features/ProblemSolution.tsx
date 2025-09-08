@@ -37,7 +37,7 @@ const ProblemSolution = () => {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] py-24">
+    <section className="relative overflow-hidden bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] py-22">
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8 z-10">
         {/* Heading */}
         <div className="text-center max-w-3xl mx-auto">

@@ -63,17 +63,17 @@ const CTA = () => {
         <div className="flex flex-col items-center md:items-end gap-4">
           <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3">
             <a
-              href="/get-started"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 shadow-lg focus:outline-none focus:ring-4 focus:ring-red-200 transition"
+              href="/login"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 hover:from-green-700 hover:via-emerald-600 hover:to-teal-600 shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300 transition"
               aria-label="Get started with Tiiron"
             >
-              <span>Get Started</span>
+              <span >Get Started</span>
               <ArrowRight className="w-4 h-4 ml-3" />
             </a>
 
             <a
-              href="/talk-to-sales"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full text-gray-800 bg-white border border-gray-200 hover:bg-gray-50 font-medium focus:outline-none focus:ring-3 focus:ring-gray-100 transition"
+              href="/contact"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full text-gray-800 bg-white border border-gray-200 hover:bg-gray-200 font-medium focus:outline-none focus:ring-3 focus:ring-gray-100 transition"
               aria-label="Talk to sales"
             >
               Talk to Sales
