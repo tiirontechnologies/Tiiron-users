@@ -122,26 +122,26 @@ const ProductOverview = () => {
 
             {/* Controls */}
             <button
-  onClick={(e) => {
-    e.stopPropagation();
-    prevImage();
-  }}
-  className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 p-3 rounded-full transition shadow-lg"
-  aria-label="Previous image"
->
-  <ArrowLeft className="w-6 h-6 text-white" />
-</button>
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImage();
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 p-3 rounded-full transition shadow-lg"
+              aria-label="Previous image"
+            >
+              <ArrowLeft className="w-6 h-6 text-white" />
+            </button>
 
-<button
-  onClick={(e) => {
-    e.stopPropagation();
-    nextImage();
-  }}
-  className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 p-3 rounded-full transition shadow-lg"
-  aria-label="Next image"
->
-  <ArrowRight className="w-6 h-6 text-white" />
-</button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImage();
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 p-3 rounded-full transition shadow-lg"
+              aria-label="Next image"
+            >
+              <ArrowRight className="w-6 h-6 text-white" />
+            </button>
 
 
             <button
