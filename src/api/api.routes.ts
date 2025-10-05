@@ -72,7 +72,7 @@ export const getEndpoints = {
    */
   getCourseForStudent: {
     query: ({ id }: { id: string }) => ({
-      url: SERVER_URL + "/student/course/" + id,
+      url: SERVER_URL + "/org/student/chapter/course/" + id,
       method: "GET",
     }),
   },
@@ -83,9 +83,8 @@ export const getEndpoints = {
    */
   getUnitsWithQuestions: {
     query: ({ unitId }: { unitId: string }) => ({
-      url: SERVER_URL + "/student/unit",
-      method: "GET",
-      params: { unitId }
+      url: SERVER_URL + "/content/course/2/unit/" + unitId,
+      method: "GET"
     }),
   },
   /**
