@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import AddNewCourseCard from "../../course-settings/components/AddNewCourseCard";
-import CourseCard from "../../course-settings/components/CourseCard";
+import CourseCard from "../../course/pages/CourseCard";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import { useGetCoursesQuery } from "../api/courseApi";
 import { ICourse } from "types/course.types";

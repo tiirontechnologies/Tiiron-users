@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { useModal } from "../../../hooks/useModal";
-import { DeleteModal } from "./Modal/DeleteCourseModal";
+import { DeleteModal } from "../../course/components/DeleteCourseModal";
 import { DeleteCourseSection } from "./SettingsSections/DeleteCourseSection";
 import { CourseDetailsSection } from "./SettingsSections/CourseDetailsSection";
 import { NavigationSection } from "./SettingsSections/NavigationSection";

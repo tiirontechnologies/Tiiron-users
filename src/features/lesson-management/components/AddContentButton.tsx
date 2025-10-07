@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { ReusablePopper } from "../../../components/ui/popper/ReusablePopper";
+import { ReusablePopper } from "@components/ui/popper/ReusablePopper";
 import VideoCircleIcon from "@icons/VideoCircleIcon";
 import GridViewIcon from "@icons/GridViewIcon";
 import TextBlockIcon from "@icons/TextBlockIcon";

@@ -28,11 +28,11 @@ import {
   LessonItem
 } from "../../course-settings/components/StyledComponents";
 import { ReusablePopper } from "@components/ui/popper/ReusablePopper";
-import { AddLessonPopperItem } from "../../course-settings/components/AddLessonPopperItem";
+import { AddLessonPopperItem } from "./AddLessonPopperItem";
 import { useModal } from "../../../hooks/useModal";
 import { useNavigate } from "react-router-dom";
-import { AddChapterModal } from "../../course-settings/components/AddChapterModal";
-import { AddUnitForm } from "../../course-settings/components/AddUnitForm";
+import { AddChapterModal } from "./AddChapterModal";
+import { AddUnitForm } from "./AddUnitForm";
 import { Chapter, CourseData } from '../types';
 
 interface LessonsProps {

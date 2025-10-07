@@ -1,5 +1,4 @@
-import Modal from "@components/ui/Modal/Modal";
-import { useSnackbar } from "@components/ui/Snackbar/SnackBarProvider";
+import { Modal, useSnackbar } from "@components/ui";
 import { Box, Button, Typography } from "@mui/material";
 import { useDeleteCourseMutation } from "../../course-dashboard/api/courseApi";
 

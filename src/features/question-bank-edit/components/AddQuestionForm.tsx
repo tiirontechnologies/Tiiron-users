@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import RichTextEditor from "@components/ui/RichTextEditor";
 import { ICreateQuestion } from "types/questioncreate.types";
 import { useCreateQuestionMutation } from "../../question-bank/api/questionBankApi";
-import { useSnackbar } from "@components/ui/Snackbar/SnackBarProvider";
+import { useSnackbar } from "@components/ui";
 
 type QuestionType = "multiple_choice" | "single_choice" | "fill_up";
 

@@ -1,10 +1,9 @@
 import { Box, Button, Chip, TextField, Typography } from "@mui/material";
-import { useCreateCourseMutation } from "../../../course-dashboard/api/courseApi";
+import { useCreateCourseMutation } from "../../course-dashboard/api/courseApi";
 import { Controller, useForm } from "react-hook-form";
-import { ICreateCourse } from "../../../../types/course.types";
+import { ICreateCourse } from "../../../types/course.types";
 import { useState } from "react";
-import Modal from "@components/ui/Modal/Modal";
-import { useSnackbar } from "@components/ui/Snackbar/SnackBarProvider";
+import { Modal, useSnackbar } from "@components/ui";
 
 export function AddNewCourseModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
     const { showSnackbar } = useSnackbar();

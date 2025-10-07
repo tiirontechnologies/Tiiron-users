@@ -1,9 +1,8 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import Modal from "@components/ui/Modal/Modal";
+import { Modal, useSnackbar } from "@components/ui";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { useCreateChapterMutation } from "../../lesson-management/api/chapterApi";
-import { useSnackbar } from "@components/ui/Snackbar/SnackBarProvider";
+import { useCreateChapterMutation } from "../api/chapterApi";
 
 interface IAddChapterModalProps {
   open: boolean;

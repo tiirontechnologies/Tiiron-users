@@ -4,7 +4,7 @@ import MoreButton from "../../course-settings/components/MoreButton";
 import PublishButton from "../../course-settings/components/PublishButton";
 import QuestionBankLayout from "../../question-bank-edit/components/QuestionBankLayout";
 import { useState } from "react";
-import AddCourseQuestionForm from "./AddCourseQuestionForm";
+import { AddCourseQuestionForm } from "./AddCourseQuestionForm";
 import { useLocation, useParams } from "react-router-dom";
 
 // Dummy data for now, replace with real course/unit questions

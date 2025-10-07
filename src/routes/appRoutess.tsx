@@ -1,5 +1,5 @@
 import { QuestionBankComponent } from "../features";
-import EditCourse from "../pages/EditCourse";
+import EditCourse from "../features/course/EditCourse";
 import { QuestionBankEdit } from "../features";
 import { CreateCourseContent } from "../features";
 import { CourseQuestionEdit } from "../features";

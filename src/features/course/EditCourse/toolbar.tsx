@@ -9,8 +9,8 @@ import {
 // icons
 import WestIcon from "@mui/icons-material/West";
 
-import MoreButton from "../../features/course-settings/components/MoreButton";
-import PublishButton from "../../features/course-settings/components/PublishButton";
+import MoreButton from "../../course-settings/components/MoreButton";
+import PublishButton from "../../course-settings/components/PublishButton";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; children: React.ReactNode; previousPage?: string }) => {

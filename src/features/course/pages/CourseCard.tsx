@@ -7,7 +7,7 @@ import DeleteIcon from "@icons/DeleteIcon";
 import { Link } from "react-router-dom";
 import { ICourseCardProps } from "types/course.types";
 import { useModal } from "../../../hooks/useModal";
-import { DeleteModal } from "./Modal/DeleteCourseModal";
+import { DeleteModal } from "../components/DeleteCourseModal";
 
 
 

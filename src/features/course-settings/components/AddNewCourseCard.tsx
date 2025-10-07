@@ -2,7 +2,7 @@
 import { Box, Divider, Typography } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { useModal } from "../../../hooks/useModal";
-import { AddNewCourseModal } from "./Modal/AddNewCourseModal";
+import { AddNewCourseModal } from "../../course/components/AddNewCourseModal";
 
 
 export default function AddNewCourseCard() {

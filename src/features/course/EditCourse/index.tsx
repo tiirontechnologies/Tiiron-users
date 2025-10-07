@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import ToolBar, { RightSideTools } from "./toolbar";
 import CourseMetaTabs from "./CourseMetaTabs";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api.routes";
+import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../../api/api.routes";
 import Loader from "@components/ui/Spinner";
 import { createContext, useState } from "react";
 
@@ -60,4 +60,5 @@ const Index = () => {
   );
 };
 
-export default Index;
+const EditCourse = Index;
+export default EditCourse;

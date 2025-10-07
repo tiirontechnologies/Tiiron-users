@@ -5,13 +5,13 @@ import ReportIcon from "@icons/ReportIcon";
 import ProfileTwoUserIcon from "@icons/ProfileTwoUserIcon";
 import InfoCircleIcon from "@icons/InfoCircleIcon";
 import SettingsIcon from "@icons/SettingsIcon";
-import { Lessons, Settings, Learners, Reports, CourseDashboard } from "../../features";
+import { Lessons, Settings, Learners, Reports, CourseDashboard } from "../../../features";
 import ToolBar from "./toolbar";
-import MoreButton from "../../features/course-settings/components/MoreButton";
-import PublishButton from "../../features/course-settings/components/PublishButton";
+import MoreButton from "../../course-settings/components/MoreButton";
+import PublishButton from "../../course-settings/components/PublishButton";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetCourseByIdQuery } from "../../features/course-dashboard/api/courseApi";
-import { useGetChaptersQuery } from "../../features/lesson-management/api/chapterApi";
+import { useGetCourseByIdQuery } from "../../course-dashboard/api/courseApi";
+import { useGetChaptersQuery } from "../../lesson-management/api/chapterApi";
 import Loader from "@components/ui/Spinner";
 import { CourseContext } from "./index";
 
