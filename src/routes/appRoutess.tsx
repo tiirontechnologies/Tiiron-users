@@ -1,13 +1,13 @@
-import QuestionBank from "@pages/QuestionBank";
-import EditCourse from "../pages/EditCourse";
-import EditQuestionBank from "@pages/QuestionBankEdit";
-import CreateCourseContent from "@pages/CreateCourseContent";
-import CourseQuestionEdit from "@pages/CourseQuestionEdit";
+import { QuestionBankComponent } from "../features";
+import EditCourse from "../features/course/EditCourse";
+import { QuestionBankEdit } from "../features";
+import { CreateCourseContent } from "../features";
+import { CourseQuestionEdit } from "../features";
 import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
-import Courses from "../pages/Courses";
+import Courses from "../features/course-dashboard/components/Courses";
 import NotificationsIcon from "@icons/NotificationsIcon";
 export const appRoutes: Route[] = [
   {
@@ -42,15 +42,15 @@ export const appRoutes: Route[] = [
         children: [
           {
             path: "",
-            element: <QuestionBank />,
+            element: <QuestionBankComponent />,
           },
           {
             path: "create",
-            element: <EditQuestionBank />,
+            element: <QuestionBankEdit />,
           },
           {
             path: ":questionBankId/questions",
-            element: <EditQuestionBank />,
+            element: <QuestionBankEdit />,
           },
         ],
       },

@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { Provider } from 'react-redux'
 import { store } from './store/store.ts'
-import { SnackbarProvider } from '@layouts/Snackbar/SnackBarProvider.tsx'
+import { SnackbarProvider } from '@components/ui'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
