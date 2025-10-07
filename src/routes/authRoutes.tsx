@@ -1,8 +1,6 @@
 import { Navigate } from "react-router-dom";
 import type { Route } from "types/routes";
-import Login from "@pages/auth/login";
-import Signup from "@pages/auth/signup";
-import OrgSignup from "@pages/auth/organization-signup";
+import { Login, Signup, OrganizationSignup } from "../features";
 export const authRoutes: Route[] = [
   {
     path: "/",
@@ -18,6 +16,6 @@ export const authRoutes: Route[] = [
   },
   {
     path: "/organization/create-account",
-    element: <OrgSignup />,
+    element: <OrganizationSignup />,
   },
 ];

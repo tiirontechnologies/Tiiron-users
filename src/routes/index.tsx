@@ -3,12 +3,12 @@ import { appRoutes } from "./appRoutess";
 import { globalRoutes } from "./globalRoutes";
 import { authRoutes } from "./authRoutes";
 import { homeRoutes } from "./homeRoutes";
-import CourseProgress from "@pages/course-progress";
+import { CourseProgress } from "../features";
 import PrivateRoute from "@layouts/PrivateRoute";
-import CourseGlossary from "@pages/CourseGlossary";
+import { CourseGlossary } from "../features";
 import { Box } from "@mui/material";
 import DollerIcon from "../assets/icons/DollerIcon";
-import CheckoutPage from "@pages/Checkout";
+import { CheckoutPage } from "../features";
 
 export const routeConfig = [
   {

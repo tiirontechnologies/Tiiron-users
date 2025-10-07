@@ -1,18 +1,19 @@
 import type { Route } from "types/routes";
 
 import Layout from "../layouts/Layout";
-import Home from "@pages/home/Home";
-import Features from "@pages/home/Features";
-import About from "@pages/home/About";
-import Product from "@pages/home/Product";
-import Pricing from "@pages/home/Pricing";
-import Contact from "@pages/home/Contact";
-import NotFound from "@pages/home/NotFound";
-import LoginSignup from "@pages/home/LoginSignup";
-
-import WhyTiiron from "@pages/home/Explore/WhyTiiron";
-import OurPlatform from "@pages/home/Explore/OurPlatform";
-import WhomFor from "@pages/home/Explore/WhomFor";
+import { 
+  Home, 
+  Features, 
+  About, 
+  Product, 
+  Pricing, 
+  Contact, 
+  NotFound, 
+  LoginSignup,
+  WhyTiiron,
+  OurPlatform,
+  WhomFor
+} from "../features";
 
 export const homeRoutes: Route[] = [
   {

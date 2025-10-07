@@ -1,10 +1,9 @@
 import { Box } from "@mui/material";
 import ToolBar, { RightSideTools } from "./toolbar";
-
 import CourseMetaTabs from "./CourseMetaTabs";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api";
-import Loader from "@components/Template/ui/Spinner";
+import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../api/api.routes";
+import Loader from "@components/ui/Spinner";
 import { createContext, useState } from "react";
 
 export const CourseContext = createContext<any>("");
@@ -26,14 +25,28 @@ const Index = () => {
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
+  
   return (
-    <Box>
-      {isCourseFetching ? <Loader /> : isCourseError ? <div>Some error occuredd...</div> : courseData?.data && <ToolBar courseName={courseData?.data?.title} >
+    <Box sx={{ 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+      p: { xs: 2, sm: 3, md: 4 },
+      gap: 2
+    }}>
+      {isCourseFetching ? <Loader /> : isCourseError ? <div>Some error occurred...</div> : courseData?.data && <ToolBar courseName={courseData?.data?.title} >
         <RightSideTools />
       </ToolBar>}
 
-      <Box sx={{ display: "flex", height: "100vh", p: "24px" }}>
-        {isFetching ? <Loader /> : isError ? <div>Some error occuredd...</div> : <CourseContext.Provider
+      <Box sx={{ 
+        display: "flex", 
+        flex: 1,
+        height: 'calc(100vh - 120px)',
+        backgroundColor: '#f8fafc',
+        borderRadius: { xs: 2, md: 3 },
+        overflow: 'hidden'
+      }}>
+        {isFetching ? <Loader /> : isError ? <div>Some error occurred...</div> : <CourseContext.Provider
           value={{
             data: data?.data,
             isLoading: isFetching,

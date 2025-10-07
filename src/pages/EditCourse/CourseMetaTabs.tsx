@@ -1,35 +1,110 @@
-import { Box, Tab, Tabs, Typography, useTheme, useMediaQuery } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Tab, Tabs, Typography, useTheme, useMediaQuery, Button, Divider, Rating } from "@mui/material";
+import React, { useState, useContext } from "react";
 import EditIcon from "@icons/EditIcon";
 import ReportIcon from "@icons/ReportIcon";
 import ProfileTwoUserIcon from "@icons/ProfileTwoUserIcon";
 import InfoCircleIcon from "@icons/InfoCircleIcon";
 import SettingsIcon from "@icons/SettingsIcon";
-import Lessons from "./tabs/Lessons/index"
-import Settings from "./tabs/Settings/Settings";
-import Learners from "./tabs/Learners";
-import Reports from "./tabs/Reports";
-import Dashboard from "./tabs/Dashboard";
+import { Lessons, Settings, Learners, Reports, CourseDashboard } from "../../features";
+import ToolBar from "./toolbar";
+import MoreButton from "../../features/course-settings/components/MoreButton";
+import PublishButton from "../../features/course-settings/components/PublishButton";
+import { useParams, useNavigate } from "react-router-dom";
+import { useGetCourseByIdQuery } from "../../features/course-dashboard/api/courseApi";
+import { useGetChaptersQuery } from "../../features/lesson-management/api/chapterApi";
+import Loader from "@components/ui/Spinner";
+import { CourseContext } from "./index";
 
 const CourseMetaTabs = () => {
   const [value, setValue] = useState(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { courseId } = useParams<{ courseId: string }>();
+  const courseContext = useContext(CourseContext);
+  
+  // Fetch course data
+  const { data: courseData, isLoading: isCourseLoading, error: courseError } = useGetCourseByIdQuery({ 
+    id: courseId || "" 
+  }, {
+    skip: !courseId // Skip the query if courseId is not available
+  });
+  
+  // Fetch chapters data
+  const { data: chaptersData, isLoading: isChaptersLoading, error: chaptersError, isSuccess: isChaptersSuccess } = useGetChaptersQuery({
+    id: courseId || "",
+    page: 1,
+    limit: 100
+  }, {
+    skip: !courseId // Skip the query if courseId is not available
+  });
+
+  // Extract chapters data with fallback
+  const extractChaptersData = (data: any) => {
+    if (!data) return null;
+    
+    // Try different possible data structures
+    if (Array.isArray(data)) return data;
+    if (data.chapters && Array.isArray(data.chapters)) return data.chapters;
+    if (data.data && Array.isArray(data.data)) return data.data;
+    if (data.data && data.data.chapters && Array.isArray(data.data.chapters)) return data.data.chapters;
+    
+    return null;
+  };
+  
+  const extractedChaptersData = extractChaptersData(chaptersData);
   
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  // Show error if no courseId
+  if (!courseId) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Typography color="error">No course ID provided. Please navigate to a valid course.</Typography>
+      </Box>
+    );
+  }
+
+  // Validate courseId format
+  if (isNaN(Number(courseId))) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Typography color="error">Invalid course ID format. Please navigate to a valid course.</Typography>
+      </Box>
+    );
+  }
+
+  // Show loading state while fetching course data
+  if (isCourseLoading || isChaptersLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Loader />
+      </Box>
+    );
+  }
+
+  // Show error state if course fetch failed
+  if (courseError || chaptersError) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Typography color="error">
+          Error loading data: {courseError ? 'Course data' : 'Chapters data'}. Please try again.
+        </Typography>
+      </Box>
+    );
+  }
+
   const tabdata = [
     {
       title: "Overview",
       icon: <InfoCircleIcon />,
-      content: <Dashboard />
+      content: <CourseDashboard />
     },
     {
       title: "Lessons",
       icon: <EditIcon />,
-      content: <Lessons />,
+      content: <Lessons courseData={courseData?.data} chaptersData={extractedChaptersData} />,
     },
     {
       title: "Report",
@@ -49,16 +124,21 @@ const CourseMetaTabs = () => {
       ),
     },
   ];
+  
   return (
     <Box 
       sx={{
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         width: '100%',
-        minHeight: { xs: 'auto', md: '600px' }
+        height: '100%',
+        backgroundColor: '#f8fafc',
+        borderRadius: { xs: 2, md: 3 },
+        overflow: 'hidden'
       }}
     >
       <Tabs
+        className="course-edit-tabs"
         orientation={isMobile ? "horizontal" : "vertical"}
         variant={isMobile ? "scrollable" : "standard"}
         value={value}
@@ -158,11 +238,17 @@ const CourseMetaTabs = () => {
       {/* Tab panels */}
       <Box sx={{ 
         flexGrow: 1, 
-        mx: { xs: 0, md: "24px" },
+        mx: { xs: 0, md: 3 },
         mt: { xs: 2, md: 0 },
         width: { xs: '100%', md: 'calc(100% - 160px)' },
         maxWidth: { xs: '100%', md: 'none' },
-        overflow: 'hidden'
+        overflow: 'hidden',
+        backgroundColor: '#fff',
+        borderRadius: { xs: 2, md: 3 },
+        boxShadow: { xs: '0 2px 4px rgba(0,0,0,0.1)', md: '0 4px 12px rgba(0,0,0,0.15)' },
+        border: { xs: '1px solid #e0e0e0', md: '1px solid #f0f0f0' },
+        display: 'flex',
+        flexDirection: 'column'
       }}>
         {tabdata.map((tab, index) => (
           <TabPanel key={index} value={value} index={index} isMobile={isMobile}>
@@ -194,7 +280,9 @@ function TabPanel(props: TabPanelProps) {
       {...other}
       style={{
         width: '100%',
-        height: '100%'
+        height: '100%',
+        display: value === index ? 'flex' : 'none',
+        flexDirection: 'column'
       }}
     >
       {value === index && (
@@ -202,7 +290,8 @@ function TabPanel(props: TabPanelProps) {
           width: '100%',
           height: '100%',
           overflow: 'auto',
-          p: { xs: 1, sm: 2, md: 0 }
+          p: { xs: 3, sm: 4, md: 4 },
+          flex: 1
         }}>
           {children}
         </Box>
@@ -210,4 +299,3 @@ function TabPanel(props: TabPanelProps) {
     </div>
   );
 }
-

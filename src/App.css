@@ -8,3 +8,198 @@ body {
   background-color: rgba(241, 242, 244, 1);
   font-family: "Inter", sans-serif;
 }
+
+/* Additional CSS for lesson tab and course edit page styling */
+.MuiAccordion-root {
+  box-shadow: none !important;
+  border: 1px solid #E6E6E6 !important;
+  border-radius: 16px !important;
+  margin-bottom: 16px !important;
+}
+
+.MuiAccordion-root:before {
+  display: none !important;
+}
+
+.MuiAccordionSummary-root {
+  padding: 16px 20px !important;
+  background-color: #F9FAFA !important;
+  border-radius: 16px !important;
+  min-height: 60px !important;
+}
+
+.MuiAccordionSummary-content {
+  margin: 0 !important;
+  align-items: center !important;
+}
+
+.MuiAccordionDetails-root {
+  padding: 16px 20px !important;
+  background-color: #fff !important;
+  border-top: 1px solid #E6E6E6 !important;
+}
+
+/* Tab styling improvements */
+.MuiTabs-root {
+  background-color: #fff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.MuiTab-root {
+  text-transform: none !important;
+  font-weight: 500 !important;
+  min-height: 60px !important;
+  padding: 12px 24px !important;
+}
+
+.MuiTab-root.Mui-selected {
+  color: #6A42AB !important;
+  font-weight: 600 !important;
+}
+
+.MuiTabs-indicator {
+  background-color: #6A42AB !important;
+  height: 3px !important;
+  border-radius: 2px !important;
+}
+
+/* Course edit page specific tab styling */
+.course-edit-tabs .MuiTabs-root {
+  background-color: #fff !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-right: 1px solid #e0e0e0 !important;
+  min-height: 100% !important;
+}
+
+.course-edit-tabs .MuiTab-root {
+  min-height: 90px !important;
+  padding: 16px 12px !important;
+  border-left: 4px solid transparent !important;
+  border-radius: 0 !important;
+  background-color: #fff !important;
+  transition: all 0.2s ease !important;
+}
+
+.course-edit-tabs .MuiTab-root.Mui-selected {
+  background-color: #FBF8FF !important;
+  border-left: 4px solid #6A42AB !important;
+  color: #6A42AB !important;
+}
+
+.course-edit-tabs .MuiTab-root:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.course-edit-tabs .MuiTab-root.Mui-selected:hover {
+  background-color: #FBF8FF !important;
+}
+
+/* Mobile tab styling for course edit */
+@media (max-width: 768px) {
+  .course-edit-tabs .MuiTabs-root {
+    border-right: none !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+    flex-direction: row !important;
+  }
+  
+  .course-edit-tabs .MuiTab-root {
+    min-height: 60px !important;
+    padding: 12px 16px !important;
+    border-left: none !important;
+    border-bottom: 2px solid transparent !important;
+  }
+  
+  .course-edit-tabs .MuiTab-root.Mui-selected {
+    border-left: none !important;
+    border-bottom: 2px solid #6A42AB !important;
+  }
+}
+
+/* Lesson item styling */
+.lesson-item {
+  background: #fff !important;
+  border: 1px solid #F2F2F2 !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.lesson-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border-color: #6A42AB !important;
+}
+
+/* Button styling improvements */
+.MuiButton-root {
+  text-transform: none !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+.MuiButton-contained {
+  background-color: #6A42AB !important;
+  box-shadow: 0 2px 4px rgba(106, 66, 171, 0.3) !important;
+}
+
+.MuiButton-contained:hover {
+  background-color: #5a3a9a !important;
+  box-shadow: 0 4px 8px rgba(106, 66, 171, 0.4) !important;
+}
+
+/* Typography improvements */
+.MuiTypography-h6 {
+  font-weight: 600 !important;
+  color: #000 !important;
+}
+
+.MuiTypography-body1 {
+  color: #666 !important;
+  line-height: 1.5 !important;
+}
+
+/* Tab content area styling */
+.course-edit-tabs .MuiTabs-root + div {
+  background-color: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  border: 1px solid #f0f0f0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 24px !important;
+}
+
+/* Tab content scrolling */
+.course-edit-tabs .MuiTabs-root + div > div {
+  height: 100% !important;
+  overflow-y: auto !important;
+  flex: 1 !important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .MuiAccordionSummary-root {
+    padding: 12px 16px !important;
+    min-height: 50px !important;
+  }
+  
+  .MuiTab-root {
+    min-height: 50px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+  }
+  
+  .lesson-item {
+    padding: 12px !important;
+  }
+  
+  .course-edit-tabs .MuiTabs-root + div {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    height: 100% !important;
+  }
+}
