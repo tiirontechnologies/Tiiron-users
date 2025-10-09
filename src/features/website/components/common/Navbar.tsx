@@ -36,9 +36,21 @@ const Navbar = () => {
       name: "Explore",
       hasDropdown: true,
       dropdown: [
-        { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
-        { name: "Who It’s For", desc: "See who benefits from us", href: "/whomfor" },
-        { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
+        {
+          name: "Why Tiiron",
+          desc: "Learn from success stories",
+          href: "/whytiiron",
+        },
+        {
+          name: "Who It’s For",
+          desc: "See who benefits from us",
+          href: "/whomfor",
+        },
+        {
+          name: "How It Works",
+          desc: "Understand our platform workflow",
+          href: "/ourplatform",
+        },
       ],
     },
     {
@@ -47,7 +59,11 @@ const Navbar = () => {
       dropdown: [
         { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
         { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
-        { name: "Community", desc: "Join our community space", href: "/community" },
+        {
+          name: "Community",
+          desc: "Join our community space",
+          href: "/community",
+        },
       ],
     },
   ];
@@ -124,7 +140,7 @@ const Navbar = () => {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <Link
-                to="/sign-up"
+                to="/loginsignup?action=login"
                 className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center transition"
               >
                 Login
@@ -191,9 +207,7 @@ const Navbar = () => {
                             <p className="text-sm font-medium text-gray-800">
                               {drop.name}
                             </p>
-                            <p className="text-xs text-gray-500">
-                              {drop.desc}
-                            </p>
+                            <p className="text-xs text-gray-500">{drop.desc}</p>
                           </Link>
                         ))}
                       </div>
