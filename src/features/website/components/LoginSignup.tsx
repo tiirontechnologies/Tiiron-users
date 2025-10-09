@@ -1,8 +1,15 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Mail, Lock, User, ArrowRight, LogIn } from "lucide-react";
 
 const LoginSignup = () => {
-  const [action, setAction] = useState<"Sign Up" | "Login">("Sign Up");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialAction = queryParams.get("action") === "login" ? "Login" : "Sign Up";
+
+  const [action, setAction] = useState<"Sign Up" | "Login">(initialAction);
+  
+  // const [action, setAction] = useState<"Sign Up" | "Login">("Sign Up");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 via-purple-50 to-pink-50 px-4">
