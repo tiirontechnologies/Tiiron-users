@@ -7,6 +7,8 @@ import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
+import LocalLibraryIcon from "@icons/LocalLibraryIcon";
+import AutoStoriesIcon from "@icons/AutoStoriesIcon";
 import Courses from "../features/course-dashboard/components/Courses";
 import NotificationsIcon from "@icons/NotificationsIcon";
 export const appRoutes: Route[] = [
@@ -17,6 +19,7 @@ export const appRoutes: Route[] = [
       {
         label: "My Courses",
         path: "/courses",
+        icon: <LocalLibraryIcon />,
         children: [
           {
             path: "",
@@ -28,7 +31,7 @@ export const appRoutes: Route[] = [
           },
           {
             path: "content/create",
-            element: <CreateCourseContent />, 
+            element: <CreateCourseContent />,
           },
           {
             path: "edit/:courseId/:unitId/questions",
@@ -39,6 +42,7 @@ export const appRoutes: Route[] = [
       {
         label: "Question Bank",
         path: "/question-bank",
+        icon: <AutoStoriesIcon />,
         children: [
           {
             path: "",

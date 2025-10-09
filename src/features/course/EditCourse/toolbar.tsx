@@ -67,23 +67,27 @@ export const RightSideTools = () => {
           border: "1px solid #6A42AB",
           borderRadius: "8px",
           backgroundColor: "transparent",
-          textTransform: "none", // keeps "Preview" as-is
+          textTransform: "none",
+          fontWeight: 500,
+          transition: "all 0.3s ease",
           "&:hover": {
-            border: "2px solid #6A42AB",
-            backgroundColor: "rgba(255, 255, 255, 0.1)", // subtle hover
+            borderColor: "#6A42BB",
+            boxShadow: "0 0 10px rgba(106, 66, 171, 0.4)", // soft glow around border
+            backgroundColor: "transparent", // keep transparent
           },
           "&:focus": {
             outline: "none",
-            boxShadow: "none",
+            boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.3)",
           },
           "&:active": {
-            border: "1px solid #6A42AB",
-            boxShadow: "none",
+            transform: "scale(0.98)", // subtle click feedback
+            boxShadow: "0 0 6px rgba(106, 66, 171, 0.3)",
           },
         }}
       >
         Preview
       </Button>
+
       <MoreButton />
       <Divider
         orientation="vertical"

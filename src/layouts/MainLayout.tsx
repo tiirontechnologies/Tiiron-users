@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Drawer, useMediaQuery, useTheme } from "@mui/material";
 import SidebarMenu from "../components/ui/sidebar/Sidebar";
 import LogoAndName from "../components/ui/sidebar/LogoAndName";
 import Header from "../components/ui/header/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { appRoutes } from "../routes/appRoutess";
 import { globalRoutes } from "../routes/globalRoutes";
 
@@ -13,11 +13,18 @@ const collapsedWidth = 72;
 const MainLayout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [desktopOpen, setDesktopOpen] = useState(true);
+  const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
   const handleToggleDesktopMenu = () => setDesktopOpen((prev) => !prev);
   const handleToggleMobileMenu = () => setMobileOpen((prev) => !prev);
+
+  // Auto-close sidebar on route change (keeps desktop collapsed and closes mobile drawer)
+  useEffect(() => {
+    setDesktopOpen(false);
+    setMobileOpen(false);
+  }, [location]);
 
   return (
     <Box sx={{ display: "flex" }}>

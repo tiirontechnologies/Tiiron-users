@@ -7,7 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { useState } from "react";
+import { cloneElement, isValidElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SidebarMenu = ({ routes, open }: any) => {
@@ -26,6 +26,19 @@ const SidebarMenu = ({ routes, open }: any) => {
 
   const toggleExpand = (label: string) => {
     setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
+  };
+
+  const ACTIVE_COLOR = "rgba(106, 66, 171, 1)";
+  const INACTIVE_COLOR = "rgba(51, 51, 51, 1)";
+
+  const renderIconWithColor = (icon: any, color: string) => {
+    if (!icon) return null;
+    if (isValidElement(icon)) {
+      const existingSx = (icon as any)?.props?.sx || undefined;
+      const mergedSx = existingSx ? { ...existingSx, color } : { color };
+      return cloneElement(icon as any, { color, sx: mergedSx });
+    }
+    return icon;
   };
   return (
     <List>
@@ -51,29 +64,12 @@ const SidebarMenu = ({ routes, open }: any) => {
               <ListItemIcon
                 sx={{
                   minWidth: !open ? "min-content" : "35px",
-                  // color: isRouteActive(route)
-                  //   ? "rgba(106, 66, 171, 1)"
-                  //   : "rgba(28, 28, 28, 1)",
-                  path: {
-                    stroke:
-                      route.label === "Learning" && isRouteActive(route)
-                        ? "rgba(106, 66, 171, 1)" // active Learning route stroke color
-                        : "", // default stroke color
-
-                    fill:
-                      route.label === "Learning"
-                        ? undefined // no fill override for Learning (use default SVG fill)
-                        : isRouteActive(route)
-                        ? "rgba(106, 66, 171, 1)" // active non-Learning route fill color
-                        : "", // default fill color
-                  },
-
-                  // "&.MuiListItemIcon-root": {
-                  //   minWidth: "35px",
-                  // },
                 }}
               >
-                {route.icon}
+                {renderIconWithColor(
+                  route.icon,
+                  isRouteActive(route) ? ACTIVE_COLOR : INACTIVE_COLOR
+                )}
               </ListItemIcon>
               {open && (
                 <ListItemText
@@ -100,18 +96,23 @@ const SidebarMenu = ({ routes, open }: any) => {
                     <ListItemButton
                       key={child.label}
                       onClick={() => navigate(child.path)}
+                      sx={{ pl: 3 }}
                     >
-                      <ListItemIcon sx={{ color: "rgba(51, 51, 51, 1)", minWidth: "35px" }}>
-                        {child.icon}
+                      <ListItemIcon sx={{ minWidth: "35px" }}>
+                        {renderIconWithColor(
+                          child.icon,
+                          location.pathname.startsWith(child.path)
+                            ? ACTIVE_COLOR
+                            : INACTIVE_COLOR
+                        )}
                       </ListItemIcon>
                       {open && (
                         <ListItemText
                           primary={child.label}
                           sx={{
-                            color:
-                              location.pathname === child.path
-                                ? "rgba(106, 66, 171, 1)"
-                                : "rgba(28, 28, 28, 1)",
+                            color: location.pathname.startsWith(child.path)
+                              ? ACTIVE_COLOR
+                              : "rgba(28, 28, 28, 1)",
                           }}
                         />
                       )}
