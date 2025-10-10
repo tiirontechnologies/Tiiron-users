@@ -146,7 +146,7 @@ const Navbar = () => {
                 Login
               </Link>
               <Link
-                to="/loginsignup"
+                to="/organization/create-account"
                 className="px-6 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-full hover:from-red-600 hover:to-pink-600 transition-all duration-200"
               >
                 Get Started for Free →
@@ -232,14 +232,14 @@ const Navbar = () => {
             {/* Mobile CTA */}
             <div className="pt-4 border-t border-gray-200 space-y-3">
               <Link
-                to="/sign-up"
+                to="/loginsignup?action=login"
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center transition"
               >
                 Login
               </Link>
               <Link
-                to="/loginsignup"
+                to="/organization/create-account"
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-full hover:from-red-600 hover:to-pink-600 text-center"
               >
