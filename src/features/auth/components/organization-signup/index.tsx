@@ -39,7 +39,11 @@ const Step1 = ({
         defaultValue=""
         rules={{ required: "Organization name is required" }}
         render={({ field }) => (
-          <CustomTextField placeholder="Organization Name"  {...field} labelText="Organization Name" />
+          <CustomTextField
+            placeholder="Organization Name"
+            {...field}
+            labelText="Organization Name"
+          />
         )}
       />
       <p style={{ color: "red" }}>{errors.orgName?.message}</p>
@@ -56,7 +60,11 @@ const Step1 = ({
           },
         }}
         render={({ field }) => (
-          <CustomTextField placeholder="Organization Email" {...field} labelText="Organization Email" />
+          <CustomTextField
+            placeholder="Organization Email"
+            {...field}
+            labelText="Organization Email"
+          />
         )}
       />
       <p style={{ color: "red" }}>{errors.email?.message}</p>
@@ -74,25 +82,44 @@ const Step2 = ({
   getValues: UseFormGetValues<IOrganisationRegister>;
 }) => {
   return (
-    <Grid container spacing={2}>
-      <Grid>
-        <Typography variant="subtitle2" fontWeight={500} mb={0.5}>
-          Full Name
-        </Typography>
+    <Grid container spacing={3}>
+      {/* Full Name row (two column */}
+      <Grid item xs={12}>
         <Grid container spacing={2}>
-          <Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="subtitle2"
+              fontWeight={500}
+              mb={0.5}
+              fontSize={17}
+            >
+              First Name
+            </Typography>
             <Controller
               name="firstName"
               control={control}
               defaultValue=""
               rules={{ required: "First name is required" }}
               render={({ field }) => (
-                <CustomTextField {...field} placeholder="Full Name" />
+                <CustomTextField {...field} placeholder="First Name" />
               )}
             />
-            <p style={{ color: "red" }}>{errors.firstName?.message}</p>
+            <p style={{ color: "red", fontSize: "0.8rem" }}>
+              {errors.firstName?.message}
+            </p>
           </Grid>
-          <Grid>
+
+          <Grid item xs={12} sm={6}>
+            {/* Invisible label for spacing */}
+            <Typography
+              variant="subtitle2"
+              fontWeight={500}
+              mb={0.5}
+              fontSize={17}
+              style={{ visibility: "hidden" }}
+            >
+              Last Name
+            </Typography>
             <Controller
               name="lastName"
               control={control}
@@ -102,50 +129,93 @@ const Step2 = ({
                 <CustomTextField {...field} placeholder="Last Name" />
               )}
             />
-            <p style={{ color: "red" }}>{errors.lastName?.message}</p>
+            <p style={{ color: "red", fontSize: "0.8rem" }}>
+              {errors.lastName?.message}
+            </p>
           </Grid>
         </Grid>
       </Grid>
-      <Grid>
+
+      {/* Username (full width) */}
+      <Grid item xs={12}>
+        <Typography variant="subtitle2" fontWeight={500} mb={0.5} fontSize={17}>
+          Username
+        </Typography>
         <Controller
           name="username"
           control={control}
           defaultValue=""
           rules={{ required: "Username is required" }}
           render={({ field }) => (
-            <CustomTextField {...field} labelText="Username" />
+            <CustomTextField {...field} placeholder="Username" />
           )}
         />
-        <p style={{ color: "red" }}>{errors.username?.message}</p>
+        <p style={{ color: "red", fontSize: "0.8rem" }}>
+          {errors.username?.message}
+        </p>
       </Grid>
-      <Grid>
-        <Controller
-          name="password"
-          control={control}
-          defaultValue=""
-          rules={{ required: "Password is required" }}
-          render={({ field }) => (
-            <CustomTextField {...field} labelText="Password" />
-          )}
-        />
-        <p style={{ color: "red" }}>{errors.password?.message}</p>
-      </Grid>
-      <Grid>
-        <Controller
-          name="confirmPassword"
-          control={control}
-          defaultValue=""
-          rules={{
-            required: "Please confirm your password",
-            validate: (value) =>
-              value === getValues("password") || "Passwords do not match",
-          }}
-          render={({ field }) => (
-            <CustomTextField {...field} labelText="Confirm Password" />
-          )}
-        />
-        {/* Display error message if confirmPassword is invalid */}
-        <p style={{ color: "red" }}>{errors.confirmPassword?.message}</p>
+
+      {/* Password row (two columns) */}
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="subtitle2"
+              fontWeight={500}
+              mb={0.5}
+              fontSize={17}
+            >
+              Password
+            </Typography>
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Password is required" }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  placeholder="Enter Password"
+                  type="password"
+                />
+              )}
+            />
+            <p style={{ color: "red", fontSize: "0.8rem" }}>
+              {errors.password?.message}
+            </p>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="subtitle2"
+              fontWeight={500}
+              mb={0.5}
+              fontSize={17}
+            >
+              Confirm Password
+            </Typography>
+            <Controller
+              name="confirmPassword"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === getValues("password") || "Passwords do not match",
+              }}
+              render={({ field }) => (
+                <CustomTextField
+                  {...field}
+                  placeholder="Confirm Password"
+                  type="password"
+                />
+              )}
+            />
+            <p style={{ color: "red", fontSize: "0.8rem" }}>
+              {errors.confirmPassword?.message}
+            </p>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
@@ -211,7 +281,7 @@ const index = () => {
       isUserSignUp={true}
       isLogin={true}
       titleText="Create your account"
-      submitButtonText={`${!stepChange ? "Continue" : "Create Account"} →`}
+      submitButtonText={`${!stepChange ? "Continue" : "Create Account"} ->`}
       dividerText="Sign in with"
       onSubmit={handleNext}
       isLoading={isLoading}
