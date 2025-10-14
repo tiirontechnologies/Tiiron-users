@@ -5,7 +5,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link, useParams } from "react-router-dom";
 import { useGetChaptersQuery } from "../../lesson-management/api/chapterApi";
-import { useGetCourseByIdQuery } from "../../course-dashboard/api/courseApi";
+import { useGetCourseByIdQuery } from "../../course/api/courseApi";
 import Loader from "@components/ui/Spinner";
 import { UPLOADS } from "../../../constants/constants";
 import { Navbar } from '../../website';

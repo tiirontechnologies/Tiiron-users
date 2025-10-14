@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import ToolBar from "../../course-settings/components/index";
-import MoreButton from "../../course-settings/components/MoreButton";
-import PublishButton from "../../course-settings/components/PublishButton";
-import QuestionBankLayout from "./QuestionBankLayout";
+import MoreButton from "../../../components/ui/MoreButton";
+import PublishButton from "../../../components/ui/PublishButton";
+import CreateContentLayout from "../../content-management/layout/CreateContentLayout";
 import Topics from "./Topics";
 import TopicsQuestions from "./TopicsQuestions";
 import { useState } from "react";
@@ -36,7 +36,7 @@ export default function QuestionBankEdit() {
         <RightSideTools />
       </ToolBar>
       <Box sx={{ display: "flex", height: "100vh", p: "24px" }}>
-        {isFetching ? <Loader /> : isError ? <Box>Some Error occured...</Box> : data?.data && <QuestionBankLayout
+        {isFetching ? <Loader /> : isError ? <Box>Some Error occured...</Box> : data?.data && <CreateContentLayout
           heading="Questions"
           mainContent={<>
             <TopicsQuestions

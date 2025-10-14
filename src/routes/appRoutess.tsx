@@ -1,15 +1,14 @@
 import { QuestionBankComponent } from "../features";
-import EditCourse from "../features/course/EditCourse";
+import EditCourse from "../features/course/pages/course-management";
 import { QuestionBankEdit } from "../features";
-import { CreateCourseContent } from "../features";
-import { CourseQuestionEdit } from "../features";
+import { CourseContentEdit } from "../features";
 import type { Route } from "types/routes";
 import TickInSquareIcon from "../assets/icons/TickInSquareIcon";
 import DollerIcon from "../assets/icons/DollerIcon";
 import BookIcon from "@icons/BookIcon";
 import LocalLibraryIcon from "@icons/LocalLibraryIcon";
 import AutoStoriesIcon from "@icons/AutoStoriesIcon";
-import Courses from "../features/course-dashboard/components/Courses";
+import Courses from "../features/course/pages/Courses";
 import NotificationsIcon from "@icons/NotificationsIcon";
 export const appRoutes: Route[] = [
   {
@@ -30,12 +29,8 @@ export const appRoutes: Route[] = [
             element: <EditCourse />,
           },
           {
-            path: "content/create",
-            element: <CreateCourseContent />,
-          },
-          {
             path: "edit/:courseId/:unitId/questions",
-            element: <CourseQuestionEdit />,
+            element: <CourseContentEdit />,
           },
         ],
       },

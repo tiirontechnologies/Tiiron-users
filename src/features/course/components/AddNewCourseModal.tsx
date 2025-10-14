@@ -1,5 +1,5 @@
 import { Box, Button, Chip, TextField, Typography } from "@mui/material";
-import { useCreateCourseMutation } from "../../course-dashboard/api/courseApi";
+import { useCreateCourseMutation } from "../api/courseApi";
 import { Controller, useForm } from "react-hook-form";
 import { ICreateCourse } from "../../../types/course.types";
 import { useState } from "react";

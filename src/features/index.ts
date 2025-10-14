@@ -7,27 +7,25 @@ export * from './learner-management';
 // Lesson Management Feature
 export * from './lesson-management';
 
-// Reporting Feature
-export * from './reporting';
+// Course Report Feature
+export * from './course-report';
 
 // Course Settings Feature
 export * from './course-settings';
 
 // Question Bank Features
-export * from './question-bank';
+export { QuestionBankComponent, AddNewQuestionCard, QuestionCard } from './question-bank';
+export type {QuestionBankFilters, CreateQuestionBankData } from './question-bank';
 export * from './question-bank-edit';
 
 // Course Progress Feature
-export * from './course-progress';
+export * from './course-practice';
 
 // Course Glossary Feature
 export * from './course-glossary';
 
-// Course Question Edit Feature
-export * from './course-question-edit';
-
-// Create Course Content Feature
-export * from './create-course-content';
+// Course Content Management Feature
+export * from './content-management';
 
 // Website Feature
 export * from './website';
@@ -38,5 +36,4 @@ export * from './auth';
 // Checkout Feature
 export * from './checkout';
 
-// Upload Box Feature
-export * from './upload-box';
+

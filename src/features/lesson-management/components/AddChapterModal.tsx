@@ -61,7 +61,7 @@ export const AddChapterModal = ({ open, onClose }: IAddChapterModalProps) => {
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Add Chapter
+          Add Lesson
         </Typography>
 
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 2 }}>

@@ -17,7 +17,7 @@ export const routeConfig = [
     children: [...appRoutes, ...globalRoutes],
   },
   {
-    path: "course-progress/:courseId",
+    path: "/course-practice/:courseId",
     element: <PrivateRoute><CourseProgress /></PrivateRoute>,
   },
   {

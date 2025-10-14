@@ -68,8 +68,8 @@ export const AddUnitForm: React.FC<AddUnitFormProps> = ({
         >
             <TextField
                 fullWidth
-                label="Lesson Title"
-                placeholder="Enter the title of the lesson"
+                label="Topic"
+                placeholder="Enter the title of the Topic"
                 variant="outlined"
                 {...register("title", {
                     required: "Title is required",

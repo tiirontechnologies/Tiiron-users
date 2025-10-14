@@ -73,7 +73,7 @@ const QuestionCard = ({
           }
         }}
         onClick={() => {
-          // Navigate to question management page
+          // Navigate to content management page
           navigate(`/question-bank/${id}/questions`);
         }}
       >

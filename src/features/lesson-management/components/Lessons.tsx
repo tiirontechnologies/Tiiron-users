@@ -168,8 +168,8 @@ export default function Lessons({ courseData, chaptersData }: LessonsProps) {
                   description="Import lessons from other courses" />
                 <AddLessonPopperItem
                   icon={<FileUploadIcon />}
-                  title="Add chapter"
-                  description="Add another chapter"
+                  title="Add Lesson"
+                  description="Add another lesson"
                   onClickCallBack={openChapterModal} />
               </Box>}
               trigger={<Button
@@ -183,7 +183,7 @@ export default function Lessons({ courseData, chaptersData }: LessonsProps) {
                   minHeight: { xs: 40, md: 'auto' }
                 }}
               >
-                Add Chapter
+                Add Lesson
               </Button>} />
           </Box>
         </Fragment>}
