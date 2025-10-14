@@ -140,7 +140,7 @@ const Navbar = () => {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <Link
-                to="/loginsignup?action=login"
+                to="/login"
                 className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center transition"
               >
                 Login
@@ -232,7 +232,7 @@ const Navbar = () => {
             {/* Mobile CTA */}
             <div className="pt-4 border-t border-gray-200 space-y-3">
               <Link
-                to="/loginsignup?action=login"
+                to="/login"
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-2 text-gray-800 bg-gray-100 rounded-full hover:bg-gray-200 text-center transition"
               >
