@@ -20,8 +20,8 @@ jobs:
 
     - name: Install dependencies & build (optional)
       run: |
-        run: npm ci --legacy-peer-deps
-        npm run build
+           npm ci --legacy-peer-deps
+           npm run build
 
     - name: Set up Google Cloud CLI
       uses: google-github-actions/auth@v2
