@@ -29,6 +29,7 @@ export interface Learner {
 export interface DistributionSlice {
   name: string;
   value: number;
+  [key: string]: string | number;
 }
 
 export interface Analytics {

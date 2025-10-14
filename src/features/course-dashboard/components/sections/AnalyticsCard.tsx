@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardContent, Grid, Typography, IconButton, Box, Divider, Legend } from "@mui/material";
+import { Card, CardHeader, CardContent, Grid, Typography, IconButton, Box, Divider } from "@mui/material";
 import { MoreVertRounded } from "@mui/icons-material";
 import StatMini from "../common/StatMini";
 import { analytics } from "../../utils/mockData";
