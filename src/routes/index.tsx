@@ -13,12 +13,12 @@ import { CheckoutPage } from "../features";
 
 export const routeConfig = [
   {
-    element: <PrivateRoute><MainLayout /></PrivateRoute>,
+    element: <MainLayout />,
     children: [...appRoutes, ...globalRoutes],
   },
   {
     path: "/course-practice/:courseId",
-    element: <PrivateRoute><CourseProgress /></PrivateRoute>,
+    element: <CourseProgress />,
   },
   {
     label: "Course Glossary",
@@ -29,8 +29,8 @@ export const routeConfig = [
   ...homeRoutes,
   ...authRoutes,
   {
-    path: "*",  // Catch-all for unmatched routes
-    element: <NotFound />,  // Render 404 page
+    path: "*", // Catch-all for unmatched routes
+    element: <NotFound />, // Render 404 page
   },
   {
     label: "Checkout",

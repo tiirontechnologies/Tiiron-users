@@ -1,8 +1,4 @@
-import {
-  Box,
-  Button,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { ReusablePopper } from "@components/ui/popper/ReusablePopper";
@@ -14,7 +10,12 @@ const PublishButton = () => {
   return (
     <ReusablePopper
       content={
-        <Box sx={{ width: "547px" }}>
+        <Box
+          sx={{
+            width: "fit-content",
+            maxWidth: "547px",
+          }}
+        >
           <Typography
             sx={{ color: "#000000", fontSize: "20px", fontWeight: 600 }}
           >
@@ -24,7 +25,6 @@ const PublishButton = () => {
             sx={{
               borderRadius: "8px",
               border: "1px solid #CCCCCC",
-              height: "211px",
               mt: "24px",
               p: "16px",
             }}
