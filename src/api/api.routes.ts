@@ -57,32 +57,11 @@ export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Course', 'Chapter', 'Question', 'QuestionBank', 'Unit', 'Auth'],
-  endpoints: (builder) => ({
-    // Get course by course ID (alternative endpoint)
-    getCourseByCourseId: builder.query({
-      query: ({ id }: { id: string }) => ({
-        url: `/org/course/${id}`,
-        method: 'GET',
-      }),
-      providesTags: ['Course'],
-    }),
-    
-    // Get chapters for a course
-    getChapters: builder.query({
-      query: ({ page = 1, limit = 10, id }: { page?: number; limit?: number; id: string }) => ({
-        url: `/org/chapter/${id}`,
-        method: 'GET',
-        params: { page, limit },
-      }),
-      providesTags: ['Chapter'],
-    }),
-  }),
+  endpoints: (builder) => ({}),
 });
 
 // Export hooks for usage in components
 export const {
-  useGetCourseByCourseIdQuery,
-  useGetChaptersQuery,
 } = baseApi;
 
 // Auth API configuration

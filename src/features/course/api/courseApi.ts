@@ -6,7 +6,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
     // Get courses with pagination
     getCourses: builder.query({
       query: ({ page = 1, limit = 10 }: { page?: number; limit?: number }) => ({
-        url: '/org/course',
+        url: '/course',
         method: 'GET',
         params: { page, limit },
       }),
@@ -16,7 +16,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
     // Get course by ID
     getCourseById: builder.query({
       query: ({ id }: { id: string }) => ({
-        url: `/org/course/${id}`,
+        url: `/course/${id}`,
         method: 'GET',
       }),
       providesTags: ['Course'],
@@ -26,7 +26,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
     // Create course
     createCourse: builder.mutation({
       query: ({ body }: { body: FormData }) => ({
-        url: '/org/course',
+        url: '/course',
         method: 'POST',
         body,
       }),
@@ -36,7 +36,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
     // Update course
     updateCourse: builder.mutation({
       query: ({ id, body }: { id: number; body: FormData }) => ({
-        url: `/org/course/${id}`,
+        url: `/course/${id}`,
         method: 'PUT',
         body,
       }),
@@ -46,10 +46,20 @@ export const courseApiSlice = baseApi.injectEndpoints({
     // Delete course
     deleteCourse: builder.mutation({
       query: ({ id }: { id: number }) => ({
-        url: `/org/course/${id}`,
+        url: `/course/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Course'],
+    }),
+    
+    // Get chapters for a course
+    getChapters: builder.query({
+      query: ({ page = 1, limit = 10, id }: { page?: number; limit?: number; id: string }) => ({
+        url: `course/chapter/${id}`,
+        method: 'GET', 
+        params: { page, limit },
+      }),
+      providesTags: ['Chapter'],
     }),
   }),
 });
@@ -61,4 +71,5 @@ export const {
   useCreateCourseMutation,
   useUpdateCourseMutation,
   useDeleteCourseMutation,
+  useGetChaptersQuery,
 } = courseApiSlice;

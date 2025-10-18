@@ -6,7 +6,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
     // Get chapters for a course with pagination
     getChapters: builder.query({
       query: ({ page = 1, limit = 10, id }: { page?: number; limit?: number; id: string }) => ({
-        url: `/org/chapter/${id}`,
+        url: `/course/chapter/${id}`,
         method: 'GET',
         params: { page, limit },
       }),
@@ -25,7 +25,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
     // Create chapter
     createChapter: builder.mutation({
       query: ({ body }: { body: { title: string; courseId: number } }) => ({
-        url: '/org/chapter',
+        url: '/course/chapter',
         method: 'POST',
         body,
       }),
@@ -35,7 +35,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
     // Update chapter
     updateChapter: builder.mutation({
       query: ({ id, body }: { id: number; body: { title: string; courseId: number } }) => ({
-        url: `/org/chapter/${id}`,
+        url: `/course/chapter/${id}`,
         method: 'PUT',
         body,
       }),
@@ -45,7 +45,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
     // Delete chapter
     deleteChapter: builder.mutation({
       query: ({ id }: { id: number }) => ({
-        url: `/org/chapter/${id}`,
+        url: `/course/chapter/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Chapter'],
@@ -54,7 +54,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
     // Create unit
     createUnit: builder.mutation({
       query: ({ body }: { body: { title: string; content: string; chapterId: number } }) => ({
-        url: '/org/unit',
+        url: '/course/unit',
         method: 'POST',
         body,
       }),
@@ -64,7 +64,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
     // Update unit
     updateUnit: builder.mutation({
       query: ({ id, body }: { id: number; body: { title: string; content: string; chapterId: number } }) => ({
-        url: `/org/unit/${id}`,
+        url: `/course/unit/${id}`,
         method: 'PUT',
         body,
       }),
@@ -74,7 +74,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
     // Delete unit
     deleteUnit: builder.mutation({
       query: ({ id }: { id: number }) => ({
-        url: `/org/unit/${id}`,
+        url: `/course/unit/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Unit'],

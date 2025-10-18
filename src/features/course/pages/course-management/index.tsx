@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import ToolBar, { RightSideTools } from "../../components/toolbar";
 import CourseMetaTabs from "./CourseMetaTabs";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetChaptersQuery, useGetCourseByCourseIdQuery } from "../../../../api/api.routes";
+import { useGetChaptersQuery, useGetCourseByIdQuery } from "../../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import { createContext, useState } from "react";
 
@@ -14,7 +14,7 @@ const Index = () => {
   if (!courseId) navigate(-1);
 
   const { data, isFetching, isError } = useGetChaptersQuery({ page: 1, limit: 10, id: courseId! });
-  const { data: courseData, isFetching: isCourseFetching, isError: isCourseError } = useGetCourseByCourseIdQuery({ id: courseId! });
+  const { data: courseData, isFetching: isCourseFetching, isError: isCourseError } = useGetCourseByIdQuery({ id: courseId! });
 
   /**SNACKBAR */
   const [snackbarOpen, setSnackbarOpen] = useState(false);

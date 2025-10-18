@@ -11,12 +11,13 @@ interface QuestionCardProps {
   isLast?: boolean;
 }
 
-const QuestionCard: React.FC<QuestionCardProps> = ({ 
+const QuestionCard: React.FC<any> = ({ 
   question, 
   index, 
   isFirst = false, 
   isLast = false 
 }) => {
+  console.log("hello hello",question);
   return (
     <Box>
       {/* Question Header */}
@@ -55,7 +56,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             >
               {index + 1}
             </Box>
-            Practice Question {index + 1}
+             {question?.description?.title}
           </Typography>
           <Chip
             label={question.contentType?.replace('_', ' ').toUpperCase() || 'QUESTION'}
