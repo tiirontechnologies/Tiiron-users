@@ -1,23 +1,38 @@
-import React from 'react';
-import { Box, Typography, Card, CardContent, Chip, Divider } from '@mui/material';
-import { Question } from '../../types';
-import { COLORS, GRADIENTS, BORDER_RADIUS, SHADOWS } from '../../constants';
-import QuestionTemplateFactory from '../QuestionTemplates/QuestionTemplateFactory';
+import React from "react";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Chip,
+  Divider,
+} from "@mui/material";
+import { Question } from "../../types";
+import { COLORS, GRADIENTS, BORDER_RADIUS, SHADOWS } from "../../constants";
+import QuestionTemplateFactory from "../QuestionTemplates/QuestionTemplateFactory";
 
 interface QuestionCardProps {
   question: Question;
   index: number;
   isFirst?: boolean;
   isLast?: boolean;
+  practiceMode?: boolean;
+  showAnswers?: boolean;
+  userAnswer?: string | string[];
+  onAnswerChange?: (answer: string | string[]) => void;
 }
 
-const QuestionCard: React.FC<any> = ({ 
-  question, 
-  index, 
-  isFirst = false, 
-  isLast = false 
+const QuestionCard: React.FC<QuestionCardProps> = ({
+  question,
+  index,
+  isFirst = false,
+  isLast = false,
+  practiceMode = false,
+  showAnswers = false,
+  userAnswer,
+  onAnswerChange,
 }) => {
-  console.log("hello hello",question);
+  console.log("hello hello", question);
   return (
     <Box>
       {/* Question Header */}
@@ -28,7 +43,14 @@ const QuestionCard: React.FC<any> = ({
           borderBottom: !isLast ? "1px solid #E5E7EB" : "none",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 2,
+          }}
+        >
           <Typography
             variant="h6"
             sx={{
@@ -56,10 +78,13 @@ const QuestionCard: React.FC<any> = ({
             >
               {index + 1}
             </Box>
-             {question?.description?.title}
+            {question?.description?.title}
           </Typography>
           <Chip
-            label={question.contentType?.replace('_', ' ').toUpperCase() || 'QUESTION'}
+            label={
+              question.contentType?.replace("_", " ").toUpperCase() ||
+              "QUESTION"
+            }
             size="small"
             sx={{
               background: COLORS.primary,
@@ -84,12 +109,16 @@ const QuestionCard: React.FC<any> = ({
         >
           <span dangerouslySetInnerHTML={{ __html: question.text }} />
         </Typography>
-        
+
         {!isLast && <Divider sx={{ mb: 3, opacity: 0.3 }} />}
-        
-        <QuestionTemplateFactory 
-          type={question.contentType} 
-          question={question} 
+
+        <QuestionTemplateFactory
+          type={question.contentType}
+          question={question}
+          practiceMode={practiceMode}
+          showAnswers={showAnswers}
+          userAnswer={userAnswer}
+          onAnswerChange={onAnswerChange}
         />
       </Box>
     </Box>

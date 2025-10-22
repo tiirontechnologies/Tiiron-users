@@ -8,11 +8,12 @@ export interface Question {
 export interface QuestionContent {
   id?: string;
   options?: QuestionOption[];
-  correctAnswer?: string;
+  correctAnswer?: string | string[];
   question?: string;
   html?: string;
   text?: string;
   url?: string;
+  allowMultipleSelection?: boolean;
 }
 
 export interface QuestionOption {
@@ -20,14 +21,14 @@ export interface QuestionOption {
   isCorrect: boolean;
 }
 
-export type QuestionType = 
-  | 'mcq' 
-  | 'single_choice' 
-  | 'fill_up' 
-  | 'subjective' 
-  | 'blog' 
-  | 'video' 
-  | 'video_blog';
+export type QuestionType =
+  | "mcq"
+  | "single_choice"
+  | "fill_up"
+  | "subjective"
+  | "blog"
+  | "video"
+  | "video_blog";
 
 export interface Chapter {
   id: string;
