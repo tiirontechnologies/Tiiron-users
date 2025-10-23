@@ -1,24 +1,25 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
-import { COLORS } from "../../constants";
+import { Box, Typography, Button } from "@mui/material";
+import { COLORS, GRADIENTS } from "../../constants";
 import Scoresvg from "@icons/Score.svg";
 
-interface PracticeState {
-  showResults: boolean;
-  score: number;
-  totalQuestions: number;
-  isPracticeMode: boolean;
-  completedQuestions: number;
-}
-
 interface PracticeFooterProps {
-  practiceState: PracticeState;
+  practiceState: {
+    isPracticeMode: boolean;
+    showResults: boolean;
+    score: number;
+    completedQuestions: number;
+  };
   questionsLength: number;
+  startPractice: () => void;
+  endPractice: () => void;
 }
 
 const PracticeFooter: React.FC<PracticeFooterProps> = ({
   practiceState,
   questionsLength,
+  startPractice,
+  endPractice,
 }) => {
   return (
     <Box
@@ -119,6 +120,49 @@ const PracticeFooter: React.FC<PracticeFooterProps> = ({
             )}
           </Box>
         </Box>
+
+        {!practiceState.isPracticeMode && !practiceState.showResults && (
+          <Button
+            variant="contained"
+            onClick={startPractice}
+            sx={{
+              background: COLORS.primary,
+              color: "white",
+              fontWeight: 600,
+              px: 3,
+              py: 1,
+              borderRadius: "12px",
+              textTransform: "none",
+              "&:hover": {
+                background: GRADIENTS.primaryHover,
+              },
+            }}
+          >
+            Start Practice
+          </Button>
+        )}
+
+        {practiceState.isPracticeMode && !practiceState.showResults && (
+          <Button
+            variant="outlined"
+            onClick={endPractice}
+            sx={{
+              borderColor: COLORS.primary,
+              color: COLORS.primary,
+              fontWeight: 600,
+              px: 3,
+              py: 1,
+              borderRadius: "12px",
+              textTransform: "none",
+              "&:hover": {
+                color: GRADIENTS.primaryHover,
+                boxShadow: GRADIENTS.primaryHover,
+              },
+            }}
+          >
+            Submit Practice
+          </Button>
+        )}
       </Box>
     </Box>
   );

@@ -40,7 +40,7 @@ interface PracticeState {
 
 const MainContent: React.FC<MainContentProps> = ({ questions }) => {
   const { courseId } = useParams<{ courseId: string }>();
-  const unitId = "current-unit"; 
+  const unitId = "current-unit";
 
   const {
     isAutoSaving,
@@ -548,6 +548,8 @@ const MainContent: React.FC<MainContentProps> = ({ questions }) => {
       <PracticeFooter
         practiceState={practiceState}
         questionsLength={questions.length}
+        startPractice={startPractice}
+        endPractice={endPractice}
       />
 
       {/* Snackbar for Notifications (kept here as it relies on notification state) */}
