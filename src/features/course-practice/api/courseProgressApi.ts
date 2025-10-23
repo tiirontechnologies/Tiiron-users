@@ -16,7 +16,7 @@ export const courseProgressApiSlice = baseApi.injectEndpoints({
 
     getContentByTopicId: builder.query<{ data?: any } | any, { unitId: string }>({
       query: ({ unitId }) => ({
-        url: `/content/course/2/unit/${unitId}`,
+        url: `/content/course/1/unit/${unitId}`,
         method: 'GET',
       }),
       providesTags: ['Unit'],
