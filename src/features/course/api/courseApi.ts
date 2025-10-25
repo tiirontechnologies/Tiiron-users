@@ -12,17 +12,17 @@ export const courseApiSlice = baseApi.injectEndpoints({
       }),
       providesTags: ['Course'],
     }),
-    
+
     // Get course by ID
     getCourseById: builder.query({
-      query: ({ id }: { id: string }) => ({
+      query: ({ id }: { id: number }) => ({
         url: `/course/${id}`,
         method: 'GET',
       }),
       providesTags: ['Course'],
     }),
-    
-    
+
+
     // Create course
     createCourse: builder.mutation({
       query: ({ body }: { body: FormData }) => ({
@@ -32,7 +32,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Course'],
     }),
-    
+
     // Update course
     updateCourse: builder.mutation({
       query: ({ id, body }: { id: number; body: FormData }) => ({
@@ -42,7 +42,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Course'],
     }),
-    
+
     // Delete course
     deleteCourse: builder.mutation({
       query: ({ id }: { id: number }) => ({
@@ -51,12 +51,12 @@ export const courseApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Course'],
     }),
-    
+
     // Get chapters for a course
     getChapters: builder.query({
-      query: ({ page = 1, limit = 10, id }: { page?: number; limit?: number; id: string }) => ({
+      query: ({ page = 1, limit = 10, id }: { page?: number; limit?: number; id: number }) => ({
         url: `course/chapter/${id}`,
-        method: 'GET', 
+        method: 'GET',
         params: { page, limit },
       }),
       providesTags: ['Chapter'],

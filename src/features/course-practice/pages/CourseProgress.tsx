@@ -9,8 +9,9 @@ import EmptyState from '../components/UI/EmptyState';
 import Loader from '@components/ui/Spinner';
 
 const CourseProgress: React.FC = () => {
-  
+
   const {
+    courseId,
     courseData,
     unitsData,
     selectUnit,
@@ -49,10 +50,10 @@ const CourseProgress: React.FC = () => {
   return (
     <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>
       {/* Sidebar */}
-      <Sidebar 
-        data={courseData.data} 
+      <Sidebar
+        data={courseData.data}
         onUnitSelect={selectUnit}
-        courseId={courseData.data?.id}
+        courseId={courseId}
       />
 
       {/* Header */}
@@ -60,22 +61,22 @@ const CourseProgress: React.FC = () => {
 
       {/* Main Content */}
       {isUnitsLoading ? (
-        <Box sx={{ 
-          display: "flex", 
-          justifyContent: "center", 
-          alignItems: "center", 
-          height: "calc(100vh - 84px)", 
-          marginLeft: "289px" 
+        <Box sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "calc(100vh - 84px)",
+          marginLeft: "289px"
         }}>
           <Loader />
         </Box>
       ) : isUnitsError ? (
-        <Box sx={{ 
-          display: "flex", 
-          justifyContent: "center", 
-          alignItems: "center", 
-          height: "calc(100vh - 84px)", 
-          marginLeft: "289px" 
+        <Box sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "calc(100vh - 84px)",
+          marginLeft: "289px"
         }}>
           <Paper sx={{ p: 4, textAlign: "center", borderRadius: "16px" }}>
             <Typography color="error" variant="h6">Some Error occurred...</Typography>

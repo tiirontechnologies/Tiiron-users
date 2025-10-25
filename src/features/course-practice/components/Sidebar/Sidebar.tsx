@@ -14,7 +14,9 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ data, onUnitSelect, courseId }) => {
-  console.log("Sidebar",data.chapters,onUnitSelect,courseId);
+  console.log("Sidebar - courseId:", courseId);
+  console.log("Sidebar - courseId type:", typeof courseId);
+  console.log("Sidebar - data:", data);
   const progressStats = {
     current: 3,
     total: 12,
