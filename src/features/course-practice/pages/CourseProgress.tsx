@@ -17,6 +17,7 @@ const EMPTY_STATS = {
 
 const CourseProgress: React.FC = () => {
   const {
+    courseId,
     courseData,
     unitsData,
     selectUnit,

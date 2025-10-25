@@ -1,5 +1,5 @@
 /**
- * @author Vishal
+ * @author Nitin
  */
 import CustomTextField from "@components/ui/textfields/CustomTextField";
 import LoginPng from "@images/login.png";
@@ -14,28 +14,40 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
   const [authLogin, { isLoading }] = useLoginMutation();
-  const { control, handleSubmit, formState: { errors } } = useForm<TAuth>();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TAuth>();
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<TAuth> = async (data) => {
     try {
       const res = await authLogin({ ...data }).unwrap();
-      const { token } = res?.user;
-      console.log(token)
+      const { token, roleId } = res?.user;
+      console.log(token);
       if (res?.success === true && token) {
-        console.log("INSIDE TOKEN OBJECT")
-        localStorage.setItem("token", token); // Store access token in localStorage 
-        navigate("/courses");
+        console.log("INSIDE TOKEN OBJECT");
+        localStorage.setItem("token", token); // Store access token in localStorage
+        if (roleId == "admin") {
+          navigate("/courses");
+        } else {
+          navigate("/");
+        }
+        localStorage.setItem("roleId", roleId);
         setSnackbarSeverity("success");
         setSnackbarMessage(res?.message || "User registered successfully");
         setSnackbarOpen(true);
         // Optionally redirect or do something after successful login
       }
-    }
-    catch (err: any) {
+    } catch (err: any) {
       // On failure
-      const errorMessage = err?.data?.errors?.map((e: any) => e.message).join(", ") || "Something went wrong!";
+      const errorMessage =
+        err?.data?.errors?.map((e: any) => e.message).join(", ") ||
+        "Something went wrong!";
       setSnackbarSeverity("error");
       setSnackbarMessage(errorMessage);
       setSnackbarOpen(true);
@@ -77,9 +89,7 @@ const Login = () => {
                 />
               )}
             />
-            <span style={{ color: "red" }}>
-              {errors.email?.message}
-            </span>
+            <span style={{ color: "red" }}>{errors.email?.message}</span>
           </Box>
           <Box>
             <Controller
@@ -101,9 +111,7 @@ const Login = () => {
                 />
               )}
             />
-            <span style={{ color: "red" }}>
-              {errors.password?.message}
-            </span>
+            <span style={{ color: "red" }}>{errors.password?.message}</span>
           </Box>
           <Snackbar
             open={snackbarOpen}

@@ -4,17 +4,78 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link, useParams } from "react-router-dom";
-import { useGetChaptersQuery } from "../../lesson-management/api/chapterApi";
+import { useGetChaptersQuery } from "../../course/api/courseApi";
 import { useGetCourseByIdQuery } from "../../course/api/courseApi";
 import Loader from "@components/ui/Spinner";
 import { UPLOADS } from "../../../constants/constants";
 import { Navbar } from '../../website';
 
 export default function CourseGlossary() {
-  const { courseId } = useParams();
-  if (!courseId) return <Box>No Course Found or Invalid Course Id...</Box>;
-  const { data, isLoading, isError } = useGetCourseByIdQuery({ id: courseId || "1" });
-  const { data: chapters } = useGetChaptersQuery({ id: courseId || "1" });
+  const { courseId } = useParams<{ courseId: string }>();
+  console.log("CourseGlossary - courseId:", courseId);
+  console.log("CourseGlossary - courseId type:", typeof courseId);
+  console.log("CourseGlossary - courseId length:", courseId?.length);
+  console.log("CourseGlossary - window.location:", window.location.href);
+  console.log("CourseGlossary - URL pathname:", window.location.pathname);
+  console.log("CourseGlossary - URL search:", window.location.search);
+  console.log("CourseGlossary - All URL params:", new URLSearchParams(window.location.search));
+
+  if (!courseId || courseId === 'undefined') {
+    console.log("CourseGlossary - No courseId found in params or courseId is 'undefined'");
+    return (
+      <Box sx={{ p: 4, textAlign: 'center' }}>
+        <Typography variant="h6" color="error">No Course Found or Invalid Course Id</Typography>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          The URL you're trying to access doesn't have a valid course ID.
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Current courseId: "{courseId}"
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Expected URL format: /course-glossary/[courseId] (e.g., /course-glossary/1)
+        </Typography>
+      </Box>
+    );
+  }
+
+  // Validate that courseId is a valid number
+  const numericCourseId = Number(courseId);
+  console.log("CourseGlossary - numericCourseId:", numericCourseId);
+  console.log("CourseGlossary - isNaN(numericCourseId):", isNaN(numericCourseId));
+
+  if (isNaN(numericCourseId) || numericCourseId <= 0) {
+    console.log("CourseGlossary - Invalid courseId:", courseId);
+    return (
+      <Box sx={{ p: 4, textAlign: 'center' }}>
+        <Typography variant="h6" color="error">Invalid Course ID</Typography>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          The course ID must be a valid positive number.
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Current courseId: "{courseId}"
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Expected URL format: /course-glossary/[courseId] (e.g., /course-glossary/1)
+        </Typography>
+      </Box>
+    );
+  }
+
+  const { data, isLoading, isError, error: courseError } = useGetCourseByIdQuery(
+    { id: numericCourseId },
+    { skip: !courseId || isNaN(numericCourseId) }
+  );
+  const { data: chapters, isLoading: chaptersLoading, isError: chaptersError, error: chaptersApiError } = useGetChaptersQuery(
+    {
+      id: numericCourseId,
+      page: 1,
+      limit: 100
+    },
+    { skip: !courseId || isNaN(numericCourseId) }
+  );
+
+  console.log("Course API - isLoading:", isLoading, "isError:", isError, "error:", courseError);
+  console.log("Chapters API - isLoading:", chaptersLoading, "isError:", chaptersError, "error:", chaptersApiError);
 
   return (
     <Box>
@@ -29,8 +90,30 @@ export default function CourseGlossary() {
           boxSizing: "border-box",
         }}
       >
-        {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : <Header course={data?.data} chapters={chapters?.data?.chapters} />}
-        {isLoading ? <Loader /> : isError ? <Box>Some error occured...</Box> : (
+        {isLoading || chaptersLoading ? <Loader /> : (isError || chaptersError) ? (
+          <Box sx={{ p: 2 }}>
+            <Typography variant="h6" color="error">Some error occurred...</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              {isError && (
+                <Box sx={{ mb: 1 }}>
+                  <Typography variant="subtitle2">Course API Error:</Typography>
+                  <Typography variant="body2" component="pre" sx={{ fontSize: '12px', overflow: 'auto' }}>
+                    {JSON.stringify(courseError, null, 2)}
+                  </Typography>
+                </Box>
+              )}
+              {chaptersError && (
+                <Box>
+                  <Typography variant="subtitle2">Chapters API Error:</Typography>
+                  <Typography variant="body2" component="pre" sx={{ fontSize: '12px', overflow: 'auto' }}>
+                    {JSON.stringify(chaptersApiError, null, 2)}
+                  </Typography>
+                </Box>
+              )}
+            </Typography>
+          </Box>
+        ) : <Header course={data?.data} chapters={chapters?.data?.chapters} />}
+        {!isLoading && !chaptersLoading && !isError && !chaptersError && (
           <Box
             sx={{
               width: { xs: "100%", md: "60%" },
