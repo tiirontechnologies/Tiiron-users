@@ -28,7 +28,7 @@ export default function CourseCard({ thumbnailSrc, tags, title, chapters, rating
         flexShrink: 0,
         background: "#fff",
       }}
-      onClick={() => navigate(`edit/${id}`)}
+      onClick={handleCardClick}
     >
       <Box
         sx={{
