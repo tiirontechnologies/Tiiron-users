@@ -18,8 +18,9 @@ import { useModal } from "../../../hooks/useModal";
 import { DeleteModal } from "../components/DeleteCourseModal";
 import { useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useAddCourseToCartMutation } from "../api/courseApi";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, selectCartItems } from "../../../slices/cartSlice";
 
 export default function CourseCard({
   thumbnailSrc,
@@ -29,16 +30,17 @@ export default function CourseCard({
   rating,
   id,
   isBrowsingPage,
-}: ICourseCardProps) {
+  price = 0, // Safely defaulting price to 0 if not provided
+}: ICourseCardProps & { price?: number }) {
   const { isOpen, openModal, closeModal } = useModal();
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const isCourseInCart = cartItems.some((item) => item.id === id);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, SetSnackbarMessage] = useState("");
   const [snacbarSeverity, setSnacbarSeverity] = useState("success");
-
-  const [addToCart, { isLoading: isAddingToCart }] =
-    useAddCourseToCartMutation();
 
   const handleCardClick = () => {
     if (isBrowsingPage) {
@@ -50,25 +52,33 @@ export default function CourseCard({
     }
   };
 
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    try {
-      await addToCart({ courseId: id }).unwrap();
 
-      SetSnackbarMessage("Course added to cart successfully!");
-      setSnacbarSeverity("success");
+    if (isCourseInCart) {
+      SetSnackbarMessage("Course already exists in your cart.");
+      setSnacbarSeverity("info");
       setSnackbarOpen(true);
-    } catch (error: any) {
-      console.log("failed To add course to cart:", error);
-      const errorMessage =
-        error.data?.message || "Faild to add course to cart.";
-      SetSnackbarMessage(errorMessage);
-      setSnacbarSeverity("error");
-      setSnackbarOpen(true);
+      return; // Stop execution
     }
-  };
 
-  const handleSnackbarClose = (event, reason) => {
+    // 1. Prepare data payload
+    const courseToAdd = {
+      id: id,
+      title: title,
+      price: price,
+      thumbnail: UPLOADS + thumbnailSrc,
+    };
+
+    // 2. Dispatch to Redux Store
+    dispatch(addToCart(courseToAdd));
+
+    // 3. Show success feedback
+    SetSnackbarMessage("Course added to cart successfully!");
+    setSnacbarSeverity("success");
+    setSnackbarOpen(true);
+  };
+  const handleSnackbarClose = (event: any, reason: string) => {
     if (reason === "clickaway") {
       return;
     }
@@ -173,7 +183,7 @@ export default function CourseCard({
           variant="contained"
           size="small"
           startIcon={<ShoppingCartIcon />}
-          disabled={isAddingToCart}
+          disabled={isCourseInCart} // <-- Disabled based on Redux state
           onClick={handleAddToCart}
           sx={{
             position: "absolute",
@@ -184,7 +194,7 @@ export default function CourseCard({
             "&:hover": { backgroundColor: "#3a2366" },
           }}
         >
-          {isAddingToCart ? "Adding..." : "Add to Cart"}
+          {isCourseInCart ? "In Cart" : "Add to Cart"}
         </Button>
       ) : (
         <IconButton
@@ -240,7 +250,6 @@ export default function CourseCard({
       {!isBrowsingPage && (
         <DeleteModal isOpen={isOpen} onClose={closeModal} id={id} />
       )}
-
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}

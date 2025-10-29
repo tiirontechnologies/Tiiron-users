@@ -6,6 +6,11 @@ import FilterButton from "./FilterButton";
 import { useTheme } from "@mui/material/styles";
 import AboutIcon from "@icons/AboutIcon";
 import ProfilePopup from "./profilePopup";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectCartItems } from "../../../slices/cartSlice"; // Path adjust karna pad sakta hai
+import { CartModal } from "../cart/cartModal";
 
 const Header = ({
   onHamburgerClick,
@@ -17,6 +22,13 @@ const Header = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const cartItems = useSelector(selectCartItems); // Cart items count ke liye
+  const cartItemCount = cartItems.length;
+
+  const handleOpenCart = () => setIsCartOpen(true);
+  const handleCloseCart = () => setIsCartOpen(false);
 
   return (
     <Box
@@ -53,9 +65,41 @@ const Header = ({
         >
           Upgrade
         </Button>
+        <IconButton
+          color="primary"
+          onClick={handleOpenCart}
+          sx={{ position: "relative" }}
+        >
+          <ShoppingCartIcon />
+          {/* Cart Count Badge (optional) */}
+          {cartItemCount > 0 && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: 18,
+                height: 18,
+                borderRadius: "50%",
+                bgcolor: "red",
+                color: "white",
+                fontSize: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "bold",
+                // Max count display
+                lineHeight: 1,
+              }}
+            >
+              {cartItemCount > 9 ? "9+" : cartItemCount}
+            </Box>
+          )}
+        </IconButton>
 
         <ProfilePopup></ProfilePopup>
       </Box>
+      <CartModal isOpen={isCartOpen} onClose={handleCloseCart} />
     </Box>
   );
 };
