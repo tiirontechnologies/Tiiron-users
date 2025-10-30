@@ -71,21 +71,22 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-white/90 backdrop-blur-md shadow-md border-b border-gray-200"
-            : "bg-white"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? "bg-white/90 backdrop-blur-md shadow-md border-b border-gray-200"
+          : "bg-white"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-7 h-7 rounded-md bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">T</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">Tiiron</span>
+            <Link to="/" className="flex items-center">
+              <img
+                src="./public/Tiiron_Logo.png"
+                alt="Tiiron Logo"
+                className="h-10 w-auto object-contain hover:scale-105 transition-transform duration-300"
+              />
             </Link>
+
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
@@ -112,6 +113,9 @@ const Navbar = () => {
 
                               <p className="text-sm font-semibold text-gray-800">
                                 {drop.name}
+                                {item.name === "Resources" && ["Blog", "Docs", "Community"].includes(drop.name) && (
+                                  <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-[#e7f0fd] text-[#2563eb] text-[10px] font-semibold border border-[#b6d1fa] shadow-sm">Coming Soon</span>
+                                )}
                               </p>
                               <p className="text-xs text-gray-600">
                                 {drop.desc}
@@ -124,11 +128,10 @@ const Navbar = () => {
                   ) : (
                     <Link
                       to={item.href}
-                      className={`font-medium transition-colors duration-200 ${
-                        item.highlight
-                          ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500"
-                          : "text-gray-800 hover:text-gray-900"
-                      }`}
+                      className={`font-medium transition-colors duration-200 ${item.highlight
+                        ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500"
+                        : "text-gray-800 hover:text-gray-900"
+                        }`}
                     >
                       {item.name}
                     </Link>
@@ -169,9 +172,8 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`lg:hidden transition-all duration-300 overflow-hidden ${
-            isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`lg:hidden transition-all duration-300 overflow-hidden ${isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           <div className="bg-white border-t border-gray-200 px-6 py-6 space-y-4">
             {navigationItems.map((item) => (
@@ -188,9 +190,8 @@ const Navbar = () => {
                     >
                       {item.name}
                       <ChevronDown
-                        className={`w-4 h-4 transform transition-transform ${
-                          openDropdown === item.name ? "rotate-180" : ""
-                        }`}
+                        className={`w-4 h-4 transform transition-transform ${openDropdown === item.name ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
 
@@ -206,6 +207,9 @@ const Navbar = () => {
                           >
                             <p className="text-sm font-medium text-gray-800">
                               {drop.name}
+                              {item.name === "Resources" && ["Blog", "Docs", "Community"].includes(drop.name) && (
+                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-[#e7f0fd] text-[#2563eb] text-[10px] font-semibold border border-[#b6d1fa] shadow-sm">Soon</span>
+                              )}
                             </p>
                             <p className="text-xs text-gray-500">{drop.desc}</p>
                           </Link>
@@ -217,11 +221,10 @@ const Navbar = () => {
                   <Link
                     to={item.href}
                     onClick={() => setIsOpen(false)}
-                    className={`block px-3 py-2 rounded-md font-medium ${
-                      item.highlight
-                        ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500"
-                        : "text-gray-800 hover:bg-gray-50"
-                    }`}
+                    className={`block px-3 py-2 rounded-md font-medium ${item.highlight
+                      ? "text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500"
+                      : "text-gray-800 hover:bg-gray-50"
+                      }`}
                   >
                     {item.name}
                   </Link>
