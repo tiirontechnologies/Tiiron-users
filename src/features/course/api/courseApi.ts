@@ -1,5 +1,35 @@
 import { baseApi } from "../../../api/api.routes";
 
+export interface SingleCheckoutRequest {
+  courseIds: number[];
+}
+
+export interface CheckoutResponse {
+  success: boolean;
+  paymentUrl?: string;
+  message: string;
+}
+
+export interface ICartItem {
+  id: number;
+  courseId: number;
+  userId: number;
+  createdAt: string;
+
+  course: {
+    id: number;
+    title: string;
+    price: number;
+    image: string | null;
+  };
+}
+
+export interface CartResponse {
+  data: {
+    items: ICartItem[];
+    total: number;
+  };
+}
 // Course API endpoints
 export const courseApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -87,12 +117,43 @@ export const courseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    addCourseToCart: builder.mutation({
-      query: ({ courseId }: { courseId: number }) => ({
+    initiateCheckout: builder.mutation<CheckoutResponse, SingleCheckoutRequest>(
+      {
+        query: (data) => ({
+          url: "enrollment",
+          method: "POST",
+          body: data,
+        }),
+      }
+    ),
+
+    // 1. GET USER CART (Query)
+    getCart: builder.query<CartResponse, void>({
+      query: () => ({
+        url: "cart",
+        method: "GET",
+      }),
+      providesTags: ["Cart"],
+    }),
+
+    // 2. ADD TO CART (Mutation)
+    addToCartServer: builder.mutation<void, { courseId: number }>({
+      query: ({ courseId }) => ({
         url: "cart/add",
         method: "POST",
-        body: { courseId },
+        body: { courseId: courseId },
       }),
+      // Mutation ke baad cart data ko refetch karwao
+      invalidatesTags: ["Cart"],
+    }),
+
+    // 3. REMOVE FROM CART (Mutation)
+    removeFromCartServer: builder.mutation<void, { cartItemId: number }>({
+      query: ({ cartItemId }) => ({
+        url: `cart/item/${cartItemId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
     }),
   }),
 });
@@ -107,5 +168,8 @@ export const {
   useDeleteCourseMutation,
   useGetChaptersQuery,
   useSearchCoursesQuery,
-  useAddCourseToCartMutation,
+  useInitiateCheckoutMutation,
+  useGetCartQuery,
+  useAddToCartServerMutation,
+  useRemoveFromCartServerMutation,
 } = courseApiSlice;

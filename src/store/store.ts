@@ -2,13 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import { baseApi, authApi } from "../api/api.routes";
 import globalIdReducer from "../slices/globalid.slice";
 import loginFormReducer from "../slices/login.slice";
-import cartReducer from "../slices/cartSlice";
 
 export const store = configureStore({
   reducer: {
     globalIdSlice: globalIdReducer,
     loginFormSlice: loginFormReducer,
-    cart: cartReducer,
     [authApi.reducerPath]: authApi.reducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },

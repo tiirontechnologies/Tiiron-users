@@ -5,16 +5,21 @@ import {
   Divider,
   Button,
   IconButton,
+  Alert,
+  Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteForever";
 import CloseIcon from "@mui/icons-material/Close";
+import { useState } from "react";
 
-import { useSelector, useDispatch } from "react-redux";
 import {
-  selectCartItems,
-  selectCartTotal,
-  removeFromCart,
-} from "../../../slices/cartSlice"; 
+  useInitiateCheckoutMutation,
+  useGetCartQuery,
+  useRemoveFromCartServerMutation,
+  ICartItem,
+  SingleCheckoutRequest,
+} from "../../../features/course/api/courseApi";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -37,17 +42,24 @@ const style = {
 
 // --- Single Cart Item Component ---
 interface CartItemProps {
-  id: number;
-  title: string;
-  price: number;
-  thumbnail?: string;
+  item: ICartItem;
 }
 
-const CartItem: React.FC<CartItemProps> = ({ id, title, price, thumbnail }) => {
-  const dispatch = useDispatch();
+const CartItem: React.FC<CartItemProps> = ({ item }) => {
+  const [removeFromCartServer, { isLoading: isRemoving }] =
+    useRemoveFromCartServerMutation();
 
-  const handleRemove = () => {
-    dispatch(removeFromCart(id));
+  const title = item.course.title;
+  const price = item.course.price ?? 0;
+  const thumbnail = item.course.image;
+  const cartItemId = item.id;
+
+  const handleRemove = async () => {
+    try {
+      await removeFromCartServer({ cartItemId: cartItemId }).unwrap();
+    } catch (error) {
+      console.error("Failed to remove item from server cart:", error);
+    }
   };
 
   return (
@@ -70,17 +82,111 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, thumbnail }) => {
           ${price.toFixed(2)}
         </Typography>
       </Box>
-      <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
-        <DeleteIcon color="error" />
+      <IconButton
+        edge="end"
+        aria-label="delete"
+        onClick={handleRemove}
+        disabled={isRemoving}
+      >
+        {isRemoving ? (
+          <CircularProgress size={20} color="error" />
+        ) : (
+          <DeleteIcon color="error" />
+        )}
       </IconButton>
     </Box>
   );
 };
 
 export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
-  const cartItems = useSelector(selectCartItems); // Cart items from Redux
-  const cartTotal = useSelector(selectCartTotal); // Cart total from Redux
+  const {
+    data: cartData,
+    isFetching: isCartFetching,
+    isError: isCartError,
+  } = useGetCartQuery(undefined, {
+    skip: !isOpen, // Only fetch when modal is open
+  });
+
+  const cartItems = cartData?.data?.items || [];
+  const cartTotal = cartData?.data?.total || 0;
   const isCartEmpty = cartItems.length === 0;
+
+  const [initiateCheckout, { isLoading: isCheckingOut }] =
+    useInitiateCheckoutMutation();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, SetSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("success");
+  const handleSnackbarClose = () => setSnackbarOpen(false);
+
+  // --- LOOPING CHECKOUT HANDLER ---
+  const handleCheckout = async () => {
+    if (isCartEmpty || isCheckingOut || isCartFetching) return;
+
+    SetSnackbarMessage("Initiating checkout process...");
+    setSnackbarSeverity("info");
+    setSnackbarOpen(true);
+
+    // 1. Get all Course IDs from the server cart items
+    const courseIds = cartItems.map((item) => item.courseId);
+
+    const payload: SingleCheckoutRequest = {
+      courseIds: courseIds,
+    };
+
+    const isFree = cartTotal === 0;
+
+    try {
+      const response = await initiateCheckout(payload as any).unwrap();
+
+      // SUCCESS HANDLING
+      if (response.success) {
+        if (isFree) {
+          SetSnackbarMessage(
+            `Successfully enrolled in ${courseIds.length} FREE course(s)!`
+          );
+          setSnackbarSeverity("success");
+          setTimeout(onClose, 2000);
+        } else if (response.paymentUrl) {
+          SetSnackbarMessage("Redirecting to payment gateway...");
+          setSnackbarSeverity("info");
+          // TODO: Redirect the user to response.paymentUrl
+          // window.location.href = response.paymentUrl; // Uncomment this when ready
+        } else {
+          SetSnackbarMessage("Checkout initiated successfully!");
+          setSnackbarSeverity("success");
+          setTimeout(onClose, 3000);
+        }
+      }
+    } catch (error: any) {
+      let errorMessage = "Checkout failed due to a server or network error.";
+      let severity: "success" | "error" | "info" | "warning" = "error";
+
+      const serverMessage =
+        error?.data?.errors?.[0]?.message || error?.data?.message;
+
+      if (serverMessage) {
+        if (serverMessage.toLowerCase().includes("enrolled")) {
+          errorMessage =
+            "You are already enrolled in one or more of these courses.";
+          severity = "warning";
+        } else {
+          errorMessage = serverMessage;
+          severity = "error";
+        }
+      }
+
+      setSnackbarSeverity(severity);
+      SetSnackbarMessage(errorMessage);
+      setSnackbarOpen(true);
+
+      console.error("Checkout Error:", error);
+    }
+  };
+
+  const isContentLoading = isCartFetching && !cartData;
 
   return (
     <Modal
@@ -105,10 +211,10 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
             component="h2"
             fontWeight="bold"
           >
-            Your Cart ({cartItems.length}{" "}
+            🛒 Your Cart ({cartItems.length}{" "}
             {cartItems.length === 1 ? "Item" : "Items"})
           </Typography>
-          <IconButton onClick={onClose}>
+          <IconButton onClick={onClose} disabled={isCheckingOut}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -116,7 +222,15 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
         <Divider sx={{ mb: 2 }} />
 
         {/* Cart Items List */}
-        {isCartEmpty ? (
+        {isCartError ? (
+          <Typography color="error" sx={{ py: 3, textAlign: "center" }}>
+            Error loading cart. Please try again.
+          </Typography>
+        ) : isContentLoading ? (
+          <Box sx={{ py: 3, textAlign: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : isCartEmpty ? (
           <Typography
             variant="body1"
             color="text.secondary"
@@ -128,13 +242,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
           <>
             <Box sx={{ mb: 2 }}>
               {cartItems.map((item) => (
-                <CartItem
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  price={item.price}
-                  thumbnail={item.thumbnail}
-                />
+                <CartItem key={item.id} item={item} />
               ))}
             </Box>
 
@@ -150,8 +258,12 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
               }}
             >
               <Typography variant="h6">Total:</Typography>
-              <Typography variant="h5" color="success.main" fontWeight="bold">
-                ${cartTotal}
+              <Typography
+                variant="h5"
+                color={cartTotal > 0 ? "error.main" : "success.main"}
+                fontWeight="bold"
+              >
+                {cartTotal === 0 ? "FREE" : `$${cartTotal.toFixed(2)}`}
               </Typography>
             </Box>
 
@@ -161,12 +273,35 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
               fullWidth
               size="large"
               sx={{ mt: 1 }}
-              // onClick={() => console.log('Navigate to Checkout')} // Add actual checkout logic/navigation here
+              onClick={handleCheckout}
+              disabled={isCheckingOut || isCartEmpty}
             >
-              Proceed to Checkout
+              {isCheckingOut ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : cartTotal === 0 ? (
+                "Enroll Now (FREE)"
+              ) : (
+                "Proceed to Checkout"
+              )}
             </Button>
           </>
         )}
+
+        {/* Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={5000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbarSeverity}
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
     </Modal>
   );

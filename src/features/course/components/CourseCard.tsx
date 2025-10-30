@@ -7,6 +7,7 @@ import {
   Button,
   Snackbar,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import DocumentIcon from "@icons/DocumentIcon";
 import StarFilledIcon from "@icons/StarFilledIcon";
@@ -19,8 +20,10 @@ import { DeleteModal } from "../components/DeleteCourseModal";
 import { useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart, selectCartItems } from "../../../slices/cartSlice";
+import {
+  useAddToCartServerMutation,
+  useGetCartQuery,
+} from "../../../features/course/api/courseApi";
 
 export default function CourseCard({
   thumbnailSrc,
@@ -35,9 +38,17 @@ export default function CourseCard({
   const { isOpen, openModal, closeModal } = useModal();
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const cartItems = useSelector(selectCartItems);
-  const isCourseInCart = cartItems.some((item) => item.id === id);
+  const { data: cartData } = useGetCartQuery(undefined, {
+    pollingInterval: 30000,
+  });
+
+  const isCourseInCart = cartData?.data?.items?.some(
+    (item) => item.courseId === id
+  );
+
+  const [addToCartServer, { isLoading: isAddingToCart }] =
+    useAddToCartServerMutation();
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, SetSnackbarMessage] = useState("");
   const [snacbarSeverity, setSnacbarSeverity] = useState("success");
@@ -52,33 +63,66 @@ export default function CourseCard({
     }
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    console.log("CLICKED CARD ID:", id, "Type:", typeof id);
+
+    if (!id || typeof id !== "number") {
+      SetSnackbarMessage("Error: Cannot add course. Course ID is missing.");
+      setSnacbarSeverity("error");
+      setSnackbarOpen(true);
+      console.error("Add to Cart Error: Course ID is invalid or missing.", {
+        id,
+      });
+      return;
+    }
 
     if (isCourseInCart) {
       SetSnackbarMessage("Course already exists in your cart.");
       setSnacbarSeverity("info");
       setSnackbarOpen(true);
-      return; // Stop execution
+      return;
     }
 
-    // 1. Prepare data payload
-    const courseToAdd = {
-      id: id,
-      title: title,
-      price: price,
-      thumbnail: UPLOADS + thumbnailSrc,
-    };
+    try {
+      await addToCartServer({ courseId: id }).unwrap();
 
-    // 2. Dispatch to Redux Store
-    dispatch(addToCart(courseToAdd));
+      // SUCCESS Feedback
+      SetSnackbarMessage(`"${title}" successfully added to your cart!`);
+      setSnacbarSeverity("success");
+      setSnackbarOpen(true);
+    } catch (error: any) {
+      // ERROR Feedback
+      let errorMessage = "Failed to add course to cart.";
+      let severity: "success" | "error" | "info" | "warning" = "error";
 
-    // 3. Show success feedback
-    SetSnackbarMessage("Course added to cart successfully!");
-    setSnacbarSeverity("success");
-    setSnackbarOpen(true);
+      // Extract server-side error message
+      const serverMessage =
+        error?.data?.errors?.[0]?.message || error?.data?.message;
+
+      if (serverMessage) {
+        // Check for specific error like 'already in cart'
+        if (serverMessage.toLowerCase().includes("already in cart")) {
+          errorMessage = "This course is already in your cart.";
+          severity = "warning";
+        } else {
+          errorMessage = serverMessage;
+          severity = "error";
+        }
+      }
+
+      SetSnackbarMessage(errorMessage);
+      setSnacbarSeverity(severity);
+      setSnackbarOpen(true);
+      console.error("Add to Cart Server Error:", error);
+    }
   };
-  const handleSnackbarClose = (event: any, reason: string) => {
+
+  const handleSnackbarClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
     if (reason === "clickaway") {
       return;
     }
@@ -178,12 +222,31 @@ export default function CourseCard({
           {title}
         </Link>
       )}
+
+      <Typography
+        variant="h6"
+        color={price > 0 ? "error.main" : "success.main"}
+        sx={{
+          fontWeight: 700,
+          fontSize: isBrowsingPage ? 18 : 16,
+          mt: 0.5,
+        }}
+      >
+        {price === 0 ? "FREE" : `$${price.toFixed(2)}`}
+      </Typography>
+
       {isBrowsingPage ? (
         <Button
           variant="contained"
           size="small"
-          startIcon={<ShoppingCartIcon />}
-          disabled={isCourseInCart} // <-- Disabled based on Redux state
+          startIcon={
+            isAddingToCart ? (
+              <CircularProgress size={16} color="inherit" />
+            ) : (
+              <ShoppingCartIcon />
+            )
+          }
+          disabled={isCourseInCart || isAddingToCart} // <-- isAddingToCart added
           onClick={handleAddToCart}
           sx={{
             position: "absolute",
@@ -194,7 +257,11 @@ export default function CourseCard({
             "&:hover": { backgroundColor: "#3a2366" },
           }}
         >
-          {isCourseInCart ? "In Cart" : "Add to Cart"}
+          {isAddingToCart
+            ? "Adding..."
+            : isCourseInCart
+            ? "In Cart"
+            : "Add to Cart"}
         </Button>
       ) : (
         <IconButton

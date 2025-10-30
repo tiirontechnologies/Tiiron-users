@@ -24,11 +24,7 @@ export default function Courses({
     data: browseData,
     isFetching: fetchingBrowse,
     isError: errorBrowse,
-  } = useGetCourseForFeedQuery(
-    queryArgs, 
-    { skip: !isBrowsingPage }
-  );
-
+  } = useGetCourseForFeedQuery(queryArgs, { skip: !isBrowsingPage });
 
   let courses: ICourse[] = [];
   let isFetching: boolean = false;
@@ -64,12 +60,13 @@ export default function Courses({
             courses.map((course) => (
               <CourseCard
                 key={course.id}
-                id={course.id}
+                id={Number(course.id)}
                 thumbnailSrc={course.image}
                 tags={course.tags}
                 title={course.title}
                 chapters={course.totalChapters}
                 rating={0}
+                price={course.price}
                 isBrowsingPage={isBrowsingPage}
               />
             ))
