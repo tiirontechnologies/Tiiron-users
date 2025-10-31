@@ -9,6 +9,7 @@ import {
 } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function Courses({
   isBrowsingPage = false,
@@ -18,11 +19,13 @@ export default function Courses({
   console.log("Courses Component Rendered. isBrowsingPage:", isBrowsingPage);
   const queryArgs = { limit: 10, page: 1 };
 
+  const { isAdmin } = useAuth();
+
   const {
     data: myCoursesData,
     isFetching: fetchingMyCourses,
     isError: errorMyCourses,
-  } = useGetCoursesQuery(queryArgs, { skip: true });
+  } = useGetCoursesQuery(queryArgs, { skip: isBrowsingPage || !isAdmin });
 
   const {
     data: browseData,
@@ -34,7 +37,9 @@ export default function Courses({
     data: enrollmentData,
     isFetching: fetchingEnrollments,
     isError: errorEnrollments,
-  } = useGetMyEnrolledCoursesQuery(undefined, { skip: isBrowsingPage });
+  } = useGetMyEnrolledCoursesQuery(undefined, {
+    skip: isBrowsingPage || isAdmin,
+  });
 
   let courses: ICourse[] = [];
   let isFetching: boolean = false;
@@ -45,6 +50,13 @@ export default function Courses({
     courses = typedBrowseData?.data?.courses || [];
     isFetching = fetchingBrowse;
     isError = errorBrowse;
+  } else if (isAdmin) {
+    const typedMyCoursesData = myCoursesData as {
+      data: { courses: ICourse[] };
+    };
+    courses = typedMyCoursesData?.data?.courses || [];
+    isFetching = fetchingMyCourses;
+    isError = errorMyCourses;
   } else {
     const enrolledCourses = enrollmentData?.data || [];
 
@@ -52,10 +64,8 @@ export default function Courses({
       .filter((enrollment) => enrollment.course)
       .map((enrollment) => ({
         ...enrollment.course,
-
         id: enrollment.course.id,
         price: enrollment.course.price ?? 0,
-
         totalChapters: enrollment.course.totalChapters ?? 0,
       })) as ICourse[];
 
@@ -69,8 +79,20 @@ export default function Courses({
   return (
     <Box sx={{ padding: "24px" }}>
       <PageToolbarLayout title={title}>
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 2,
+            p: 1,
+            borderRadius: 1,
+            backgroundColor: isAdmin ? "secondary.light" : "primary.light",
+            color: isAdmin ? "secondary.dark" : "primary.dark",
+          }}
+        >
+          [TEST] Current User Role: {isAdmin ? "Admin" : "Normal User"}
+        </Typography>
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-          {!isBrowsingPage && <AddNewCourseCard />}
+          {!isBrowsingPage && isAdmin && <AddNewCourseCard />}
           {isFetching ? (
             <Loader />
           ) : isError ? (

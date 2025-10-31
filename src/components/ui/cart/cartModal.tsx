@@ -20,6 +20,7 @@ import {
   ICartItem,
   SingleEnrollmentRequest,
 } from "../../../features/course/api/courseApi";
+import { useNavigate } from "react-router-dom";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -99,6 +100,8 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 };
 
 export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
   const {
     data: cartData,
     isFetching: isCartFetching,
@@ -133,6 +136,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
     const paymentStatus = isFree ? "free" : "pending";
 
     const successfullyEnrolledIds: number[] = [];
+    const enrolledCourseIds: number[] = [];
 
     try {
       for (const item of cartItems) {
@@ -157,14 +161,36 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
 
       // --- Final Success Check ---
       if (successfullyEnrolledIds.length > 0) {
-        // API (invalidatesTags) will refetch the cart, making it empty
-        SetSnackbarMessage(
-          `Successfully enrolled in ${successfullyEnrolledIds.length} course(s).`
-        );
-        setSnackbarSeverity("success");
-        setTimeout(onClose, 2000);
+        if (isFree) {
+          if (successfullyEnrolledIds.length == 1) {
+            const courseIdToRedirect = enrolledCourseIds[0];
 
-        // ... (Payment Gateway logic) ...
+            SetSnackbarMessage(
+              `Successfully enrolled! Redirecting to course...`
+            );
+            setSnackbarSeverity("success");
+            setSnackbarOpen(true);
+            onClose();
+            navigate(`/course-practice/${courseIdToRedirect}`);
+          } else {
+            // API (invalidatesTags) will refetch the cart, making it empty
+            SetSnackbarMessage(
+              `Successfully enrolled in ${successfullyEnrolledIds.length} FREE course(s).`
+            );
+            setSnackbarSeverity("success");
+            setSnackbarOpen(true);
+            setTimeout(onClose, 2000);
+          }
+
+          // ... (Payment Gateway logic) ...
+        } else {
+          SetSnackbarMessage(
+            `Enrollment successful for ${successfullyEnrolledIds.length} paid course(s).`
+          );
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
+          setTimeout(onClose, 3000);
+        }
       } else {
         throw new Error(
           "Checkout failed. No courses were successfully enrolled."
