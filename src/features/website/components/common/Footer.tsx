@@ -147,21 +147,17 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
           {/* Brand Info & Contact */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-red-600 to-pink-600 flex items-center justify-center text-white font-bold shadow">
-                T
-              </div>
-              <div>
-                <div className="text-xl font-extrabold text-white">Tiiron</div>
-                <div className="text-sm text-gray-400">
-                  Personalized learning powered by AI
-                </div>
-              </div>
+            <div className="flex items-center gap-3 mb-4 mt-0">
+              <img
+                src="/Tiiron_logo_footer.png"
+                alt="Tiiron Logo"
+                className="h-12 w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform duration-300"
+              />
             </div>
 
-            <p className="text-gray-400 mb-6 max-w-lg">
-              We help learners and creators reach their goals with thoughtful
-              tools and clear insights.
+
+            <p className="text-gray-400 mb-3 max-w-lg">
+              We help educators deliver interactive learning and real-time practice. Learners don’t just watch they practice, improve, and master concepts.
             </p>
 
             <div className="space-y-3">
@@ -189,7 +185,7 @@ const Footer: React.FC = () => {
               <h4 className="text-sm font-semibold text-white mb-3">
                 {sec.title}
               </h4>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {sec.links.map((link, i) => (
                   <li key={i}>
                     <a
@@ -212,8 +208,10 @@ const Footer: React.FC = () => {
 
           {/* Social Links */}
           <div className="flex flex-col">
-            <h4 className="text-sm font-semibold text-white mb-3">Follow Us</h4>
-            <div className="grid grid-cols-2 gap-3">
+            <h4 className="text-sm font-semibold text-white mb-4">Follow Us</h4>
+
+            {/* Desktop View */}
+            <div className="hidden sm:grid grid-cols-2 gap-3">
               {socialLinks.map((s, i) => {
                 const Icon = s.icon;
                 return (
@@ -221,7 +219,26 @@ const Footer: React.FC = () => {
                     key={i}
                     href={s.href}
                     aria-label={s.label}
-                    className="p-2 rounded-md border border-gray-700 text-gray-400 hover:text-red-500 hover:border-red-500 transition flex items-center justify-center"
+                    target="_blank"
+                    className="p-2 rounded-md border border-gray-700 text-gray-400 hover:text-red-500 hover:border-red-500 transition flex items-center justify-center hover:scale-105"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Mobile View: 3 icons per row */}
+            <div className="grid grid-cols-3 gap-2 sm:hidden">
+              {socialLinks.map((s, i) => {
+                const Icon = s.icon;
+                return (
+                  <a
+                    key={i}
+                    href={s.href}
+                    aria-label={s.label}
+                    target="_blank"
+                    className="p-2 rounded-lg bg-[#1e293b] text-gray-300 border border-gray-700 flex items-center justify-center hover:bg-[#111827] hover:text-red-400 hover:border-red-500 transition duration-200 shadow-sm hover:shadow-md"
                   >
                     <Icon className="w-5 h-5" />
                   </a>

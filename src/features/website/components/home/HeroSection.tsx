@@ -3,7 +3,7 @@ import OrbitalVisualization from "./OrbitalVisualization";
 
 export default function HeroSection() {
   return (
-    <section className="relative bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white min-h-screen flex items-center">
+    <section className="relative bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white min-h-screen flex items-center pt-12 lg:pt-0">
       <div className="container mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Content */}
         <motion.div
