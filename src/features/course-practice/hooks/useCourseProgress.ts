@@ -1,16 +1,23 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useGetLessonAndTopicByCourseIdQuery, useGetContentByTopicIdQuery } from '../api/courseProgressApi';
-import { useParams } from 'react-router-dom';
+import { useState, useCallback, useEffect } from "react";
+import {
+  useGetLessonAndTopicByCourseIdQuery,
+  useGetContentByTopicIdQuery,
+} from "../api/courseProgressApi";
+import { useParams } from "react-router-dom";
 
 export const useCourseProgress = () => {
-  const { courseId } = useParams();
-  const [selectedUnitId, setSelectedUnitId] = useState<string>('');
+  const params = useParams<{ courseId: string; id?: string }>();
+  const courseId = params.courseId || params.id || "";
+  const [selectedUnitId, setSelectedUnitId] = useState<string>("");
 
   const {
     data: courseData,
     isFetching: isCourseLoading,
     isError: isCourseError,
-  } = useGetLessonAndTopicByCourseIdQuery({ id: courseId! }, { skip: !courseId });
+  } = useGetLessonAndTopicByCourseIdQuery(
+    { id: courseId! },
+    { skip: !courseId }
+  );
 
   const {
     data: unitsData,
@@ -36,6 +43,48 @@ export const useCourseProgress = () => {
     }
   }, [courseData, selectedUnitId]);
 
+  /**
+   * @param
+   */
+  const getPracticeStats = (data: any) => {
+    const unitContent = (data as any)?.data ?? data;
+    if (!unitContent || !Array.isArray(unitContent)) {
+      return {
+        totoalQuestions: 0,
+        attemptedQuestions: 0,
+        correctAnswers: 0,
+        accuracy: 0,
+      };
+    }
+
+    const allPractices: any[] = [];
+    unitContent.forEach((unit: any) => {
+      if (unit.practices && Array.isArray(unit.practices)) {
+        allPractices.push(...unit.practices);
+      }
+    });
+
+    const totalPractices = allPractices.length;
+    const completedPractice = allPractices.filter(
+      (p) => p.score !== null && p.score !== undefined
+    ).length;
+    const totalScore = allPractices.reduce((sum, p) => sum + (p.score || 0), 0);
+    const averageScore =
+      completedPractice > 0 ? Math.round(totalScore / completedPractice) : 0;
+
+    return {
+      totalSessions: totalPractices,
+      completedSessions: completedPractice,
+      averageScore: averageScore,
+      progressPercent:
+        totalPractices > 0
+          ? Math.round((completedPractice / totalPractices) * 100)
+          : 0,
+    };
+  };
+
+  const practiceStats = getPracticeStats(unitsData);
+
   const isLoading = isCourseLoading || isUnitsLoading;
   const hasError = isCourseError || isUnitsError;
   const hasData = Boolean((courseData as any)?.data ?? courseData);
@@ -55,5 +104,6 @@ export const useCourseProgress = () => {
     isUnitsLoading,
     isCourseError,
     isUnitsError,
+    practiceStats,
   };
 };

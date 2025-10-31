@@ -1,27 +1,43 @@
-import React from 'react';
-import { Box, Button, Avatar, Typography, Divider } from '@mui/material';
-import { KeyboardBackspace } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-import { CourseData } from '../../types';
-import { COLORS, GRADIENTS, SHADOWS } from '../../constants';
-import ProgressCard from '../UI/ProgressCard';
-import NavigationList from './NavigationList';
+import React from "react";
+import { Box, Button, Avatar, Typography, Divider } from "@mui/material";
+import { KeyboardBackspace } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import { CourseData } from "../../types";
+import NavigationList from "./NavigationList";
+import PracticeProgressStats from "./PracticeProgressStats";
+import { GRADIENTS, COLORS } from "../../constants";
+
+interface PracticeStats {
+  totalSessions: number;
+  completedSessions: number;
+  averageScore: number;
+  progressPercent: number;
+}
 
 interface SidebarProps {
   data: CourseData;
   onUnitSelect: (unitId: string) => void;
   courseId?: string;
+  practiceStats: PracticeStats;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ data, onUnitSelect, courseId }) => {
-  console.log("Sidebar - courseId:", courseId);
-  console.log("Sidebar - courseId type:", typeof courseId);
-  console.log("Sidebar - data:", data);
+const Sidebar: React.FC<SidebarProps> = ({
+  data,
+  onUnitSelect,
+  courseId,
+  practiceStats,
+}) => {
+  console.log("Sidebar", data.chapters, onUnitSelect, courseId);
+  console.log("sidebar Practice stats:", practiceStats);
+  <PracticeProgressStats stats={practiceStats} />;
+
   const progressStats = {
     current: 3,
     total: 12,
     percentage: 25,
   };
+
+  console.log("Rendering PracticeProgressStats with courseId:", courseId);
 
   return (
     <Box
@@ -96,13 +112,19 @@ const Sidebar: React.FC<SidebarProps> = ({ data, onUnitSelect, courseId }) => {
             >
               Learning Trail
             </Typography>
-            <Typography sx={{ fontSize: "12px", color: COLORS.text.muted, fontWeight: 500 }}>
+            <Typography
+              sx={{
+                fontSize: "12px",
+                color: COLORS.text.muted,
+                fontWeight: 500,
+              }}
+            >
               Track your progress
             </Typography>
           </Box>
         </Box>
-
-        <ProgressCard stats={progressStats} />
+        {/* <ProgressCard stats={progressStats} /> */}
+        {practiceStats && <PracticeProgressStats stats={practiceStats} />}
       </Box>
 
       <Divider sx={{ my: 2, opacity: 0.3 }} />

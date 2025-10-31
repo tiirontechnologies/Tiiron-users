@@ -178,6 +178,7 @@ const MainContent: React.FC<MainContentProps> = ({ questions }) => {
   }, [questions, practiceState.userAnswers]);
 
   const endPractice = useCallback(async () => {
+    console.log("Ending practice session...");
     const finalScore = calculateScore();
     const endTime = new Date();
 
