@@ -12,6 +12,12 @@ import Courses from "../features/course/pages/Courses";
 import NotificationsIcon from "@icons/NotificationsIcon";
 export const appRoutes: Route[] = [
   {
+    label: "Browse Courses",
+    path: "/browse-courses",
+    icon: <AutoStoriesIcon />,
+    element: <Courses isBrowsingPage={true} />,
+  },
+  {
     label: "Learning",
     icon: <BookIcon />,
     children: [

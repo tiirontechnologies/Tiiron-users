@@ -66,9 +66,23 @@ import {
   Legend,
 } from "recharts";
 
-import { CourseHeader, KPI, Learner, Analytics, Enrollments, LearnerStatus } from '../types';
-import { header, kpis, initialLearners, analytics, enrollments, STATUS_COLOR } from '../utils/mockData';
-import { exportCSV } from '../utils/helpers';
+import {
+  CourseHeader,
+  KPI,
+  Learner,
+  Analytics,
+  Enrollments,
+  LearnerStatus,
+} from "../types";
+import {
+  header,
+  kpis,
+  initialLearners,
+  analytics,
+  enrollments,
+  STATUS_COLOR,
+} from "../utils/mockData";
+import { exportCSV } from "../utils/helpers";
 
 /* ==============================
  * Small building blocks
@@ -76,7 +90,14 @@ import { exportCSV } from '../utils/helpers';
 function StatCard({ label, value, suffix }: KPI) {
   const theme = useTheme();
   return (
-    <Card sx={{ height: "100%", borderRadius: 3, overflow: "hidden", position: "relative" }}>
+    <Card
+      sx={{
+        height: "100%",
+        borderRadius: 3,
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
       <Box
         sx={{
           position: "absolute",
@@ -89,7 +110,12 @@ function StatCard({ label, value, suffix }: KPI) {
         <Typography variant="body2" color="text.secondary">
           {label}
         </Typography>
-        <Stack direction="row" alignItems="baseline" spacing={1} sx={{ mt: 0.5 }}>
+        <Stack
+          direction="row"
+          alignItems="baseline"
+          spacing={1}
+          sx={{ mt: 0.5 }}
+        >
           <Typography variant="h4" fontWeight={800}>
             {value}
           </Typography>
@@ -154,13 +180,23 @@ function KPIRing({ percent = 68 }: { percent?: number }) {
 }
 
 function StatusChip({ status }: { status: LearnerStatus }) {
-  return <Chip label={status} size="small" color={STATUS_COLOR[status]}  /> as any;
+  return (
+    <Chip label={status} size="small" color={STATUS_COLOR[status]} />
+  ) as any;
 }
 
 /* ==============================
  * Dialogs
  * ============================== */
-function AddLearnerDialog({ open, onClose, onAdd }: { open: boolean; onClose: () => void; onAdd: (l: Learner) => void }) {
+function AddLearnerDialog({
+  open,
+  onClose,
+  onAdd,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onAdd: (l: Learner) => void;
+}) {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [status, setStatus] = React.useState<LearnerStatus>("Active");
@@ -170,7 +206,15 @@ function AddLearnerDialog({ open, onClose, onAdd }: { open: boolean; onClose: ()
 
   const handleAdd = () => {
     const now = new Date().toISOString().slice(0, 10);
-    onAdd({ id: crypto.randomUUID(), name, email, enrolled: now, progress, status, lastActive: now });
+    onAdd({
+      id: crypto.randomUUID(),
+      name,
+      email,
+      enrolled: now,
+      progress,
+      status,
+      lastActive: now,
+    });
     setName("");
     setEmail("");
     setProgress(0);
@@ -183,8 +227,18 @@ function AddLearnerDialog({ open, onClose, onAdd }: { open: boolean; onClose: ()
       <DialogTitle>Add Learner</DialogTitle>
       <DialogContent dividers>
         <Stack spacing={2} sx={{ mt: 1 }}>
-          <TextField autoFocus label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
-          <TextField label="Email (optional)" value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
+          <TextField
+            autoFocus
+            label="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            label="Email (optional)"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+          />
           <TextField
             label="Progress (%)"
             value={progress}
@@ -194,7 +248,10 @@ function AddLearnerDialog({ open, onClose, onAdd }: { open: boolean; onClose: ()
           />
           <FormControl>
             <FormLabel>Status</FormLabel>
-            <Select value={status} onChange={(e) => setStatus(e.target.value as LearnerStatus)}>
+            <Select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as LearnerStatus)}
+            >
               <MenuItem value="Active">Active</MenuItem>
               <MenuItem value="Completed">Completed</MenuItem>
               <MenuItem value="Inactive">Inactive</MenuItem>
@@ -203,14 +260,29 @@ function AddLearnerDialog({ open, onClose, onAdd }: { open: boolean; onClose: ()
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} startIcon={<CloseRounded />}>Cancel</Button>
-        <Button onClick={handleAdd} disabled={!canAdd} variant="contained" startIcon={<AddRounded />}>Add</Button>
+        <Button onClick={onClose} startIcon={<CloseRounded />}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleAdd}
+          disabled={!canAdd}
+          variant="contained"
+          startIcon={<AddRounded />}
+        >
+          Add
+        </Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-function AnnouncementDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+function AnnouncementDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   const [sendEmail, setSendEmail] = React.useState(true);
   const [message, setMessage] = React.useState("");
 
@@ -219,22 +291,41 @@ function AnnouncementDialog({ open, onClose }: { open: boolean; onClose: () => v
       <DialogTitle>Send Announcement</DialogTitle>
       <DialogContent dividers>
         <Stack spacing={2} sx={{ mt: 1 }}>
-          <TextField label="Subject" fullWidth defaultValue={`Update for ${header.title}`} />
-          <TextField label="Message" fullWidth multiline minRows={4} value={message} onChange={(e) => setMessage(e.target.value)} />
+          <TextField
+            label="Subject"
+            fullWidth
+            defaultValue={`Update for ${header.title}`}
+          />
+          <TextField
+            label="Message"
+            fullWidth
+            multiline
+            minRows={4}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
           <Stack direction="row" spacing={1} alignItems="center">
             <FormLabel>Also send email</FormLabel>
-            <Switch checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} />
+            <Switch
+              checked={sendEmail}
+              onChange={(e) => setSendEmail(e.target.checked)}
+            />
           </Stack>
         </Stack>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
-        <Button onClick={onClose} variant="contained" startIcon={<CampaignRounded />}>Send</Button>
+        <Button
+          onClick={onClose}
+          variant="contained"
+          startIcon={<CampaignRounded />}
+        >
+          Send
+        </Button>
       </DialogActions>
     </Dialog>
   );
 }
-
 
 /* ==============================
  * Main Page
@@ -243,7 +334,9 @@ export default function CourseDashboard() {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const [query, setQuery] = React.useState<string>("");
-  const [granularity, setGranularity] = React.useState<"Weekly" | "Monthly" | "Quarterly">("Weekly");
+  const [granularity, setGranularity] = React.useState<
+    "Weekly" | "Monthly" | "Quarterly"
+  >("Weekly");
   const [learners, setLearners] = React.useState<Learner[]>(initialLearners);
   const [addOpen, setAddOpen] = React.useState(false);
   const [annOpen, setAnnOpen] = React.useState(false);
@@ -252,8 +345,10 @@ export default function CourseDashboard() {
   const filteredLearners = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return learners;
-    return learners.filter((l) =>
-      l.name.toLowerCase().includes(q) || (l.email?.toLowerCase().includes(q) ?? false)
+    return learners.filter(
+      (l) =>
+        l.name.toLowerCase().includes(q) ||
+        (l.email?.toLowerCase().includes(q) ?? false)
     );
   }, [query, learners]);
 
@@ -269,7 +364,13 @@ export default function CourseDashboard() {
   };
 
   return (
-    <Box sx={{ bgcolor: (t) => t.palette.background.default, minHeight: "100vh", pb: 12 }}>
+    <Box
+      sx={{
+        bgcolor: (t) => t.palette.background.default,
+        minHeight: "100vh",
+        pb: 12,
+      }}
+    >
       {/* Hero */}
       <Box
         sx={{
@@ -284,12 +385,26 @@ export default function CourseDashboard() {
         }}
       >
         <Container maxWidth="lg">
-          <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ md: "center" }} justifyContent="space-between">
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            spacing={2}
+            alignItems={{ md: "center" }}
+            justifyContent="space-between"
+          >
             <Box>
-              <Typography variant={isMdUp ? "h4" : "h5"} fontWeight={900} letterSpacing={-0.5}>
+              <Typography
+                variant={isMdUp ? "h4" : "h5"}
+                fontWeight={900}
+                letterSpacing={-0.5}
+              >
                 {header.title}
               </Typography>
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, flexWrap: "wrap" }}>
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                sx={{ mt: 0.5, flexWrap: "wrap" }}
+              >
                 <Chip size="small" label={`Course ID: ${header.id}`} />
                 <Chip size="small" label={`Category: ${header.category}`} />
                 <Chip size="small" label={`Instructor: ${header.instructor}`} />
@@ -304,7 +419,11 @@ export default function CourseDashboard() {
               <Typography variant="body2" color="text.secondary">
                 ({header.reviews} reviews)
               </Typography>
-              <Button endIcon={<ArrowOutwardRounded />} sx={{ ml: 1 }} variant="contained">
+              <Button
+                endIcon={<ArrowOutwardRounded />}
+                sx={{ ml: 1 }}
+                variant="contained"
+              >
                 View Reviews
               </Button>
             </Stack>
@@ -328,9 +447,21 @@ export default function CourseDashboard() {
           <Grid item xs={12} md={7}>
             <Card sx={{ borderRadius: 3 }}>
               <CardHeader
-                action={<IconButton size="small"><MoreVertRounded /></IconButton>}
-                title={<Typography variant="h6" fontWeight={800}>Overall Completion Rate</Typography>}
-                subheader={<Typography variant="body2" color="text.secondary">Live cohort performance</Typography>}
+                action={
+                  <IconButton size="small">
+                    <MoreVertRounded />
+                  </IconButton>
+                }
+                title={
+                  <Typography variant="h6" fontWeight={800}>
+                    Overall Completion Rate
+                  </Typography>
+                }
+                subheader={
+                  <Typography variant="body2" color="text.secondary">
+                    Live cohort performance
+                  </Typography>
+                }
               />
               <CardContent>
                 <Grid container spacing={2}>
@@ -362,17 +493,35 @@ export default function CourseDashboard() {
           <Grid item xs={12} md={5}>
             <Card sx={{ borderRadius: 3, height: "100%" }}>
               <CardHeader
-                action={<IconButton size="small"><MoreVertRounded /></IconButton>}
-                title={<Typography variant="h6" fontWeight={800}>Analytics</Typography>}
-                subheader={<Typography variant="body2" color="text.secondary">Distribution & engagement</Typography>}
+                action={
+                  <IconButton size="small">
+                    <MoreVertRounded />
+                  </IconButton>
+                }
+                title={
+                  <Typography variant="h6" fontWeight={800}>
+                    Analytics
+                  </Typography>
+                }
+                subheader={
+                  <Typography variant="body2" color="text.secondary">
+                    Distribution & engagement
+                  </Typography>
+                }
               />
               <CardContent>
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <StatMini title="Average Progress" value={`${analytics.avgProgress}%`} />
+                    <StatMini
+                      title="Average Progress"
+                      value={`${analytics.avgProgress}%`}
+                    />
                   </Grid>
                   <Grid item xs={6}>
-                    <StatMini title="Active Learners" value={analytics.active} />
+                    <StatMini
+                      title="Active Learners"
+                      value={analytics.active}
+                    />
                   </Grid>
                 </Grid>
 
@@ -390,7 +539,10 @@ export default function CourseDashboard() {
                         paddingAngle={2}
                       >
                         {analytics.distribution.map((_, i) => (
-                          <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                          <Cell
+                            key={i}
+                            fill={PIE_COLORS[i % PIE_COLORS.length]}
+                          />
                         ))}
                       </Pie>
                       <Legend verticalAlign="bottom" height={36} />
@@ -409,7 +561,11 @@ export default function CourseDashboard() {
           <Grid item xs={12} md={8}>
             <Card sx={{ borderRadius: 3 }}>
               <CardHeader
-                title={<Typography variant="h6" fontWeight={800}>Learners ({learners.length})</Typography>}
+                title={
+                  <Typography variant="h6" fontWeight={800}>
+                    Learners ({learners.length})
+                  </Typography>
+                }
                 action={
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
                     <TextField
@@ -425,17 +581,29 @@ export default function CourseDashboard() {
                         ),
                       }}
                     />
-                    <Button variant="outlined" startIcon={<DownloadRounded />} onClick={() => exportCSV(filteredLearners)}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<DownloadRounded />}
+                      onClick={() => exportCSV(filteredLearners)}
+                    >
                       Export
                     </Button>
-                    <Button variant="contained" startIcon={<AddRounded />} onClick={() => setAddOpen(true)}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddRounded />}
+                      onClick={() => setAddOpen(true)}
+                    >
                       Add Learner
                     </Button>
                   </Stack>
                 }
               />
               <CardContent>
-                <TableContainer component={Paper} variant="outlined" sx={{ borderRadius: 2 }}>
+                <TableContainer
+                  component={Paper}
+                  variant="outlined"
+                  sx={{ borderRadius: 2 }}
+                >
                   <Table size="small">
                     <TableHead>
                       <TableRow>
@@ -450,23 +618,49 @@ export default function CourseDashboard() {
                       {filteredLearners.map((l) => (
                         <TableRow key={l.id} hover>
                           <TableCell>
-                            <Stack direction="row" spacing={1.5} alignItems="center">
-                              <Avatar sx={{ width: 28, height: 28 }}>{l.name.charAt(0)}</Avatar>
+                            <Stack
+                              direction="row"
+                              spacing={1.5}
+                              alignItems="center"
+                            >
+                              <Avatar sx={{ width: 28, height: 28 }}>
+                                {l.name.charAt(0)}
+                              </Avatar>
                               <Box>
-                                <Typography fontWeight={600}>{l.name}</Typography>
+                                <Typography fontWeight={600}>
+                                  {l.name}
+                                </Typography>
                                 {l.email && (
-                                  <Typography variant="caption" color="text.secondary">{l.email}</Typography>
+                                  <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                  >
+                                    {l.email}
+                                  </Typography>
                                 )}
                               </Box>
                             </Stack>
                           </TableCell>
                           <TableCell>{l.enrolled}</TableCell>
                           <TableCell>
-                            <Stack direction="row" alignItems="center" spacing={1} sx={{ minWidth: 160 }}>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                              sx={{ minWidth: 160 }}
+                            >
                               <Box sx={{ flex: 1 }}>
-                                <LinearProgress variant="determinate" value={l.progress} sx={{ height: 8, borderRadius: 999 }} />
+                                <LinearProgress
+                                  variant="determinate"
+                                  value={l.progress}
+                                  sx={{ height: 8, borderRadius: 999 }}
+                                />
                               </Box>
-                              <Chip label={`${l.progress}%`} size="small" color={l.progress === 100 ? "info" : "default"} />
+                              <Chip
+                                label={`${l.progress}%`}
+                                size="small"
+                                color={l.progress === 100 ? "info" : "default"}
+                              />
                             </Stack>
                           </TableCell>
                           <TableCell>
@@ -485,9 +679,20 @@ export default function CourseDashboard() {
           {/* Drop-off + Rating */}
           <Grid item xs={12} md={4}>
             <Card sx={{ borderRadius: 3 }}>
-              <CardHeader title={<Typography variant="h6" fontWeight={800}>Course Rating & Feedback</Typography>} />
+              <CardHeader
+                title={
+                  <Typography variant="h6" fontWeight={800}>
+                    Course Rating & Feedback
+                  </Typography>
+                }
+              />
               <CardContent>
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
+                  sx={{ mt: 1 }}
+                >
                   <StarRounded sx={{ color: "#FFB400" }} />
                   <Typography variant="h5" fontWeight={900}>
                     {analytics.rating.value.toFixed(1)}
@@ -514,7 +719,11 @@ export default function CourseDashboard() {
                 </Box>
                 <Stack spacing={1} sx={{ mt: 1 }}>
                   {analytics.dropoff.map((d) => (
-                    <Stack key={d.lesson} direction="row" justifyContent="space-between">
+                    <Stack
+                      key={d.lesson}
+                      direction="row"
+                      justifyContent="space-between"
+                    >
                       <Typography variant="caption" color="text.secondary">
                         {d.lesson}
                       </Typography>
@@ -534,11 +743,18 @@ export default function CourseDashboard() {
           <Grid item xs={12}>
             <Card sx={{ borderRadius: 3 }}>
               <CardHeader
-                title={<Typography variant="h6" fontWeight={800}>Enrollments Over Time</Typography>}
+                title={
+                  <Typography variant="h6" fontWeight={800}>
+                    Enrollments Over Time
+                  </Typography>
+                }
                 action={
                   <Stack direction="row" spacing={1} alignItems="center">
                     <FormControl size="small">
-                      <Select value={granularity} onChange={(e) => setGranularity(e.target.value as any)}>
+                      <Select
+                        value={granularity}
+                        onChange={(e) => setGranularity(e.target.value as any)}
+                      >
                         <MenuItem value="Weekly">Weekly</MenuItem>
                         <MenuItem value="Monthly">Monthly</MenuItem>
                         <MenuItem value="Quarterly">Quarterly</MenuItem>
@@ -553,21 +769,36 @@ export default function CourseDashboard() {
               <CardContent>
                 <Box sx={{ height: 300 }}>
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={enrollments.series} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
+                    <LineChart
+                      data={enrollments.series}
+                      margin={{ left: 8, right: 8, top: 8, bottom: 8 }}
+                    >
                       <XAxis dataKey="date" />
                       <YAxis />
                       <ReTooltip />
-                      <Line type="monotone" dataKey="value" stroke={theme.palette.primary.main} strokeWidth={3} dot={false} />
+                      <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke={theme.palette.primary.main}
+                        strokeWidth={3}
+                        dot={false}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </Box>
 
                 <Grid container spacing={2} sx={{ mt: 1 }}>
                   <Grid item xs={12} sm={6} md={3}>
-                    <StatMini title="Total Enrollment" value={enrollments.total.toLocaleString()} />
+                    <StatMini
+                      title="Total Enrollment"
+                      value={enrollments.total.toLocaleString()}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
-                    <StatMini title="Unique Students" value={enrollments.unique.toLocaleString()} />
+                    <StatMini
+                      title="Unique Students"
+                      value={enrollments.unique.toLocaleString()}
+                    />
                   </Grid>
                 </Grid>
               </CardContent>
@@ -577,7 +808,11 @@ export default function CourseDashboard() {
       </Container>
 
       {/* Floating Quick Actions */}
-      <Stack direction="column" spacing={1.5} sx={{ position: "fixed", right: 24, bottom: 24, zIndex: 100 }}>
+      <Stack
+        direction="column"
+        spacing={1.5}
+        sx={{ position: "fixed", right: 24, bottom: 24, zIndex: 100 }}
+      >
         <Tooltip title="Send Announcement">
           <Fab color="primary" onClick={() => setAnnOpen(true)}>
             <CampaignRounded />
@@ -589,18 +824,39 @@ export default function CourseDashboard() {
           </Fab>
         </Tooltip>
         <Tooltip title="Export Data">
-          <Fab onClick={() => exportCSV(filteredLearners)} sx={{ bgcolor: "success.main", color: "white", "&:hover": { bgcolor: "success.dark" } }}>
+          <Fab
+            onClick={() => exportCSV(filteredLearners)}
+            sx={{
+              bgcolor: "success.main",
+              color: "white",
+              "&:hover": { bgcolor: "success.dark" },
+            }}
+          >
             <DownloadRounded />
           </Fab>
         </Tooltip>
       </Stack>
 
       {/* Dialogs */}
-      <AddLearnerDialog open={addOpen} onClose={() => setAddOpen(false)} onAdd={handleAdd} />
+      <AddLearnerDialog
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onAdd={handleAdd}
+      />
       <AnnouncementDialog open={annOpen} onClose={() => setAnnOpen(false)} />
 
-      <Snackbar open={!!snack} autoHideDuration={3000} onClose={() => setSnack(null)}>
-        <Alert icon={<CheckCircleOutline />} onClose={() => setSnack(null)} severity="success" variant="filled" sx={{ width: '100%' }}>
+      <Snackbar
+        open={!!snack}
+        autoHideDuration={3000}
+        onClose={() => setSnack(null)}
+      >
+        <Alert
+          icon={<CheckCircleOutline />}
+          onClose={() => setSnack(null)}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
           {snack}
         </Alert>
       </Snackbar>

@@ -1,11 +1,14 @@
-import { Avatar, Box, Button, IconButton, useMediaQuery } from "@mui/material";
+import { Box, Button, IconButton, useMediaQuery, Badge } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchBox from "./SearchBox";
 import FilterButton from "./FilterButton";
 import { useTheme } from "@mui/material/styles";
-import AboutIcon from "@icons/AboutIcon";
 import ProfilePopup from "./profilePopup";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useState } from "react";
+import { CartModal } from "../cart/cartModal";
+import { useGetCartQuery } from "../../../features/course/api/courseApi";
 
 const Header = ({
   onHamburgerClick,
@@ -17,6 +20,16 @@ const Header = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const { data: cartData } = useGetCartQuery(undefined, {
+    pollingInterval: 30000,
+  });
+
+  const cartItemCount = cartData?.data?.items?.length || 0;
+  const handleOpenCart = () => setIsCartOpen(true);
+  const handleCloseCart = () => setIsCartOpen(false);
 
   return (
     <Box
@@ -53,9 +66,20 @@ const Header = ({
         >
           Upgrade
         </Button>
+        <IconButton color="primary" onClick={handleOpenCart}>
+          <Badge
+            badgeContent={cartItemCount}
+            color="error"
+            max={9}
+            invisible={cartItemCount === 0}
+          >
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
 
         <ProfilePopup></ProfilePopup>
       </Box>
+      <CartModal isOpen={isCartOpen} onClose={handleCloseCart} />
     </Box>
   );
 };

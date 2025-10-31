@@ -8,10 +8,12 @@ export const store = configureStore({
     globalIdSlice: globalIdReducer,
     loginFormSlice: loginFormReducer,
     [authApi.reducerPath]: authApi.reducer,
-    [baseApi.reducerPath]: baseApi.reducer
+    [baseApi.reducerPath]: baseApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware).concat(baseApi.middleware),
+    getDefaultMiddleware()
+      .concat(authApi.middleware)
+      .concat(baseApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
