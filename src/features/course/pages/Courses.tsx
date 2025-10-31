@@ -1,8 +1,12 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import AddNewCourseCard from "../../course-settings/components/AddNewCourseCard";
 import CourseCard from "../components/CourseCard";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
-import { useGetCoursesQuery, useGetCourseForFeedQuery } from "../api/courseApi";
+import {
+  useGetCoursesQuery,
+  useGetCourseForFeedQuery,
+  useGetMyEnrolledCoursesQuery,
+} from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
 
@@ -18,13 +22,19 @@ export default function Courses({
     data: myCoursesData,
     isFetching: fetchingMyCourses,
     isError: errorMyCourses,
-  } = useGetCoursesQuery(queryArgs, { skip: isBrowsingPage });
+  } = useGetCoursesQuery(queryArgs, { skip: true });
 
   const {
     data: browseData,
     isFetching: fetchingBrowse,
     isError: errorBrowse,
   } = useGetCourseForFeedQuery(queryArgs, { skip: !isBrowsingPage });
+
+  const {
+    data: enrollmentData,
+    isFetching: fetchingEnrollments,
+    isError: errorEnrollments,
+  } = useGetMyEnrolledCoursesQuery(undefined, { skip: isBrowsingPage });
 
   let courses: ICourse[] = [];
   let isFetching: boolean = false;
@@ -36,12 +46,21 @@ export default function Courses({
     isFetching = fetchingBrowse;
     isError = errorBrowse;
   } else {
-    const typedMyCoursesData = myCoursesData as {
-      data: { courses: ICourse[] };
-    };
-    courses = typedMyCoursesData?.data?.courses || [];
-    isFetching = fetchingMyCourses;
-    isError = errorMyCourses;
+    const enrolledCourses = enrollmentData?.data || [];
+
+    courses = enrolledCourses
+      .filter((enrollment) => enrollment.course)
+      .map((enrollment) => ({
+        ...enrollment.course,
+
+        id: enrollment.course.id,
+        price: enrollment.course.price ?? 0,
+
+        totalChapters: enrollment.course.totalChapters ?? 0,
+      })) as ICourse[];
+
+    isFetching = fetchingEnrollments;
+    isError = errorEnrollments;
   }
 
   const title = isBrowsingPage ? "Browse Courses" : "My Courses";
@@ -56,6 +75,12 @@ export default function Courses({
             <Loader />
           ) : isError ? (
             <div>Some error occurred...</div>
+          ) : courses.length === 0 ? (
+            <Typography sx={{ width: "100%", textAlign: "center", mt: 4 }}>
+              {isBrowsingPage
+                ? "No courses found in the feed."
+                : "You have not enrolled in any courses yet."}
+            </Typography>
           ) : (
             courses.map((course) => (
               <CourseCard

@@ -1,7 +1,9 @@
 import { baseApi } from "../../../api/api.routes";
 
-export interface SingleCheckoutRequest {
-  courseIds: number[];
+export interface SingleEnrollmentRequest {
+  courseId: number;
+  status: string;
+  payment_status: string;
 }
 
 export interface CheckoutResponse {
@@ -30,6 +32,20 @@ export interface CartResponse {
     total: number;
   };
 }
+
+interface IEnrollment {
+  id: number;
+  courseId: number;
+  status: string;
+  payment_status: string;
+  course: ICourse;
+}
+
+interface MyEnrollmentResponse {
+  success: boolean;
+  data: IEnrollment[];
+}
+
 // Course API endpoints
 export const courseApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -117,16 +133,6 @@ export const courseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    initiateCheckout: builder.mutation<CheckoutResponse, SingleCheckoutRequest>(
-      {
-        query: (data) => ({
-          url: "enrollment",
-          method: "POST",
-          body: data,
-        }),
-      }
-    ),
-
     // 1. GET USER CART (Query)
     getCart: builder.query<CartResponse, void>({
       query: () => ({
@@ -155,6 +161,30 @@ export const courseApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Cart"],
     }),
+
+    initiateCheckout: builder.mutation<
+      CheckoutResponse,
+      SingleEnrollmentRequest
+    >({
+      query: (data) => ({
+        url: "enrollment",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Cart", "Enrollment"],
+    }),
+
+    getMyEnrolledCourses: builder.query<MyEnrollmentResponse, void>({
+      query: () => ({
+        url: "enrollment/my-enrollments",
+        method: "GET",
+        params: {
+          page: 1,
+          limit: 10,
+        },
+      }),
+      providesTags: ["Enrollment"],
+    }),
   }),
 });
 
@@ -172,4 +202,5 @@ export const {
   useGetCartQuery,
   useAddToCartServerMutation,
   useRemoveFromCartServerMutation,
+  useGetMyEnrolledCoursesQuery,
 } = courseApiSlice;
