@@ -1,4 +1,5 @@
 import { baseApi } from "../../../api/api.routes";
+import { ICourse } from "../../../types/course.types";
 
 export interface SingleEnrollmentRequest {
   courseId: number;

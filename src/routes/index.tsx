@@ -4,17 +4,22 @@ import { globalRoutes } from "./globalRoutes";
 import { authRoutes } from "./authRoutes";
 import { homeRoutes } from "./homeRoutes";
 import { CourseProgress } from "../features";
-import PrivateRoute from "@layouts/PrivateRoute";
 import { CourseGlossary } from "../features";
-import { Box } from "@mui/material";
 import NotFound from "../pages/NotFound";
 import DollerIcon from "../assets/icons/DollerIcon";
 import { CheckoutPage } from "../features";
+import { userRoutes } from "./learnerRoute";
+import UserLayout from "@layouts/UserLayout";
 
 export const routeConfig = [
   {
     element: <MainLayout />,
     children: [...appRoutes, ...globalRoutes],
+  },
+  {
+    path: "/learner",
+    element: <UserLayout />,
+    children: [...userRoutes]
   },
   {
     path: "/course-practice/:courseId",
@@ -26,16 +31,16 @@ export const routeConfig = [
     icon: <DollerIcon />,
     path: "/course-glossary/:courseId",
   },
-  ...homeRoutes,
-  ...authRoutes,
-  {
-    path: "*", // Catch-all for unmatched routes
-    element: <NotFound />, // Render 404 page
-  },
   {
     label: "Checkout",
     icon: <DollerIcon />,
     path: "/checkout",
     element: <CheckoutPage />,
   },
+  ...homeRoutes,
+  ...authRoutes,
+  {
+    path: "*", // Catch-all for unmatched routes
+    element: <NotFound />, // Render 404 page
+  }
 ];
