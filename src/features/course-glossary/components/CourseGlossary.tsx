@@ -8,7 +8,7 @@ import { useGetChaptersQuery } from "../../course/api/courseApi";
 import { useGetCourseByIdQuery } from "../../course/api/courseApi";
 import Loader from "@components/ui/Spinner";
 import { UPLOADS } from "../../../constants/constants";
-import { Navbar } from '../../website';
+import Navbar from '../../../components/ui/Navbar';
 
 export default function CourseGlossary() {
   const { courseId } = useParams<{ courseId: string }>();
