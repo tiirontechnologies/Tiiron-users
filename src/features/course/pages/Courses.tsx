@@ -1,43 +1,62 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import AddNewCourseCard from "../../course-settings/components/AddNewCourseCard";
-import CourseCard from "../components/CourseCard";
+import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
+import { DeleteModal } from "../components/DeleteCourseModal";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import { useGetCoursesQuery } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
+import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function Courses() {
-  const { data, isFetching, isError } = useGetCoursesQuery({ limit: 10, page: 1 }) as {
-    data: {
-      data: {
-        courses: ICourse[];
-      };
-    };
-    isFetching: boolean;
-    isError: boolean;
+  const queryArgs = { limit: 10, page: 1 };
+  const { isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  const {
+    data: myCoursesData,
+    isFetching: fetchingMyCourses,
+    isError: errorMyCourses,
+  } = useGetCoursesQuery(queryArgs, { skip: !isAdmin });
+
+  const typedMyCoursesData = myCoursesData as {
+    data: { courses: ICourse[] };
   };
-  
-  // Debug logging
-  console.log("Courses data:", data);
-  console.log("isFetching:", isFetching);
-  console.log("isError:", isError);
-  
+  const courses: ICourse[] = typedMyCoursesData?.data?.courses || [];
+
+  // Handler for course click - navigate to edit page
+  const handleCourseClick = (courseId: number) => {
+    navigate(`/courses/edit/${courseId}`);
+  };
+
   return (
     <Box sx={{ padding: "24px" }}>
-      <PageToolbarLayout title="Courses">
+      <PageToolbarLayout title="My Courses">
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
           <AddNewCourseCard />
-
-          {isFetching ? (<Loader />) : isError ? (<div>Some error occurred...</div>) : (
-            data?.data?.courses?.map((course) => (
-              <CourseCard
+          {fetchingMyCourses ? (
+            <Loader />
+          ) : errorMyCourses ? (
+            <div>Some error occurred...</div>
+          ) : courses.length === 0 ? (
+            <Typography sx={{ width: "100%", textAlign: "center", mt: 4 }}>
+              No Course Found
+            </Typography>
+          ) : (
+            courses.map((course) => (
+              <CourseCardWrapper
                 key={course.id}
-                id={course.id}
+                id={Number(course.id)}
                 thumbnailSrc={course.image}
                 tags={course.tags}
                 title={course.title}
                 chapters={course.totalChapters}
-                rating={0} />
+                rating={0}
+                price={course.price}
+                onCardClick={handleCourseClick}
+                DeleteModalComponent={DeleteModal}
+              />
             ))
           )}
         </Box>

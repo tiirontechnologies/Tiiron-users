@@ -31,7 +31,7 @@ export const usePracticeService = ({
   questions,
 }: UsePracticeServiceProps) => {
   // API mutations
-  const [submitPracticeBulk] = useSubmitPracticeBulkMutation(); 
+  const [submitPracticeBulk] = useSubmitPracticeBulkMutation();
   const [savePracticeSession] = useSavePracticeSessionMutation();
   const [savePracticeProgress] = useSavePracticeProgressMutation();
   const [startPracticeSession] = useStartPracticeSessionMutation();
