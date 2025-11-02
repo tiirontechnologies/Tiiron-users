@@ -18,8 +18,9 @@ import {
   useGetCartQuery,
   useRemoveFromCartServerMutation,
   ICartItem,
-  SingleCheckoutRequest,
-} from "../../../features/course/api/courseApi";
+  SingleEnrollmentRequest,
+} from "../../../features/course-browse/api/courseApi";
+import { useNavigate } from "react-router-dom";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -99,6 +100,8 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 };
 
 export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
   const {
     data: cartData,
     isFetching: isCartFetching,
@@ -125,42 +128,76 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
   const handleCheckout = async () => {
     if (isCartEmpty || isCheckingOut || isCartFetching) return;
 
-    SetSnackbarMessage("Initiating checkout process...");
+    SetSnackbarMessage("Starting enrollment process...");
     setSnackbarSeverity("info");
     setSnackbarOpen(true);
 
-    // 1. Get all Course IDs from the server cart items
-    const courseIds = cartItems.map((item) => item.courseId);
-
-    const payload: SingleCheckoutRequest = {
-      courseIds: courseIds,
-    };
-
     const isFree = cartTotal === 0;
+    const paymentStatus = isFree ? "free" : "pending";
+
+    const successfullyEnrolledIds: number[] = [];
+    const enrolledCourseIds: number[] = [];
 
     try {
-      const response = await initiateCheckout(payload as any).unwrap();
+      for (const item of cartItems) {
+        const courseId = item.course?.id;
 
-      // SUCCESS HANDLING
-      if (response.success) {
-        if (isFree) {
-          SetSnackbarMessage(
-            `Successfully enrolled in ${courseIds.length} FREE course(s)!`
-          );
-          setSnackbarSeverity("success");
-          setTimeout(onClose, 2000);
-        } else if (response.paymentUrl) {
-          SetSnackbarMessage("Redirecting to payment gateway...");
-          setSnackbarSeverity("info");
-          // TODO: Redirect the user to response.paymentUrl
-          // window.location.href = response.paymentUrl; // Uncomment this when ready
-        } else {
-          SetSnackbarMessage("Checkout initiated successfully!");
-          setSnackbarSeverity("success");
-          setTimeout(onClose, 3000);
+        if (!courseId || typeof courseId !== "number") {
+          console.error("Skipping item, missing course ID:", item);
+          continue;
+        }
+
+        const payload: SingleEnrollmentRequest = {
+          courseId: courseId,
+          status: "active",
+          payment_status: paymentStatus,
+        };
+
+        const response = await initiateCheckout(payload).unwrap();
+        if (response.success) {
+          successfullyEnrolledIds.push(item.id);
         }
       }
+
+      // --- Final Success Check ---
+      if (successfullyEnrolledIds.length > 0) {
+        if (isFree) {
+          if (successfullyEnrolledIds.length == 1) {
+            const courseIdToRedirect = enrolledCourseIds[0];
+
+            SetSnackbarMessage(
+              `Successfully enrolled! Redirecting to course...`
+            );
+            setSnackbarSeverity("success");
+            setSnackbarOpen(true);
+            onClose();
+            navigate(`/course-practice/${courseIdToRedirect}`);
+          } else {
+            // API (invalidatesTags) will refetch the cart, making it empty
+            SetSnackbarMessage(
+              `Successfully enrolled in ${successfullyEnrolledIds.length} FREE course(s).`
+            );
+            setSnackbarSeverity("success");
+            setSnackbarOpen(true);
+            setTimeout(onClose, 2000);
+          }
+
+          // ... (Payment Gateway logic) ...
+        } else {
+          SetSnackbarMessage(
+            `Enrollment successful for ${successfullyEnrolledIds.length} paid course(s).`
+          );
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
+          setTimeout(onClose, 3000);
+        }
+      } else {
+        throw new Error(
+          "Checkout failed. No courses were successfully enrolled."
+        );
+      }
     } catch (error: any) {
+      // ... (Error handling logic remains the same) ...
       let errorMessage = "Checkout failed due to a server or network error.";
       let severity: "success" | "error" | "info" | "warning" = "error";
 
@@ -170,7 +207,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
       if (serverMessage) {
         if (serverMessage.toLowerCase().includes("enrolled")) {
           errorMessage =
-            "You are already enrolled in one or more of these courses.";
+            "You are already enrolled in this course. Cannot enroll again.";
           severity = "warning";
         } else {
           errorMessage = serverMessage;

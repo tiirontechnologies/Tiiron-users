@@ -8,7 +8,7 @@ import ProfilePopup from "./profilePopup";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 import { CartModal } from "../cart/cartModal";
-import { useGetCartQuery } from "../../../features/course/api/courseApi";
+import { useGetCartQuery } from "../../../features/course-browse/api/courseApi";
 
 const Header = ({
   onHamburgerClick,
