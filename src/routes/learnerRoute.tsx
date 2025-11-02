@@ -9,7 +9,7 @@ export const userRoutes: Route[] = [
         label: "Browse Courses",
         path: "browse-courses",
         icon: <AutoStoriesIcon />,
-        element: <Courses isBrowsingPage={true} />,
+        element: <Courses />,
     },
     {
         label: "My Courses",

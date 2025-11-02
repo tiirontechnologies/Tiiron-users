@@ -33,6 +33,5 @@ interface ICourseCardProps {
   rating?: number;
   id: number;
   price?: number;
-  isBrowsingPage?: boolean;
 }
 export type { ICreateCourse, ICourse, ICourseCardProps };

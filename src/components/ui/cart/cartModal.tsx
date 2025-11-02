@@ -19,7 +19,7 @@ import {
   useRemoveFromCartServerMutation,
   ICartItem,
   SingleEnrollmentRequest,
-} from "../../../features/course/api/courseApi";
+} from "../../../features/course-browse/api/courseApi";
 import { useNavigate } from "react-router-dom";
 
 interface CartModalProps {

@@ -34,33 +34,10 @@ export interface CartResponse {
   };
 }
 
-interface IEnrollment {
-  id: number;
-  courseId: number;
-  status: string;
-  payment_status: string;
-  course: ICourse;
-}
-
-interface MyEnrollmentResponse {
-  success: boolean;
-  data: IEnrollment[];
-}
-
-// Course API endpoints
-export const courseApiSlice = baseApi.injectEndpoints({
+// Course Browse API - Only for browsing, cart, and enrollment
+export const courseBrowseApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Get courses with pagination
-    getCourses: builder.query({
-      query: ({ page = 1, limit = 10 }: { page?: number; limit?: number }) => ({
-        url: "/course",
-        method: "GET",
-        params: { page, limit },
-      }),
-      providesTags: ["Course"],
-    }),
-
-    // get course for feed
+    // Get course for feed (browsing)
     getCourseForFeed: builder.query({
       query: ({ page = 1, limit = 10 }: { page?: number; limit?: number }) => ({
         url: "/course/all",
@@ -70,62 +47,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    // Get course by ID
-    getCourseById: builder.query({
-      query: ({ id }: { id: number }) => ({
-        url: `/course/${id}`,
-        method: "GET",
-      }),
-      providesTags: ["Course"],
-    }),
-
-    // Create course
-    createCourse: builder.mutation({
-      query: ({ body }: { body: FormData }) => ({
-        url: "/course",
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["Course"],
-    }),
-
-    // Update course
-    updateCourse: builder.mutation({
-      query: ({ id, body }: { id: number; body: FormData }) => ({
-        url: `/course/${id}`,
-        method: "PUT",
-        body,
-      }),
-      invalidatesTags: ["Course"],
-    }),
-
-    // Delete course
-    deleteCourse: builder.mutation({
-      query: ({ id }: { id: number }) => ({
-        url: `/course/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Course"],
-    }),
-
-    // Get chapters for a course
-    getChapters: builder.query({
-      query: ({
-        page = 1,
-        limit = 10,
-        id,
-      }: {
-        page?: number;
-        limit?: number;
-        id: number;
-      }) => ({
-        url: `course/chapter/${id}`,
-        method: "GET",
-        params: { page, limit },
-      }),
-      providesTags: ["Chapter"],
-    }),
-
+    // Search courses (browsing)
     searchCourses: builder.query({
       query: (serachTerm: string) => ({
         url: `/course/search?q=${serachTerm}`,
@@ -150,7 +72,6 @@ export const courseApiSlice = baseApi.injectEndpoints({
         method: "POST",
         body: { courseId: courseId },
       }),
-      // Mutation ke baad cart data ko refetch karwao
       invalidatesTags: ["Cart"],
     }),
 
@@ -163,6 +84,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
 
+    // 4. INITIATE CHECKOUT/ENROLLMENT (Mutation)
     initiateCheckout: builder.mutation<
       CheckoutResponse,
       SingleEnrollmentRequest
@@ -174,34 +96,15 @@ export const courseApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Cart", "Enrollment"],
     }),
-
-    getMyEnrolledCourses: builder.query<MyEnrollmentResponse, void>({
-      query: () => ({
-        url: "enrollment/my-enrollments",
-        method: "GET",
-        params: {
-          page: 1,
-          limit: 10,
-        },
-      }),
-      providesTags: ["Enrollment"],
-    }),
   }),
 });
 
 // Export hooks for usage in functional components
 export const {
-  useGetCoursesQuery,
   useGetCourseForFeedQuery,
-  useGetCourseByIdQuery,
-  useCreateCourseMutation,
-  useUpdateCourseMutation,
-  useDeleteCourseMutation,
-  useGetChaptersQuery,
   useSearchCoursesQuery,
   useInitiateCheckoutMutation,
   useGetCartQuery,
   useAddToCartServerMutation,
   useRemoveFromCartServerMutation,
-  useGetMyEnrolledCoursesQuery,
-} = courseApiSlice;
+} = courseBrowseApiSlice;
