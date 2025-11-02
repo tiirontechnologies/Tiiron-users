@@ -1,5 +1,7 @@
 // UI Components - Reusable components used across the application
 export { default as CustomProgress } from "./CustomProgress";
+export { default as Navbar } from "./Navbar";
+export { default as Footer } from "./Footer";
 export { default as CustomTabPanel, CustomTabs } from "./CustomTabPanel";
 export { default as RichTextEditor } from "./RichTextEditor";
 export { default as SingleRadioButton } from "./SingleRadioButton";

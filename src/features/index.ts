@@ -15,7 +15,7 @@ export * from './course-settings';
 
 // Question Bank Features
 export { QuestionBankComponent, AddNewQuestionCard, QuestionCard } from './question-bank';
-export type {QuestionBankFilters, CreateQuestionBankData } from './question-bank';
+export type { QuestionBankFilters, CreateQuestionBankData } from './question-bank';
 export * from './question-bank-edit';
 
 // Course Progress Feature
@@ -26,9 +26,6 @@ export * from './course-glossary';
 
 // Course Content Management Feature
 export * from './content-management';
-
-// Website Feature
-export * from './website';
 
 // Auth Feature
 export * from './auth';

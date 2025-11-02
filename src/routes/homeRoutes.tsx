@@ -1,38 +1,13 @@
 import type { Route } from "types/routes";
-
 import Layout from "../layouts/Layout";
-import { 
-  Home, 
-  Features, 
-  About, 
-  Product, 
-  Pricing, 
-  Contact, 
-  NotFound, 
-  LoginSignup,
-  WhyTiiron,
-  OurPlatform,
-  WhomFor
-} from "../features";
+import Landing from "../pages/Landing";
 
+// Home routes for the landing page
 export const homeRoutes: Route[] = [
   {
     element: <Layout />,
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/features", element: <Features /> },
-      { path: "/product", element: <Product /> },
-      { path: "/pricing", element: <Pricing /> },
-      { path: "/about", element: <About /> },
-      { path: "/contact", element: <Contact /> },
-      { path: "/loginsignup", element: <LoginSignup /> },
-
-      // Explore Dropdown routes
-      { path: "/whytiiron", element: <WhyTiiron /> },
-      { path: "/whomfor", element: <WhomFor/> },
-      { path: "/ourplatform", element: <OurPlatform /> },
+      { path: "/", element: <Landing /> },
     ],
   },
-  // Fallback
-  { path: "*", element: <NotFound /> },
 ];

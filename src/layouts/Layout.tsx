@@ -1,5 +1,6 @@
 // src/components/layout/Layout.jsx
-import { Navbar, Footer } from "../features";
+import Navbar from "../components/ui/Navbar";
+import Footer from "../components/ui/Footer";
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
@@ -7,7 +8,7 @@ const Layout = () => {
     <>
       <Navbar />
       <main>
-        <Outlet /> {/* Page content goes here */}
+        <Outlet />
       </main>
       <Footer />
     </>

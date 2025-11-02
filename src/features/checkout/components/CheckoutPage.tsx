@@ -1,4 +1,4 @@
-import { Navbar } from '../../website';
+import Navbar from '../../../components/ui/Navbar';
 import {
     Box,
     Typography,
