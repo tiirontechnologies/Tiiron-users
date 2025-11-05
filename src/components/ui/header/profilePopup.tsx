@@ -11,62 +11,76 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  useTheme,
 } from "@mui/material";
+import { useNavigate, NavigateFunction } from "react-router-dom";
 
 import CloseIcon from "@mui/icons-material/Close";
-import HubOutlinedIcon from "@mui/icons-material/HubOutlined";
-import ProfileIcon from "@icons/ProfileIcon";
-import NotificationIcon from "@icons/NotificationIcon";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
+import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
 
 const menuItems = [
-  { text: "My Profile", icon: <ProfileIcon />, color: "#54B86F" },
+  { text: "View Profile", icon: <PersonOutlineOutlinedIcon />, color: "#4CAF50" },
+  {
+    text: "My Courses",
+    icon: <MenuBookOutlinedIcon />,
+    color: "#2196F3",
+    onClick: (navigate: NavigateFunction) => {
+      navigate("/learner/my-courses");
+    }
+  },
+  {
+    text: "Browse Courses",
+    icon: <ExploreOutlinedIcon />,
+    color: "#9C27B0",
+    onClick: (navigate: NavigateFunction) => {
+      navigate("/learner/browse-courses");
+    }
+  },
+  {
+    text: "Tiiron Business",
+    icon: <BusinessOutlinedIcon />,
+    color: "#FF5722",
+    onClick: (_navigate: NavigateFunction) => {
+      window.location.href = "https://tiiron-for-busines";
+    }
+  },
+  { text: "Publish The Course", icon: <PublishOutlinedIcon />, color: "#00BCD4" },
   {
     text: "Notification Settings",
-    icon: <NotificationIcon />,
-    color: "#E2B93B",
+    icon: <NotificationsNoneOutlinedIcon />,
+    color: "#FFC107",
   },
-  // we dont have have hub icon in svg
-  { text: "My Hub", icon: <HubOutlinedIcon />, color: "#7887E8" },
 ];
 
 const ProfileCenterPopup = () => {
   const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const navigate = useNavigate();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const getListItemStyles = (color, isSelected) => ({
+  const getListItemStyles = (color: string, isSelected: boolean) => ({
     "&.MuiListItemButton-root": {
       borderRadius: 2,
       padding: "10px 16px",
-      marginBottom: 1,
+      marginBottom: 0.5,
       "&:hover": {
-        backgroundColor: `${color}1A`,
-        "& .MuiListItemText-primary": {
-          fontWeight: 600,
-        },
-        "& .MuiListItemIcon-root > div": {
-          bgcolor: `${color}33`,
-        },
+        backgroundColor: `${color}14`,
       },
       ...(isSelected && {
         backgroundColor: `${color}1A`,
-        "& .MuiListItemText-primary": {
-          fontWeight: 600,
-        },
       }),
     },
     "& .MuiListItemIcon-root": {
-      minWidth: "auto",
-      "& > div": {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 40,
-        height: 40,
-        borderRadius: 2,
-        marginRight: 2,
-        bgcolor: isSelected ? `${color}33` : "transparent",
+      minWidth: 40,
+      "& svg": {
         color: color,
       },
     },
@@ -74,17 +88,28 @@ const ProfileCenterPopup = () => {
 
   return (
     <>
+      {/* Trigger Avatar */}
       <Avatar
         src=""
         onClick={handleOpen}
-        sx={{ cursor: "pointer", width: 40, height: 40 }}
-      />
+        sx={{
+          cursor: "pointer",
+          width: 42,
+          height: 42,
+          bgcolor: theme.palette.primary.main,
+          color: "#fff",
+          fontWeight: 600,
+          fontSize: "1rem",
+        }}
+      >
+        RS
+      </Avatar>
 
+      {/* Modal */}
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="profile-modal-title"
-        aria-describedby="profile-modal-description"
         sx={{
           display: "flex",
           alignItems: "center",
@@ -96,13 +121,14 @@ const ProfileCenterPopup = () => {
             width: 340,
             bgcolor: "background.paper",
             borderRadius: 3,
-            boxShadow: 24,
+            boxShadow: "0px 4px 20px rgba(0,0,0,0.1)",
             p: 3,
             position: "relative",
             display: "flex",
             flexDirection: "column",
           }}
         >
+          {/* Close Button */}
           <IconButton
             onClick={handleClose}
             sx={{
@@ -115,45 +141,68 @@ const ProfileCenterPopup = () => {
             <CloseIcon />
           </IconButton>
 
+          {/* Header Section */}
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               textAlign: "center",
-              pt: 2,
-              pb: 3,
+              mb: 2,
             }}
           >
-            <Avatar src="" sx={{ width: 72, height: 72, mb: 1.5 }} />
-            <Typography variant="h6" fontWeight={700} gutterBottom>
-              Nipun Kalra
+            <Avatar
+              src=""
+              sx={{
+                width: 70,
+                height: 70,
+                bgcolor: theme.palette.primary.light,
+                color: theme.palette.primary.main,
+                fontSize: "1.5rem",
+                fontWeight: 600,
+                mb: 1.5,
+              }}
+            >
+              RS
+            </Avatar>
+
+            <Typography variant="h6" fontWeight={600}>
+              Rishabh Singh
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Example@gmail.com
+              example@gmail.com
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              User Id : 1234567890
+              User ID: 1234567890
             </Typography>
           </Box>
 
           <Divider sx={{ mb: 2 }} />
 
-          {/* Navigation List Items */}
+          {/* Menu Items */}
           <List sx={{ width: "100%", padding: 0 }}>
             {menuItems.map((item, index) => {
-              // hover is hardcoded on 3rd item :P
               const isSelected = index === 2;
               return (
                 <ListItemButton
                   key={item.text}
                   disableRipple
                   sx={getListItemStyles(item.color, isSelected)}
+                  onClick={() => {
+                    if (item.onClick) {
+                      item.onClick(navigate);
+                      handleClose();
+                    }
+                  }}
                 >
-                  <ListItemIcon>
-                    <Box>{item.icon}</Box>
-                  </ListItemIcon>
-                  <ListItemText primary={item.text} />
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={item.text}
+                    primaryTypographyProps={{
+                      fontWeight: 500,
+                      fontSize: "0.95rem",
+                    }}
+                  />
                 </ListItemButton>
               );
             })}
@@ -161,17 +210,20 @@ const ProfileCenterPopup = () => {
 
           <Divider sx={{ mt: 2, mb: 2 }} />
 
+          {/* Sign Out Button */}
           <Button
-            variant="outlined"
-            color="inherit"
-            onClick={handleClose}
+            variant="contained"
+            color="error"
+            startIcon={<LogoutRoundedIcon />}
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = "/login";
+            }}
             sx={{
-              width: "40%",
-              mx: "auto",
+              width: "100%",
               textTransform: "none",
               fontWeight: 600,
-              borderColor: "error.main",
-              color: "text.primary",
+              py: 1,
               borderRadius: 2,
             }}
           >

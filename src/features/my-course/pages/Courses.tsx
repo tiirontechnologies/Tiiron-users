@@ -5,6 +5,7 @@ import { useGetMyEnrolledCoursesQuery } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface CoursesProps {
   onCourseClick?: (courseId: number) => void;
@@ -12,7 +13,8 @@ interface CoursesProps {
 
 export default function Courses({ onCourseClick }: CoursesProps) {
   const navigate = useNavigate();
-  
+  const [favorites, setFavorites] = useState<Set<number>>(new Set());
+
   const {
     data: enrollmentData,
     isFetching: fetchingEnrollments,
@@ -30,14 +32,49 @@ export default function Courses({ onCourseClick }: CoursesProps) {
       totalChapters: enrollment.course.totalChapters ?? 0,
     })) as ICourse[];
 
-  // Handler for course click - decided by parent or default navigation
-  const handleCourseClick = (courseId: number) => {
+  // Handler for START COURSE button
+  const handleStartCourse = (courseId: number) => {
     if (onCourseClick) {
       onCourseClick(courseId);
     } else {
-      // Default navigation if no handler provided
       navigate(`/course-practice/${courseId}`);
     }
+  };
+
+  // Handler for share
+  const handleShare = (courseId: number) => {
+    // TODO: Implement share functionality
+    console.log("Share course:", courseId);
+    const url = `${window.location.origin}/course-glossary/${courseId}`;
+    if (navigator.share) {
+      navigator.share({
+        title: courses.find((c) => c.id === courseId)?.title || "Course",
+        url: url,
+      });
+    } else {
+      navigator.clipboard.writeText(url);
+      alert("Course link copied to clipboard!");
+    }
+  };
+
+  // Handler for favorite
+  const handleFavorite = (courseId: number) => {
+    setFavorites((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(courseId)) {
+        newSet.delete(courseId);
+      } else {
+        newSet.add(courseId);
+      }
+      return newSet;
+    });
+    // TODO: Implement API call to save favorite
+  };
+
+  // Handler for archive
+  const handleArchive = (courseId: number) => {
+    // TODO: Implement archive functionality
+    console.log("Archive course:", courseId);
   };
 
   return (
@@ -56,6 +93,15 @@ export default function Courses({ onCourseClick }: CoursesProps) {
             {courses.map((course) => {
               const courseId = Number(course.id);
 
+              // Mock progress - in production, this should come from API
+              const mockProgress = Math.floor(Math.random() * 100);
+
+              // Mock learner rating - in production, this should come from API
+              const mockLearnerRating = Math.random() * 5;
+
+              // Get instructor/organization name - prefer createdBy, fallback to orgCode
+              const instructorName = course.createdBy || course.orgCode || "";
+
               return (
                 <CourseCardWrapper
                   key={course.id}
@@ -66,8 +112,16 @@ export default function Courses({ onCourseClick }: CoursesProps) {
                   chapters={course.totalChapters}
                   rating={0}
                   price={course.price}
-                  navigatePath={!onCourseClick ? (id) => `/course-practice/${id}` : undefined}
-                  onCardClick={handleCourseClick}
+                  instructor={instructorName}
+                  progress={mockProgress}
+                  learnerRating={mockLearnerRating}
+                  variant="my-course"
+                  navigatePath={(id) => `/course-practice/${id}`}
+                  onStartCourse={handleStartCourse}
+                  onShare={handleShare}
+                  onFavorite={handleFavorite}
+                  onArchive={handleArchive}
+                  isFavorite={favorites.has(courseId)}
                 />
               );
             })}

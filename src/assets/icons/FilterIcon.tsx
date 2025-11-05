@@ -6,7 +6,7 @@ interface FilterIconProps {
 }
 
 const FilterIcon: React.FC<FilterIconProps> = ({
-  color = "#999999",
+  color = "#ffffff",
   size = 28,
 }) => {
   return (

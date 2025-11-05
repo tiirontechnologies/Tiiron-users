@@ -1,4 +1,15 @@
 import { useState, useEffect, ReactNode, AnchorHTMLAttributes } from "react";
+import { Box, Button, IconButton, Badge, useMediaQuery, useTheme, Drawer } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import SearchBox from "./header/SearchBox";
+import FilterButton from "./header/FilterButton";
+import ProfilePopup from "./header/profilePopup";
+import NotificationIcon from "@icons/NotificationIcon";
+import { CartModal } from "./cart/cartModal";
+import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
+import { useAuth } from "../../hooks/useAuth";
 
 interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
@@ -18,30 +29,47 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+
+  const { token, user } = useAuth();
+  const isLoggedIn = !!token;
+
+  const { data: cartData } = useGetCartQuery(undefined, {
+    pollingInterval: 30000,
+    skip: !isLoggedIn, // Only fetch cart if user is logged in
+  });
+
+  const cartItemCount = cartData?.data?.items?.length || 0;
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-      if (window.innerWidth >= 1024) {
-        setIsOpen(false);
-      }
-    };
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
+  // Close mobile menu when screen size changes
+  useEffect(() => {
+    if (!isMobile) {
+      setIsOpen(false);
+      setOpenDropdown(null);
+    }
+  }, [isMobile]);
+
+  const handleOpenCart = () => setIsCartOpen(true);
+  const handleCloseCart = () => setIsCartOpen(false);
+  const toggleMobileMenu = () => setIsOpen(!isOpen);
+  const closeMobileMenu = () => {
+    setIsOpen(false);
+    setOpenDropdown(null);
+  };
+
   const navigationItems = [
-    { name: "Features", href: "/features", highlight: true },
-    { name: "Product", href: "/product" },
-    { name: "Pricing", href: "/pricing" },
     {
       name: "Explore",
       hasDropdown: true,
@@ -61,6 +89,11 @@ const Navbar = () => {
           desc: "Understand our platform workflow",
           href: "/ourplatform",
         },
+        {
+          name: "Browse Courses",
+          desc: "Explore our course catalog",
+          href: "/learner/browse-courses",
+        },
       ],
     },
     {
@@ -78,267 +111,560 @@ const Navbar = () => {
     },
   ];
 
+  const renderDropdown = (item: typeof navigationItems[number]) => {
+    if (!item.hasDropdown || !item.dropdown) return null;
+
+    return (
+      <Box
+        onMouseEnter={() => setOpenDropdown(item.name)}
+        onMouseLeave={() => setOpenDropdown(null)}
+        sx={{
+          position: "absolute",
+          top: "100%",
+          left: 0,
+          mt: 1,
+          backgroundColor: "white",
+          borderRadius: 2,
+          boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+          padding: "0.75rem",
+          minWidth: "280px",
+          zIndex: 1000,
+          border: "1px solid #e5e7eb",
+        }}
+      >
+        {item.dropdown.map((drop) => (
+          <Link
+            key={drop.name}
+            to={drop.href}
+            onClick={() => setOpenDropdown(null)}
+            style={{
+              display: "block",
+              padding: "0.75rem",
+              borderRadius: "0.5rem",
+              backgroundColor: "#f9fafb",
+              textDecoration: "none",
+              color: "#1f2937",
+              marginBottom: "0.5rem",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f3f4f6";
+              e.currentTarget.style.transform = "translateX(4px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "#f9fafb";
+              e.currentTarget.style.transform = "translateX(0)";
+            }}
+          >
+            <p
+              style={{
+                fontSize: "14px",
+                fontWeight: 600,
+                margin: "0 0 0.25rem 0",
+              }}
+            >
+              {drop.name}
+            </p>
+            <p style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
+              {drop.desc}
+            </p>
+          </Link>
+        ))}
+      </Box>
+    );
+  };
+
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-            ? "bg-white/90 backdrop-blur-md shadow-md border-b border-gray-200"
-            : "bg-white"
-          }`}
         style={{
-          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.9)" : "white",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1100,
+          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.95)" : "white",
           backdropFilter: isScrolled ? "blur(12px)" : "none",
-          boxShadow: isScrolled ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+          boxShadow: isScrolled ? "0 2px 8px rgba(0,0,0,0.08)" : "none",
           borderBottom: isScrolled ? "1px solid #e5e7eb" : "none",
           transition: "all 0.3s ease",
         }}
       >
-        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1.5rem" }}>
-          <div
-            style={{
+        <Box
+          sx={{
+            maxWidth: "1280px",
+            margin: "0 auto",
+            padding: { xs: "0 1rem", sm: "0 1.5rem", md: "0rem" },
+          }}
+        >
+          <Box
+            sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              height: "64px",
+              height: { xs: "64px", md: "72px" },
+              gap: { xs: 1, md: 2 },
             }}
           >
-            {/* Logo */}
-            <Link to="/" style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src="/Tiiron_logo.png"
-                alt="Tiiron Logo"
-                style={{
-                  height: "40px",
-                  width: "auto",
-                  objectFit: "contain",
-                  transition: "transform 0.3s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
-              />
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div
-              style={{
-                display: isDesktop ? "flex" : "none",
+            {/* Left Side: Logo + Search Bar + Filter */}
+            <Box
+              sx={{
+                display: "flex",
                 alignItems: "center",
-                gap: "2rem",
+                gap: { xs: 1, sm: 1.5, md: 2 },
+                flex: { xs: 1, lg: "0 0 auto" },
+                minWidth: 0,
+                maxWidth: { lg: "60%", xl: "65%" },
+                marginRight: { lg: 3, xl: 4 },
               }}
-              className="desktop-nav"
             >
-              {navigationItems.map((item) => (
-                <div key={item.name} style={{ position: "relative" }}>
-                  {item.hasDropdown ? (
-                    <div style={{ position: "relative" }}>
-                      <button
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.25rem",
-                          color: "#1f2937",
-                          fontWeight: 500,
-                          background: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          fontSize: "16px",
-                          padding: 0,
-                        }}
-                      >
-                        <span>{item.name}</span>
-                        <span style={{ fontSize: "12px" }}>▼</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <Link
-                      to={item.href}
-                      style={{
-                        fontWeight: 500,
-                        color: item.highlight ? "#ef4444" : "#1f2937",
-                        textDecoration: "none",
-                        fontSize: "16px",
-                      }}
-                    >
-                      {item.name}
-                    </Link>
+              <Link
+                to="/"
+                onClick={closeMobileMenu}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <Box
+                  component="img"
+                  src="/Tiiron_logo.png"
+                  alt="Tiiron Logo"
+                  sx={{
+                    height: { xs: "32px", md: "40px" },
+                    width: "auto",
+                    objectFit: "contain",
+                    transition: "transform 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                />
+              </Link>
+              {!isMobile && (
+                <>
+                  <Box
+                    sx={{
+                      display: { xs: "none", lg: "block" },
+                      minWidth: { lg: "480px", xl: "516px" },
+                      flex: 1,
+                      maxWidth: { lg: "600px" },
+                    }}
+                  >
+                    <SearchBox />
+                  </Box>
+                  {!isMobile && (
+                    <Box sx={{ display: { xs: "none", lg: "block" }, flexShrink: 0 }}>
+                      <FilterButton />
+                    </Box>
                   )}
-                </div>
-              ))}
-            </div>
+                </>
+              )}
+            </Box>
 
-            {/* CTA Buttons */}
-            <div
-              style={{
-                display: isDesktop ? "flex" : "none",
-                alignItems: "center",
-                gap: "1rem",
-              }}
-              className="desktop-cta"
-            >
-              <Link
-                to="/login"
-                style={{
-                  display: "block",
-                  padding: "0.5rem 1rem",
-                  color: "#1f2937",
-                  backgroundColor: "#f3f4f6",
-                  borderRadius: "9999px",
-                  textAlign: "center",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                }}
-              >
-                Login
-              </Link>
-              <Link
-                to="/organization/create-account"
-                style={{
-                  padding: "0.5rem 1.5rem",
-                  background: "linear-gradient(to right, #ef4444, #ec4899)",
-                  color: "white",
-                  fontWeight: 600,
-                  borderRadius: "9999px",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                }}
-              >
-                Get Started for Free →
-              </Link>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              style={{
-                padding: "0.5rem",
-                borderRadius: "0.375rem",
-                color: "#374151",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "20px",
-                display: isDesktop ? "none" : "block",
-              }}
-              className="mobile-menu-btn"
-            >
-              {isOpen ? "✕" : "☰"}
-            </button>
-
-            {/* Mobile Menu */}
-            {isOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  right: 0,
-                  backgroundColor: "white",
-                  borderTop: "1px solid #e5e7eb",
-                  padding: "1.5rem",
-                  boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            {/* Desktop Navigation - Center */}
+            {!isMobile && (
+              <Box
+                sx={{
+                  display: { xs: "none", lg: "flex" },
+                  alignItems: "center",
+                  gap: { lg: 1.5, xl: 2 },
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  flex: "0 0 auto",
                 }}
               >
                 {navigationItems.map((item) => (
-                  <div key={item.name} style={{ marginBottom: "1rem" }}>
-                    {item.hasDropdown ? (
-                      <div>
-                        <button
-                          onClick={() =>
-                            setOpenDropdown(
-                              openDropdown === item.name ? null : item.name
-                            )
-                          }
-                          style={{
-                            width: "100%",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            padding: "0.5rem",
-                            borderRadius: "0.375rem",
+                  <Box
+                    key={item.name}
+                    sx={{
+                      position: "relative",
+                    }}
+                  >
+                    {item.hasDropdown && (
+                      <>
+                        <Button
+                          onMouseEnter={() => setOpenDropdown(item.name)}
+                          onMouseLeave={() => setOpenDropdown(null)}
+                          onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
+                          sx={{
+                            color: "#ffffff",
                             fontWeight: 500,
-                            color: "#1f2937",
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                            fontSize: "16px",
+                            fontSize: "15px",
+                            textTransform: "none",
+                            padding: "0.625rem 1rem",
+                            borderRadius: "8px",
+                            minWidth: "auto",
+                            whiteSpace: "nowrap",
+                            "&:hover": {
+                              backgroundColor: "#f3f4f6",
+                            },
                           }}
                         >
                           {item.name}
-                          <span>{openDropdown === item.name ? "▲" : "▼"}</span>
-                        </button>
-                        {openDropdown === item.name && (
-                          <div style={{ paddingLeft: "1rem", marginTop: "0.5rem" }}>
-                            {item.dropdown?.map((drop) => (
-                              <Link
-                                key={drop.name}
-                                to={drop.href}
-                                onClick={() => setIsOpen(false)}
-                                style={{
-                                  display: "block",
-                                  padding: "0.75rem",
-                                  borderRadius: "0.5rem",
-                                  backgroundColor: "#f9fafb",
-                                  textDecoration: "none",
-                                  color: "#1f2937",
-                                  marginBottom: "0.5rem",
-                                }}
-                              >
-                                <p
-                                  style={{
-                                    fontSize: "14px",
-                                    fontWeight: 600,
-                                    margin: "0 0 0.25rem 0",
-                                  }}
-                                >
-                                  {drop.name}
-                                </p>
-                                <p style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
-                                  {drop.desc}
-                                </p>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ) : (
+                          <Box
+                            component="span"
+                            sx={{
+                              fontSize: "10px",
+                              ml: 0.75,
+                              transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)",
+                              transition: "transform 0.2s ease",
+                              display: "inline-flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            ▼
+                          </Box>
+                        </Button>
+                        {openDropdown === item.name && renderDropdown(item)}
+                      </>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            )}
+
+            {/* Right Side: Actions */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: { xs: 0.5, sm: 1, md: 1.5, lg: 1.5, xl: 2 },
+                flexShrink: 0,
+                flex: "0 0 auto",
+                marginLeft: { lg: 2, xl: 3 },
+              }}
+            >
+              {/* Desktop Actions */}
+              {!isMobile && (
+                <>
+                  {isLoggedIn && (
+                    <>
+                      <Button
+                        sx={{
+                          background: "rgba(112, 45, 255, 1)",
+                          color: "#fff",
+                          padding: { lg: "10px 20px", xl: "12px 28px" },
+                          borderRadius: "12px",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          whiteSpace: "nowrap",
+                          boxShadow: "0 1px 3px rgba(112, 45, 255, 0.3)",
+                          "&:hover": {
+                            background: "rgba(112, 45, 255, 0.9)",
+                            boxShadow: "0 2px 6px rgba(112, 45, 255, 0.4)",
+                            transform: "translateY(-1px)",
+                          },
+                          transition: "all 0.2s ease",
+                          display: { xs: "none", lg: "flex" },
+                          alignItems: "center",
+                          flexShrink: 0,
+                        }}
+                      >
+                        Upgrade
+                      </Button>
+                      <IconButton
+                        onClick={handleOpenCart}
+                        sx={{
+                          color: "#1f2937",
+                          padding: "8px",
+                          flexShrink: 0,
+                          "&:hover": {
+                            backgroundColor: "#f3f4f6",
+                          },
+                        }}
+                      >
+                        <Badge
+                          badgeContent={cartItemCount}
+                          color="error"
+                          max={9}
+                          invisible={cartItemCount === 0}
+                        >
+                          <ShoppingCartIcon />
+                        </Badge>
+                      </IconButton>
+                      <IconButton
+                        sx={{
+                          color: "#1f2937",
+                          padding: "8px",
+                          flexShrink: 0,
+                          "&:hover": {
+                            backgroundColor: "#f3f4f6",
+                          },
+                        }}
+                      >
+                        <NotificationIcon />
+                      </IconButton>
+                    </>
+                  )}
+                  {isLoggedIn ? (
+                    <Box sx={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
+                      <ProfilePopup />
+                    </Box>
+                  ) : (
+                    <>
                       <Link
-                        to={item.href}
-                        onClick={() => setIsOpen(false)}
+                        to="/login"
                         style={{
-                          display: "block",
-                          padding: "0.5rem",
-                          borderRadius: "0.375rem",
-                          fontWeight: 500,
-                          color: item.highlight ? "#ef4444" : "#1f2937",
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "0.5rem 1rem",
+                          color: "#1f2937",
+                          backgroundColor: "#f3f4f6",
+                          borderRadius: "9999px",
+                          textAlign: "center",
                           textDecoration: "none",
+                          fontSize: "14px",
+                          fontWeight: 500,
+                          whiteSpace: "nowrap",
+                          transition: "all 0.2s ease",
+                          flexShrink: 0,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#e5e7eb";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "#f3f4f6";
+                        }}
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/organization/create-account"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "0.5rem 1.25rem",
+                          background: "linear-gradient(to right, #ef4444, #ec4899)",
+                          color: "white",
+                          fontWeight: 600,
+                          borderRadius: "9999px",
+                          textDecoration: "none",
+                          fontSize: "14px",
+                          whiteSpace: "nowrap",
+                          transition: "all 0.2s ease",
+                          boxShadow: "0 2px 4px rgba(239, 68, 68, 0.3)",
+                          flexShrink: 0,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.opacity = "0.9";
+                          e.currentTarget.style.transform = "translateY(-1px)";
+                          e.currentTarget.style.boxShadow = "0 4px 8px rgba(239, 68, 68, 0.4)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.opacity = "1";
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "0 2px 4px rgba(239, 68, 68, 0.3)";
+                        }}
+                      >
+                        Get Started
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
+
+              {/* Mobile Menu Button */}
+              <IconButton
+                onClick={toggleMobileMenu}
+                sx={{
+                  display: { xs: "flex", lg: "none" },
+                  color: "#1f2937",
+                  padding: "8px",
+                }}
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <CloseIcon /> : <MenuIcon />}
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Mobile Menu Drawer */}
+        <Drawer
+          anchor="right"
+          open={isOpen && isMobile}
+          onClose={closeMobileMenu}
+          sx={{
+            display: { xs: "block", lg: "none" },
+            "& .MuiDrawer-paper": {
+              width: { xs: "85%", sm: "400px" },
+              maxWidth: "400px",
+              boxSizing: "border-box",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              padding: "1.5rem",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            {/* Mobile Search and Filter */}
+            <Box sx={{ display: "flex", gap: "10px", mb: 3 }}>
+              <Box sx={{ flex: 1 }}>
+                <SearchBox />
+              </Box>
+              <FilterButton />
+            </Box>
+
+            {/* Mobile Navigation Items */}
+            <Box sx={{ flex: 1, overflowY: "auto" }}>
+              {navigationItems.map((item) => (
+                <Box key={item.name} sx={{ marginBottom: "1rem" }}>
+                  {item.hasDropdown && (
+                    <Box>
+                      <Button
+                        onClick={() =>
+                          setOpenDropdown(
+                            openDropdown === item.name ? null : item.name
+                          )
+                        }
+                        fullWidth
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "0.75rem 1rem",
+                          borderRadius: "8px",
+                          fontWeight: 500,
+                          color: "#1f2937",
+                          backgroundColor: openDropdown === item.name ? "#f3f4f6" : "transparent",
+                          textTransform: "none",
                           fontSize: "16px",
+                          "&:hover": {
+                            backgroundColor: "#f3f4f6",
+                          },
                         }}
                       >
                         {item.name}
-                      </Link>
-                    )}
-                  </div>
-                ))}
-                <div
-                  style={{
-                    paddingTop: "1rem",
-                    borderTop: "1px solid #e5e7eb",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.75rem",
-                  }}
-                >
+                        <Box
+                          component="span"
+                          sx={{
+                            fontSize: "12px",
+                            transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)",
+                            transition: "transform 0.2s ease",
+                          }}
+                        >
+                          ▼
+                        </Box>
+                      </Button>
+                      {openDropdown === item.name && (
+                        <Box sx={{ paddingLeft: "1rem", marginTop: "0.5rem" }}>
+                          {item.dropdown?.map((drop) => (
+                            <Link
+                              key={drop.name}
+                              to={drop.href}
+                              onClick={closeMobileMenu}
+                              style={{
+                                display: "block",
+                                padding: "0.75rem",
+                                borderRadius: "0.5rem",
+                                backgroundColor: "#f9fafb",
+                                textDecoration: "none",
+                                color: "#1f2937",
+                                marginBottom: "0.5rem",
+                              }}
+                            >
+                              <p
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: 600,
+                                  margin: "0 0 0.25rem 0",
+                                }}
+                              >
+                                {drop.name}
+                              </p>
+                              <p style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
+                                {drop.desc}
+                              </p>
+                            </Link>
+                          ))}
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </Box>
+              ))}
+            </Box>
+
+            {/* Mobile CTA Buttons */}
+            <Box
+              sx={{
+                paddingTop: "1.5rem",
+                borderTop: "1px solid #e5e7eb",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem",
+              }}
+            >
+              {isLoggedIn ? (
+                <>
+                  <Box sx={{ display: "flex", gap: "10px", justifyContent: "center", mb: 1 }}>
+                    <IconButton
+                      onClick={() => {
+                        handleOpenCart();
+                        closeMobileMenu();
+                      }}
+                      sx={{
+                        color: "#1f2937",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      <Badge
+                        badgeContent={cartItemCount}
+                        color="error"
+                        max={9}
+                        invisible={cartItemCount === 0}
+                      >
+                        <ShoppingCartIcon />
+                      </Badge>
+                    </IconButton>
+                    <IconButton
+                      sx={{
+                        color: "#1f2937",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      <NotificationIcon />
+                    </IconButton>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <ProfilePopup />
+                    </Box>
+                  </Box>
+                  <Button
+                    fullWidth
+                    sx={{
+                      background: "rgba(112, 45, 255, 1)",
+                      color: "#fff",
+                      padding: "12px 24px",
+                      borderRadius: "12px",
+                      textTransform: "none",
+                      fontWeight: 600,
+                      "&:hover": {
+                        background: "rgba(112, 45, 255, 0.9)",
+                      },
+                    }}
+                    onClick={closeMobileMenu}
+                  >
+                    Upgrade
+                  </Button>
+                </>
+              ) : (
+                <>
                   <Link
                     to="/login"
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMobileMenu}
                     style={{
                       display: "block",
-                      padding: "0.5rem 1rem",
+                      padding: "0.75rem 1rem",
                       color: "#1f2937",
                       backgroundColor: "#f3f4f6",
                       borderRadius: "9999px",
@@ -352,9 +678,9 @@ const Navbar = () => {
                   </Link>
                   <Link
                     to="/organization/create-account"
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMobileMenu}
                     style={{
-                      padding: "0.5rem 1.5rem",
+                      padding: "0.75rem 1.5rem",
                       background: "linear-gradient(to right, #ef4444, #ec4899)",
                       color: "white",
                       fontWeight: 600,
@@ -362,19 +688,23 @@ const Navbar = () => {
                       textDecoration: "none",
                       fontSize: "14px",
                       textAlign: "center",
+                      display: "block",
                     }}
                   >
                     Get Started for Free →
                   </Link>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+                </>
+              )}
+            </Box>
+          </Box>
+        </Drawer>
       </nav>
 
       {/* Spacer */}
-      <div style={{ height: "64px" }}></div>
+      <Box sx={{ height: { xs: "64px", md: "72px" } }} />
+
+      {/* Cart Modal */}
+      {isLoggedIn && <CartModal isOpen={isCartOpen} onClose={handleCloseCart} />}
     </>
   );
 };

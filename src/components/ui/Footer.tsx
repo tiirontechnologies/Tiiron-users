@@ -1,7 +1,33 @@
 import React from "react";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  IconButton,
+  TextField,
+  Button,
+  Link,
+  Fab,
+} from "@mui/material";
+import {
+  Email,
+  Phone,
+  Twitter,
+  LinkedIn,
+  YouTube,
+  Facebook,
+  Instagram,
+  ArrowUpward,
+  Favorite,
+  ArrowForward,
+  Map,
+  Chat,
+  OpenInNew,
+} from "@mui/icons-material";
 
 const Footer: React.FC = () => {
-  const currentYear: number = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
   const footerSections = [
     {
@@ -37,249 +63,463 @@ const Footer: React.FC = () => {
   ];
 
   const socialLinks = [
-    { name: "Twitter", href: "https://x.com/HrInacademic", icon: "🐦" },
-    { name: "LinkedIn", href: "https://www.linkedin.com/company/inacademic", icon: "💼" },
-    { name: "Instagram", href: "https://www.instagram.com/inacademic_official/", icon: "📷" },
-    { name: "Facebook", href: "https://www.facebook.com/inacademic_official", icon: "👍" },
-    { name: "YouTube", href: "https://www.youtube.com/@inacademic", icon: "📺" },
+    { icon: <Twitter />, href: "https://x.com/HrInacademic", label: "Twitter" },
+    {
+      icon: <LinkedIn />,
+      href: "https://www.linkedin.com/company/inacademic",
+      label: "LinkedIn",
+    },
+    {
+      icon: <Instagram />,
+      href: "https://www.instagram.com/inacademic_official/",
+      label: "Instagram",
+    },
+    {
+      icon: <Facebook />,
+      href: "https://www.facebook.com/inacademic_official",
+      label: "Facebook",
+    },
+    {
+      icon: <YouTube />,
+      href: "https://www.youtube.com/@inacademic",
+      label: "YouTube",
+    },
+    { icon: <Map />, href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", label: "Location" },
   ];
 
   const contactInfo = [
-    { text: "admin@tiiron.com", href: "mailto:admin@tiiron.com", icon: "✉️" },
-    { text: "+91 9161218740", href: "tel:+919161218740", icon: "📞" },
+    { icon: <Email />, text: "admin@tiiron.com", href: "mailto:admin@tiiron.com" },
+    { icon: <Phone />, text: "+91 9161218740", href: "tel:+919161218740" },
   ];
 
   return (
-    <footer
-      style={{
+    <Box
+      component="footer"
+      sx={{
         width: "100%",
         background: "linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a)",
         color: "#d1d5db",
+        mt: 6,
       }}
     >
-      {/* Newsletter CTA */}
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
-        <div
-          style={{
-            background: "linear-gradient(to right, #1e293b, #0f172a)",
-            borderRadius: "16px",
-            border: "1px solid #374151",
-            padding: "2rem",
+      {/* Newsletter Section */}
+      <Container maxWidth="lg" sx={{ py: 6 }}>
+        <Box
+          sx={{
+            background: "linear-gradient(to right, #334155, #0f172a)",
+            borderRadius: 3,
+            border: "1px solid #475569",
+            p: { xs: 2, md: 3 },
             display: "flex",
-            flexDirection: "column",
-            gap: "1.5rem",
-            alignItems: "center",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "flex-start", md: "center" },
+            justifyContent: "space-between",
+            gap: { xs: 3, md: 4 },
           }}
         >
-          <div style={{ textAlign: "center", flex: 1 }}>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 600, color: "white", margin: "0 0 0.5rem 0" }}>
-              Get product updates & tips
-            </h3>
-            <p style={{ fontSize: "0.875rem", color: "#9ca3af", margin: 0 }}>
-              Join the Tiiron newsletter — no spam, just useful stuff.
-            </p>
-          </div>
-
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              flexWrap: "wrap",
-            }}
-          >
-            <input
-              type="email"
-              placeholder="Enter your email"
-              style={{
-                flex: 1,
-                minWidth: "200px",
-                padding: "0.5rem 1rem",
-                border: "1px solid #4b5563",
-                borderRadius: "8px",
-                backgroundColor: "#1e293b",
-                color: "#e5e7eb",
-                fontSize: "14px",
-              }}
-              required
-            />
-            <button
-              type="submit"
-              style={{
-                padding: "0.5rem 1.25rem",
-                borderRadius: "8px",
-                background: "linear-gradient(to right, #dc2626, #ec4899)",
-                color: "white",
-                fontWeight: 600,
-                border: "none",
-                cursor: "pointer",
-                fontSize: "14px",
+          <Box sx={{ flex: 1, minWidth: { xs: "100%", md: "auto" } }}>
+            <Typography
+              variant="h5"
+              sx={{
+                color: "#fff",
+                fontWeight: 700,
+                mb: 0.5,
+                fontSize: { xs: "1.1rem", md: "1.25rem" },
               }}
             >
-              Subscribe →
-            </button>
-          </form>
-        </div>
-      </div>
+              Get product updates & tips
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#969696",
+                fontSize: { xs: "0.875rem", md: "0.9375rem" },
+              }}
+            >
+              Join the Tiiron newsletter — no spam, just useful stuff.
+            </Typography>
+          </Box>
+
+          <Box
+            component="form"
+            onSubmit={(e) => e.preventDefault()}
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: { xs: "stretch", sm: "center" },
+              gap: 1.5,
+              flex: { xs: 1, md: "none" },
+              width: { xs: "100%", md: "auto" },
+              minWidth: { xs: "100%", sm: 300, md: 400 },
+            }}
+          >
+            <TextField
+              type="email"
+              placeholder="Enter your email"
+              size="small"
+              variant="outlined"
+              required
+              sx={{
+                flex: 1,
+                minWidth: { xs: "100%", sm: 200 },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  backgroundColor: "#f3f4f6",
+                  color: "#1f2937",
+                  border: "1px solid #d1d5db",
+                  "& fieldset": {
+                    borderColor: "#d1d5db",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#9ca3af",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#dc2626",
+                  },
+                },
+                input: {
+                  color: "#1f2937",
+                  py: 1.25,
+                  fontSize: { xs: "0.875rem", md: "0.9375rem" },
+                },
+                "& .MuiInputBase-input::placeholder": {
+                  color: "#6b7280",
+                  opacity: 1,
+                },
+              }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              endIcon={<ArrowForward />}
+              sx={{
+                borderRadius: 2,
+                backgroundColor: "#dc2626",
+                color: "white",
+                px: { xs: 2, md: 3 },
+                py: 1.25,
+                textTransform: "none",
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+                width: { xs: "100%", sm: "auto" },
+                fontSize: { xs: "0.875rem", md: "0.9375rem" },
+                "&:hover": {
+                  backgroundColor: "#b91c1c",
+                },
+              }}
+            >
+              Subscribe
+            </Button>
+          </Box>
+        </Box>
+      </Container>
 
       {/* Main Footer Content */}
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1.5rem 3rem" }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "2.5rem",
-          }}
-        >
-          {/* Brand Info & Contact */}
-          <div style={{ gridColumn: "span 2" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-              <img
+      <Container maxWidth="lg" sx={{ pb: { xs: 4, md: 6 } }}>
+        <Grid container spacing={{ xs: 4, md: 6 }}>
+          {/* Brand Info */}
+          <Grid item xs={12} md={4}>
+            <Box sx={{ mb: 3 }}>
+              <Box
+                component="img"
                 src="/Tiiron_logo_footer.png"
                 alt="Tiiron Logo"
-                style={{ height: "48px", width: "auto", objectFit: "contain" }}
+                sx={{
+                  height: { xs: 40, md: 48 },
+                  width: "auto",
+                  mb: 2,
+                  transition: "0.3s",
+                  "&:hover": { transform: "scale(1.05)" },
+                }}
               />
-            </div>
-
-            <p style={{ color: "#9ca3af", marginBottom: "0.75rem", maxWidth: "500px", fontSize: "14px" }}>
-              We help educators deliver interactive learning and real-time practice. Learners don't just
-              watch they practice, improve, and master concepts.
-            </p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {contactInfo.map((c, i) => (
-                <a
-                  key={i}
-                  href={c.href}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    color: "#9ca3af",
-                    textDecoration: "none",
-                    fontSize: "14px",
+              <Box sx={{ color: "#969696" }}>
+                <Typography
+                  sx={{
+                    mb: 2,
+                    fontSize: { xs: 14, md: 15 },
+                    lineHeight: 1.6,
+                    color: "#969696",
                   }}
                 >
-                  <span>{c.icon}</span>
-                  <span>{c.text}</span>
-                </a>
-              ))}
-            </div>
-          </div>
+                  We help educators deliver interactive learning and real-time practice.
+                  Learners don't just watch — they practice, improve, and master concepts.
+                </Typography>
+              </Box>
 
-          {/* Footer Link Sections */}
-          {footerSections.map((sec, idx) => (
-            <div key={idx}>
-              <h4 style={{ fontSize: "14px", fontWeight: 600, color: "white", marginBottom: "0.75rem" }}>
-                {sec.title}
-              </h4>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.625rem" }}>
-                {sec.links.map((link, i) => (
-                  <li key={i}>
-                    <a
-                      href={link.href}
-                      onClick={(e) => {
-                        if (link.href === "#") e.preventDefault();
-                      }}
-                      style={{
-                        color: "#9ca3af",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
-                    >
-                      <span>{link.name}</span>
-                      {link.external && <span style={{ fontSize: "10px" }}>↗</span>}
-                    </a>
-                  </li>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 2, md: 3 }, alignItems: "center", mt: 1 }}>
+                {contactInfo.map((item, i) => (
+                  <Link
+                    key={i}
+                    href={item.href}
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 1,
+                      color: "#969696",
+                      fontSize: { xs: "13px", md: "14px" },
+                      textDecoration: "none",
+                      transition: "color 0.2s",
+                      "&:hover": { color: "#d1d5db" },
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", fontSize: { xs: "16px", md: "18px" }, color: "inherit" }}>
+                      {item.icon}
+                    </Box>
+                    <Typography component="span" sx={{ color: "inherit", fontSize: "inherit" }}>
+                      {item.text}
+                    </Typography>
+                  </Link>
                 ))}
-              </ul>
-            </div>
+              </Box>
+
+            </Box>
+          </Grid>
+
+          {/* Footer Sections */}
+          {footerSections.map((section, idx) => (
+            <Grid item xs={12} sm={6} md={2} key={idx}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "white", mb: 2, fontWeight: 600, fontSize: { xs: "0.875rem", md: "0.9375rem" } }}
+              >
+                {section.title}
+              </Typography>
+              {section.links.map((link, i) => (
+                <Link
+                  key={i}
+                  href={link.href}
+                  sx={{
+                    display: "block",
+                    color: "#969696",
+                    mb: 1.2,
+                    fontSize: { xs: "0.8125rem", md: "14px" },
+                    textDecoration: "none",
+                    transition: "color 0.2s",
+                    "&:hover": { color: "white" },
+                  }}
+                >
+                  {link.name} {link.external && <OpenInNew sx={{ fontSize: 12, ml: 0.5, verticalAlign: "middle" }} />}
+                </Link>
+              ))}
+            </Grid>
           ))}
 
           {/* Social Links */}
-          <div>
-            <h4 style={{ fontSize: "14px", fontWeight: 600, color: "white", marginBottom: "1rem" }}>
+          <Grid item xs={12} sm={6} md={2}>
+            <Typography
+              variant="subtitle2"
+              sx={{
+                color: "white",
+                mb: 2,
+                fontWeight: 600,
+                fontSize: { xs: "0.875rem", md: "0.9375rem" },
+                textAlign: "left",
+              }}
+            >
               Follow Us
-            </h4>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: "0.75rem",
+            </Typography>
+
+            <Grid
+              container
+              spacing={{ xs: 1, sm: 1 }}
+              justifyContent={{ xs: "left", sm: "flex-start" }}
+              sx={{
+                width: "100%",
+                maxWidth: { xs: "100%", sm: 220 },
+                mx: "auto",
               }}
             >
               {socialLinks.map((s, i) => (
-                <a
+                <Grid
+                  item
                   key={i}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    padding: "0.5rem",
-                    borderRadius: "8px",
-                    border: "1px solid #374151",
-                    color: "#9ca3af",
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "20px",
-                  }}
+                  xs={5} // two per row
+                  sm={5}
+                  display="flex"
+                  justifyContent={{ xs: "center", sm: "flex-start" }}
                 >
-                  {s.icon}
-                </a>
+                  <IconButton
+                    component="a"
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    sx={{
+                      color: "#94a3b8",
+                      border: "0.5px solid #475569",
+                      borderRadius: 1.5, // rounded rectangle, not circle
+                      width: "100%",
+                      maxWidth: { xs: "100%", sm: 70 },
+                      height: { xs: 38, sm: 42 },
+                      transition: "all 0.25s ease",
+                      backgroundColor: "transparent",
+                      "&:hover": {
+                        backgroundColor: "rgba(71,85,105,0.4)",
+                        borderColor: "#64748b",
+                        color: "white",
+                        transform: "translateY(-2px)",
+                      },
+                      "& svg": {
+                        fontSize: { xs: "1.1rem", md: "1.4rem" },
+                      },
+                    }}
+                  >
+                    {s.icon}
+                  </IconButton>
+                </Grid>
               ))}
-            </div>
-          </div>
-        </div>
-      </div>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Container>
 
-      {/* Footer Bottom Row */}
-      <div style={{ backgroundColor: "white", borderTop: "1px solid #e5e7eb" }}>
-        <div
-          style={{
-            maxWidth: "1280px",
-            margin: "0 auto",
-            padding: "1.25rem 1.5rem",
+      {/* Bottom Section */}
+      <Box
+        sx={{
+          borderTop: "1px solid #334155",
+          py: { xs: 2.5, md: 3 },
+          backgroundColor: "#fff",
+        }}
+      >
+        <Container
+          maxWidth="lg"
+          sx={{
             display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            alignItems: "center",
-            justifyContent: "space-between",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "center", md: "center" },
+            justifyContent: { xs: "center", md: "space-between" },
+            gap: { xs: 1.5, md: 2 },
+            textAlign: { xs: "center", md: "left" },
           }}
         >
-          <div style={{ fontSize: "14px", color: "#4b5563", textAlign: "center" }}>
-            <span>© {currentYear} Tiiron. All rights reserved.</span>
-            <span style={{ marginLeft: "0.5rem" }}>Made with ❤️ in India</span>
-          </div>
+          {/* Left Section */}
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#6b7280",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: { xs: "center", md: "flex-start" },
+              flexWrap: "wrap",
+              gap: 0.5,
+              fontSize: { xs: "12px", md: "14px" },
+              lineHeight: 1.6,
+            }}
+          >
+            © {currentYear} Tiiron. All rights reserved.{" "}
+            <Box
+              component="span"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 0.3,
+                ml: { xs: 0, md: 0.5 },
+              }}
+            >
+              Made with{" "}
+              <Favorite
+                sx={{ fontSize: { xs: 12, md: 14 }, color: "#dc2626", mx: 0.3 }}
+              />{" "}
+              in India
+            </Box>
+          </Typography>
 
-          <nav style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1rem", fontSize: "14px" }}>
-            <a href="/languages" style={{ color: "#4b5563", textDecoration: "none" }}>
-              Languages
-            </a>
-            <a href="/legal" style={{ color: "#4b5563", textDecoration: "none" }}>
-              Legal
-            </a>
-            <a href="/privacy" style={{ color: "#4b5563", textDecoration: "none" }}>
-              Privacy
-            </a>
-            <a href="/sitemap" style={{ color: "#4b5563", textDecoration: "none" }}>
-              Sitemap
-            </a>
-            <a href="/status" style={{ color: "#4b5563", textDecoration: "none" }}>
-              Status
-            </a>
-          </nav>
-        </div>
-      </div>
-    </footer>
+          {/* Right Section - Hidden on Mobile */}
+          <Box
+            sx={{
+              display: { xs: "none", sm: "flex" }, // 👈 Hidden on mobile, visible on tablet+
+              flexWrap: "wrap",
+              gap: { sm: 1.5, md: 2 },
+              alignItems: "center",
+              justifyContent: { sm: "center", md: "flex-end" },
+              width: { sm: "100%", md: "auto" },
+            }}
+          >
+            {[
+              { name: "Languages", href: "/languages" },
+              { name: "Legal", href: "/legal" },
+              { name: "Privacy", href: "/privacy" },
+              { name: "Sitemap", href: "/sitemap" },
+              { name: "Status", href: "/status" },
+            ].map((link, i) => (
+              <Link
+                key={i}
+                href={link.href}
+                sx={{
+                  color: "#6b7280",
+                  fontSize: { sm: "12px", md: "14px" },
+                  textDecoration: "none",
+                  transition: "color 0.2s ease",
+                  "&:hover": { color: "#111827" },
+                }}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
+
+      {/* Floating Action Buttons */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: { xs: 16, md: 24 },
+          right: { xs: 16, md: 24 },
+          display: "flex",
+          flexDirection: "column",
+          gap: 1.5,
+          zIndex: 1000,
+        }}
+      >
+        {/* Chat Button */}
+        <Fab
+          size="medium"
+          sx={{
+            backgroundColor: "#22c55e",
+            color: "white",
+            width: { xs: 48, md: 56 },
+            height: { xs: 48, md: 56 },
+            "&:hover": {
+              backgroundColor: "#16a34a",
+              transform: "scale(1.1)",
+            },
+            boxShadow: "0 4px 12px rgba(34, 197, 94, 0.4)",
+            transition: "all 0.2s",
+          }}
+          aria-label="Chat"
+          onClick={() => {
+            // Add your chat functionality here
+            console.log("Chat clicked");
+          }}
+        >
+          <Chat sx={{ fontSize: { xs: 20, md: 24 } }} />
+        </Fab>
+
+        {/* Scroll to Top Button */}
+        <Fab
+          size="medium"
+          sx={{
+            backgroundColor: "#0ea5e9",
+            color: "white",
+            width: { xs: 48, md: 56 },
+            height: { xs: 48, md: 56 },
+            "&:hover": {
+              backgroundColor: "#0284c7",
+              transform: "scale(1.1)",
+            },
+            boxShadow: "0 4px 12px rgba(14, 165, 233, 0.4)",
+            transition: "all 0.2s",
+          }}
+          aria-label="Scroll to top"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <ArrowUpward sx={{ fontSize: { xs: 20, md: 24 } }} />
+        </Fab>
+      </Box>
+    </Box>
   );
 };
 
 export default Footer;
-
