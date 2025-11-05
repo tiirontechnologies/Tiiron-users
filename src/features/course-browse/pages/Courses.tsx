@@ -54,6 +54,11 @@ export default function Courses() {
                   (item) => item.courseId === courseId
                 ) || false;
 
+              // Generate mock rating and review count for demo purposes
+              // In production, this should come from the API
+              const mockRating = (4.5 + Math.random() * 0.5).toFixed(1);
+              const mockReviewCount = Math.floor(Math.random() * 15000) + 1000;
+
               return (
                 <CourseCardWrapper
                   key={course.id}
@@ -62,7 +67,9 @@ export default function Courses() {
                   tags={course.tags}
                   title={course.title}
                   chapters={course.totalChapters}
-                  rating={0}
+                  rating={parseFloat(mockRating)}
+                  reviewCount={mockReviewCount}
+                  instructor={course.createdBy || "Instructor"}
                   price={course.price}
                   navigatePath={(id) => `/course-glossary/${id}`}
                   isCourseInCart={isCourseInCart}

@@ -35,7 +35,7 @@ const Login = () => {
         if (roleId == "admin") {
           navigate("/courses");
         } else {
-          navigate("/learner/browse-courses");
+          navigate("/");
         }
         localStorage.setItem("roleId", roleId);
         setSnackbarSeverity("success");

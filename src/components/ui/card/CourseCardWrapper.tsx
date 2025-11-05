@@ -18,6 +18,16 @@ interface CourseCardWrapperProps extends ICourseCardProps {
   isLoadingCart?: boolean;
   onCardClick?: (id: number) => void;
   onDeleteClick?: (id: number) => void;
+  instructor?: string;
+  reviewCount?: number;
+  progress?: number;
+  learnerRating?: number;
+  variant?: "browse" | "my-course";
+  onStartCourse?: (courseId: number) => void;
+  onShare?: (courseId: number) => void;
+  onFavorite?: (courseId: number) => void;
+  onArchive?: (courseId: number) => void;
+  isFavorite?: boolean;
 }
 
 export default function CourseCardWrapper({
@@ -35,6 +45,16 @@ export default function CourseCardWrapper({
   isLoadingCart = false,
   onCardClick,
   onDeleteClick,
+  instructor,
+  reviewCount,
+  progress,
+  learnerRating,
+  variant = "browse",
+  onStartCourse,
+  onShare,
+  onFavorite,
+  onArchive,
+  isFavorite = false,
 }: CourseCardWrapperProps) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -45,10 +65,25 @@ export default function CourseCardWrapper({
 
   // Card click handler - use parent's handler or navigatePath
   const handleCardClick = () => {
+    if (variant === "my-course" && onStartCourse) {
+      // For my-course variant, START COURSE button handles navigation
+      return;
+    }
     if (onCardClick) {
       onCardClick(id);
     } else if (navigatePath) {
       window.location.href = navigatePath(id);
+    }
+  };
+
+  // Handler for START COURSE button
+  const handleStartCourse = (courseId: number) => {
+    if (onStartCourse) {
+      onStartCourse(courseId);
+    } else if (navigatePath) {
+      window.location.href = navigatePath(courseId);
+    } else if (onCardClick) {
+      onCardClick(courseId);
     }
   };
 
@@ -144,6 +179,16 @@ export default function CourseCardWrapper({
         onCardClick={handleCardClick}
         onDeleteClick={handleDeleteClick}
         onAddToCartClick={onAddToCart ? handleAddToCart : undefined}
+        instructor={instructor}
+        reviewCount={reviewCount}
+        progress={progress}
+        learnerRating={learnerRating}
+        variant={variant}
+        onStartCourse={handleStartCourse}
+        onShare={onShare}
+        onFavorite={onFavorite}
+        onArchive={onArchive}
+        isFavorite={isFavorite}
       />
       {DeleteModalComponent && (
         <DeleteModalComponent

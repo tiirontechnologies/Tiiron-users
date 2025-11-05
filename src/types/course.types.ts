@@ -33,5 +33,10 @@ interface ICourseCardProps {
   rating?: number;
   id: number;
   price?: number;
+  instructor?: string;
+  reviewCount?: number;
+  progress?: number; // 0-100 percentage
+  learnerRating?: number; // Rating given by learner
+  variant?: "browse" | "my-course"; // Card variant
 }
 export type { ICreateCourse, ICourse, ICourseCardProps };

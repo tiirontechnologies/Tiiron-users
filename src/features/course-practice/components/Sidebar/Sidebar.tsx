@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Avatar, Typography, Divider } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CourseData } from "../../types";
 import NavigationList from "./NavigationList";
 import PracticeProgressStats from "./PracticeProgressStats";
@@ -27,6 +27,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   courseId,
   practiceStats,
 }) => {
+  const navigate = useNavigate();
+
   console.log("Sidebar", data.chapters, onUnitSelect, courseId);
   console.log("sidebar Practice stats:", practiceStats);
   <PracticeProgressStats stats={practiceStats} />;
@@ -67,8 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Back Button */}
       <Button
         variant="text"
-        component={Link}
-        to={`/course-glossary/${courseId}`}
+        onClick={() => navigate(-1)}
         startIcon={<KeyboardBackspace sx={{ color: COLORS.text.muted }} />}
         sx={{
           background: GRADIENTS.background,
