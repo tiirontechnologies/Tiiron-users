@@ -47,11 +47,12 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    // Search courses (browsing)
+    // Search courses (browsing) - uses /course/all endpoint
     searchCourses: builder.query({
-      query: (serachTerm: string) => ({
-        url: `/course/search?q=${serachTerm}`,
+      query: ({ page = 1, limit = 100 }: { page?: number; limit?: number }) => ({
+        url: "/course/all",
         method: "GET",
+        params: { page, limit },
       }),
       providesTags: ["Course"],
     }),

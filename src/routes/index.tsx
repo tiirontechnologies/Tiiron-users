@@ -10,11 +10,19 @@ import DollerIcon from "../assets/icons/DollerIcon";
 import { CheckoutPage } from "../features";
 import { userRoutes } from "./learnerRoute";
 import UserLayout from "@layouts/UserLayout";
+import SearchResults from "../pages/SearchResults";
 
 export const routeConfig = [
   {
     element: <MainLayout />,
-    children: [...appRoutes, ...globalRoutes],
+    children: [
+      ...appRoutes,
+      ...globalRoutes,
+      {
+        path: "/search",
+        element: <SearchResults />,
+      },
+    ],
   },
   {
     path: "/learner",
