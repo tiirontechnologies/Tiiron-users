@@ -1,7 +1,7 @@
 import CustomTextField from "@components/ui/textfields/CustomTextField";
 import LoginPng from "@images/login.png";
 import AuthLayout from "@layouts/AuthLayout";
-import { Alert, Box, Grid, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import { useRegisterUserMutation } from "../../api/authApi";
 import { useForm, Controller } from "react-hook-form";
 import { IOrganisationRegister } from "types/user.types";
@@ -55,32 +55,27 @@ const Index = () => {
       isLogin={true}
       onSubmit={handleSubmit(onSubmit)} // Trigger RHF handleSubmit
       renderFormFields={
-        <Grid container spacing={2}>
+        <Box display={"grid"} gap={2}>
           <Box display={"flex"} gap={2} width="100%">
-            <Grid md={6} xs={12}>
-              <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
-                First Name
-              </Typography>
+            <Box flex={1}>
               <Controller
                 name="firstName"
                 control={control}
-                rules={{ required: "Full Name is required" }}
+                rules={{ required: "First Name is required" }}
                 render={({ field }) => (
                   <CustomTextField
                     {...field}
                     type="text"
-                    placeholder="Full Name"
+                    labelText="First Name"
+                    placeholder="First Name"
                   />
                 )}
               />
               <span style={{ color: "red" }}>
                 {errors.firstName?.message}
               </span>
-            </Grid>
-            <Grid md={6} xs={12}>
-              <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
-                Last Name
-              </Typography>
+            </Box>
+            <Box flex={1}>
               <Controller
                 name="lastName"
                 control={control}
@@ -89,18 +84,16 @@ const Index = () => {
                   <CustomTextField
                     {...field}
                     type="text"
+                    labelText="Last Name"
                     placeholder="Last Name"
                   />
                 )}
               />
               <span style={{ color: "red" }}>{errors.lastName?.message}</span>
-            </Grid>
+            </Box>
           </Box>
 
-          <Grid xs={12}>
-            <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
-              User Name
-            </Typography>
+          <Box>
             <Controller
               name="username"
               control={control}
@@ -109,36 +102,37 @@ const Index = () => {
                 <CustomTextField
                   {...field}
                   type="text"
+                  labelText="User Name"
                   placeholder="Username"
                 />
               )}
             />
             <span style={{ color: "red" }}>{errors.username?.message}</span>
-          </Grid>
-          <Grid xs={12}>
-            <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
-              Email
-            </Typography>
+          </Box>
+          <Box>
             <Controller
               name="email"
               control={control}
-              rules={{ required: "Email is required" }}
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email address",
+                },
+              }}
               render={({ field }) => (
                 <CustomTextField
                   {...field}
-                  type="text"
+                  type="email"
+                  labelText="Email"
                   placeholder="mail@example.com"
                 />
               )}
             />
             <span style={{ color: "red" }}>{errors.email?.message}</span>
-          </Grid>
+          </Box>
           <Box display={"flex"} gap={2} width="100%">
-
-            <Grid xs={12} md={6}>
-              <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
-                Password
-              </Typography>
+            <Box flex={1}>
               <Controller
                 name="password"
                 control={control}
@@ -147,17 +141,14 @@ const Index = () => {
                   <CustomTextField
                     {...field}
                     type="password"
+                    labelText="Password"
                     placeholder="Password"
                   />
                 )}
               />
               <span style={{ color: "red" }}>{errors.password?.message}</span>
-            </Grid>
-
-            <Grid xs={12} md={6}>
-              <Typography variant="subtitle2" fontWeight={700} mb={0.5}>
-                Confirm Password
-              </Typography>
+            </Box>
+            <Box flex={1}>
               <Controller
                 name="confirmPassword"
                 control={control}
@@ -170,6 +161,7 @@ const Index = () => {
                   <CustomTextField
                     {...field}
                     type="password"
+                    labelText="Confirm Password"
                     placeholder="Confirm Password"
                   />
                 )}
@@ -177,7 +169,7 @@ const Index = () => {
               <span style={{ color: "red" }}>
                 {errors.confirmPassword?.message}
               </span>
-            </Grid>
+            </Box>
           </Box>
           <Snackbar
             open={snackbarOpen}
@@ -192,7 +184,7 @@ const Index = () => {
               {snackbarMessage}
             </Alert>
           </Snackbar>
-        </Grid >
+        </Box>
       }
     />
   );

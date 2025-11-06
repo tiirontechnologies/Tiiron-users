@@ -1,136 +1,46 @@
-import { useEffect, useState } from "react";
-import { Box, Drawer, useMediaQuery, useTheme } from "@mui/material";
-import SidebarMenu from "../components/ui/sidebar/Sidebar";
-import LogoAndName from "../components/ui/sidebar/LogoAndName";
+import { Box } from "@mui/material";
 import Header from "../components/ui/header/Header";
-import { Outlet, useLocation } from "react-router-dom";
-import { userRoutes } from "../routes/learnerRoute";
-import { globalRoutes } from "../routes/globalRoutes";
-
-const drawerWidth = 240;
-const collapsedWidth = 72;
+import { Outlet } from "react-router-dom";
 
 const UserLayout = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [desktopOpen, setDesktopOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const location = useLocation();
-
-  const handleToggleDesktopMenu = () => setDesktopOpen((prev) => !prev);
-  const handleToggleMobileMenu = () => setMobileOpen((prev) => !prev);
-
-  // Auto-close sidebar on route change (keeps desktop collapsed and closes mobile drawer)
-  useEffect(() => {
-    setDesktopOpen(false);
-    setMobileOpen(false);
-  }, [location]);
-
   return (
-    <Box sx={{ display: "flex" }}>
-      {/* ✅ MOBILE DRAWER */}
-      {isMobile && (
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleToggleMobileMenu}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: "block", md: "none" },
-            "& .MuiDrawer-paper": {
-              width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-        >
-          <LogoAndName toggleMenu={handleToggleMobileMenu} open={true} />
-          <SidebarMenu routes={userRoutes} open={true} />
-          <SidebarMenu routes={globalRoutes} open={true} />
-        </Drawer>
-      )}
-
-      {/* ✅ DESKTOP DRAWER */}
-      {!isMobile && (
-        <Drawer
-          variant="permanent"
-          open={desktopOpen}
-          sx={{
-            width: desktopOpen ? drawerWidth : collapsedWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: desktopOpen ? drawerWidth : collapsedWidth,
-              boxSizing: "border-box",
-              transition: "width 0.3s ease",
-              overflowX: "hidden",
-            },
-          }}
-        >
-          <LogoAndName
-            toggleMenu={handleToggleDesktopMenu}
-            open={desktopOpen}
-          />
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              height: "100vh",
-            }}
-          >
-            <SidebarMenu routes={userRoutes} open={desktopOpen} />
-            <SidebarMenu routes={globalRoutes} open={desktopOpen} />
-          </Box>
-        </Drawer>
-      )}
-
-      {/* ✅ MAIN CONTENT */}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        width: "100%",
+      }}
+    >
+      {/* ✅ HEADER - Full width, no sidebar */}
       <Box
         sx={{
-          flexGrow: 1,
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          zIndex: 1100,
+          backgroundColor: "rgba(241, 242, 244, 1)",
           display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        <Box
-          sx={{
-            position: "fixed",
-            top: 0,
-            left: !isMobile
-              ? desktopOpen
-                ? `${drawerWidth}px`
-                : `${collapsedWidth}px`
-              : 0,
-            width: !isMobile
-              ? `calc(100% - ${desktopOpen ? drawerWidth : collapsedWidth}px)`
-              : "100%",
-            zIndex: 1100,
-            backgroundColor: "rgba(241, 242, 244, 1)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Header
-            onHamburgerClick={
-              isMobile ? handleToggleMobileMenu : handleToggleDesktopMenu
-            }
-            isSidebarOpen={isMobile ? mobileOpen : desktopOpen}
-          />
-        </Box>
+        <Header />
+      </Box>
 
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            // padding: 2,
-            marginTop: "106px", // same as header height
-            overflow: "auto",
-            background: "rgba(241, 242, 244, 1)",
-          }}
-        >
-          <Outlet />
-        </Box>
+      {/* ✅ MAIN CONTENT - Full width */}
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          marginTop: "106px", // same as header height
+          overflow: "auto",
+          background: "rgba(241, 242, 244, 1)",
+          width: "100%",
+        }}
+      >
+        <Outlet />
       </Box>
     </Box>
   );

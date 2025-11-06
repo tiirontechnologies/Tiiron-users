@@ -105,26 +105,33 @@ const AuthLayout = ({
             {titleText}
           </Typography>
 
-          {/* Form Fields */}
-          {renderFormFields}
+          {/* Form */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+          >
+            {/* Form Fields */}
+            {renderFormFields}
 
-          {/* Submit Button */}
-          <Box display="flex" alignItems="center" gap={2} mt={2} mb={3}>
-            <Button
-              variant="contained"
-              onClick={onSubmit}
-              disabled={isLoading}
-              sx={{
-                backgroundColor: "#6A42AB",
-                textTransform: "none",
-                px: 3,
-                fontWeight: 600,
-              }}
-              type="submit"
-            >
-              {isLoading ? "Loading..." : submitButtonText}
-            </Button>
-          </Box>
+            {/* Submit Button */}
+            <Box display="flex" alignItems="center" gap={2} mt={2} mb={3}>
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={isLoading}
+                sx={{
+                  backgroundColor: "#6A42AB",
+                  textTransform: "none",
+                  px: 3,
+                  fontWeight: 600,
+                }}
+              >
+                {isLoading ? "Loading..." : submitButtonText}
+              </Button>
+            </Box>
+          </form>
 
           {/* Divider Text */}
           <Divider>{dividerText}</Divider>
