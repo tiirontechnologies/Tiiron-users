@@ -184,7 +184,7 @@ export function AddNewCourseModal({
         </Box>
 
         <Box display="flex" justifyContent="end" gap="10px" mt={3}>
-          <Button variant="outlined" onClick={onClose}>
+          <Button variant="outlined" type="button" onClick={onClose}>
             Cancel
           </Button>
           <Button variant="contained" type="submit" disabled={isLoading}>

@@ -4,10 +4,7 @@ import { globalRoutes } from "./globalRoutes";
 import { authRoutes } from "./authRoutes";
 import { homeRoutes } from "./homeRoutes";
 import { CourseProgress } from "../features";
-import { CourseGlossary } from "../features";
 import NotFound from "../pages/NotFound";
-import DollerIcon from "../assets/icons/DollerIcon";
-import { CheckoutPage } from "../features";
 import { userRoutes } from "./learnerRoute";
 import UserLayout from "@layouts/UserLayout";
 import SearchResults from "../pages/SearchResults";
@@ -32,18 +29,6 @@ export const routeConfig = [
   {
     path: "/course-practice/:courseId",
     element: <CourseProgress />,
-  },
-  {
-    label: "Course Glossary",
-    element: <CourseGlossary />,
-    icon: <DollerIcon />,
-    path: "/course-glossary/:courseId",
-  },
-  {
-    label: "Checkout",
-    icon: <DollerIcon />,
-    path: "/checkout",
-    element: <CheckoutPage />,
   },
   ...homeRoutes,
   ...authRoutes,

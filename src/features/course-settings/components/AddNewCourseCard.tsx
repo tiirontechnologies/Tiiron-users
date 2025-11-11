@@ -1,5 +1,5 @@
 // components/AddNewCourseCard.tsx
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { useModal } from "../../../hooks/useModal";
 import { AddNewCourseModal } from "../../course/components/AddNewCourseModal";
@@ -8,93 +8,101 @@ import { AddNewCourseModal } from "../../course/components/AddNewCourseModal";
 export default function AddNewCourseCard() {
   const { isOpen, openModal, closeModal } = useModal();
   return (
-    <Box
-      sx={{
-        border: "1px dashed #000000",
-        width: 268,
-        height: 311,
-        borderRadius: "20px",
-        padding: 1.5,
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        overflow: "hidden",
-        flexShrink: 0,
-        background: "#fff",
-      }}
-    >
+    <>
       <Box
         sx={{
-          background: "#E2D5FF",
-          borderRadius: "12px",
-          height: 113,
           width: "100%",
+          maxWidth: 350,
+          minHeight: 400,
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
-          overflow: "hidden",
+          justifyContent: "center",
+          gap: 2,
+          borderRadius: "18px",
+          border: "2px dashed rgba(99,102,241,0.35)",
+          background: "linear-gradient(180deg, #ffffff 0%, #f9fafb 100%)",
+          boxShadow:
+            "0 4px 12px rgba(15,23,42,0.06), 0 12px 28px rgba(15,23,42,0.08)",
+          textAlign: "center",
+          transition:
+            "box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease",
           cursor: "pointer",
-          position: "sticky",
-          top: 0,
-          zIndex: 2,
+          px: 3,
+          py: 4,
+          transform: "translateY(0)",
+          "&:hover": {
+            boxShadow:
+              "0 8px 18px rgba(15,23,42,0.08), 0 16px 40px rgba(15,23,42,0.1)",
+            borderColor: "rgba(99,102,241,0.6)",
+            transform: "translateY(-6px)",
+          },
         }}
         onClick={openModal}
       >
-        <AddRoundedIcon sx={{ color: "#452B80", fontSize: 40 }} />
-      </Box>
-
-      <Divider
-        sx={{
-          position: "absolute",
-          bottom: 37,
-          left: 12,
-          right: 12,
-        }} />
-
-      <Box
-        sx={{
-          overflowY: "auto",
-          flexGrow: 1,
-          mt: 1,
-          pb: "90px",
-          pr: 1,
-          "&::-webkit-scrollbar": {
-            width: 6,
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#c4c4c4",
-            borderRadius: 10,
-          },
-        }}
-      >
+        <Box
+          sx={{
+            width: 88,
+            height: 88,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background:
+              "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(14,165,233,0.12))",
+            color: "#4338CA",
+          }}
+        >
+          <AddRoundedIcon sx={{ fontSize: 40 }} />
+        </Box>
         <Typography
-          style={{
-            width: "100%",
-            fontSize: 16,
-            fontWeight: 500,
-            border: "none",
-            outline: "none",
-            backgroundColor: "transparent",
-            padding: "4px 0",
+          sx={{
+            fontWeight: 700,
+            fontSize: "18px",
+            color: "#1e293b",
+            lineHeight: 1.4,
           }}
         >
           Add A New Course
         </Typography>
+        <Typography
+          sx={{
+            fontSize: "13px",
+            color: "#64748b",
+            maxWidth: 220,
+          }}
+        >
+          Create a new course to share with your learners.
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddRoundedIcon />}
+          sx={{
+            textTransform: "none",
+            borderRadius: "10px",
+            px: 2.8,
+            py: 1,
+            fontSize: "13.5px",
+            fontWeight: 600,
+            color: "#fff",
+            background:
+              "linear-gradient(135deg, #6366f1, #7c3aed, #0ea5e9)",
+            boxShadow: "0 6px 14px rgba(99,102,241,0.25)",
+            "&:hover": {
+              background:
+                "linear-gradient(135deg, #4f46e5, #7c3aed, #0891b2)",
+              boxShadow: "0 8px 22px rgba(99,102,241,0.35)",
+            },
+          }}
+          onClick={(event) => {
+            event.stopPropagation();
+            openModal();
+          }}
+        >
+          New Course
+        </Button>
       </Box>
-
-      <Box
-        sx={{
-          position: "absolute",
-          bottom: 12,
-          left: 0,
-          right: 0,
-          px: 1.5,
-          display: "flex",
-          justifyContent: "center",
-          bgcolor: "#fff",
-        }}
-      ></Box>
       <AddNewCourseModal isOpen={isOpen} onClose={closeModal} />
-    </Box>
+    </>
   );
 }
