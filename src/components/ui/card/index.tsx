@@ -102,25 +102,28 @@ export default function CourseCard({
     }
   };
 
-  // My Course Variant
+  // My Course Variant — Final Product-Grade Card
   if (variant === "my-course") {
     return (
       <Box
         sx={{
-          width: 290,
-          minHeight: 400,
-          borderRadius: "8px",
+          width: "100%",
+          maxWidth: 320,
+          minHeight: 360,
+          borderRadius: "16px",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          position: "relative",
-          background: "#fff",
-          cursor: "default",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          transition: "all 0.3s ease",
+          background: "linear-gradient(180deg, #ffffff 0%, #f9fafb 100%)",
+          border: "1px solid rgba(148,163,184,0.18)",
+          boxShadow:
+            "0 4px 12px rgba(15,23,42,0.06), 0 12px 28px rgba(15,23,42,0.08)",
+          transition: "transform 0.35s ease, box-shadow 0.35s ease",
+          cursor: "pointer",
           "&:hover": {
-            boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-            transform: "translateY(-2px)",
+            transform: "scale(1.02)",
+            boxShadow:
+              "0 6px 16px rgba(15,23,42,0.07), 0 14px 36px rgba(15,23,42,0.1)",
           },
         }}
       >
@@ -128,9 +131,10 @@ export default function CourseCard({
         <Box
           sx={{
             width: "100%",
-            height: 160,
-            overflow: "hidden",
+            height: 150,
             position: "relative",
+            overflow: "hidden",
+            borderBottom: "1px solid rgba(148,163,184,0.12)",
           }}
         >
           {thumbnailSrc ? (
@@ -141,25 +145,28 @@ export default function CourseCard({
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                transition: "transform 0.4s ease",
               }}
+              className="hover:scale-105"
             />
           ) : (
             <Box
               sx={{
                 height: "100%",
-                bgcolor: "#E2D5FF",
+                bgcolor: "#EEF2FF",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "#452B80",
+                color: "#4338CA",
                 fontWeight: 600,
+                fontSize: "13px",
               }}
             >
               No Image
             </Box>
           )}
 
-          {/* Delete button overlay */}
+          {/* Delete Button */}
           {allowDelete && (
             <IconButton
               size="small"
@@ -169,214 +176,208 @@ export default function CourseCard({
               }}
               sx={{
                 position: "absolute",
-                top: 8,
-                right: 8,
-                bgcolor: "rgba(255, 255, 255, 0.9)",
+                top: 10,
+                right: 10,
+                bgcolor: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(8px)",
                 "&:hover": { bgcolor: "#fff" },
               }}
             >
-              <DeleteIcon />
+              <DeleteIcon fontSize="small" />
             </IconButton>
           )}
         </Box>
 
-        {/* Content Section */}
-        <Box sx={{ padding: "16px", flex: 1, display: "flex", flexDirection: "column" }}>
-          {/* Line 1: Course Title */}
-          <Typography
-            sx={{
-              fontWeight: 700,
-              fontSize: "16px",
-              lineHeight: 1.3,
-              mb: 0.25,
-              color: "#1c1d1f",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              minHeight: "42px",
-            }}
-          >
-            {title}
-          </Typography>
-
-          {/* Line 2: Instructor/Organization */}
-          {instructor && (
+        {/* Content */}
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            p: 2,
+          }}
+        >
+          {/* Title & Instructor */}
+          <Box sx={{ mb: 0.6 }}>
             <Typography
               sx={{
-                fontSize: "13px",
-                color: "#6a6f73",
-                mb: 1.25,
-                lineHeight: 1.4,
-                fontWeight: 400,
-              }}
-            >
-              {instructor}
-            </Typography>
-          )}
-
-          {/* Line 3: Progress Bar - Only the broader rounded one */}
-          <Box sx={{ mb: 1.5 }}>
-            <Box
-              sx={{
-                width: "100%",
-                height: 8,
-                bgcolor: "#e5e5e5",
-                borderRadius: "4px",
+                fontWeight: 700,
+                fontSize: "15px",
+                color: "#0f172a",
+                lineHeight: 1.3,
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
                 overflow: "hidden",
+                mb: 0.25,
               }}
             >
-              <LinearProgress
-                variant="determinate"
-                value={progress}
-                sx={{
-                  height: "100%",
-                  borderRadius: "4px",
-                  bgcolor: "#e5e5e5",
-                  "& .MuiLinearProgress-bar": {
-                    bgcolor: "#452B80",
-                    borderRadius: "4px",
-                  },
-                }}
-              />
-            </Box>
-          </Box>
-
-          {/* Line 4: START COURSE Button */}
-          <Button
-            variant="contained"
-            fullWidth
-            onClick={handleStartCourse}
-            sx={{
-              bgcolor: "#452B80",
-              color: "#fff",
-              textTransform: "none",
-              fontWeight: 600,
-              fontSize: "14px",
-              py: 0.75,
-              mb: 1.5,
-              minHeight: "36px",
-              "&:hover": {
-                bgcolor: "#3a2366",
-              },
-            }}
-          >
-            START COURSE
-          </Button>
-
-          {/* Rating Section */}
-          {learnerRating > 0 && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 1.5 }}>
+              {title}
+            </Typography>
+            {instructor && (
               <Typography
                 sx={{
-                  fontSize: "13px",
-                  fontWeight: 700,
-                  color: "#b4690e",
+                  fontSize: "12.5px",
+                  color: "#64748b",
+                  fontWeight: 500,
+                  lineHeight: 1.4,
                 }}
               >
-                {displayLearnerRating}
+                {instructor}
               </Typography>
-              <Rating
-                value={learnerRating}
-                precision={0.5}
-                readOnly
-                size="small"
-                sx={{
-                  fontSize: "14px",
-                  "& .MuiRating-iconFilled": {
-                    color: "#b4690e",
-                  },
-                  "& .MuiRating-iconEmpty": {
-                    color: "#d1d1d1",
-                  },
-                }}
-              />
-            </Box>
-          )}
+            )}
+          </Box>
 
-          {/* Action Icons: Share, Favorite, Archive */}
+          {/* Progress */}
+          <Box sx={{ mt: 1.2, mb: 1.6 }}>
+            <Typography
+              sx={{
+                fontSize: "12px",
+                color: "#64748b",
+                fontWeight: 500,
+                mb: 0.4,
+              }}
+            >
+              Course Progress
+            </Typography>
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{
+                height: 6,
+                borderRadius: "3px",
+                backgroundColor: "#e2e8f0",
+                "& .MuiLinearProgress-bar": {
+                  background:
+                    "linear-gradient(90deg, #6366f1 0%, #7c3aed 50%, #0ea5e9 100%)",
+                  borderRadius: "3px",
+                },
+              }}
+            />
+          </Box>
+
+          {/* CTA Button */}
           <Box
             sx={{
-              marginTop: "auto",
+              display: "flex",
+              justifyContent: "left",
+              mb: 1.8,
+              mt: 0.5,
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={handleStartCourse}
+              sx={{
+                width: "54%", // slightly reduced width
+                background:
+                  "linear-gradient(135deg, #6366f1, #7c3aed, #0ea5e9)",
+                color: "#fff",
+                textTransform: "none",
+                fontWeight: 600,
+                fontSize: "13.5px",
+                py: 0.5,
+                borderRadius: "10px",
+                boxShadow: "0 6px 14px rgba(99,102,241,0.25)",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, #4f46e5, #7c3aed, #0891b2)",
+                  boxShadow: "0 8px 20px rgba(99,102,241,0.3)",
+                },
+              }}
+            >
+              Start Course
+            </Button>
+          </Box>
+
+          {/* Rating + Actions */}
+          <Box
+            sx={{
+              mt: 1.2,
+              pt: 1,
+              borderTop: "1px solid rgba(148,163,184,0.12)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              pt: 1.25,
-              borderTop: "1px solid #e5e5e5",
             }}
           >
-            <Box
-              onClick={handleShare}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 0.25,
-                cursor: "pointer",
-                flex: 1,
-                py: 0.5,
-                borderRadius: 1,
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  bgcolor: "#f5f5f5",
-                },
-              }}
-            >
-              <ShareIcon sx={{ fontSize: 18, color: "#6a6f73" }} />
-              <Typography sx={{ fontSize: "10px", color: "#6a6f73", fontWeight: 500 }}>
-                Share
+            {/* Rating */}
+            {learnerRating > 0 ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.4,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    color: "#b4690e",
+                  }}
+                >
+                  {displayLearnerRating}
+                </Typography>
+                <Rating
+                  value={learnerRating}
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                  sx={{
+                    fontSize: "15px",
+                    "& .MuiRating-iconFilled": { color: "#b4690e" },
+                    "& .MuiRating-iconEmpty": { color: "#d1d1d1" },
+                  }}
+                />
+              </Box>
+            ) : (
+              <Typography sx={{ fontSize: "12px", color: "#94a3b8" }}>
+                No Rating
               </Typography>
-            </Box>
+            )}
 
-            <Box
-              onClick={handleFavorite}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 0.25,
-                cursor: "pointer",
-                flex: 1,
-                py: 0.5,
-                borderRadius: 1,
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  bgcolor: "#f5f5f5",
-                },
-              }}
-            >
+            {/* Actions */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.4 }}>
+              <ShareIcon
+                onClick={handleShare}
+                sx={{
+                  fontSize: 18,
+                  color: "#64748b",
+                  cursor: "pointer",
+                  "&:hover": { color: "#6366f1" },
+                }}
+              />
               {isFavorite ? (
-                <FavoriteIcon sx={{ fontSize: 18, color: "#e91e63" }} />
+                <FavoriteIcon
+                  onClick={handleFavorite}
+                  sx={{
+                    fontSize: 18,
+                    color: "#e11d48",
+                    cursor: "pointer",
+                  }}
+                />
               ) : (
-                <FavoriteBorderIcon sx={{ fontSize: 18, color: "#6a6f73" }} />
+                <FavoriteBorderIcon
+                  onClick={handleFavorite}
+                  sx={{
+                    fontSize: 18,
+                    color: "#64748b",
+                    cursor: "pointer",
+                    "&:hover": { color: "#6366f1" },
+                  }}
+                />
               )}
-              <Typography sx={{ fontSize: "10px", color: "#6a6f73", fontWeight: 500 }}>
-                Favorite
-              </Typography>
-            </Box>
-
-            <Box
-              onClick={handleArchive}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 0.25,
-                cursor: "pointer",
-                flex: 1,
-                py: 0.5,
-                borderRadius: 1,
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  bgcolor: "#f5f5f5",
-                },
-              }}
-            >
-              <ArchiveIcon sx={{ fontSize: 18, color: "#6a6f73" }} />
-              <Typography sx={{ fontSize: "10px", color: "#6a6f73", fontWeight: 500 }}>
-                Archive
-              </Typography>
+              <ArchiveIcon
+                onClick={handleArchive}
+                sx={{
+                  fontSize: 18,
+                  color: "#64748b",
+                  cursor: "pointer",
+                  "&:hover": { color: "#6366f1" },
+                }}
+              />
             </Box>
           </Box>
         </Box>
@@ -384,35 +385,42 @@ export default function CourseCard({
     );
   }
 
-  // Browse Variant (default)
+
+
+
   return (
     <Box
+      onClick={onCardClick}
       sx={{
-        width: 290,
-        minHeight: 380,
-        borderRadius: "8px",
-        overflow: "hidden",
+        width: "100%",
+        maxWidth: 350,
+        minHeight: 400,
         display: "flex",
         flexDirection: "column",
         position: "relative",
-        background: "#fff",
+        borderRadius: "18px",
+        overflow: "hidden",
+        background: "linear-gradient(180deg, #ffffff 0%, #f9fafb 100%)",
+        border: "1px solid rgba(148,163,184,0.18)",
+        boxShadow:
+          "0 4px 12px rgba(15,23,42,0.06), 0 12px 28px rgba(15,23,42,0.08)",
+        transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
         cursor: onCardClick ? "pointer" : "default",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        transition: "all 0.3s ease",
         "&:hover": {
-          boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-          transform: "translateY(-2px)",
+          transform: "translateY(-8px)",
+          boxShadow:
+            "0 8px 18px rgba(15,23,42,0.08), 0 16px 40px rgba(15,23,42,0.1)",
         },
       }}
-      onClick={onCardClick}
     >
       {/* Thumbnail */}
       <Box
         sx={{
-          width: "100%",
-          height: 160,
-          overflow: "hidden",
           position: "relative",
+          width: "100%",
+          height: 180,
+          overflow: "hidden",
+          borderBottom: "1px solid rgba(148,163,184,0.12)",
         }}
       >
         {thumbnailSrc ? (
@@ -423,17 +431,19 @@ export default function CourseCard({
               width: "100%",
               height: "100%",
               objectFit: "cover",
+              transition: "transform 0.4s ease",
             }}
+            className="hover:scale-105"
           />
         ) : (
           <Box
             sx={{
               height: "100%",
-              bgcolor: "#E2D5FF",
+              bgcolor: "#EEF2FF",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#452B80",
+              color: "#4338CA",
               fontWeight: 600,
             }}
           >
@@ -441,7 +451,7 @@ export default function CourseCard({
           </Box>
         )}
 
-        {/* Delete button overlay */}
+        {/* Delete Button */}
         {allowDelete && (
           <IconButton
             size="small"
@@ -451,33 +461,53 @@ export default function CourseCard({
             }}
             sx={{
               position: "absolute",
-              top: 8,
-              right: 8,
-              bgcolor: "rgba(255, 255, 255, 0.9)",
+              top: 10,
+              right: 10,
+              bgcolor: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(8px)",
               "&:hover": { bgcolor: "#fff" },
             }}
           >
-            <DeleteIcon />
+            <DeleteIcon fontSize="small" />
           </IconButton>
         )}
       </Box>
 
-      {/* Content Section */}
-      <Box sx={{ padding: "16px", flex: 1, display: "flex", flexDirection: "column" }}>
+      {/* Content */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          p: 2.5,
+        }}
+      >
         {/* Tags */}
-        {tags && tags.length > 0 && (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 1 }}>
+        {tags?.length > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 0.6,
+              mb: 1,
+            }}
+          >
             {tags.slice(0, 2).map((tag, idx) => (
               <Chip
                 key={idx}
                 label={tag}
                 size="small"
                 sx={{
-                  fontSize: "10px",
-                  height: "20px",
-                  bgcolor: "#E2D5FF",
-                  color: "#452B80",
+                  fontSize: "11px",
+                  height: "22px",
+                  bgcolor:
+                    idx === 0
+                      ? "rgba(99,102,241,0.12)"
+                      : "rgba(14,165,233,0.12)",
+                  color: idx === 0 ? "#4338CA" : "#0369A1",
                   fontWeight: 500,
+                  borderRadius: "8px",
                 }}
               />
             ))}
@@ -486,18 +516,17 @@ export default function CourseCard({
 
         {/* Title */}
         <Typography
+          variant="h6"
           sx={{
             fontWeight: 700,
             fontSize: "16px",
             lineHeight: 1.4,
-            mb: 0.5,
-            color: "#1c1d1f",
+            color: "#0f172a",
             display: "-webkit-box",
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
-            textOverflow: "ellipsis",
-            minHeight: "44px",
+            mb: 0.6,
           }}
         >
           {title}
@@ -507,8 +536,8 @@ export default function CourseCard({
         {instructor && (
           <Typography
             sx={{
-              fontSize: "12px",
-              color: "#6a6f73",
+              fontSize: "13px",
+              color: "#64748b",
               mb: 1,
             }}
           >
@@ -516,8 +545,15 @@ export default function CourseCard({
           </Typography>
         )}
 
-        {/* Rating and Reviews */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 1 }}>
+        {/* Rating */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+            mb: 1.5,
+          }}
+        >
           <Typography
             sx={{
               fontSize: "14px",
@@ -533,21 +569,17 @@ export default function CourseCard({
             readOnly
             size="small"
             sx={{
+              "& .MuiRating-iconFilled": { color: "#b4690e" },
+              "& .MuiRating-iconEmpty": { color: "#d1d1d1" },
               fontSize: "16px",
-              "& .MuiRating-iconFilled": {
-                color: "#b4690e",
-              },
-              "& .MuiRating-iconEmpty": {
-                color: "#d1d1d1",
-              },
             }}
           />
           {reviewCount > 0 && (
             <Typography
               sx={{
                 fontSize: "12px",
-                color: "#6a6f73",
-                ml: 0.5,
+                color: "#6b7280",
+                ml: 0.4,
               }}
             >
               ({formattedReviewCount})
@@ -561,39 +593,34 @@ export default function CourseCard({
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 0.5,
+              gap: 0.6,
               mb: 2,
             }}
           >
-            <DocumentIcon />
-            <Typography
-              sx={{
-                fontSize: "12px",
-                color: "#6a6f73",
-              }}
-            >
+            <DocumentIcon sx={{ color: "#64748b", fontSize: 18 }} />
+            <Typography sx={{ fontSize: "12.5px", color: "#6b7280" }}>
               {chapters} {chapters === 1 ? "Chapter" : "Chapters"}
             </Typography>
           </Box>
         )}
 
-        {/* Price and Add to Cart */}
+        {/* Price + Cart */}
         <Box
           sx={{
-            marginTop: "auto",
+            mt: "auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            pt: 1,
-            borderTop: "1px solid #e5e5e5",
+            pt: 1.2,
+            borderTop: "1px solid rgba(148,163,184,0.12)",
           }}
         >
           <Typography
             variant="h6"
             sx={{
               fontWeight: 700,
-              fontSize: "20px",
-              color: price > 0 ? "#1c1d1f" : "#6a6f73",
+              fontSize: "18px",
+              color: price > 0 ? "#1e293b" : "#64748b",
             }}
           >
             {price === 0 ? "FREE" : `$${price.toFixed(0)}`}
@@ -610,19 +637,25 @@ export default function CourseCard({
                 onAddToCartClick(e);
               }}
               sx={{
-                bgcolor: "#452B80",
-                color: "#fff",
                 textTransform: "none",
+                borderRadius: "10px",
+                px: 2.4,
+                py: 0.8,
+                fontSize: "13.5px",
                 fontWeight: 600,
-                fontSize: "14px",
-                px: 2,
-                py: 0.75,
+                color: "#fff",
+                background:
+                  "linear-gradient(135deg, #6366f1, #7c3aed, #0ea5e9)",
+                boxShadow: "0 6px 14px rgba(99,102,241,0.25)",
                 "&:hover": {
-                  bgcolor: "#3a2366",
+                  background:
+                    "linear-gradient(135deg, #4f46e5, #7c3aed, #0891b2)",
+                  boxShadow: "0 8px 22px rgba(99,102,241,0.35)",
                 },
                 "&:disabled": {
-                  bgcolor: "#d1d7dc",
+                  background: "rgba(148,163,184,0.35)",
                   color: "#fff",
+                  boxShadow: "none",
                 },
               }}
             >
@@ -630,11 +663,12 @@ export default function CourseCard({
                 ? "Adding..."
                 : isInCart
                   ? "In Cart"
-                  : "Add to cart"}
+                  : "Add to Cart"}
             </Button>
           )}
         </Box>
       </Box>
     </Box>
   );
+
 }

@@ -75,7 +75,24 @@ export default function SearchResults() {
             No courses found for "{query}".
           </Typography>
         ) : (
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: { xs: 3, md: 4 },
+              width: "100%",
+              maxWidth: "1440px",
+              mx: "auto",
+              gridTemplateColumns: {
+                xs: "repeat(auto-fill, minmax(260px, 1fr))",
+                sm: "repeat(2, minmax(260px, 1fr))",
+                md: "repeat(3, minmax(260px, 1fr))",
+                lg: "repeat(4, minmax(260px, 1fr))",
+              },
+              justifyItems: "center",
+              alignItems: "stretch",
+              py: { xs: 1, md: 2 },
+            }}
+          >
             {courses.map((course) => {
               const courseId = Number(course.id);
               const isCourseInCart =
