@@ -25,6 +25,7 @@ const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; 
           flexWrap: "wrap",
           gap: "10px",
           padding: "24px",
+          paddingTop: "0px",
           borderBottom: "1px solid #cccccc",
         }}
       >

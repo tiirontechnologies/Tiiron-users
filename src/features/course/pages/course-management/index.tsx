@@ -25,11 +25,11 @@ const Index = () => {
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
-  
+
   return (
-    <Box sx={{ 
-      height: '100vh', 
-      display: 'flex', 
+    <Box sx={{
+      height: '100vh',
+      display: 'flex',
       flexDirection: 'column',
       p: { xs: 2, sm: 3, md: 4 },
       gap: 2
@@ -38,8 +38,8 @@ const Index = () => {
         <RightSideTools />
       </ToolBar>}
 
-      <Box sx={{ 
-        display: "flex", 
+      <Box sx={{
+        display: "flex",
         flex: 1,
         height: 'calc(100vh - 120px)',
         backgroundColor: '#f8fafc',

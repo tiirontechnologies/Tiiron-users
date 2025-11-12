@@ -9,11 +9,11 @@ import {
   Divider,
   Rating,
 } from "@mui/material";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import EditIcon from "@icons/EditIcon";
 import ReportIcon from "@icons/ReportIcon";
 import ProfileTwoUserIcon from "@icons/ProfileTwoUserIcon";
-import InfoCircleIcon from "@icons/InfoCircleIcon";
+import AnalyticsIcon from "@icons/AnalyticsIcon";
 import SettingsIcon from "@icons/SettingsIcon";
 import {
   Lessons,
@@ -25,18 +25,38 @@ import {
 import ToolBar from "../../components/toolbar";
 // import MoreButton from "../../../course-settings/components/MoreButton";
 // import PublishButton from "../../../course-settings/components/PublishButton";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useGetCourseByIdQuery } from "../../api/courseApi";
 import { useGetChaptersQuery } from "../../../lesson-management/api/chapterApi";
 import Loader from "@components/ui/Spinner";
 import { CourseContext } from "./index";
 
 const CourseMetaTabs = () => {
-  const [value, setValue] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabFromUrl = searchParams.get("tab");
+  const initialTab = tabFromUrl ? parseInt(tabFromUrl, 10) : 0;
+  const [value, setValue] = useState(initialTab);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { courseId } = useParams<{ courseId: string }>();
   const courseContext = useContext(CourseContext);
+
+  // Sync URL with tab state (for browser back/forward navigation)
+  useEffect(() => {
+    const tabFromUrl = searchParams.get("tab");
+    if (tabFromUrl !== null) {
+      const tabIndex = parseInt(tabFromUrl, 10);
+      if (!isNaN(tabIndex) && tabIndex >= 0 && tabIndex < 5) {
+        setValue((prevValue) => {
+          // Only update if different to avoid unnecessary re-renders
+          return prevValue !== tabIndex ? tabIndex : prevValue;
+        });
+      }
+    } else {
+      // If no tab param, ensure we're on default tab
+      setValue((prevValue) => (prevValue !== 0 ? 0 : prevValue));
+    }
+  }, [searchParams]);
 
   // Fetch course data
   const {
@@ -45,10 +65,10 @@ const CourseMetaTabs = () => {
     error: courseError,
   } = useGetCourseByIdQuery(
     {
-      id: courseId || "",
+      id: courseId ? Number(courseId) : 0,
     },
     {
-      skip: !courseId, // Skip the query if courseId is not available
+      skip: !courseId || isNaN(Number(courseId)), // Skip the query if courseId is not available
     }
   );
 
@@ -58,6 +78,7 @@ const CourseMetaTabs = () => {
     isLoading: isChaptersLoading,
     error: chaptersError,
     isSuccess: isChaptersSuccess,
+    refetch: refetchChapters,
   } = useGetChaptersQuery(
     {
       id: courseId || "",
@@ -87,6 +108,8 @@ const CourseMetaTabs = () => {
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    // Update URL to persist tab state
+    setSearchParams({ tab: newValue.toString() });
   };
 
   // Show error if no courseId
@@ -162,8 +185,8 @@ const CourseMetaTabs = () => {
 
   const tabdata = [
     {
-      title: "Overview",
-      icon: <InfoCircleIcon />,
+      title: "Analytics",
+      icon: <AnalyticsIcon />,
       content: <CourseDashboard />,
     },
     {
@@ -173,6 +196,17 @@ const CourseMetaTabs = () => {
         <Lessons
           courseData={courseData?.data}
           chaptersData={extractedChaptersData}
+          onChapterAdded={() => {
+            // Keep user on Lessons tab after adding a lesson
+            setValue(1);
+            setSearchParams({ tab: "1" });
+            // Refetch chapters to show the new lesson
+            refetchChapters();
+          }}
+          onUnitAdded={() => {
+            // Refetch chapters to show the new topic
+            refetchChapters();
+          }}
         />
       ),
     },
@@ -241,9 +275,8 @@ const CourseMetaTabs = () => {
             key={index}
             iconPosition={isMobile ? "start" : "top"}
             id={`${isMobile ? "horizontal" : "vertical"}-tab-${index}`}
-            aria-controls={`${
-              isMobile ? "horizontal" : "vertical"
-            }-tabpanel-${index}`}
+            aria-controls={`${isMobile ? "horizontal" : "vertical"
+              }-tabpanel-${index}`}
             icon={
               <Box
                 display="flex"

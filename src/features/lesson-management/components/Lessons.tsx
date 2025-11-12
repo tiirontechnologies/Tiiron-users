@@ -38,9 +38,11 @@ import { Chapter, CourseData } from "../types";
 interface LessonsProps {
   courseData?: CourseData;
   chaptersData?: Chapter[];
+  onChapterAdded?: () => void;
+  onUnitAdded?: () => void;
 }
 
-export default function Lessons({ courseData, chaptersData }: LessonsProps) {
+export default function Lessons({ courseData, chaptersData, onChapterAdded, onUnitAdded }: LessonsProps) {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [openEditorChapterId, setOpenEditorChapterId] = useState<number | null>(
@@ -71,8 +73,8 @@ export default function Lessons({ courseData, chaptersData }: LessonsProps) {
       {!openEditorChapterId && (
         <Fragment>
           {!chaptersData ||
-          !Array.isArray(chaptersData) ||
-          chaptersData.length === 0 ? (
+            !Array.isArray(chaptersData) ||
+            chaptersData.length === 0 ? (
             <Box sx={{ display: "grid", placeItems: "center", p: 10 }}>
               <Typography color="textSecondary">
                 {!chaptersData
@@ -252,6 +254,7 @@ export default function Lessons({ courseData, chaptersData }: LessonsProps) {
         <AddUnitForm
           chapterId={openEditorChapterId}
           onClose={() => setOpenEditorChapterId(null)}
+          onUnitAdded={onUnitAdded}
         />
       )}
       {/* Add Content Dropdown */}
@@ -336,7 +339,11 @@ export default function Lessons({ courseData, chaptersData }: LessonsProps) {
           })}
         </Box>
       </Menu>
-      <AddChapterModal onClose={closeChapterModal} open={isChapterModalOpen} />
+      <AddChapterModal
+        onClose={closeChapterModal}
+        open={isChapterModalOpen}
+        onChapterAdded={onChapterAdded}
+      />
     </Box>
   );
 }

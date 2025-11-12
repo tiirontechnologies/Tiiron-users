@@ -7,13 +7,14 @@ import { useCreateChapterMutation } from "../api/chapterApi";
 interface IAddChapterModalProps {
   open: boolean;
   onClose: () => void;
+  onChapterAdded?: () => void;
 }
 
-export const AddChapterModal = ({ open, onClose }: IAddChapterModalProps) => {
+export const AddChapterModal = ({ open, onClose, onChapterAdded }: IAddChapterModalProps) => {
   const { courseId } = useParams();
   const { showSnackbar } = useSnackbar();
   const [createChapter, { isLoading }] = useCreateChapterMutation();
-  
+
   const {
     register,
     handleSubmit,
@@ -32,6 +33,8 @@ export const AddChapterModal = ({ open, onClose }: IAddChapterModalProps) => {
       showSnackbar({ message: response?.message || "Chapter created successfully", severity: "success" });
       reset();
       onClose();
+      // Notify parent component that a chapter was added
+      onChapterAdded?.();
     } catch (err: any) {
       const errorMessage =
         err?.data?.errors?.map((e: any) => e.message).join(", ") ||
