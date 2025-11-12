@@ -12,7 +12,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
       }),
       providesTags: ['Chapter'],
     }),
-    
+
     // Get units with questions for a specific unit
     getUnitsWithQuestions: builder.query({
       query: ({ unitId }: { unitId: string }) => ({
@@ -21,7 +21,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
       }),
       providesTags: ['Unit'],
     }),
-    
+
     // Create chapter
     createChapter: builder.mutation({
       query: ({ body }: { body: { title: string; courseId: number } }) => ({
@@ -31,7 +31,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Chapter'],
     }),
-    
+
     // Update chapter
     updateChapter: builder.mutation({
       query: ({ id, body }: { id: number; body: { title: string; courseId: number } }) => ({
@@ -41,7 +41,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Chapter'],
     }),
-    
+
     // Delete chapter
     deleteChapter: builder.mutation({
       query: ({ id }: { id: number }) => ({
@@ -50,7 +50,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Chapter'],
     }),
-    
+
     // Create unit
     createUnit: builder.mutation({
       query: ({ body }: { body: { title: string; content: string; chapterId: number } }) => ({
@@ -58,9 +58,9 @@ export const chapterApiSlice = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Unit'],
+      invalidatesTags: ['Unit', 'Chapter'], // Also invalidate Chapter since units are part of chapters
     }),
-    
+
     // Update unit
     updateUnit: builder.mutation({
       query: ({ id, body }: { id: number; body: { title: string; content: string; chapterId: number } }) => ({
@@ -70,7 +70,7 @@ export const chapterApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Unit'],
     }),
-    
+
     // Delete unit
     deleteUnit: builder.mutation({
       query: ({ id }: { id: number }) => ({
