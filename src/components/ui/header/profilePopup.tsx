@@ -96,10 +96,14 @@ const ProfileCenterPopup = () => {
           cursor: "pointer",
           width: 42,
           height: 42,
-          bgcolor: theme.palette.primary.main,
+          background: "linear-gradient(to right, #ef4444, #ec4899)",
           color: "#fff",
           fontWeight: 600,
           fontSize: "1rem",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            background: "linear-gradient(to right, #dc2626, #db2777)",
+          },
         }}
       >
         RS
@@ -156,8 +160,8 @@ const ProfileCenterPopup = () => {
               sx={{
                 width: 70,
                 height: 70,
-                bgcolor: theme.palette.primary.light,
-                color: theme.palette.primary.main,
+                background: "linear-gradient(to right, #ef4444, #ec4899)",
+                color: "#fff",
                 fontSize: "1.5rem",
                 fontWeight: 600,
                 mb: 1.5,
@@ -213,7 +217,6 @@ const ProfileCenterPopup = () => {
           {/* Sign Out Button */}
           <Button
             variant="contained"
-            color="error"
             startIcon={<LogoutRoundedIcon />}
             onClick={() => {
               localStorage.clear();
@@ -225,6 +228,15 @@ const ProfileCenterPopup = () => {
               fontWeight: 600,
               py: 1,
               borderRadius: 2,
+              background: "linear-gradient(to right, #ef4444, #ec4899)",
+              color: "#fff",
+              boxShadow: "0 2px 4px rgba(239, 68, 68, 0.3)",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                background: "linear-gradient(to right, #dc2626, #db2777)",
+                boxShadow: "0 4px 8px rgba(239, 68, 68, 0.4)",
+                transform: "translateY(-1px)",
+              },
             }}
           >
             Sign Out

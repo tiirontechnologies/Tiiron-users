@@ -21,7 +21,7 @@ import {
   ArrowUpward,
   Favorite,
   ArrowForward,
-  Map,
+  LocationOn,
   Chat,
   OpenInNew,
 } from "@mui/icons-material";
@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
       href: "https://www.youtube.com/@inacademic",
       label: "YouTube",
     },
-    { icon: <Map />, href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", label: "Location" },
+    { icon: <LocationOn />, href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", label: "Location" },
   ];
 
   const contactInfo = [
@@ -106,7 +106,7 @@ const Footer: React.FC = () => {
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Box
           sx={{
-            background: "linear-gradient(to right, #334155, #0f172a)",
+            background: "linear-gradient(to right, #1e293b, #0f172a)",
             borderRadius: 3,
             border: "1px solid #475569",
             p: { xs: 2, md: 3 },
@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
               variant="h5"
               sx={{
                 color: "#fff",
-                fontWeight: 700,
+                fontWeight: 600,
                 mb: 0.5,
                 fontSize: { xs: "1.1rem", md: "1.25rem" },
               }}
@@ -132,7 +132,7 @@ const Footer: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                color: "#969696",
+                color: "#9ca3af",
                 fontSize: { xs: "0.875rem", md: "0.9375rem" },
               }}
             >
@@ -160,30 +160,35 @@ const Footer: React.FC = () => {
               variant="outlined"
               required
               sx={{
-                flex: 1,
-                minWidth: { xs: "100%", sm: 200 },
+                minWidth: 0,
+                flex: { xs: 1, sm: "none" },
                 "& .MuiOutlinedInput-root": {
+                  px: 2,
+                  py: 1,
                   borderRadius: 2,
-                  backgroundColor: "#f3f4f6",
-                  color: "#1f2937",
-                  border: "1px solid #d1d5db",
+                  backgroundColor: "#1e293b",
+                  border: "1px solid #4b5563",
+                  transition: "all 0.2s ease",
                   "& fieldset": {
-                    borderColor: "#d1d5db",
+                    borderColor: "#4b5563",
                   },
                   "&:hover fieldset": {
-                    borderColor: "#9ca3af",
+                    borderColor: "#4b5563",
                   },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#dc2626",
+                  "&.Mui-focused": {
+                    outline: "none",
+                    boxShadow: "0 0 0 2px rgba(56, 189, 248, 0.2)",
+                    "& fieldset": {
+                      borderColor: "#38bdf8",
+                    },
                   },
                 },
-                input: {
-                  color: "#1f2937",
-                  py: 1.25,
-                  fontSize: { xs: "0.875rem", md: "0.9375rem" },
+                "& .MuiOutlinedInput-input": {
+                  color: "#d1d5db",
+                  py: 0,
                 },
                 "& .MuiInputBase-input::placeholder": {
-                  color: "#6b7280",
+                  color: "#9ca3af",
                   opacity: 1,
                 },
               }}
@@ -194,7 +199,8 @@ const Footer: React.FC = () => {
               endIcon={<ArrowForward />}
               sx={{
                 borderRadius: 2,
-                backgroundColor: "#dc2626",
+                background: "linear-gradient(to right, #dc2626, #db2777)",
+                boxShadow: "0 4px 12px rgba(220, 38, 38, 0.4)",
                 color: "white",
                 px: { xs: 2, md: 3 },
                 py: 1.25,
@@ -203,8 +209,14 @@ const Footer: React.FC = () => {
                 whiteSpace: "nowrap",
                 width: { xs: "100%", sm: "auto" },
                 fontSize: { xs: "0.875rem", md: "0.9375rem" },
+                cursor: "pointer",
+                transition: "all 0.2s",
                 "&:hover": {
-                  backgroundColor: "#b91c1c",
+                  background: "linear-gradient(to right, #b91c1c, #be185d)",
+                },
+                "&:focus": {
+                  outline: "none",
+                  boxShadow: "0 0 0 4px rgba(220, 38, 38, 0.3)",
                 },
               }}
             >
@@ -215,7 +227,7 @@ const Footer: React.FC = () => {
       </Container>
 
       {/* Main Footer Content */}
-      <Container maxWidth="lg" sx={{ pb: { xs: 4, md: 6 } }}>
+      <Container maxWidth="lg" sx={{ pb: { xs: 4, md: 5 } }}>
         <Grid container spacing={{ xs: 4, md: 6 }}>
           {/* Brand Info */}
           <Grid item xs={12} md={4}>
@@ -232,13 +244,13 @@ const Footer: React.FC = () => {
                   "&:hover": { transform: "scale(1.05)" },
                 }}
               />
-              <Box sx={{ color: "#969696" }}>
-                <Typography
+              <Box sx={{ color: "#9ca3af" }}>
+                <Typography variant="body2"
                   sx={{
                     mb: 2,
                     fontSize: { xs: 14, md: 15 },
                     lineHeight: 1.6,
-                    color: "#969696",
+                    color: "#9ca3af",
                   }}
                 >
                   We help educators deliver interactive learning and real-time practice.
@@ -251,11 +263,12 @@ const Footer: React.FC = () => {
                   <Link
                     key={i}
                     href={item.href}
+                    variant="body2"
                     sx={{
                       display: "inline-flex",
                       alignItems: "center",
                       gap: 1,
-                      color: "#969696",
+                      color: "#9ca3af",
                       fontSize: { xs: "13px", md: "14px" },
                       textDecoration: "none",
                       transition: "color 0.2s",
@@ -265,7 +278,7 @@ const Footer: React.FC = () => {
                     <Box sx={{ display: "flex", alignItems: "center", fontSize: { xs: "16px", md: "18px" }, color: "inherit" }}>
                       {item.icon}
                     </Box>
-                    <Typography component="span" sx={{ color: "inherit", fontSize: "inherit" }}>
+                    <Typography variant="body2" component="span" sx={{ color: "inherit", fontSize: "inherit" }}>
                       {item.text}
                     </Typography>
                   </Link>
@@ -290,7 +303,7 @@ const Footer: React.FC = () => {
                   href={link.href}
                   sx={{
                     display: "block",
-                    color: "#969696",
+                    color: "#9ca3af",
                     mb: 1.2,
                     fontSize: { xs: "0.8125rem", md: "14px" },
                     textDecoration: "none",
@@ -309,7 +322,7 @@ const Footer: React.FC = () => {
             <Typography
               variant="subtitle2"
               sx={{
-                color: "white",
+                color: "#fff",
                 mb: 2,
                 fontWeight: 600,
                 fontSize: { xs: "0.875rem", md: "0.9375rem" },
