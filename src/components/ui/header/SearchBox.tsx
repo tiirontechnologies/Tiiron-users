@@ -132,7 +132,9 @@ const SearchBox = () => {
       ref={searchBoxRef}
       sx={{
         position: "relative",
-        minWidth: { xs: "230px", sm: "200px", md: "200px", lg: "516px" },
+        width: "100%",
+        minWidth: 0,
+        maxWidth: "100%",
       }}
     >
       <TextField
@@ -151,11 +153,12 @@ const SearchBox = () => {
           width: "100%",
           "& .MuiOutlinedInput-root": {
             background: "#fff",
-            borderRadius: "12px",
-            padding: "10px",
+            borderRadius: { xs: "8px", sm: "10px" },
+            padding: { xs: "4px", sm: "6px" },
+            height: { xs: "40px", sm: "44px" },
             "& fieldset": {
               border: "1px solid rgba(230, 230, 230, 1)",
-              borderRadius: "12px",
+              borderRadius: { xs: "8px", sm: "10px" },
               overflow: "hidden",
             },
             "&:hover fieldset": {
@@ -164,13 +167,21 @@ const SearchBox = () => {
             "&.Mui-focused fieldset": {
               borderColor: "rgba(106, 66, 171, 1)",
             },
+            "& .MuiInputBase-input": {
+              padding: { xs: "6px 10px", sm: "8px 12px" },
+              fontSize: { xs: "13px", sm: "14px" },
+            },
             "& .MuiInputBase-input::placeholder": {
               color: "rgba(158, 158, 158, 1)",
               opacity: 1,
-              fontSize: "14px",
+              fontSize: { xs: "13px", sm: "14px" },
             },
-            "& .MuiInputAdornment-root svg": {
-              color: "rgba(158, 158, 158, 1)",
+            "& .MuiInputAdornment-root": {
+              padding: { xs: "0 6px", sm: "0 8px" },
+              "& svg": {
+                color: "rgba(158, 158, 158, 1)",
+                fontSize: { xs: "18px", sm: "20px" },
+              },
             },
           },
         }}

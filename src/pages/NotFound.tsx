@@ -90,6 +90,7 @@ const NotFound = () => {
           position: "relative",
           zIndex: 2,
           py: { xs: 4, md: 6 },
+          pb: { md: 0 },
         }}
       >
         <Stack spacing={3} alignItems="center" textAlign="center" sx={{ width: "100%" }}>
@@ -123,7 +124,7 @@ const NotFound = () => {
                   "linear-gradient(135deg, #2563eb 0%, #7c3aed 45%, #0ea5e9 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                mb: 1,
+                mb: 0,
               }}
             >
               404
