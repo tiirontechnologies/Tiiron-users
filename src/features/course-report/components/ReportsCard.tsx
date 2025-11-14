@@ -42,17 +42,17 @@ const ReportsCard: React.FC<ReportsCardProps> = ({ item }) => {
       </Box>
       <Box sx={{ minWidth: 0, flex: 1 }}>
         <Typography
-          sx={{ 
-            color: "#000000", 
-            fontSize: { xs: "20px", md: "24px" }, 
+          sx={{
+            color: "#000000",
+            fontSize: { xs: "20px", md: "24px" },
             fontWeight: "600",
             lineHeight: 1.2
           }}
         >
           {item.value}
         </Typography>
-        <Typography sx={{ 
-          color: "#666666", 
+        <Typography sx={{
+          color: "#666666",
           fontSize: { xs: "14px", md: "16px" },
           mt: 0.5
         }}>

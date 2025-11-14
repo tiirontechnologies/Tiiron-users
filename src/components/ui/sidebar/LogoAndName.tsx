@@ -1,5 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
-import Logo from "@images/Logo.png";
+import { Box, IconButton } from "@mui/material";
 import BackArrowIcon from "@icons/BackArrowIcon";
 
 const LogoAndName = ({
@@ -7,8 +6,12 @@ const LogoAndName = ({
   open,
 }: {
   toggleMenu: () => void;
-  open: Boolean;
+  open: boolean;
 }) => {
+  const logoSrc = open ? "/Tiiron_logo.png" : "/Tiiron_Taksbar_Img.png";
+  const logoAlt = open ? "Tiiron logo" : "Tiiron collapsed logo";
+  const logoWidth = open ? "130px" : "32px";
+
   return (
     <Box
       sx={{
@@ -17,25 +20,35 @@ const LogoAndName = ({
         justifyContent: "space-between",
         p: 2,
         flexWrap: "wrap",
-        columnGap: open ? 0 : 2, // Add gap when closed
+        columnGap: open ? 0 : 2,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Box>
-          <img
-            width="34px"
-            // src="https://tse4.mm.bing.net/th?id=OIP.TnYFKDEPAjSaLeYiD4Np3QHaHa&pid=Api&P=0&h=180"
-            src={Logo}
-            alt="logo"
-          />
-        </Box>
-        {open ? <Typography>Logo</Typography> : null}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: open ? "flex-start" : "center",
+          width: open ? "auto" : "100%",
+        }}
+      >
+        <Box
+          component="img"
+          src={logoSrc}
+          alt={logoAlt}
+          sx={{
+            width: logoWidth,
+            height: "auto",
+            objectFit: "contain",
+            transition: "width 0.3s ease",
+          }}
+        />
       </Box>
       <IconButton
         onClick={toggleMenu}
         sx={{
           transform: open ? "rotate(0deg)" : "rotate(180deg)",
           transition: "transform 0.3s ease-in-out",
+          marginLeft: "8px",
         }}
       >
         <BackArrowIcon />

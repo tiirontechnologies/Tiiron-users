@@ -109,6 +109,11 @@ const Navbar = () => {
           desc: "Explore our course catalog",
           href: "/learner/browse-courses",
         },
+        {
+          name: "Tiiron Business",
+          desc: "AI-powered learning solutions",
+          href: "https://tiiron-for-busines",
+        },
       ],
     },
     {
@@ -545,7 +550,7 @@ const Navbar = () => {
                         Login
                       </Link>
                       <Link
-                        to="/organization/create-account"
+                        to="/sign-up"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -989,7 +994,7 @@ const Navbar = () => {
                     Login
                   </Link>
                   <Link
-                    to="/organization/create-account"
+                    to="/sign-up"
                     onClick={closeMobileMenu}
                     style={{
                       padding: "0.75rem 1.5rem",

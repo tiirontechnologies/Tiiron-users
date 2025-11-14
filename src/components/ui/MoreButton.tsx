@@ -40,29 +40,31 @@ const MoreButton = () => {
         <Button
           variant="outlined"
           sx={{
-            width: "84px", // ✅ fixed width
-            height: "48px", // ✅ match select/button height
-            padding: "12px 0px", // center the icon vertically
-            color: "white",
-            border: "1px solid #6A42AB",
-            borderRadius: "8px",
-            minWidth: "unset", // removes MUI's default min width
-            backgroundColor: "transparent",
+            width: "40px",
+            height: "40px",
+            minWidth: "40px",
+            padding: "0px",
+            color: "#475467",
+            border: "1px solid rgba(148, 163, 184, 0.4)",
+            borderRadius: "12px",
+            backgroundColor: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transition: "all 0.2s ease",
             "&:hover": {
-              border: "1px solid #6A42AB",
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
+              borderColor: "#6A42AB",
+              color: "#6A42AB",
+              boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
+              backgroundColor: "rgba(106, 66, 171, 0.04)",
             },
             "&:focus": {
               outline: "none",
-              boxShadow: "none",
-            },
-            "&:active": {
-              border: "1px solid #6A42AB",
-              boxShadow: "none",
+              boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
             },
           }}
         >
-          <MoreHorizIcon sx={{ color: "#6A42AB" }} />
+          <MoreHorizIcon sx={{ color: "inherit", fontSize: "1.25rem" }} />
         </Button>
       }
       content={

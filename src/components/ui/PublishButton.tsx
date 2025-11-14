@@ -13,11 +13,12 @@ const PublishButton = () => {
         <Box
           sx={{
             width: "fit-content",
-            maxWidth: "547px",
+            maxWidth: "420px",
+            padding: "16px",
           }}
         >
           <Typography
-            sx={{ color: "#000000", fontSize: "20px", fontWeight: 600 }}
+            sx={{ color: "#000000", fontSize: "18px", fontWeight: 600 }}
           >
             Publish Setting
           </Typography>
@@ -25,8 +26,8 @@ const PublishButton = () => {
             sx={{
               borderRadius: "8px",
               border: "1px solid #CCCCCC",
-              mt: "24px",
-              p: "16px",
+              mt: "16px",
+              p: "12px",
             }}
           >
             <SingleRadioButton
@@ -36,29 +37,29 @@ const PublishButton = () => {
               checked={true}
               onChange={(e) => setSubscribe(e.target.value)}
               formStyles={{
-                height: "28px",
+                height: "24px",
               }}
             />
-            <Box sx={{ ml: 4 }}>
-              <Typography sx={{ fontSize: "14px", color: "#666666" }}>
+            <Box sx={{ ml: 3 }}>
+              <Typography sx={{ fontSize: "13px", color: "#666666" }}>
                 All hub users can access this course and enroll themselves
               </Typography>
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
-                  mt: "16px",
+                  gap: "8px",
+                  mt: "12px",
                 }}
               >
-                <Typography sx={{ fontWeight: "500", color: "#333333" }}>
+                <Typography sx={{ fontWeight: "500", color: "#333333", fontSize: "13px" }}>
                   Needs Admin Approval{" "}
                 </Typography>
 
-                <IOSSwitch checked={false} onChange={() => {}} size="small" />
+                <IOSSwitch checked={false} onChange={() => { }} size="small" />
               </Box>
             </Box>
-            <Box sx={{ mt: "32px" }}>
+            <Box sx={{ mt: "20px" }}>
               <SingleRadioButton
                 label="Added Learners Only"
                 value="yes"
@@ -66,23 +67,42 @@ const PublishButton = () => {
                 checked={true}
                 onChange={(e) => setSubscribe(e.target.value)}
                 formStyles={{
-                  height: "28px",
+                  height: "24px",
                 }}
               />
-              <Typography sx={{ fontSize: "14px", color: "#666666", ml: 4 }}>
+              <Typography sx={{ fontSize: "13px", color: "#666666", ml: 3 }}>
                 All hub users can access this course and enroll themselves
               </Typography>
             </Box>
           </Box>
-          <Button sx={{ mt: "24px" }}>Publish</Button>
+          <Button sx={{ mt: "16px" }}>Publish</Button>
         </Box>
       }
       trigger={
         <Button
+          variant="outlined"
           endIcon={<KeyboardArrowDownRoundedIcon />}
           sx={{
-            padding: "12px 32px",
-            height: "48px",
+            padding: "10px 24px",
+            height: "40px",
+            borderRadius: "12px",
+            border: "1px solid rgba(148, 163, 184, 0.4)",
+            color: "#6A42AB",
+            backgroundColor: "#fff",
+            textTransform: "none",
+            fontWeight: 500,
+            fontSize: "0.95rem",
+            transition: "all 0.2s ease",
+            "&:hover": {
+              borderColor: "#6A42AB",
+              color: "#6A42AB",
+              boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
+              backgroundColor: "rgba(106, 66, 171, 0.04)",
+            },
+            "&:focus": {
+              outline: "none",
+              boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
+            },
           }}
         >
           Publish

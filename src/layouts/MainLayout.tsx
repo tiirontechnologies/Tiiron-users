@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Drawer, useMediaQuery, useTheme } from "@mui/material";
 import SidebarMenu from "../components/ui/sidebar/Sidebar";
 import LogoAndName from "../components/ui/sidebar/LogoAndName";
@@ -16,6 +16,9 @@ const MainLayout = () => {
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const [headerHeight, setHeaderHeight] = useState(106);
+  const HEADER_CONTENT_GAP = 16;
 
   const handleToggleDesktopMenu = () => setDesktopOpen((prev) => !prev);
   const handleToggleMobileMenu = () => setMobileOpen((prev) => !prev);
@@ -25,6 +28,25 @@ const MainLayout = () => {
     setDesktopOpen(false);
     setMobileOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+
+    const updateHeight = () => {
+      if (headerRef.current) {
+        setHeaderHeight(headerRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight();
+
+    const resizeObserver = new ResizeObserver(() => updateHeight());
+    resizeObserver.observe(headerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -93,6 +115,7 @@ const MainLayout = () => {
         }}
       >
         <Box
+          ref={headerRef}
           sx={{
             position: "fixed",
             top: 0,
@@ -124,7 +147,7 @@ const MainLayout = () => {
           sx={{
             flexGrow: 1,
             // padding: 2,
-            marginTop: "106px", // same as header height
+            marginTop: `${Math.max(headerHeight - HEADER_CONTENT_GAP, 0)}px`,
             overflow: "auto",
             background: "rgba(241, 242, 244, 1)",
           }}
