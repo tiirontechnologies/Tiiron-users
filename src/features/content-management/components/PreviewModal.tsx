@@ -259,9 +259,8 @@ export function PreviewModal({
             Preview Generated Content
           </Typography>
           <Chip
-            label={`${questions.length} ${
-              questions.length === 1 ? "Item" : "Items"
-            }`}
+            label={`${questions.length} ${questions.length === 1 ? "Item" : "Items"
+              }`}
             size="small"
             color="primary"
           />
@@ -355,7 +354,7 @@ export function PreviewModal({
                       color="error"
                       onClick={() => handleDelete(index)}
                     >
-                      <DeleteIcon fontSize="small" />
+                      <DeleteIcon width={16} height={18} />
                     </IconButton>
                   </Box>
                 </Box>
