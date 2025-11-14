@@ -56,7 +56,7 @@ export function CustomTabs({ tabs, panels }: CustomTabsProps) {
             background: "#fff",
             borderRadius: "16px",
             width: "fit-content",
-            p: "20px",
+            p: "0px 20px",
             "& .MuiTabs-indicator": {
               height: "3px",
               borderRadius: "24px",
