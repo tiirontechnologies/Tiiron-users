@@ -11,6 +11,14 @@ interface CoursesProps {
   onCourseClick?: (courseId: number) => void;
 }
 
+const PAGE_LAYOUT_SX = {
+  width: "100%",
+  maxWidth: "1440px",
+  mx: "auto",
+  px: { xs: 3, sm: 5, md: 10, lg: 15 },
+  py: { xs: 3, md: 4 },
+};
+
 export default function Courses({ onCourseClick }: CoursesProps) {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
@@ -78,7 +86,7 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   };
 
   return (
-    <Box sx={{ padding: "24px" }}>
+    <Box sx={PAGE_LAYOUT_SX}>
       <PageToolbarLayout title="My Courses">
         {fetchingEnrollments ? (
           <Loader />

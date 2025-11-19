@@ -9,6 +9,14 @@ import {
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
 
+const PAGE_LAYOUT_SX = {
+  width: "100%",
+  maxWidth: "1440px",
+  mx: "auto",
+  px: { xs: 3, sm: 5, md: 10, lg: 15 },
+  py: { xs: 3, md: 4 },
+};
+
 export default function Courses() {
   const queryArgs = { limit: 10, page: 1 };
 
@@ -35,7 +43,7 @@ export default function Courses() {
   const courses: ICourse[] = typedBrowseData?.data?.courses || [];
 
   return (
-    <Box sx={{ padding: "24px" }}>
+    <Box sx={PAGE_LAYOUT_SX}>
       <PageToolbarLayout title="Browse Courses">
         {fetchingBrowse ? (
           <Loader />

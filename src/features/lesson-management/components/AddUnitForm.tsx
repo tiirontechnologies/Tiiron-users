@@ -9,6 +9,7 @@ import { useSnackbar } from '@components/ui';
 interface AddUnitFormProps {
     chapterId: number;
     onClose: () => void;
+    onUnitAdded?: () => void;
 }
 
 interface UnitFormData {
@@ -19,6 +20,7 @@ interface UnitFormData {
 export const AddUnitForm: React.FC<AddUnitFormProps> = ({
     chapterId,
     onClose,
+    onUnitAdded,
 }) => {
     const { showSnackbar } = useSnackbar();
     const [createUnit, { isLoading }] = useCreateUnitMutation();
@@ -42,6 +44,8 @@ export const AddUnitForm: React.FC<AddUnitFormProps> = ({
             showSnackbar({ message: response?.message || "Unit created successfully", severity: "success" });
             reset();
             onClose();
+            // Notify parent component that a unit was added
+            onUnitAdded?.();
         } catch (err: any) {
             const errorMessage =
                 err?.data?.errors?.map((e: any) => e.message).join(", ") ||

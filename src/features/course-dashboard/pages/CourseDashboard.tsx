@@ -91,6 +91,46 @@ import { exportCSV } from "../utils/helpers";
  * ============================== */
 function StatCard({ label, value, suffix }: KPI) {
   const theme = useTheme();
+
+  // Color mapping for different KPIs
+  const getCardColors = (label: string) => {
+    if (label.includes("Enrolled")) {
+      return {
+        bg: "linear-gradient(135deg, #667EEA 0%, #764BA2 100%)",
+        border: "#667EEA",
+        iconBg: "#EEF2FF",
+      };
+    }
+    if (label.includes("Completion")) {
+      return {
+        bg: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+        border: "#10B981",
+        iconBg: "#D1FAE5",
+      };
+    }
+    if (label.includes("Revenue")) {
+      return {
+        bg: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
+        border: "#F59E0B",
+        iconBg: "#FEF3C7",
+      };
+    }
+    if (label.includes("Completed")) {
+      return {
+        bg: "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
+        border: "#3B82F6",
+        iconBg: "#DBEAFE",
+      };
+    }
+    return {
+      bg: "linear-gradient(135deg, #6A42AB 0%, #5B3A94 100%)",
+      border: "#6A42AB",
+      iconBg: "#F3E8FF",
+    };
+  };
+
+  const colors = getCardColors(label);
+
   return (
     <Card
       sx={{
@@ -98,18 +138,36 @@ function StatCard({ label, value, suffix }: KPI) {
         borderRadius: 3,
         overflow: "hidden",
         position: "relative",
+        border: `1px solid ${colors.border}20`,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+        transition: "transform 0.2s, box-shadow 0.2s",
+        "&:hover": {
+          transform: "translateY(-2px)",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
+        },
       }}
     >
       <Box
         sx={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(135deg, ${theme.palette.primary.main}10, ${theme.palette.primary.light}05)`,
+          background: colors.bg,
+          opacity: 0.1,
           pointerEvents: "none",
         }}
       />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
+      <CardContent sx={{ position: "relative", p: 3 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "#64748B",
+            fontWeight: 600,
+            fontSize: "12px",
+            textTransform: "uppercase",
+            letterSpacing: "0.5px",
+            mb: 1.5,
+          }}
+        >
           {label}
         </Typography>
         <Stack
@@ -118,15 +176,38 @@ function StatCard({ label, value, suffix }: KPI) {
           spacing={1}
           sx={{ mt: 0.5 }}
         >
-          <Typography variant="h4" fontWeight={800}>
+          <Typography
+            variant="h4"
+            fontWeight={800}
+            sx={{
+              color: "#1E293B",
+              fontSize: { xs: "28px", md: "32px" },
+            }}
+          >
             {value}
           </Typography>
           {suffix && (
-            <Typography variant="caption" color="text.secondary">
+            <Typography
+              variant="caption"
+              sx={{
+                color: "#94A3B8",
+                fontWeight: 500,
+                fontSize: "12px",
+              }}
+            >
               {suffix}
             </Typography>
           )}
         </Stack>
+        <Box
+          sx={{
+            mt: 2,
+            width: 40,
+            height: 4,
+            borderRadius: 2,
+            background: colors.bg,
+          }}
+        />
       </CardContent>
     </Card>
   );
@@ -136,17 +217,39 @@ function StatMini({ title, value }: { title: string; value: React.ReactNode }) {
   return (
     <Box
       sx={{
-        p: 2,
+        p: 2.5,
         borderRadius: 2,
-        bgcolor: "background.default",
-        border: "1px solid",
-        borderColor: "divider",
+        bgcolor: "#FFFFFF",
+        border: "1px solid #E2E8F0",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+        transition: "all 0.2s",
+        "&:hover": {
+          borderColor: "#6A42AB",
+          boxShadow: "0 2px 6px rgba(106, 66, 171, 0.1)",
+        },
       }}
     >
-      <Typography variant="caption" color="text.secondary">
+      <Typography
+        variant="caption"
+        sx={{
+          color: "#64748B",
+          fontWeight: 600,
+          fontSize: "11px",
+          textTransform: "uppercase",
+          letterSpacing: "0.5px",
+        }}
+      >
         {title}
       </Typography>
-      <Typography variant="h6" fontWeight={800}>
+      <Typography
+        variant="h6"
+        fontWeight={700}
+        sx={{
+          color: "#1E293B",
+          mt: 0.5,
+          fontSize: "18px",
+        }}
+      >
         {value}
       </Typography>
     </Box>
@@ -368,25 +471,23 @@ export default function CourseDashboard() {
   return (
     <Box
       sx={{
-        bgcolor: (t) => t.palette.background.default,
-        minHeight: "100vh",
-        pb: 12,
+        bgcolor: "#F8FAFC",
+        minHeight: "100%",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        marginTop: "-15px",
       }}
     >
-      {/* Hero */}
+      {/* Header */}
       <Box
         sx={{
-          py: 3,
-          borderBottom: "1px solid",
-          borderColor: "divider",
-          bgcolor: "background.paper",
-          position: "sticky",
-          top: 0,
-          zIndex: 10,
-          backdropFilter: "saturate(180%) blur(6px)",
+          bgcolor: "#FFFFFF",
+          borderBottom: "2px solid #E2E8F0",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
         }}
       >
-        <Container maxWidth="lg">
+        <Box sx={{ px: { xs: 2, sm: 3, md: 4 }, py: 3 }}>
           <Stack
             direction={{ xs: "column", md: "row" }}
             spacing={2}
@@ -395,9 +496,13 @@ export default function CourseDashboard() {
           >
             <Box>
               <Typography
-                variant={isMdUp ? "h4" : "h5"}
-                fontWeight={900}
-                letterSpacing={-0.5}
+                variant={isMdUp ? "h5" : "h6"}
+                fontWeight={700}
+                sx={{
+                  color: "#1E293B",
+                  mb: 1,
+                  fontSize: { xs: "20px", md: "24px" },
+                }}
               >
                 {header.title}
               </Typography>
@@ -405,65 +510,146 @@ export default function CourseDashboard() {
                 direction="row"
                 spacing={1}
                 alignItems="center"
-                sx={{ mt: 0.5, flexWrap: "wrap" }}
+                sx={{ flexWrap: "wrap", gap: 1 }}
               >
-                <Chip size="small" label={`Course ID: ${header.id}`} />
-                <Chip size="small" label={`Category: ${header.category}`} />
-                <Chip size="small" label={`Instructor: ${header.instructor}`} />
+                <Chip
+                  size="small"
+                  label={`Course ID: ${header.id}`}
+                  sx={{
+                    bgcolor: "#EEF2FF",
+                    color: "#4F46E5",
+                    fontWeight: 600,
+                    fontSize: "11px",
+                  }}
+                />
+                <Chip
+                  size="small"
+                  label={`Category: ${header.category}`}
+                  sx={{
+                    bgcolor: "#F0FDF4",
+                    color: "#16A34A",
+                    fontWeight: 600,
+                    fontSize: "11px",
+                  }}
+                />
+                <Chip
+                  size="small"
+                  label={`Instructor: ${header.instructor}`}
+                  sx={{
+                    bgcolor: "#FEF3C7",
+                    color: "#D97706",
+                    fontWeight: 600,
+                    fontSize: "11px",
+                  }}
+                />
               </Stack>
             </Box>
 
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <StarRounded sx={{ color: "#FFB400" }} />
-              <Typography variant="h6" fontWeight={800}>
-                {header.rating.toFixed(1)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                ({header.reviews} reviews)
-              </Typography>
+            <Stack direction="row" alignItems="center" spacing={1.5}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  bgcolor: "#FFFBEB",
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
+                  border: "1px solid #FDE68A",
+                }}
+              >
+                <StarRounded sx={{ color: "#F59E0B", fontSize: 20 }} />
+                <Typography variant="h6" fontWeight={700} sx={{ color: "#92400E" }}>
+                  {header.rating.toFixed(1)}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "#78350F", fontSize: "12px" }}
+                >
+                  ({header.reviews} reviews)
+                </Typography>
+              </Box>
               <Button
                 endIcon={<ArrowOutwardRounded />}
-                sx={{ ml: 1 }}
                 variant="contained"
+                sx={{
+                  bgcolor: "#6A42AB",
+                  "&:hover": { bgcolor: "#5B3A94" },
+                  textTransform: "none",
+                  fontWeight: 600,
+                  px: 2.5,
+                }}
               >
                 View Reviews
               </Button>
             </Stack>
           </Stack>
-        </Container>
+        </Box>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
+      {/* Main Content */}
+      <Box sx={{ flex: 1, px: { xs: 2, sm: 3, md: 4 }, py: 3 }}>
         {/* KPI Row */}
-        <Grid container spacing={2}>
-          {kpis.map((k) => (
-            <Grid item xs={12} sm={6} md={3} key={k.label}>
-              <StatCard {...k} />
-            </Grid>
-          ))}
-        </Grid>
+        <Box sx={{ mb: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              color: "#1E293B",
+              fontWeight: 700,
+              mb: 2,
+              fontSize: "18px",
+            }}
+          >
+            Key Performance Indicators
+          </Typography>
+          <Grid container spacing={2.5}>
+            {kpis.map((k) => (
+              <Grid item xs={12} sm={6} md={3} key={k.label}>
+                <StatCard {...k} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
         {/* Overview + Analytics top */}
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={2.5} sx={{ mb: 3, mt: 0 }}>
           {/* Course Overview with ring */}
           <Grid item xs={12} md={7}>
-            <Card sx={{ borderRadius: 3 }}>
+            <Card
+              sx={{
+                borderRadius: 3,
+                border: "1px solid #E2E8F0",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                bgcolor: "#FFFFFF",
+              }}
+            >
               <CardHeader
                 action={
-                  <IconButton size="small">
+                  <IconButton size="small" sx={{ color: "#64748B" }}>
                     <MoreVertRounded />
                   </IconButton>
                 }
                 title={
-                  <Typography variant="h6" fontWeight={800}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ color: "#1E293B", fontSize: "16px" }}
+                  >
                     Overall Completion Rate
                   </Typography>
                 }
                 subheader={
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#64748B", fontSize: "12px", mt: 0.5 }}
+                  >
                     Live cohort performance
                   </Typography>
                 }
+                sx={{
+                  borderBottom: "1px solid #F1F5F9",
+                  pb: 2,
+                }}
               />
               <CardContent>
                 <Grid container spacing={2}>
@@ -493,23 +679,42 @@ export default function CourseDashboard() {
 
           {/* Small analytics card */}
           <Grid item xs={12} md={5}>
-            <Card sx={{ borderRadius: 3, height: "100%" }}>
+            <Card
+              sx={{
+                borderRadius: 3,
+                height: "100%",
+                border: "1px solid #E2E8F0",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                bgcolor: "#FFFFFF",
+              }}
+            >
               <CardHeader
                 action={
-                  <IconButton size="small">
+                  <IconButton size="small" sx={{ color: "#64748B" }}>
                     <MoreVertRounded />
                   </IconButton>
                 }
                 title={
-                  <Typography variant="h6" fontWeight={800}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ color: "#1E293B", fontSize: "16px" }}
+                  >
                     Analytics
                   </Typography>
                 }
                 subheader={
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#64748B", fontSize: "12px", mt: 0.5 }}
+                  >
                     Distribution & engagement
                   </Typography>
                 }
+                sx={{
+                  borderBottom: "1px solid #F1F5F9",
+                  pb: 2,
+                }}
               />
               <CardContent>
                 <Grid container spacing={2}>
@@ -558,16 +763,31 @@ export default function CourseDashboard() {
         </Grid>
 
         {/* Learners + Drop-off */}
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={2.5} sx={{ mb: 3 }}>
           {/* Learners Table */}
           <Grid item xs={12} md={8}>
-            <Card sx={{ borderRadius: 3 }}>
+            <Card
+              sx={{
+                borderRadius: 3,
+                border: "1px solid #E2E8F0",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                bgcolor: "#FFFFFF",
+              }}
+            >
               <CardHeader
                 title={
-                  <Typography variant="h6" fontWeight={800}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ color: "#1E293B", fontSize: "16px" }}
+                  >
                     Learners ({learners.length})
                   </Typography>
                 }
+                sx={{
+                  borderBottom: "1px solid #F1F5F9",
+                  pb: 2,
+                }}
                 action={
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
                     <TextField
@@ -587,6 +807,16 @@ export default function CourseDashboard() {
                       variant="outlined"
                       startIcon={<DownloadRounded />}
                       onClick={() => exportCSV(filteredLearners)}
+                      sx={{
+                        borderColor: "#CBD5E1",
+                        color: "#475569",
+                        textTransform: "none",
+                        fontWeight: 600,
+                        "&:hover": {
+                          borderColor: "#6A42AB",
+                          bgcolor: "#F3E8FF",
+                        },
+                      }}
                     >
                       Export
                     </Button>
@@ -594,21 +824,44 @@ export default function CourseDashboard() {
                       variant="contained"
                       startIcon={<AddRounded />}
                       onClick={() => setAddOpen(true)}
+                      sx={{
+                        bgcolor: "#6A42AB",
+                        textTransform: "none",
+                        fontWeight: 600,
+                        "&:hover": { bgcolor: "#5B3A94" },
+                      }}
                     >
                       Add Learner
                     </Button>
                   </Stack>
                 }
               />
-              <CardContent>
+              <CardContent sx={{ p: 0 }}>
                 <TableContainer
                   component={Paper}
                   variant="outlined"
-                  sx={{ borderRadius: 2 }}
+                  sx={{
+                    borderRadius: 2,
+                    border: "none",
+                    boxShadow: "none",
+                  }}
                 >
                   <Table size="small">
                     <TableHead>
-                      <TableRow>
+                      <TableRow
+                        sx={{
+                          bgcolor: "#F8FAFC",
+                          "& th": {
+                            color: "#475569",
+                            fontWeight: 700,
+                            fontSize: "12px",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                            borderBottom: "2px solid #E2E8F0",
+                            py: 2,
+                          },
+                        }}
+                      >
                         <TableCell>Learner</TableCell>
                         <TableCell>Enrolled Date</TableCell>
                         <TableCell>Progress</TableCell>
@@ -618,7 +871,19 @@ export default function CourseDashboard() {
                     </TableHead>
                     <TableBody>
                       {filteredLearners.map((l) => (
-                        <TableRow key={l.id} hover>
+                        <TableRow
+                          key={l.id}
+                          hover
+                          sx={{
+                            "&:hover": {
+                              bgcolor: "#F8FAFC",
+                            },
+                            "& td": {
+                              borderBottom: "1px solid #F1F5F9",
+                              py: 2,
+                            },
+                          }}
+                        >
                           <TableCell>
                             <Stack
                               direction="row"
@@ -661,7 +926,26 @@ export default function CourseDashboard() {
                               <Chip
                                 label={`${l.progress}%`}
                                 size="small"
-                                color={l.progress === 100 ? "info" : "default"}
+                                sx={{
+                                  bgcolor:
+                                    l.progress === 100
+                                      ? "#DBEAFE"
+                                      : l.progress >= 70
+                                        ? "#D1FAE5"
+                                        : l.progress >= 40
+                                          ? "#FEF3C7"
+                                          : "#FEE2E2",
+                                  color:
+                                    l.progress === 100
+                                      ? "#1E40AF"
+                                      : l.progress >= 70
+                                        ? "#065F46"
+                                        : l.progress >= 40
+                                          ? "#92400E"
+                                          : "#991B1B",
+                                  fontWeight: 600,
+                                  fontSize: "11px",
+                                }}
                               />
                             </Stack>
                           </TableCell>
@@ -680,76 +964,246 @@ export default function CourseDashboard() {
 
           {/* Drop-off + Rating */}
           <Grid item xs={12} md={4}>
-            <Card sx={{ borderRadius: 3 }}>
-              <CardHeader
-                title={
-                  <Typography variant="h6" fontWeight={800}>
-                    Course Rating & Feedback
-                  </Typography>
-                }
-              />
-              <CardContent>
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  alignItems="center"
-                  sx={{ mt: 1 }}
+            <Card
+              sx={{
+                borderRadius: 3,
+                border: "1px solid #E2E8F0",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                bgcolor: "#FFFFFF",
+              }}
+            >
+
+              <CardContent sx={{ pt: 3, pb: 3 }}>
+                {/* Rating Section */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    pb: 3,
+                    mb: 3,
+                    borderBottom: "1px solid #F1F5F9",
+                  }}
                 >
-                  <StarRounded sx={{ color: "#FFB400" }} />
-                  <Typography variant="h5" fontWeight={900}>
-                    {analytics.rating.value.toFixed(1)}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    ({analytics.rating.reviews} reviews)
-                  </Typography>
-                </Stack>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                  Common Drop-off Points
-                </Typography>
-                <Box sx={{ height: 220 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={analytics.dropoff} barCategoryGap={8}>
-                      <XAxis dataKey="lesson" hide />
-                      <YAxis hide />
-                      <ReTooltip />
-                      <Bar dataKey="value" radius={[6, 6, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </Box>
-                <Stack spacing={1} sx={{ mt: 1 }}>
-                  {analytics.dropoff.map((d) => (
-                    <Stack
-                      key={d.lesson}
-                      direction="row"
-                      justifyContent="space-between"
+                  <Box>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#64748B",
+                        fontWeight: 500,
+                        fontSize: "12px",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        mb: 1,
+                      }}
                     >
-                      <Typography variant="caption" color="text.secondary">
-                        {d.lesson}
-                      </Typography>
-                      <Typography variant="caption" fontWeight={700}>
-                        {d.value}%
+                      Course Rating & Feedback
+                    </Typography>
+                  </Box>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    alignItems="center"
+                    divider={
+                      <Divider
+                        orientation="vertical"
+                        flexItem
+                        sx={{ borderColor: "#E2E8F0", height: 24 }}
+                      />
+                    }
+                  >
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="baseline"
+                    >
+                      <StarRounded
+                        sx={{
+                          color: "#F59E0B",
+                          fontSize: 20,
+                        }}
+                      />
+                      <Typography
+                        variant="h5"
+                        fontWeight={700}
+                        sx={{
+                          color: "#1E293B",
+                          fontSize: "28px",
+                          lineHeight: 1,
+                        }}
+                      >
+                        {analytics.rating.value.toFixed(1)}
                       </Typography>
                     </Stack>
-                  ))}
-                </Stack>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#64748B",
+                        fontSize: "13px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {analytics.rating.reviews} reviews
+                    </Typography>
+                  </Stack>
+                </Box>
+
+                {/* Drop-off Points Section */}
+                <Box>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      mb: 2.5,
+                      color: "#64748B",
+                      fontWeight: 600,
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    Common Drop-off Points
+                  </Typography>
+
+                  <Stack spacing={1.5}>
+                    {analytics.dropoff.map((d, index) => {
+                      const getColorScheme = (value: number) => {
+                        if (value >= 20)
+                          return {
+                            bg: "#FEF2F2",
+                            text: "#1E293B",
+                            bar: "#FCA5A5",
+                            border: "#FEE2E2",
+                          };
+                        if (value >= 15)
+                          return {
+                            bg: "#FFFBEB",
+                            text: "#1E293B",
+                            bar: "#FCD34D",
+                            border: "#FEF3C7",
+                          };
+                        return {
+                          bg: "#FFFBEB",
+                          text: "#1E293B",
+                          bar: "#FBBF24",
+                          border: "#FEF3C7",
+                        };
+                      };
+                      const colors = getColorScheme(d.value);
+                      return (
+                        <Box
+                          key={d.lesson}
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
+                            p: 2,
+                            borderRadius: 2,
+                            bgcolor: "#FFFFFF",
+                            border: `1px solid ${colors.border}`,
+                            transition: "all 0.2s ease",
+                            cursor: "pointer",
+                            "&:hover": {
+                              borderColor: "#6A42AB",
+                              bgcolor: "#F8FAFC",
+                              boxShadow: "0 2px 8px rgba(106, 66, 171, 0.08)",
+                              transform: "translateY(-1px)",
+                              "& .dropoff-text": {
+                                color: "#6A42AB",
+                              },
+                              "& .dropoff-percent": {
+                                color: "#6A42AB",
+                              },
+                            },
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              className="dropoff-text"
+                              sx={{
+                                color: colors.text,
+                                fontWeight: 500,
+                                fontSize: "13px",
+                                transition: "color 0.2s",
+                              }}
+                            >
+                              {d.lesson}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              className="dropoff-percent"
+                              sx={{
+                                color: colors.text,
+                                fontWeight: 600,
+                                fontSize: "13px",
+                                transition: "color 0.2s",
+                              }}
+                            >
+                              {d.value}%
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              width: "100%",
+                              height: 8,
+                              borderRadius: 4,
+                              bgcolor: "#F1F5F9",
+                              overflow: "hidden",
+                              position: "relative",
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                width: `${d.value}%`,
+                                height: "100%",
+                                bgcolor: colors.bar,
+                                borderRadius: 4,
+                                transition: "width 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                              }}
+                            />
+                          </Box>
+                        </Box>
+                      );
+                    })}
+                  </Stack>
+                </Box>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
 
         {/* Enrollments Over Time */}
-        <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid container spacing={2.5}>
           <Grid item xs={12}>
-            <Card sx={{ borderRadius: 3 }}>
+            <Card
+              sx={{
+                borderRadius: 3,
+                border: "1px solid #E2E8F0",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                bgcolor: "#FFFFFF",
+              }}
+            >
               <CardHeader
                 title={
-                  <Typography variant="h6" fontWeight={800}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ color: "#1E293B", fontSize: "16px" }}
+                  >
                     Enrollments Over Time
                   </Typography>
                 }
+                sx={{
+                  borderBottom: "1px solid #F1F5F9",
+                  pb: 2,
+                }}
                 action={
                   <Stack direction="row" spacing={1} alignItems="center">
                     <FormControl size="small">
@@ -762,9 +1216,51 @@ export default function CourseDashboard() {
                         <MenuItem value="Quarterly">Quarterly</MenuItem>
                       </Select>
                     </FormControl>
-                    <Button variant="outlined">Last 6 Weeks</Button>
-                    <Button variant="outlined">Last 3 Months</Button>
-                    <Button variant="outlined">Year to Date</Button>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: "#CBD5E1",
+                        color: "#475569",
+                        textTransform: "none",
+                        fontWeight: 600,
+                        "&:hover": {
+                          borderColor: "#6A42AB",
+                          bgcolor: "#F3E8FF",
+                        },
+                      }}
+                    >
+                      Last 6 Weeks
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: "#CBD5E1",
+                        color: "#475569",
+                        textTransform: "none",
+                        fontWeight: 600,
+                        "&:hover": {
+                          borderColor: "#6A42AB",
+                          bgcolor: "#F3E8FF",
+                        },
+                      }}
+                    >
+                      Last 3 Months
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        borderColor: "#CBD5E1",
+                        color: "#475569",
+                        textTransform: "none",
+                        fontWeight: 600,
+                        "&:hover": {
+                          borderColor: "#6A42AB",
+                          bgcolor: "#F3E8FF",
+                        },
+                      }}
+                    >
+                      Year to Date
+                    </Button>
                   </Stack>
                 }
               />
@@ -807,7 +1303,7 @@ export default function CourseDashboard() {
             </Card>
           </Grid>
         </Grid>
-      </Container>
+      </Box>
 
       {/* Floating Quick Actions */}
       <Stack

@@ -7,8 +7,8 @@ import { lessonReportData } from "../utils/mockData";
 
 const LessonSection = () => {
   return (
-    <Box sx={{ 
-      bgcolor: "#fff", 
+    <Box sx={{
+      bgcolor: "#fff",
       borderRadius: "16px",
       boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
       border: '1px solid #f0f0f0'
@@ -33,10 +33,10 @@ const LessonSection = () => {
           startIcon={<ListChecklistIcon color="#666666" />}
           endIcon={<KeyboardArrowDownRoundedIcon sx={{ color: "#666666" }} />}
         ></Button>
-        <Box sx={{ 
-          display: "flex", 
+        <Box sx={{
+          display: "flex",
           flexDirection: { xs: 'column', sm: 'row' },
-          alignItems: { xs: 'stretch', sm: 'center' }, 
+          alignItems: { xs: 'stretch', sm: 'center' },
           gap: { xs: 1, sm: 2 }
         }}>
           <Button
@@ -52,7 +52,7 @@ const LessonSection = () => {
           >
             All
           </Button>
-          <Button 
+          <Button
             sx={{
               fontSize: { xs: '14px', sm: '16px' },
               px: { xs: 2, sm: 3 }
@@ -68,9 +68,9 @@ const LessonSection = () => {
             <TableHead sx={{ bgcolor: "#F7F7F8" }}>
               <TableRow>
                 <TableCell
-                  sx={{ 
-                    color: "#000000", 
-                    fontSize: { xs: "14px", md: "16px" }, 
+                  sx={{
+                    color: "#000000",
+                    fontSize: { xs: "14px", md: "16px" },
                     fontWeight: "600",
                     py: { xs: 1.5, md: 2 }
                   }}
@@ -78,9 +78,9 @@ const LessonSection = () => {
                   S.No
                 </TableCell>
                 <TableCell
-                  sx={{ 
-                    color: "#000000", 
-                    fontSize: { xs: "14px", md: "16px" }, 
+                  sx={{
+                    color: "#000000",
+                    fontSize: { xs: "14px", md: "16px" },
                     fontWeight: "600",
                     py: { xs: 1.5, md: 2 }
                   }}
@@ -88,9 +88,9 @@ const LessonSection = () => {
                   Lessons
                 </TableCell>
                 <TableCell
-                  sx={{ 
-                    color: "#000000", 
-                    fontSize: { xs: "14px", md: "16px" }, 
+                  sx={{
+                    color: "#000000",
+                    fontSize: { xs: "14px", md: "16px" },
                     fontWeight: "600",
                     py: { xs: 1.5, md: 2 }
                   }}
@@ -98,9 +98,9 @@ const LessonSection = () => {
                   Yet to Start
                 </TableCell>
                 <TableCell
-                  sx={{ 
-                    color: "#000000", 
-                    fontSize: { xs: "14px", md: "16px" }, 
+                  sx={{
+                    color: "#000000",
+                    fontSize: { xs: "14px", md: "16px" },
                     fontWeight: "600",
                     py: { xs: 1.5, md: 2 }
                   }}
@@ -108,9 +108,9 @@ const LessonSection = () => {
                   In Progress
                 </TableCell>
                 <TableCell
-                  sx={{ 
-                    color: "#000000", 
-                    fontSize: { xs: "14px", md: "16px" }, 
+                  sx={{
+                    color: "#000000",
+                    fontSize: { xs: "14px", md: "16px" },
                     fontWeight: "600",
                     py: { xs: 1.5, md: 2 }
                   }}
@@ -118,9 +118,9 @@ const LessonSection = () => {
                   Completed
                 </TableCell>
                 <TableCell
-                  sx={{ 
-                    color: "#000000", 
-                    fontSize: { xs: "14px", md: "16px" }, 
+                  sx={{
+                    color: "#000000",
+                    fontSize: { xs: "14px", md: "16px" },
                     fontWeight: "600",
                     py: { xs: 1.5, md: 2 }
                   }}
@@ -129,7 +129,7 @@ const LessonSection = () => {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody sx={{ 
+            <TableBody sx={{
               minHeight: { xs: "200px", md: "300px" }
             }}>
               {lessonReportData.length > 0 ? lessonReportData.map((lesson, index) => (
@@ -155,10 +155,10 @@ const LessonSection = () => {
                 </TableRow>
               )) : (
                 <TableRow>
-                  <TableCell 
-                    colSpan={6} 
-                    sx={{ 
-                      textAlign: 'center', 
+                  <TableCell
+                    colSpan={6}
+                    sx={{
+                      textAlign: 'center',
                       py: 4,
                       color: '#666666',
                       fontSize: { xs: '14px', md: '16px' }

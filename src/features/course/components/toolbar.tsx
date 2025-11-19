@@ -5,7 +5,10 @@ import {
   IconButton,
   Rating,
   Typography,
+  useMediaQuery,
+  Tooltip,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 // icons
 import WestIcon from "@mui/icons-material/West";
 
@@ -14,26 +17,70 @@ import PublishButton from "@components/ui/PublishButton";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; children: React.ReactNode; previousPage?: string }) => {
+  const theme = useTheme();
+
+  const iconButtonSx = {
+    width: 40,
+    height: 40,
+    borderRadius: "12px",
+    border: "1px solid rgba(148, 163, 184, 0.4)",
+    color: "#475467",
+    backgroundColor: "#fff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "all 0.2s ease",
+    "&:hover": {
+      borderColor: "#6A42AB",
+      color: "#6A42AB",
+      boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
+      backgroundColor: "rgba(106, 66, 171, 0.04)",
+    },
+    "& svg": {
+      fontSize: "1.15rem",
+    },
+  };
+
   return (
-    <Box>
+    <Box sx={{ width: "100%" }}>
       {/* Header */}
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
+          alignItems: { xs: "flex-start", sm: "center" },
           justifyContent: "space-between",
           flexWrap: "wrap",
-          gap: "10px",
-          padding: "24px",
-          borderBottom: "1px solid #cccccc",
+          rowGap: 2,
+          columnGap: 3,
+          paddingBottom: { xs: 2, md: 1.5 },
+          marginBottom: { xs: 3, md: 4 },
+          borderBottom: "1px solid rgba(148, 163, 184, 0.35)",
         }}
       >
         {/* left side  */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <IconButton sx={{ color: "#000000" }}>
-            <Link to={previousPage || "/courses"} style={{ textDecoration: "none", color: "black" }}><WestIcon /></Link>
-          </IconButton>
-          <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Tooltip title="Go back">
+            <IconButton
+              component={Link}
+              to={previousPage || "/courses"}
+              sx={{
+                ...iconButtonSx,
+                textDecoration: "none",
+              }}
+            >
+              <WestIcon />
+            </IconButton>
+          </Tooltip>
+          <Typography
+            component="h1"
+            sx={{
+              fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+              fontWeight: 700,
+              color: theme.palette.text.primary,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.15,
+            }}
+          >
             {courseName || "Course Name"}
           </Typography>
         </Box>
@@ -47,13 +94,17 @@ const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; 
 export const RightSideTools = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <Box
       sx={{
         display: "flex",
         alignItems: "center",
-        gap: "10px",
-        height: "48px",
+        justifyContent: { xs: "flex-start", md: "flex-end" },
+        gap: 1.5,
+        flexWrap: "wrap",
       }}
     >
       <PublishButton />
@@ -61,40 +112,51 @@ export const RightSideTools = () => {
         variant="outlined"
         onClick={() => navigate(`/course-practice/${courseId}`)}
         sx={{
-          padding: "12px 32px",
-          height: "48px",
+          padding: "10px 24px",
+          height: "40px",
           color: "#6A42AB",
-          border: "1px solid #6A42AB",
-          borderRadius: "8px",
-          backgroundColor: "transparent",
-          textTransform: "none", // keeps "Preview" as-is
+          border: "1px solid rgba(148, 163, 184, 0.4)",
+          borderRadius: "12px",
+          backgroundColor: "#fff",
+          textTransform: "none",
+          fontWeight: 500,
+          fontSize: "0.95rem",
+          transition: "all 0.2s ease",
           "&:hover": {
-            border: "2px solid #6A42AB",
-            backgroundColor: "rgba(255, 255, 255, 0.1)", // subtle hover
+            borderColor: "#6A42AB",
+            color: "#6A42AB",
+            boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
+            backgroundColor: "rgba(106, 66, 171, 0.04)",
           },
           "&:focus": {
             outline: "none",
-            boxShadow: "none",
-          },
-          "&:active": {
-            border: "1px solid #6A42AB",
-            boxShadow: "none",
+            boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
           },
         }}
       >
         Preview
       </Button>
       <MoreButton />
+
       <Divider
         orientation="vertical"
         flexItem
         sx={{
-          borderColor: "#B3B3B3", // sets the line color
-          height: "48px", // sets custom height
-          borderWidth: "0.8px", // optional: control thickness
+          borderColor: "rgba(148, 163, 184, 0.5)",
+          mx: 1,
+          display: { xs: "none", sm: "block" },
         }}
       />
-      <Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 0.5,
+          minWidth: { xs: "auto", sm: "60px" },
+        }}
+      >
         <Rating
           size="small"
           name="simple-uncontrolled"
@@ -102,26 +164,113 @@ export const RightSideTools = () => {
           defaultValue={0}
           sx={{
             "& .MuiRating-iconEmpty": {
-              color: "#808080", // 🎯 your custom color here (e.g., #ccc, white, etc.)
+              color: "rgba(148, 163, 184, 0.6)",
             },
             "& .MuiRating-iconFilled": {
-              color: "gold", // optional: change selected star color
+              color: "#F59E0B",
             },
           }}
         />
-        <Typography sx={{ color: "#808080", fontSize: "12px" }}>
+        <Typography
+          sx={{
+            color: "#667085",
+            fontSize: "0.75rem",
+            fontWeight: 500,
+            letterSpacing: "0.01em",
+          }}
+        >
           No Rating
         </Typography>
       </Box>
-      <Typography sx={{ color: "#000000" }}>/</Typography>
-      <Box sx={{ textAlign: "center", color: "#000000" }}>
-        <Typography>2</Typography>
-        <Typography>Lessons</Typography>
+
+      {!isMobile && (
+        <>
+          <Typography
+            sx={{
+              color: "rgba(148, 163, 184, 0.6)",
+              fontSize: "1rem",
+              fontWeight: 400,
+            }}
+          >
+            /
+          </Typography>
+        </>
+      )}
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          minWidth: { xs: "auto", sm: "60px" },
+        }}
+      >
+        <Typography
+          sx={{
+            color: theme.palette.text.primary,
+            fontSize: "1rem",
+            fontWeight: 600,
+            lineHeight: 1.2,
+          }}
+        >
+          2
+        </Typography>
+        <Typography
+          sx={{
+            color: "#667085",
+            fontSize: "0.75rem",
+            fontWeight: 500,
+            letterSpacing: "0.01em",
+          }}
+        >
+          Lessons
+        </Typography>
       </Box>
-      <Typography sx={{ color: "#000000" }}>/</Typography>
-      <Box sx={{ textAlign: "center", color: "#000000" }}>
-        <Typography>2</Typography>
-        <Typography>Learners</Typography>
+
+      {!isMobile && (
+        <>
+          <Typography
+            sx={{
+              color: "rgba(148, 163, 184, 0.6)",
+              fontSize: "1rem",
+              fontWeight: 400,
+            }}
+          >
+            /
+          </Typography>
+        </>
+      )}
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          minWidth: { xs: "auto", sm: "60px" },
+        }}
+      >
+        <Typography
+          sx={{
+            color: theme.palette.text.primary,
+            fontSize: "1rem",
+            fontWeight: 600,
+            lineHeight: 1.2,
+          }}
+        >
+          2
+        </Typography>
+        <Typography
+          sx={{
+            color: "#667085",
+            fontSize: "0.75rem",
+            fontWeight: 500,
+            letterSpacing: "0.01em",
+          }}
+        >
+          Learners
+        </Typography>
       </Box>
     </Box>
   );

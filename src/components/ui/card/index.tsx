@@ -183,7 +183,7 @@ export default function CourseCard({
                 "&:hover": { bgcolor: "#fff" },
               }}
             >
-              <DeleteIcon fontSize="small" />
+              <DeleteIcon width={16} height={18} />
             </IconButton>
           )}
         </Box>
@@ -246,12 +246,13 @@ export default function CourseCard({
               value={progress}
               sx={{
                 height: 6,
-                borderRadius: "3px",
-                backgroundColor: "#e2e8f0",
+                borderRadius: "999px",
+                backgroundColor: "rgba(106,66,171,0.14)",
                 "& .MuiLinearProgress-bar": {
                   background:
-                    "linear-gradient(90deg, #6366f1 0%, #7c3aed 50%, #0ea5e9 100%)",
-                  borderRadius: "3px",
+                    "linear-gradient(90deg, #6A42AB 0%, #8B5FD4 50%, #A87BEC 100%)",
+                  borderRadius: "999px",
+                  boxShadow: "0 2px 6px rgba(138,92,212,0.35)",
                 },
               }}
             />
@@ -271,20 +272,22 @@ export default function CourseCard({
               onClick={handleStartCourse}
               sx={{
                 width: "54%", // slightly reduced width
-                background:
-                  "linear-gradient(135deg, #6366f1, #7c3aed, #0ea5e9)",
+                backgroundColor: "#6A42AB",
                 color: "#fff",
                 textTransform: "none",
                 fontWeight: 600,
                 fontSize: "13.5px",
                 py: 0.5,
                 borderRadius: "10px",
-                boxShadow: "0 6px 14px rgba(99,102,241,0.25)",
+                border: "1px solid #6A42AB",
+                boxShadow: "0 6px 16px rgba(106,66,171,0.25)",
                 "&:hover": {
-                  background:
-                    "linear-gradient(135deg, #4f46e5, #7c3aed, #0891b2)",
-                  boxShadow: "0 8px 20px rgba(99,102,241,0.3)",
+                  backgroundColor: "#5a3796",
+                  borderColor: "#5a3796",
+                  boxShadow: "0 8px 20px rgba(106,66,171,0.35)",
                 },
+                transition:
+                  "background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
               }}
             >
               Start Course
@@ -468,7 +471,7 @@ export default function CourseCard({
               "&:hover": { bgcolor: "#fff" },
             }}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteIcon width={16} height={18} />
           </IconButton>
         )}
       </Box>
@@ -597,7 +600,7 @@ export default function CourseCard({
               mb: 2,
             }}
           >
-            <DocumentIcon sx={{ color: "#64748b", fontSize: 18 }} />
+            <DocumentIcon strokeColor="#64748b" width={18} height={18} />
             <Typography sx={{ fontSize: "12.5px", color: "#6b7280" }}>
               {chapters} {chapters === 1 ? "Chapter" : "Chapters"}
             </Typography>
@@ -630,7 +633,16 @@ export default function CourseCard({
             <Button
               variant="contained"
               size="small"
-              startIcon={!isLoadingCart && <ShoppingCartIcon />}
+              startIcon={
+                !isLoadingCart && (
+                  <ShoppingCartIcon
+                    sx={{
+                      color: isInCart ? "#94A3B8" : "#FFFFFF",
+                      transition: "color 0.2s ease",
+                    }}
+                  />
+                )
+              }
               disabled={isInCart || isLoadingCart}
               onClick={(e) => {
                 e.stopPropagation();
@@ -643,18 +655,21 @@ export default function CourseCard({
                 py: 0.8,
                 fontSize: "13.5px",
                 fontWeight: 600,
-                color: "#fff",
-                background:
-                  "linear-gradient(135deg, #6366f1, #7c3aed, #0ea5e9)",
-                boxShadow: "0 6px 14px rgba(99,102,241,0.25)",
+                color: isInCart ? "#94A3B8" : "#FFFFFF",
+                backgroundColor: "#6A42AB",
+                border: "1px solid #6A42AB",
+                boxShadow: "0 6px 16px rgba(106,66,171,0.25)",
+                transition:
+                  "background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
                 "&:hover": {
-                  background:
-                    "linear-gradient(135deg, #4f46e5, #7c3aed, #0891b2)",
-                  boxShadow: "0 8px 22px rgba(99,102,241,0.35)",
+                  backgroundColor: "#5a3796",
+                  borderColor: "#5a3796",
+                  boxShadow: "0 8px 20px rgba(106,66,171,0.35)",
                 },
                 "&:disabled": {
-                  background: "rgba(148,163,184,0.35)",
-                  color: "#fff",
+                  backgroundColor: "#F1F5F9",
+                  borderColor: "rgba(148,163,184,0.4)",
+                  color: "#94A3B8",
                   boxShadow: "none",
                 },
               }}

@@ -228,43 +228,84 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
   };
 
   return (
-    <>
-      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-        <DialogTitle>
-          Preview (Static Data)
-          <IconButton onClick={onClose} sx={{ float: "right" }}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          minHeight: "70vh",
+          maxHeight: "90vh",
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Preview Generated Content
+          </Typography>
+          <Chip
+            label={`${questions.length} ${questions.length === 1 ? "Item" : "Items"
+              }`}
+            size="small"
+            color="primary"
+          />
+        </Box>
+        <IconButton onClick={onClose} size="small">
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-        <DialogContent dividers>
-          {questions.length === 0 ? (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                py: 8,
-              }}
-            >
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-                No content generated yet
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Generate content using AI to preview here
-              </Typography>
-            </Box>
-          ) : (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {questions.map((question, index) => (
-                <Paper
-                  key={question.id}
-                  draggable
-                  onDragStart={() => handleDragStart(index)}
-                  onDragOver={(e) => handleDragOver(e, index)}
-                  onDragEnd={handleDragEnd}
-                  elevation={draggedIndex === index ? 8 : 1}
+      <DialogContent dividers>
+        {questions.length === 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              py: 8,
+            }}
+          >
+            <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+              No content generated yet
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Generate content using AI to preview here
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {questions.map((question, index) => (
+              <Paper
+                key={question.id}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragEnd={handleDragEnd}
+                elevation={draggedIndex === index ? 8 : 1}
+                sx={{
+                  p: 3,
+                  cursor: "grab",
+                  transition: "all 0.2s",
+                  opacity: draggedIndex === index ? 0.5 : 1,
+                  "&:hover": {
+                    boxShadow: 3,
+                  },
+                  "&:active": {
+                    cursor: "grabbing",
+                  },
+                }}
+              >
+                {/* Header */}
+                <Box
                   sx={{
                     p: 3,
                     cursor: "grab",
@@ -399,26 +440,9 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
                         mb: 1,
                       }}
                     >
-                      <TextField
-                        fullWidth
-                        value={opt.text}
-                        onChange={(e) => {
-                          const updated = [...editData.options!];
-                          updated[idx].text = e.target.value;
-                          setEditData({ ...editData, options: updated });
-                        }}
-                      />
-
-                      <Checkbox
-                        checked={opt.isCorrect}
-                        onChange={(e) => {
-                          const updated = [...editData.options!];
-                          updated[idx].isCorrect = e.target.checked;
-                          setEditData({ ...editData, options: updated });
-                        }}
-                      />
-                    </Box>
-                  ))}
+                      <DeleteIcon width={16} height={18} />
+                    </IconButton>
+                  </Box>
                 </Box>
               )}
 

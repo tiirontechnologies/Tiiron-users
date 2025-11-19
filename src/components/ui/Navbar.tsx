@@ -3,13 +3,15 @@ import { Box, Button, IconButton, Badge, useMediaQuery, useTheme, Drawer } from 
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchBox from "./header/SearchBox";
 import FilterButton from "./header/FilterButton";
 import ProfilePopup from "./header/profilePopup";
-import NotificationIcon from "@icons/NotificationIcon";
 import { CartModal } from "./cart/cartModal";
 import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
 import { useAuth } from "../../hooks/useAuth";
+import { useLocation } from "react-router-dom";
 
 interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
@@ -32,9 +34,16 @@ const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const isSmallMobile = useMediaQuery("(max-width: 400px)");
+  const location = useLocation();
 
   const { token, user } = useAuth();
   const isLoggedIn = !!token;
+
+  // Check if a route is active
+  const isActive = (href: string) => {
+    return location.pathname === href || location.pathname.startsWith(href + "/");
+  };
 
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,
@@ -71,7 +80,7 @@ const Navbar = () => {
 
   const navigationItems = [
     {
-      name: "Explore",
+      name: "Why Tiiron",
       hasDropdown: true,
       dropdown: [
         {
@@ -89,10 +98,21 @@ const Navbar = () => {
           desc: "Understand our platform workflow",
           href: "/ourplatform",
         },
+      ],
+    },
+    {
+      name: "Explore",
+      hasDropdown: true,
+      dropdown: [
         {
           name: "Browse Courses",
           desc: "Explore our course catalog",
           href: "/learner/browse-courses",
+        },
+        {
+          name: "Tiiron Business",
+          desc: "AI-powered learning solutions",
+          href: "https://tiiron-for-busines",
         },
       ],
     },
@@ -116,60 +136,133 @@ const Navbar = () => {
 
     return (
       <Box
-        onMouseEnter={() => setOpenDropdown(item.name)}
-        onMouseLeave={() => setOpenDropdown(null)}
+        className="dropdown-container"
+        data-dropdown={item.name}
         sx={{
           position: "absolute",
           top: "100%",
           left: 0,
-          mt: 1,
+          mt: 0.25,
+          pt: 0.5,
           backgroundColor: "white",
-          borderRadius: 2,
+          borderRadius: "12px",
           boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
           padding: "0.75rem",
-          minWidth: "280px",
+          minWidth: "256px",
+          width: "256px",
+          maxWidth: "90vw",
           zIndex: 1000,
           border: "1px solid #e5e7eb",
+          opacity: openDropdown === item.name ? 1 : 0,
+          visibility: openDropdown === item.name ? "visible" : "hidden",
+          transform: openDropdown === item.name ? "translateY(0)" : "translateY(-8px)",
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.25rem",
+          pointerEvents: openDropdown === item.name ? "auto" : "none",
         }}
       >
-        {item.dropdown.map((drop) => (
-          <Link
-            key={drop.name}
-            to={drop.href}
-            onClick={() => setOpenDropdown(null)}
-            style={{
-              display: "block",
-              padding: "0.75rem",
-              borderRadius: "0.5rem",
-              backgroundColor: "#f9fafb",
-              textDecoration: "none",
-              color: "#1f2937",
-              marginBottom: "0.5rem",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#f3f4f6";
-              e.currentTarget.style.transform = "translateX(4px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#f9fafb";
-              e.currentTarget.style.transform = "translateX(0)";
-            }}
-          >
-            <p
-              style={{
-                fontSize: "14px",
-                fontWeight: 600,
-                margin: "0 0 0.25rem 0",
+        {item.dropdown.map((drop) => {
+          const active = isActive(drop.href);
+          return (
+            <Box
+              key={drop.name}
+              component={Link}
+              to={drop.href}
+              onClick={() => setOpenDropdown(null)}
+              sx={{
+                position: "relative",
+                display: "block",
+                padding: "0.75rem 1rem",
+                borderRadius: "0.5rem",
+                background: active
+                  ? "linear-gradient(to right, #fef2f2, #fdf2f8)"
+                  : "transparent",
+                textDecoration: "none",
+                marginBottom: "0.25rem",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  background: "linear-gradient(to right, #fef2f2, #fdf2f8)",
+                  "& .accent-bar": {
+                    opacity: 1,
+                  },
+                },
               }}
             >
-              {drop.name}
-            </p>
-            <p style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
-              {drop.desc}
-            </p>
-          </Link>
-        ))}
+              {/* Accent bar - Single vertical line */}
+              <Box
+                className="accent-bar"
+                sx={{
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  height: "100%",
+                  width: "4px",
+                  background: "linear-gradient(to bottom, #ef4444, #ec4899)",
+                  borderRadius: "0 4px 4px 0",
+                  opacity: active ? 1 : 0,
+                  transition: "opacity 0.3s ease",
+                }}
+              />
+              <Box
+                component="p"
+                sx={{
+                  fontSize: "15px",
+                  fontWeight: 500,
+                  margin: "0 0 0.25rem 0",
+                  color: active ? "#ef4444" : "#1E2939",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    color: "transparent",
+                    background: "linear-gradient(to right, #ef4444, #a855f7)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  },
+                }}
+              >
+                {drop.name}
+                {item.name === "Resources" &&
+                  ["Blog", "Docs", "Community"].includes(drop.name) && (
+                    <Box
+                      component="span"
+                      sx={{
+                        ml: 1,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        px: 0.5,
+                        py: 0.125,
+                        borderRadius: "9999px",
+                        backgroundColor: "#e7f0fd",
+                        color: "#2563eb !important",
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        border: "1px solid #b6d1fa",
+                        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                        WebkitTextFillColor: "#2563eb !important",
+                        position: "relative",
+                        zIndex: 1,
+                      }}
+                    >
+                      Coming Soon
+                    </Box>
+                  )}
+              </Box>
+              <Box
+                component="p"
+                sx={{
+                  fontSize: "12px",
+                  color: active ? "#374151" : "#4b5563",
+                  margin: 0,
+                  transition: "color 0.2s ease",
+                }}
+              >
+                {drop.desc}
+              </Box>
+            </Box>
+          );
+        })}
       </Box>
     );
   };
@@ -183,7 +276,7 @@ const Navbar = () => {
           left: 0,
           right: 0,
           zIndex: 1100,
-          backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.95)" : "white",
+          backgroundColor: isScrolled ? "rgba(255, 255, 255, 1.0)" : "white",
           backdropFilter: isScrolled ? "blur(12px)" : "none",
           boxShadow: isScrolled ? "0 2px 8px rgba(0,0,0,0.08)" : "none",
           borderBottom: isScrolled ? "1px solid #e5e7eb" : "none",
@@ -192,9 +285,11 @@ const Navbar = () => {
       >
         <Box
           sx={{
-            maxWidth: "1280px",
+            maxWidth: "1400px",
             margin: "0 auto",
-            padding: { xs: "0 1rem", sm: "0 1.5rem", md: "0rem" },
+            padding: { xs: "0 1rem", sm: "0 1.5rem", md: "0 2rem", lg: "0 2.5rem", xl: "0 3rem" },
+            width: "100%",
+            boxSizing: "border-box",
           }}
         >
           <Box
@@ -211,11 +306,11 @@ const Navbar = () => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                gap: { xs: 1, sm: 1.5, md: 2 },
+                gap: { xs: 0.75, sm: 1, md: 1.5, lg: 1.5, xl: 2 },
                 flex: { xs: 1, lg: "0 0 auto" },
                 minWidth: 0,
-                maxWidth: { lg: "60%", xl: "65%" },
-                marginRight: { lg: 3, xl: 4 },
+                maxWidth: { lg: "45%", xl: "50%" },
+                marginRight: { lg: 2, xl: 2.5 },
               }}
             >
               <Link
@@ -247,9 +342,9 @@ const Navbar = () => {
                   <Box
                     sx={{
                       display: { xs: "none", lg: "block" },
-                      minWidth: { lg: "480px", xl: "516px" },
+                      minWidth: { lg: "300px", xl: "350px" },
                       flex: 1,
-                      maxWidth: { lg: "600px" },
+                      maxWidth: { lg: "400px", xl: "450px" },
                     }}
                   >
                     <SearchBox />
@@ -269,59 +364,78 @@ const Navbar = () => {
                 sx={{
                   display: { xs: "none", lg: "flex" },
                   alignItems: "center",
-                  gap: { lg: 1.5, xl: 2 },
+                  gap: { lg: 0.75, xl: 1 },
                   justifyContent: "center",
                   flexShrink: 0,
                   flex: "0 0 auto",
+                  flexWrap: "nowrap",
+                  marginX: { lg: 2, xl: 2.5 },
                 }}
               >
-                {navigationItems.map((item) => (
-                  <Box
-                    key={item.name}
-                    sx={{
-                      position: "relative",
-                    }}
-                  >
-                    {item.hasDropdown && (
-                      <>
-                        <Button
-                          onMouseEnter={() => setOpenDropdown(item.name)}
-                          onMouseLeave={() => setOpenDropdown(null)}
-                          onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
-                          sx={{
-                            color: "#ffffff",
-                            fontWeight: 500,
-                            fontSize: "15px",
-                            textTransform: "none",
-                            padding: "0.625rem 1rem",
-                            borderRadius: "8px",
-                            minWidth: "auto",
-                            whiteSpace: "nowrap",
-                            "&:hover": {
-                              backgroundColor: "#f3f4f6",
-                            },
-                          }}
-                        >
-                          {item.name}
-                          <Box
-                            component="span"
+                {navigationItems.map((item) => {
+                  const hasActiveDropdownItem = item.dropdown?.some((drop) => isActive(drop.href));
+                  return (
+                    <Box
+                      key={item.name}
+                      onMouseEnter={() => setOpenDropdown(item.name)}
+                      onMouseLeave={() => setOpenDropdown(null)}
+                      sx={{
+                        position: "relative",
+                      }}
+                    >
+                      {item.hasDropdown && (
+                        <>
+                          <Button
+                            variant="text"
+                            onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
                             sx={{
-                              fontSize: "10px",
-                              ml: 0.75,
-                              transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)",
-                              transition: "transform 0.2s ease",
-                              display: "inline-flex",
+                              display: "flex",
                               alignItems: "center",
+                              gap: 0.5,
+                              fontWeight: 700,
+                              fontSize: "15px",
+                              textTransform: "none",
+                              padding: "0.625rem 1rem",
+                              borderRadius: "8px",
+                              minWidth: "auto",
+                              whiteSpace: "nowrap",
+                              color: "#1F2937",
+                              backgroundColor: "transparent",
+                              boxShadow: "none",
+                              transition: "all 0.2s ease",
+                              "&:hover": {
+                                color: "transparent",
+                                background: "linear-gradient(to right, #ef4444, #a855f7)",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                                backgroundClip: "text",
+                                backgroundColor: "transparent",
+                                boxShadow: "none",
+                              },
                             }}
                           >
-                            ▼
-                          </Box>
-                        </Button>
-                        {openDropdown === item.name && renderDropdown(item)}
-                      </>
-                    )}
-                  </Box>
-                ))}
+                            <Box component="span">{item.name}</Box>
+                            <Box
+                              component="span"
+                              sx={{
+                                fontSize: "10px",
+                                ml: 0.5,
+                                transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)",
+                                transition: "transform 0.3s ease",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                color: "inherit",
+                              }}
+                            >
+                              ▼
+                            </Box>
+                          </Button>
+                          {renderDropdown(item)}
+                        </>
+                      )}
+                    </Box>
+                  );
+                })}
               </Box>
             )}
 
@@ -330,10 +444,10 @@ const Navbar = () => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                gap: { xs: 0.5, sm: 1, md: 1.5, lg: 1.5, xl: 2 },
+                gap: { xs: 0.5, sm: 0.75, md: 1, lg: 1, xl: 1.5 },
                 flexShrink: 0,
                 flex: "0 0 auto",
-                marginLeft: { lg: 2, xl: 3 },
+                marginLeft: { lg: 2, xl: 2.5 },
               }}
             >
               {/* Desktop Actions */}
@@ -341,40 +455,38 @@ const Navbar = () => {
                 <>
                   {isLoggedIn && (
                     <>
-                      <Button
+                      <IconButton
                         sx={{
-                          background: "rgba(112, 45, 255, 1)",
-                          color: "#fff",
-                          padding: { lg: "10px 20px", xl: "12px 28px" },
-                          borderRadius: "12px",
-                          textTransform: "none",
-                          fontWeight: 600,
-                          fontSize: "14px",
-                          whiteSpace: "nowrap",
-                          boxShadow: "0 1px 3px rgba(112, 45, 255, 0.3)",
-                          "&:hover": {
-                            background: "rgba(112, 45, 255, 0.9)",
-                            boxShadow: "0 2px 6px rgba(112, 45, 255, 0.4)",
-                            transform: "translateY(-1px)",
-                          },
-                          transition: "all 0.2s ease",
-                          display: { xs: "none", lg: "flex" },
-                          alignItems: "center",
+                          color: "#1E2939",
+                          padding: "8px",
                           flexShrink: 0,
+                          transition: "all 0.2s ease",
+                          "&:hover": {
+                            backgroundColor: "#f3f4f6",
+                            color: "#ef4444",
+                            transform: "scale(1.1)",
+                          },
                         }}
+                        aria-label="Upgrade"
                       >
-                        Upgrade
-                      </Button>
+                        <WorkspacePremiumIcon />
+                      </IconButton>
                       <IconButton
                         onClick={handleOpenCart}
                         sx={{
-                          color: "#1f2937",
+                          color: "#000000",
                           padding: "8px",
                           flexShrink: 0,
+                          transition: "all 0.2s ease",
                           "&:hover": {
                             backgroundColor: "#f3f4f6",
+                            transform: "scale(1.1)",
+                            "& svg": {
+                              color: "#2563eb",
+                            },
                           },
                         }}
+                        aria-label="Shopping cart"
                       >
                         <Badge
                           badgeContent={cartItemCount}
@@ -387,15 +499,21 @@ const Navbar = () => {
                       </IconButton>
                       <IconButton
                         sx={{
-                          color: "#1f2937",
+                          color: "#000000",
                           padding: "8px",
                           flexShrink: 0,
+                          transition: "all 0.2s ease",
                           "&:hover": {
                             backgroundColor: "#f3f4f6",
+                            transform: "scale(1.1)",
+                            "& svg": {
+                              color: "#fbbf24",
+                            },
                           },
                         }}
+                        aria-label="Notifications"
                       >
-                        <NotificationIcon />
+                        <NotificationsIcon />
                       </IconButton>
                     </>
                   )}
@@ -432,7 +550,7 @@ const Navbar = () => {
                         Login
                       </Link>
                       <Link
-                        to="/organization/create-account"
+                        to="/sign-up"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -459,7 +577,7 @@ const Navbar = () => {
                           e.currentTarget.style.boxShadow = "0 2px 4px rgba(239, 68, 68, 0.3)";
                         }}
                       >
-                        Get Started
+                        Get Started →
                       </Link>
                     </>
                   )}
@@ -473,6 +591,11 @@ const Navbar = () => {
                   display: { xs: "flex", lg: "none" },
                   color: "#1f2937",
                   padding: "8px",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    backgroundColor: "#f3f4f6",
+                    color: "#ef4444",
+                  },
                 }}
                 aria-label="Toggle menu"
               >
@@ -501,121 +624,285 @@ const Navbar = () => {
               height: "100%",
               display: "flex",
               flexDirection: "column",
-              padding: "1.5rem",
               backgroundColor: "#ffffff",
             }}
           >
+            {/* Mobile Drawer Header with Close Button */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "1.25rem 1.5rem",
+                borderBottom: "1px solid #e5e7eb",
+                flexShrink: 0,
+              }}
+            >
+              <Link
+                to="/"
+                onClick={closeMobileMenu}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src="/Tiiron_logo.png"
+                  alt="Tiiron Logo"
+                  sx={{
+                    height: "32px",
+                    width: "auto",
+                    objectFit: "contain",
+                  }}
+                />
+              </Link>
+              <IconButton
+                onClick={closeMobileMenu}
+                sx={{
+                  color: "#1f2937",
+                  padding: "8px",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    backgroundColor: "#f3f4f6",
+                    color: "#ef4444",
+                    transform: "rotate(90deg)",
+                  },
+                }}
+                aria-label="Close menu"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+
             {/* Mobile Search and Filter */}
-            <Box sx={{ display: "flex", gap: "10px", mb: 3 }}>
-              <Box sx={{ flex: 1 }}>
+            <Box sx={{ display: "flex", gap: "10px", padding: "1.5rem", paddingBottom: "1rem" }}>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
                 <SearchBox />
               </Box>
-              <FilterButton />
+              {!isSmallMobile && (
+                <Box
+                  sx={{
+                    flexShrink: 0,
+                  }}
+                >
+                  <FilterButton />
+                </Box>
+              )}
             </Box>
 
             {/* Mobile Navigation Items */}
-            <Box sx={{ flex: 1, overflowY: "auto" }}>
-              {navigationItems.map((item) => (
-                <Box key={item.name} sx={{ marginBottom: "1rem" }}>
-                  {item.hasDropdown && (
-                    <Box>
-                      <Button
-                        onClick={() =>
-                          setOpenDropdown(
-                            openDropdown === item.name ? null : item.name
-                          )
-                        }
-                        fullWidth
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          padding: "0.75rem 1rem",
-                          borderRadius: "8px",
-                          fontWeight: 500,
-                          color: "#1f2937",
-                          backgroundColor: openDropdown === item.name ? "#f3f4f6" : "transparent",
-                          textTransform: "none",
-                          fontSize: "16px",
-                          "&:hover": {
-                            backgroundColor: "#f3f4f6",
-                          },
-                        }}
-                      >
-                        {item.name}
-                        <Box
-                          component="span"
+            <Box sx={{ flex: 1, overflowY: "auto", paddingX: "1.5rem" }}>
+              {navigationItems.map((item) => {
+                const hasActiveDropdownItem = item.dropdown?.some((drop) => isActive(drop.href));
+                return (
+                  <Box key={item.name} sx={{ marginBottom: "1rem" }}>
+                    {item.hasDropdown && (
+                      <Box>
+                        <Button
+                          variant="text"
+                          onClick={() =>
+                            setOpenDropdown(
+                              openDropdown === item.name ? null : item.name
+                            )
+                          }
+                          fullWidth
                           sx={{
-                            fontSize: "12px",
-                            transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)",
-                            transition: "transform 0.2s ease",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            padding: "0.75rem 1rem",
+                            borderRadius: "8px",
+                            fontWeight: 700,
+                            color: "#1F2937",
+                            backgroundColor: "transparent",
+                            boxShadow: "none",
+                            textTransform: "none",
+                            fontSize: "16px",
+                            transition: "all 0.2s ease",
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                              color: "transparent",
+                              background: "linear-gradient(to right, #ef4444, #a855f7)",
+                              WebkitBackgroundClip: "text",
+                              WebkitTextFillColor: "transparent",
+                              backgroundClip: "text",
+                              boxShadow: "none",
+                            },
                           }}
                         >
-                          ▼
-                        </Box>
-                      </Button>
-                      {openDropdown === item.name && (
-                        <Box sx={{ paddingLeft: "1rem", marginTop: "0.5rem" }}>
-                          {item.dropdown?.map((drop) => (
-                            <Link
-                              key={drop.name}
-                              to={drop.href}
-                              onClick={closeMobileMenu}
-                              style={{
-                                display: "block",
-                                padding: "0.75rem",
-                                borderRadius: "0.5rem",
-                                backgroundColor: "#f9fafb",
-                                textDecoration: "none",
-                                color: "#1f2937",
-                                marginBottom: "0.5rem",
-                              }}
-                            >
-                              <p
-                                style={{
-                                  fontSize: "14px",
-                                  fontWeight: 600,
-                                  margin: "0 0 0.25rem 0",
-                                }}
-                              >
-                                {drop.name}
-                              </p>
-                              <p style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
-                                {drop.desc}
-                              </p>
-                            </Link>
-                          ))}
-                        </Box>
-                      )}
-                    </Box>
-                  )}
-                </Box>
-              ))}
+                          {item.name}
+                          <Box
+                            component="span"
+                            sx={{
+                              fontSize: "12px",
+                              transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)",
+                              transition: "transform 0.3s ease",
+                              color: "inherit",
+                            }}
+                          >
+                            ▼
+                          </Box>
+                        </Button>
+                        {openDropdown === item.name && (
+                          <Box sx={{ paddingLeft: "1rem", marginTop: "0.5rem" }}>
+                            {item.dropdown?.map((drop) => {
+                              const active = isActive(drop.href);
+                              return (
+                                <Box
+                                  key={drop.name}
+                                  component={Link}
+                                  to={drop.href}
+                                  onClick={closeMobileMenu}
+                                  sx={{
+                                    position: "relative",
+                                    display: "block",
+                                    padding: "0.75rem 1rem",
+                                    borderRadius: "0.5rem",
+                                    background: active
+                                      ? "linear-gradient(to right, #fef2f2, #fdf2f8)"
+                                      : "#f9fafb",
+                                    textDecoration: "none",
+                                    marginBottom: "0.5rem",
+                                    transition: "all 0.2s ease",
+                                    "&:hover": {
+                                      background: "linear-gradient(to right, #fef2f2, #fdf2f8)",
+                                      "& .accent-bar": {
+                                        opacity: 1,
+                                      },
+                                    },
+                                  }}
+                                >
+                                  {/* Accent bar - Single vertical line */}
+                                  <Box
+                                    className="accent-bar"
+                                    sx={{
+                                      position: "absolute",
+                                      left: 0,
+                                      top: 0,
+                                      height: "100%",
+                                      width: "4px",
+                                      background: "linear-gradient(to bottom, #ef4444, #ec4899)",
+                                      borderRadius: "0 4px 4px 0",
+                                      opacity: active ? 1 : 0,
+                                      transition: "opacity 0.3s ease",
+                                    }}
+                                  />
+                                  <Box
+                                    component="p"
+                                    sx={{
+                                      fontSize: "15px",
+                                      fontWeight: 500,
+                                      margin: "0 0 0.25rem 0",
+                                      color: active ? "#ef4444" : "#1E2939",
+                                      transition: "all 0.2s ease",
+                                      "&:hover": {
+                                        color: "transparent",
+                                        background: "linear-gradient(to right, #ef4444, #a855f7)",
+                                        WebkitBackgroundClip: "text",
+                                        WebkitTextFillColor: "transparent",
+                                        backgroundClip: "text",
+                                      },
+                                    }}
+                                  >
+                                    {drop.name}
+                                    {item.name === "Resources" &&
+                                      ["Blog", "Docs", "Community"].includes(drop.name) && (
+                                        <Box
+                                          component="span"
+                                          sx={{
+                                            ml: 1,
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            px: 0.5,
+                                            py: 0.125,
+                                            borderRadius: "9999px",
+                                            backgroundColor: "#e7f0fd",
+                                            color: "#2563eb !important",
+                                            fontSize: "10px",
+                                            fontWeight: 600,
+                                            border: "1px solid #b6d1fa",
+                                            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                                            WebkitTextFillColor: "#2563eb !important",
+                                            position: "relative",
+                                            zIndex: 1,
+                                          }}
+                                        >
+                                          Coming Soon
+                                        </Box>
+                                      )}
+                                  </Box>
+                                  <Box
+                                    component="p"
+                                    sx={{
+                                      fontSize: "12px",
+                                      color: active ? "#374151" : "#4b5563",
+                                      margin: 0,
+                                      transition: "color 0.2s ease",
+                                    }}
+                                  >
+                                    {drop.desc}
+                                  </Box>
+                                </Box>
+                              );
+                            })}
+                          </Box>
+                        )}
+                      </Box>
+                    )}
+                  </Box>
+                );
+              })}
             </Box>
 
             {/* Mobile CTA Buttons */}
             <Box
               sx={{
-                paddingTop: "1.5rem",
+                padding: "1.5rem",
                 borderTop: "1px solid #e5e7eb",
                 display: "flex",
                 flexDirection: "column",
-                gap: "0.75rem",
+                gap: "1rem",
               }}
             >
               {isLoggedIn ? (
                 <>
-                  <Box sx={{ display: "flex", gap: "10px", justifyContent: "center", mb: 1 }}>
+                  {/* Mobile Icons Row - All aligned */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: { xs: "0.5rem", sm: "0.75rem" },
+                      flexWrap: "nowrap",
+                    }}
+                  >
                     <IconButton
                       onClick={() => {
                         handleOpenCart();
                         closeMobileMenu();
                       }}
                       sx={{
-                        color: "#1f2937",
-                        border: "1px solid #e5e7eb",
+                        color: "#000000",
+                        padding: { xs: "8px", sm: "10px" },
                         borderRadius: "12px",
+                        border: "1px solid #e5e7eb",
+                        minWidth: { xs: "44px", sm: "48px" },
+                        height: { xs: "44px", sm: "48px" },
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: "#f3f4f6",
+                          borderColor: "#2563eb",
+                          transform: "scale(1.05)",
+                          "& svg": {
+                            color: "#2563eb",
+                          },
+                        },
+                        "&:active": {
+                          transform: "scale(0.95)",
+                        },
                       }}
+                      aria-label="Shopping cart"
                     >
                       <Badge
                         badgeContent={cartItemCount}
@@ -623,39 +910,69 @@ const Navbar = () => {
                         max={9}
                         invisible={cartItemCount === 0}
                       >
-                        <ShoppingCartIcon />
+                        <ShoppingCartIcon sx={{ fontSize: { xs: "20px", sm: "22px" } }} />
                       </Badge>
                     </IconButton>
                     <IconButton
                       sx={{
-                        color: "#1f2937",
-                        border: "1px solid #e5e7eb",
+                        color: "#000000",
+                        padding: { xs: "8px", sm: "10px" },
                         borderRadius: "12px",
+                        border: "1px solid #e5e7eb",
+                        minWidth: { xs: "44px", sm: "48px" },
+                        height: { xs: "44px", sm: "48px" },
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: "#f3f4f6",
+                          borderColor: "#fbbf24",
+                          transform: "scale(1.05)",
+                          "& svg": {
+                            color: "#fbbf24",
+                          },
+                        },
+                        "&:active": {
+                          transform: "scale(0.95)",
+                        },
+                      }}
+                      aria-label="Notifications"
+                    >
+                      <NotificationsIcon sx={{ fontSize: { xs: "20px", sm: "22px" } }} />
+                    </IconButton>
+                    <IconButton
+                      sx={{
+                        color: "#1E2939",
+                        padding: { xs: "8px", sm: "10px" },
+                        borderRadius: "12px",
+                        border: "1px solid #e5e7eb",
+                        minWidth: { xs: "44px", sm: "48px" },
+                        height: { xs: "44px", sm: "48px" },
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: "#f3f4f6",
+                          borderColor: "#ef4444",
+                          color: "#ef4444",
+                          transform: "scale(1.05)",
+                        },
+                        "&:active": {
+                          transform: "scale(0.95)",
+                        },
+                      }}
+                      aria-label="Upgrade"
+                    >
+                      <WorkspacePremiumIcon sx={{ fontSize: { xs: "20px", sm: "22px" } }} />
+                    </IconButton>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minWidth: { xs: "44px", sm: "48px" },
+                        height: { xs: "44px", sm: "48px" },
                       }}
                     >
-                      <NotificationIcon />
-                    </IconButton>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
                       <ProfilePopup />
                     </Box>
                   </Box>
-                  <Button
-                    fullWidth
-                    sx={{
-                      background: "rgba(112, 45, 255, 1)",
-                      color: "#fff",
-                      padding: "12px 24px",
-                      borderRadius: "12px",
-                      textTransform: "none",
-                      fontWeight: 600,
-                      "&:hover": {
-                        background: "rgba(112, 45, 255, 0.9)",
-                      },
-                    }}
-                    onClick={closeMobileMenu}
-                  >
-                    Upgrade
-                  </Button>
                 </>
               ) : (
                 <>
@@ -677,7 +994,7 @@ const Navbar = () => {
                     Login
                   </Link>
                   <Link
-                    to="/organization/create-account"
+                    to="/sign-up"
                     onClick={closeMobileMenu}
                     style={{
                       padding: "0.75rem 1.5rem",

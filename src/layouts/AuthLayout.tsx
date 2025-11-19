@@ -123,9 +123,30 @@ const AuthLayout = ({
                 disabled={isLoading}
                 sx={{
                   backgroundColor: "#6A42AB",
+                  color: "#FFFFFF",
                   textTransform: "none",
                   px: 3,
                   fontWeight: 600,
+                  boxShadow: "0px 6px 18px rgba(106, 66, 171, 0.35)",
+                  transition: "background-color 0.2s ease, box-shadow 0.2s ease",
+                  "&:hover": {
+                    backgroundColor: "#5B3798",
+                    boxShadow: "0px 10px 24px rgba(106, 66, 171, 0.45)",
+                  },
+                  "&:active": {
+                    backgroundColor: "#4A2C73",
+                    boxShadow: "0px 2px 8px rgba(74, 44, 115, 0.4)",
+                    color: "#FFFFFF",
+                  },
+                  "&:focus-visible": {
+                    outline: "3px solid rgba(106, 66, 171, 0.35)",
+                    outlineOffset: "2px",
+                  },
+                  "&.Mui-disabled": {
+                    backgroundColor: "#B8A1DE",
+                    color: "#FFFFFF",
+                    opacity: 0.95,
+                  },
                 }}
               >
                 {isLoading ? "Loading..." : submitButtonText}
@@ -197,21 +218,46 @@ const AuthLayout = ({
                 </Link>
               </Box>}
             </Box>
-            {isLogin && <Box display="flex" gap={2} width={"100%"} mt={3} flexWrap="nowrap">
-              <Link
-                to={"/login"}
-                style={{
-                  width: "100%"
-                }}
+            {isLogin && (
+              <Box
+                display="flex"
+                gap={2}
+                width={"100%"}
+                mt={3}
+                flexWrap="nowrap"
               >
-                <Button
-                  variant="contained"
-                  fullWidth
+                <Link
+                  to={"/login"}
+                  style={{
+                    width: "100%",
+                  }}
                 >
-                  {signInBtnTxt ?? "Sign In"}
-                </Button>
-              </Link>
-            </Box>}
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                      backgroundColor: "#6A42AB",
+                      color: "#FFFFFF",
+                      textTransform: "none",
+                      fontWeight: 600,
+                      "&:hover": {
+                        backgroundColor: "#5B3798",
+                      },
+                      "&:active": {
+                        backgroundColor: "#4A2C73",
+                        color: "#FFFFFF",
+                      },
+                      "&.Mui-disabled": {
+                        backgroundColor: "#B8A1DE",
+                        color: "#FFFFFF",
+                      },
+                    }}
+                  >
+                    {signInBtnTxt ?? "Sign In"}
+                  </Button>
+                </Link>
+              </Box>
+            )}
           </Box>
         </Box>
       </Grid>

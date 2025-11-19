@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, useMediaQuery, Badge } from "@mui/material";
+import { Box, IconButton, useMediaQuery, Badge } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchBox from "./SearchBox";
@@ -6,6 +6,8 @@ import FilterButton from "./FilterButton";
 import { useTheme } from "@mui/material/styles";
 import ProfilePopup from "./profilePopup";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useState } from "react";
 import { CartModal } from "../cart/cartModal";
 import { useGetCartQuery } from "../../../features/course-browse/api/courseApi";
@@ -55,18 +57,39 @@ const Header = ({
         <FilterButton />
       </Box>
       <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <Button
+        <IconButton
           sx={{
-            background: "rgba(112, 45, 255, 1)",
-            color: "#fff",
-            padding: "12px 48px",
-            borderRadius: "12px",
-            display: { xs: "none", sm: "block" },
+            color: "#1E2939",
+            padding: "8px",
+            flexShrink: 0,
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "#f3f4f6",
+              color: "#ef4444",
+              transform: "scale(1.1)",
+            },
           }}
+          aria-label="Upgrade"
         >
-          Upgrade
-        </Button>
-        <IconButton color="primary" onClick={handleOpenCart}>
+          <WorkspacePremiumIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleOpenCart}
+          sx={{
+            color: "#000000",
+            padding: "8px",
+            flexShrink: 0,
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "#f3f4f6",
+              transform: "scale(1.1)",
+              "& svg": {
+                color: "#2563eb",
+              },
+            },
+          }}
+          aria-label="Shopping cart"
+        >
           <Badge
             badgeContent={cartItemCount}
             color="error"
@@ -75,6 +98,24 @@ const Header = ({
           >
             <ShoppingCartIcon />
           </Badge>
+        </IconButton>
+        <IconButton
+          sx={{
+            color: "#000000",
+            padding: "8px",
+            flexShrink: 0,
+            transition: "all 0.2s ease",
+            "&:hover": {
+              backgroundColor: "#f3f4f6",
+              transform: "scale(1.1)",
+              "& svg": {
+                color: "#fbbf24",
+              },
+            },
+          }}
+          aria-label="Notifications"
+        >
+          <NotificationsIcon />
         </IconButton>
 
         <ProfilePopup></ProfilePopup>

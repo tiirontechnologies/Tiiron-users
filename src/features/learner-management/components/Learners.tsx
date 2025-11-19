@@ -42,9 +42,9 @@ export function LearnersTab() {
 
     // Mobile card view component
     const MobileLearnerCard = ({ learner }: { learner: Learner }) => (
-        <Card 
-            sx={{ 
-                mb: 2, 
+        <Card
+            sx={{
+                mb: 2,
                 borderRadius: 3,
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                 border: '1px solid #f0f0f0'
@@ -70,7 +70,7 @@ export function LearnersTab() {
                         <MoreVertIcon />
                     </IconButton>
                 </Box>
-                
+
                 <Stack spacing={1.5}>
                     <Box>
                         <Typography variant="caption" color="text.secondary" display="block">
@@ -80,7 +80,7 @@ export function LearnersTab() {
                             {learner.email}
                         </Typography>
                     </Box>
-                    
+
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Box>
                             <Typography variant="caption" color="text.secondary" display="block">
@@ -90,7 +90,7 @@ export function LearnersTab() {
                                 {learner.completion}
                             </Typography>
                         </Box>
-                        
+
                         <Chip
                             label={learner.status}
                             size="small"
@@ -165,9 +165,9 @@ export function LearnersTab() {
                         minWidth={{ sm: 250 }}
                     >
                         <SearchIcon sx={{ color: '#999', mr: 1 }} />
-                        <InputBase 
-                            placeholder="Search learners..." 
-                            fullWidth 
+                        <InputBase
+                            placeholder="Search learners..."
+                            fullWidth
                             sx={{ fontSize: { xs: '14px', sm: '16px' } }}
                         />
                     </Box>
@@ -189,8 +189,8 @@ export function LearnersTab() {
                             borderRadius: 2,
                             bgcolor: '#fff',
                             minWidth: { xs: '100%', sm: 160 },
-                            '.MuiSelect-select': { 
-                                py: isSmallScreen ? 1.2 : 0.8, 
+                            '.MuiSelect-select': {
+                                py: isSmallScreen ? 1.2 : 0.8,
                                 px: 2,
                                 fontSize: { xs: '14px', sm: '16px' }
                             },
@@ -239,8 +239,8 @@ export function LearnersTab() {
                     ))}
                 </Box>
             ) : (
-                <TableContainer 
-                    component={Paper} 
+                <TableContainer
+                    component={Paper}
                     sx={{
                         borderRadius: 3,
                         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
@@ -269,9 +269,9 @@ export function LearnersTab() {
                         </TableHead>
                         <TableBody>
                             {mockLearners.map((learner, index) => (
-                                <TableRow 
+                                <TableRow
                                     key={learner.id}
-                                    hover 
+                                    hover
                                     sx={{
                                         '&:hover': {
                                             bgcolor: '#fafafa'
@@ -349,19 +349,21 @@ export default function Learners() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Box sx={{ 
-            width: '100%', 
-            display: "grid", 
+        <Box sx={{
+            width: '100%',
+            display: "grid",
             gap: { xs: "8px", sm: "12px" },
             p: { xs: 1, sm: 0 }
         }}>
             <Box
                 sx={{
                     borderRadius: 3,
-                    p: { xs: "12px", sm: "16px", md: "20px" },
+                    p: { xs: "2px", sm: "6px", md: "5px" },
                     bgcolor: '#FFFFFF',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    border: '1px solid #f0f0f0'
+                    border: '1px solid #f0f0f0',
+                    display: 'flex',
+                    alignItems: 'center'
                 }}
             >
                 <Tabs
@@ -373,7 +375,8 @@ export default function Learners() {
                     variant={isMobile ? "fullWidth" : "standard"}
                     sx={{
                         '& .MuiTabs-flexContainer': {
-                            gap: { xs: 0, sm: 2 }
+                            gap: { xs: 0, sm: 2 },
+                            justifyContent: 'flex-start'
                         }
                     }}
                 >
