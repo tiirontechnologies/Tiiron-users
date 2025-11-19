@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Snackbar, Alert } from "@mui/material";
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import { useGetMyEnrolledCoursesQuery } from "../api/courseApi";
@@ -22,6 +22,11 @@ const PAGE_LAYOUT_SX = {
 export default function Courses({ onCourseClick }: CoursesProps) {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "info" | "warning" | "error";
+  }>({ open: false, message: "", severity: "success" });
 
   const {
     data: enrollmentData,
@@ -50,19 +55,45 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   };
 
   // Handler for share
-  const handleShare = (courseId: number) => {
+  const handleShare = async (courseId: number) => {
     // TODO: Implement share functionality
     console.log("Share course:", courseId);
     const url = `${window.location.origin}/course-glossary/${courseId}`;
     if (navigator.share) {
-      navigator.share({
-        title: courses.find((c) => c.id === courseId)?.title || "Course",
-        url: url,
-      });
+      try {
+        await navigator.share({
+          title: courses.find((c) => c.id === courseId)?.title || "Course",
+          url: url,
+        });
+        setSnackbar({
+          open: true,
+          message: "Course shared successfully!",
+          severity: "success",
+        });
+      } catch (error: any) {
+        // User cancelled or error occurred
+        if (error.name !== "AbortError") {
+          // Copy to clipboard as fallback
+          await navigator.clipboard.writeText(url);
+          setSnackbar({
+            open: true,
+            message: "Course link copied to clipboard!",
+            severity: "info",
+          });
+        }
+      }
     } else {
-      navigator.clipboard.writeText(url);
-      alert("Course link copied to clipboard!");
+      await navigator.clipboard.writeText(url);
+      setSnackbar({
+        open: true,
+        message: "Course link copied to clipboard!",
+        severity: "info",
+      });
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   // Handler for favorite
@@ -153,6 +184,20 @@ export default function Courses({ onCourseClick }: CoursesProps) {
           </Box>
         )}
       </PageToolbarLayout>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
