@@ -228,18 +228,19 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-      PaperProps={{
-        sx: {
-          minHeight: "70vh",
-          maxHeight: "90vh",
-        },
-      }}
-    >
+    <>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            minHeight: "70vh",
+            maxHeight: "90vh",
+          },
+        }}
+      >
       <DialogTitle
         sx={{
           display: "flex",
@@ -373,7 +374,8 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
 
                   {/* Content */}
                   {renderQuestionContent(question)}
-                </Paper>
+                </Box>
+              </Paper>
               ))}
             </Box>
           )}
@@ -441,8 +443,8 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
                       }}
                     >
                       <DeleteIcon width={16} height={18} />
-                    </IconButton>
-                  </Box>
+                    </Box>
+                  ))}
                 </Box>
               )}
 
