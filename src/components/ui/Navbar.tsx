@@ -37,8 +37,7 @@ const Navbar = () => {
   const isSmallMobile = useMediaQuery("(max-width: 400px)");
   const location = useLocation();
 
-  const { token, user } = useAuth();
-  const isLoggedIn = !!token;
+  const { token, user, isLoggedIn } = useAuth();
 
   // Check if a route is active
   const isActive = (href: string) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Avatar,
   Box,
@@ -14,6 +14,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { useNavigate, NavigateFunction } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../store/store";
+import { clearAuth } from "../../../slices/firebaseAuth.slice";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../features/auth/Firebase";
 
 import CloseIcon from "@mui/icons-material/Close";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -25,7 +31,14 @@ import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
 
 const menuItems = [
-  { text: "View Profile", icon: <PersonOutlineOutlinedIcon />, color: "#4CAF50" },
+  {
+    text: "View Profile",
+    icon: <PersonOutlineOutlinedIcon />,
+    color: "#4CAF50",
+    onClick: (navigate: NavigateFunction) => {
+      navigate("/learner/profile");
+    }
+  },
   {
     text: "My Courses",
     icon: <MenuBookOutlinedIcon />,
@@ -60,11 +73,109 @@ const menuItems = [
 
 const ProfileCenterPopup = () => {
   const [open, setOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, firebaseUser, backendUser } = useAuth();
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true);
+    setImageError(false); // Reset image error when opening
+  };
   const handleClose = () => setOpen(false);
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      // Sign out from Firebase if authenticated
+      if (auth.currentUser) {
+        await signOut(auth);
+      }
+      // Clear Firebase auth state in Redux
+      dispatch(clearAuth());
+      // Clear localStorage (JWT token, etc.)
+      localStorage.clear();
+      // Redirect to login
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Error signing out:", error);
+      // Still clear localStorage and redirect even if Firebase sign out fails
+      dispatch(clearAuth());
+      localStorage.clear();
+      window.location.href = "/login";
+    }
+  };
+
+  // Get user data - prioritize backend user, then Firebase user, then JWT user
+  const userData = useMemo(() => {
+    if (backendUser) {
+      return {
+        id: backendUser.id,
+        email: backendUser.email,
+        firstName: backendUser.firstName,
+        lastName: backendUser.lastName,
+        displayName: backendUser.displayName ||
+          (backendUser.firstName && backendUser.lastName
+            ? `${backendUser.firstName} ${backendUser.lastName}`
+            : backendUser.firstName || backendUser.lastName || "User"),
+        picture: backendUser.picture,
+        photoURL: null, // Backend user doesn't have photoURL
+      };
+    }
+    if (firebaseUser) {
+      return {
+        id: null,
+        email: firebaseUser.email || "",
+        firstName: null,
+        lastName: null,
+        displayName: firebaseUser.displayName || "User",
+        picture: null,
+        photoURL: firebaseUser.photoURL,
+      };
+    }
+    if (user) {
+      return {
+        id: user.id,
+        email: user.email || "",
+        firstName: null,
+        lastName: null,
+        displayName: user.username || "User",
+        picture: null,
+        photoURL: null,
+      };
+    }
+    return null;
+  }, [backendUser, firebaseUser, user]);
+
+  // Get profile image or initials - check if image failed to load
+  const profileImage = useMemo(() => {
+    if (!userData || imageError) return null;
+    return userData.picture || userData.photoURL || null;
+  }, [userData, imageError]);
+
+  const profileInitials = useMemo(() => {
+    if (!userData) return "U";
+    if (userData.firstName && userData.lastName) {
+      return `${userData.firstName[0]}${userData.lastName[0]}`.toUpperCase();
+    }
+    if (userData.firstName) {
+      return userData.firstName[0].toUpperCase();
+    }
+    if (userData.lastName) {
+      return userData.lastName[0].toUpperCase();
+    }
+    if (userData.displayName) {
+      const parts = userData.displayName.split(" ");
+      if (parts.length >= 2) {
+        return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+      }
+      return userData.displayName[0].toUpperCase();
+    }
+    return "U";
+  }, [userData]);
 
   const getListItemStyles = (color: string, isSelected: boolean) => ({
     "&.MuiListItemButton-root": {
@@ -90,23 +201,29 @@ const ProfileCenterPopup = () => {
     <>
       {/* Trigger Avatar */}
       <Avatar
-        src=""
+        src={profileImage && !imageError ? profileImage : undefined}
+        onError={handleImageError}
         onClick={handleOpen}
         sx={{
           cursor: "pointer",
           width: 42,
           height: 42,
-          background: "linear-gradient(to right, #ef4444, #ec4899)",
+          background: profileImage && !imageError
+            ? "transparent"
+            : "linear-gradient(to right, #ef4444, #ec4899)",
           color: "#fff",
           fontWeight: 600,
           fontSize: "1rem",
           transition: "all 0.2s ease",
           "&:hover": {
-            background: "linear-gradient(to right, #dc2626, #db2777)",
+            background: profileImage && !imageError
+              ? "transparent"
+              : "linear-gradient(to right, #dc2626, #db2777)",
+            transform: "scale(1.05)",
           },
         }}
       >
-        RS
+        {(!profileImage || imageError) && profileInitials}
       </Avatar>
 
       {/* Modal */}
@@ -156,29 +273,31 @@ const ProfileCenterPopup = () => {
             }}
           >
             <Avatar
-              src=""
+              src={profileImage && !imageError ? profileImage : undefined}
+              onError={handleImageError}
               sx={{
                 width: 70,
                 height: 70,
-                background: "linear-gradient(to right, #ef4444, #ec4899)",
+                background: profileImage && !imageError
+                  ? "transparent"
+                  : "linear-gradient(to right, #ef4444, #ec4899)",
                 color: "#fff",
                 fontSize: "1.5rem",
                 fontWeight: 600,
                 mb: 1.5,
               }}
             >
-              RS
+              {(!profileImage || imageError) && profileInitials}
             </Avatar>
 
             <Typography variant="h6" fontWeight={600}>
-              Rishabh Singh
+              {userData?.displayName || "User"}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              example@gmail.com
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              User ID: 1234567890
-            </Typography>
+            {userData?.email && (
+              <Typography variant="body2" color="text.secondary">
+                {userData.email}
+              </Typography>
+            )}
           </Box>
 
           <Divider sx={{ mb: 2 }} />
@@ -186,12 +305,11 @@ const ProfileCenterPopup = () => {
           {/* Menu Items */}
           <List sx={{ width: "100%", padding: 0 }}>
             {menuItems.map((item, index) => {
-              const isSelected = index === 2;
               return (
                 <ListItemButton
                   key={item.text}
                   disableRipple
-                  sx={getListItemStyles(item.color, isSelected)}
+                  sx={getListItemStyles(item.color, false)}
                   onClick={() => {
                     if (item.onClick) {
                       item.onClick(navigate);
@@ -218,10 +336,7 @@ const ProfileCenterPopup = () => {
           <Button
             variant="contained"
             startIcon={<LogoutRoundedIcon />}
-            onClick={() => {
-              localStorage.clear();
-              window.location.href = "/login";
-            }}
+            onClick={handleSignOut}
             sx={{
               width: "100%",
               textTransform: "none",

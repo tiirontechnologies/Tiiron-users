@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import SearchIcon from "@mui/icons-material/Search";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -110,11 +109,7 @@ const NotFound = () => {
           />
 
           {/* 404 Heading */}
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6 }}
-          >
+          <Box>
             <Typography
               variant="h1"
               sx={{
@@ -129,14 +124,10 @@ const NotFound = () => {
             >
               404
             </Typography>
-          </motion.div>
+          </Box>
 
           {/* Subheading + Text */}
-          <motion.div
-            initial={{ y: 15, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
+          <Box>
             <Typography
               variant="h5"
               sx={{
@@ -145,7 +136,7 @@ const NotFound = () => {
                 mb: 0.5,
               }}
             >
-              We couldn’t find that page
+              We couldn't find that page
             </Typography>
             <Typography
               variant="body1"
@@ -157,17 +148,12 @@ const NotFound = () => {
                 fontSize: "1rem",
               }}
             >
-              The page you're looking for might have been moved or deleted. Let’s get you back to where learning happens.
+              The page you're looking for might have been moved or deleted. Let's get you back to where learning happens.
             </Typography>
-          </motion.div>
+          </Box>
 
           {/* Action Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            style={{ width: "100%" }}
-          >
+          <Box sx={{ width: "100%" }}>
             <Card
               sx={{
                 mx: "auto",
@@ -324,7 +310,7 @@ const NotFound = () => {
                 </Stack>
               </CardContent>
             </Card>
-          </motion.div>
+          </Box>
 
           {/* Go Back */}
           <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
