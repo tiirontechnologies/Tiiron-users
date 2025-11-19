@@ -10,7 +10,15 @@ import LocalLibraryIcon from "@icons/LocalLibraryIcon";
 import AutoStoriesIcon from "@icons/AutoStoriesIcon";
 import Courses from "../features/course/pages/Courses";
 import NotificationsIcon from "@icons/NotificationsIcon";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import Dashboard from "../features/dashboard/pages/Dashboard";
 export const appRoutes: Route[] = [
+  {
+    label: "Dashboard",
+    icon: <DashboardIcon />,
+    path: "/dashboard",
+    element: <Dashboard/>,
+  },
   {
     label: "Learning",
     icon: <BookIcon />,

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Fab, Typography } from "@mui/material";
 import AddNewCourseCard from "../../course-settings/components/AddNewCourseCard";
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import { DeleteModal } from "../components/DeleteCourseModal";
@@ -8,6 +8,7 @@ import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import {  Chat } from "@mui/icons-material";
 
 export default function Courses() {
   const queryArgs = { limit: 10, page: 1 };
@@ -78,6 +79,43 @@ export default function Courses() {
           )}
         </Box>
       </PageToolbarLayout>
+
+      {/* Floating Action Buttons */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: { xs: 16, md: 24 },
+          right: { xs: 16, md: 24 },
+          display: "flex",
+          flexDirection: "column",
+          gap: 1.5,
+          zIndex: 1000,
+        }}
+      >
+        {/* Chat Button */}
+        <Fab
+          size="medium"
+          sx={{
+            backgroundColor: "#22c55e",
+            color: "white",
+            width: { xs: 48, md: 56 },
+            height: { xs: 48, md: 56 },
+            "&:hover": {
+              backgroundColor: "#16a34a",
+              transform: "scale(1.1)",
+            },
+            boxShadow: "0 4px 12px rgba(34, 197, 94, 0.4)",
+            transition: "all 0.2s",
+          }}
+          aria-label="Chat"
+          onClick={() => {
+            // Add your chat functionality here
+            console.log("Chat clicked");
+          }}
+        >
+          <Chat sx={{ fontSize: { xs: 20, md: 24 } }} />
+        </Fab>
+      </Box>
     </Box>
   );
 }

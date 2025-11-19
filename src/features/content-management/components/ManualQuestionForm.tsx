@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
 import {
   Box,
@@ -48,7 +49,6 @@ interface IManualQuestionFormProps {
 
 export function ManualQuestionForm({
   type,
-  unitId,
   onClose,
   onSubmit: handleFormSubmit,
   isLoading,
@@ -93,8 +93,10 @@ export function ManualQuestionForm({
 
   useEffect(() => {
     if (effectiveType === "single_choice") {
+      
       const index = watchedOptions.findIndex((op: any) => op.isCorrect);
       if (index > -1) {
+        
         watchedOptions.forEach((op: any, i: number) => {
           op.isCorrect = i === index;
         });
