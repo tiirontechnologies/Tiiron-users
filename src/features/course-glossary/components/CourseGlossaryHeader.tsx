@@ -1,0 +1,325 @@
+import { Avatar, Box, Typography } from "@mui/material";
+import { ICourse } from "../../../types/course.types";
+import { useState, useRef, useEffect } from "react";
+
+interface CourseGlossaryHeaderProps {
+  course: ICourse | undefined;
+  chapters: any[] | undefined;
+}
+
+export default function CourseGlossaryHeader({ course, chapters }: CourseGlossaryHeaderProps) {
+  const totalLessons = chapters?.reduce((acc, chapter) => acc + (chapter?.units?.length || 0), 0) || 0;
+  const [isTruncated, setIsTruncated] = useState(false);
+  const descriptionRef = useRef<HTMLDivElement>(null);
+
+  // Check if description needs truncation
+  useEffect(() => {
+    if (descriptionRef.current && course?.description) {
+      const maxHeight = 120; // Maximum height in pixels before showing "Read More"
+      const actualHeight = descriptionRef.current.scrollHeight;
+      if (actualHeight > maxHeight) {
+        setIsTruncated(true);
+      } else {
+        setIsTruncated(false);
+      }
+    }
+  }, [course?.description]);
+
+  const handleReadMore = () => {
+    const overviewElement = document.getElementById("course-overview");
+    if (overviewElement) {
+      overviewElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        // Very Light Purple Tint (Softer than current)
+        bgcolor: "#FEFBFF",
+        border: "1px solid #F1E5FF",
+        display: "flex",
+        flexDirection: "column",
+        gap: { xs: 2.5, md: 3 },
+        alignItems: { xs: "center", md: "flex-start" },
+        boxSizing: "border-box",
+        borderRadius: 3,
+        p: { xs: 3, md: 4 },
+        width: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          gap: { xs: 2, md: 3 },
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+        }}
+      >
+        {/* Course Title with Enhanced Design */}
+        <Box sx={{ position: "relative", width: "100%" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              background: "linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #6A42AB 100%)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: 800,
+              fontSize: { xs: "28px", sm: "36px", md: "44px", lg: "52px" },
+              wordBreak: "break-word",
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+              mb: 0.5,
+              position: "relative",
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: "-8px",
+                left: 0,
+                width: "60px",
+                height: "4px",
+                background: "linear-gradient(90deg, #6A42AB 0%, #8B5CF6 100%)",
+                borderRadius: "2px",
+              },
+            }}
+          >
+            {course?.title || "Course Title"}
+          </Typography>
+        </Box>
+
+        {/* Course Description with Enhanced Readability */}
+        <Box
+          sx={{
+            width: "100%",
+            position: "relative",
+            mt: { xs: 2.5, md: 3 },
+            mb: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              left: "-16px",
+              top: 0,
+              bottom: 0,
+              width: "4px",
+              background: "linear-gradient(180deg, #6A42AB 0%, #8B5CF6 50%, #A78BFA 100%)",
+              borderRadius: "2px",
+              display: { xs: "none", md: "block" },
+            }}
+          />
+          <Typography
+            variant="body1"
+            component="div"
+            ref={descriptionRef}
+            sx={{
+              width: "100%",
+              fontSize: { xs: "15px", md: "17px", lg: "19px" },
+              wordBreak: "break-word",
+              color: "#334155",
+              lineHeight: 1.75,
+              fontWeight: 400,
+              pl: { xs: 0, md: 3 },
+              overflow: isTruncated ? "hidden" : "visible",
+              maxHeight: isTruncated ? "120px" : "none",
+              position: "relative",
+              "&::after": isTruncated
+                ? {
+                  content: '""',
+                  position: "absolute",
+                  bottom: 0,
+                  left: { xs: 0, md: "24px" },
+                  right: 0,
+                  height: "40px",
+                  background: "linear-gradient(to bottom, transparent, #FEFBFF)",
+                  pointerEvents: "none",
+                }
+                : {},
+            }}
+          >
+            {course?.description ? (
+              (() => {
+                const paragraphs = course.description
+                  .split("\n")
+                  .filter((line) => line.trim());
+
+                return (
+                  <Box
+                    component="div"
+                    sx={{
+                      "& > *": {
+                        mb: 2.5,
+                        "&:last-child": { mb: 0 },
+                      },
+                    }}
+                  >
+                    {paragraphs.map((paragraph, index) => (
+                      <Typography
+                        key={index}
+                        component="p"
+                        sx={{
+                          fontSize: "inherit",
+                          lineHeight: "inherit",
+                          color: "inherit",
+                          position: "relative",
+                          pl: { xs: 0, md: 0 },
+                          "&:first-of-type::first-letter": {
+                            fontSize: { xs: "32px", md: "36px", lg: "40px" },
+                            fontWeight: 700,
+                            color: "#6A42AB",
+                            float: "left",
+                            lineHeight: 0.9,
+                            marginRight: "10px",
+                            marginTop: "6px",
+                            fontFamily: "Georgia, serif",
+                          },
+                        }}
+                      >
+                        {paragraph.trim()}
+                      </Typography>
+                    ))}
+                  </Box>
+                );
+              })()
+            ) : (
+              <Box
+                sx={{
+                  fontStyle: "italic",
+                  color: "#94A3B8",
+                }}
+              >
+                Course description will appear here. This course is designed to provide you with comprehensive knowledge and practical skills.
+              </Box>
+            )}
+          </Typography>
+          {isTruncated && (
+            <Typography
+              onClick={handleReadMore}
+              component="span"
+              sx={{
+                mt: 1, ml: 4,
+                alignSelf: { xs: "center", md: "flex-start" },
+                color: "#6A42AB",
+                fontWeight: 700,
+                fontSize: { xs: "14px", md: "15px" },
+                cursor: "pointer",
+                display: "inline-block",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  color: "#8B5CF6",
+                  transform: "translateX(4px)",
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              ...Read More
+            </Typography>
+          )}
+        </Box>
+
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: { xs: 2, md: 2.5 },
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#0F172A",
+              fontWeight: 500,
+              fontSize: { xs: "12px", md: "14px" },
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              flexWrap: "wrap",
+            }}
+          >
+            <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+              <Box component="span" sx={{ fontWeight: 700, color: "#6A42AB" }}>4.6</Box>
+              {Array(5).fill(null).map((_, i) => (
+                <img
+                  key={i}
+                  src="/icons/Vector.svg"
+                  alt="star"
+                  style={{ width: "16px", height: "16px" }}
+                />
+              ))}
+            </Box>
+            <Box component="span" sx={{ color: "#64748B" }}>
+              (146,951 ratings)
+            </Box>
+            <Box component="span" sx={{ color: "#64748B" }}>|</Box>
+            <Box component="span" sx={{ color: "#64748B" }}>22 Total Hours</Box>
+            <Box component="span" sx={{ color: "#64748B" }}>|</Box>
+            <Box component="span" sx={{ color: "#64748B" }}>{totalLessons} Lessons</Box>
+            <Box component="span" sx={{ color: "#64748B" }}>|</Box>
+            <Box component="span" sx={{ color: "#64748B" }}>All levels</Box>
+          </Typography>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              flexWrap: "wrap",
+            }}
+          >
+            <Avatar
+              alt={course?.createdBy || "Instructor"}
+              src="/images/avatarUser.png"
+              sx={{
+                width: { xs: 36, md: 40 },
+                height: { xs: 36, md: 40 },
+                border: "2px solid #E2E8F0",
+              }}
+            />
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: { xs: "12px", md: "16px" },
+                color: "#1E293B",
+                fontWeight: 500,
+              }}
+            >
+              Created by <Box component="span" sx={{ fontWeight: 600 }}>{course?.createdBy || "Instructor"}</Box>
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              flexWrap: "wrap",
+            }}
+          >
+            <Avatar
+              alt="Languages"
+              src="/icons/Icon.svg"
+              sx={{
+                width: 20,
+                height: 20,
+              }}
+            />
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: { xs: "12px", md: "16px" },
+                color: "#64748B",
+              }}
+            >
+              English, Spanish, Italian, German
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
