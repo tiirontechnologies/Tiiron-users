@@ -15,8 +15,8 @@ export const chapterApiSlice = baseApi.injectEndpoints({
 
     // Get units with questions for a specific unit
     getUnitsWithQuestions: builder.query({
-      query: ({ unitId }: { unitId: string }) => ({
-        url: `/content/course/2/unit/${unitId}`,
+      query: ({ unitId, courseId}: { unitId: string, courseId: string }) => ({
+        url: `/content/course/${courseId}/unit/${unitId}`,
         method: 'GET',
       }),
       providesTags: ['Unit'],
