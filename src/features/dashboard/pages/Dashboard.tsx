@@ -65,11 +65,7 @@ import {
   Legend,
 } from "recharts";
 
-import {
-  KPI,
-  Learner,
-  LearnerStatus,
-} from "../../course-dashboard/types";
+import { KPI, Learner, LearnerStatus } from "../../course-dashboard/types";
 import {
   header,
   kpis,
@@ -78,13 +74,11 @@ import {
   enrollments,
   STATUS_COLOR,
 } from "../../course-dashboard/utils/mockData";
-import { exportCSV } from "../../course-dashboard/utils/helpers"
+import { exportCSV } from "../../course-dashboard/utils/helpers";
 /* ==============================
  * Small building blocks
  * ============================== */
 function StatCard({ label, value, suffix }: KPI) {
- 
-
   // Color mapping for different KPIs
   const getCardColors = (label: string) => {
     if (label.includes("Enrolled")) {
@@ -464,894 +458,915 @@ export default function Dashboard() {
   return (
     <Box
       sx={{
-        bgcolor: "#F8FAFC",
-        minHeight: "100%",
+        flexGrow: 1,
+        mx: { xs: 0, md: 3 },
+        mt: { xs: 2, md: 3 },
+        overflow: "hidden",
+        backgroundColor: "#fff",
+        borderRadius: { xs: 2, md: 3 },
+        boxShadow: {
+          xs: "0 2px 4px rgba(0,0,0,0.1)",
+          md: "0 4px 12px rgba(0,0,0,0.15)",
+        },
+        border: { xs: "1px solid #e0e0e0", md: "1px solid #f0f0f0" },
         display: "flex",
         flexDirection: "column",
-        position: "relative",
-        marginTop: "-15px",
       }}
     >
-      {/* Header */}
       <Box
         sx={{
-          bgcolor: "#FFFFFF",
-          borderBottom: "2px solid #E2E8F0",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-          marginTop : "50px"
+          bgcolor: "#F8FAFC",
+          minHeight: "100%",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          marginTop: "-15px",
+          px: { xs: 0, md: 3 },
         }}
       >
-        <Box sx={{ px: { xs: 2, sm: 3, md: 4 }, py: 3 }}>
-          <Stack
-            direction={{ xs: "column", md: "row" }}
-            spacing={2}
-            alignItems={{ md: "center" }}
-            justifyContent="space-between"
-          >
-            <Box>
-              <Typography
-                variant={isMdUp ? "h5" : "h6"}
-                fontWeight={700}
-                sx={{
-                  color: "#1E293B",
-                  mb: 1,
-                  fontSize: { xs: "20px", md: "24px" },
-                }}
-              >
-                {header.title}
-              </Typography>
-              <Stack
-                direction="row"
-                spacing={1}
-                alignItems="center"
-                sx={{ flexWrap: "wrap", gap: 1 }}
-              >
-                <Chip
-                  size="small"
-                  label={`Course ID: ${header.id}`}
-                  sx={{
-                    bgcolor: "#EEF2FF",
-                    color: "#4F46E5",
-                    fontWeight: 600,
-                    fontSize: "11px",
-                  }}
-                />
-                <Chip
-                  size="small"
-                  label={`Category: ${header.category}`}
-                  sx={{
-                    bgcolor: "#F0FDF4",
-                    color: "#16A34A",
-                    fontWeight: 600,
-                    fontSize: "11px",
-                  }}
-                />
-                <Chip
-                  size="small"
-                  label={`Instructor: ${header.instructor}`}
-                  sx={{
-                    bgcolor: "#FEF3C7",
-                    color: "#D97706",
-                    fontWeight: 600,
-                    fontSize: "11px",
-                  }}
-                />
-              </Stack>
-            </Box>
-
-            <Stack direction="row" alignItems="center" spacing={1.5}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  bgcolor: "#FFFBEB",
-                  px: 2,
-                  py: 1,
-                  borderRadius: 2,
-                  border: "1px solid #FDE68A",
-                }}
-              >
-                <StarRounded sx={{ color: "#F59E0B", fontSize: 20 }} />
-                <Typography variant="h6" fontWeight={700} sx={{ color: "#92400E" }}>
-                  {header.rating.toFixed(1)}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ color: "#78350F", fontSize: "12px" }}
-                >
-                  ({header.reviews} reviews)
-                </Typography>
-              </Box>
-              <Button
-                endIcon={<ArrowOutwardRounded />}
-                variant="contained"
-                sx={{
-                  bgcolor: "#6A42AB",
-                  "&:hover": { bgcolor: "#5B3A94" },
-                  textTransform: "none",
-                  fontWeight: 600,
-                  px: 2.5,
-                }}
-              >
-                View Reviews
-              </Button>
-            </Stack>
-          </Stack>
-        </Box>
-      </Box>
-
-      {/* Main Content */}
-      <Box sx={{ flex: 1, px: { xs: 2, sm: 3, md: 4 }, py: 3 }}>
-        {/* KPI Row */}
-        <Box sx={{ mb: 3 }}>
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#1E293B",
-              fontWeight: 700,
-              mb: 2,
-              fontSize: "18px",
-            }}
-          >
-            Key Performance Indicators
-          </Typography>
-          <Grid container spacing={2.5}>
-            {kpis.map((k) => (
-              <Grid item xs={12} sm={6} md={3} key={k.label}>
-                <StatCard {...k} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        {/* Overview + Analytics top */}
-        <Grid container spacing={2.5} sx={{ mb: 3, mt: 0 }}>
-          {/* Course Overview with ring */}
-          <Grid item xs={12} md={7}>
-            <Card
-              sx={{
-                borderRadius: 3,
-                border: "1px solid #E2E8F0",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                bgcolor: "#FFFFFF",
-              }}
+        {/* Header */}
+        <Box
+          sx={{
+            bgcolor: "#FFFFFF",
+            borderBottom: "2px solid #E2E8F0",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+            marginTop: "50px",
+          }}
+        >
+          <Box sx={{ px: { xs: 2, sm: 3, md: 4 }, py: 3 }}>
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              spacing={2}
+              alignItems={{ md: "center" }}
+              justifyContent="space-between"
             >
-              <CardHeader
-                action={
-                  <IconButton size="small" sx={{ color: "#64748B" }}>
-                    <MoreVertRounded />
-                  </IconButton>
-                }
-                title={
+              <Box>
+                <Typography
+                  variant={isMdUp ? "h5" : "h6"}
+                  fontWeight={700}
+                  sx={{
+                    color: "#1E293B",
+                    mb: 1,
+                    fontSize: { xs: "20px", md: "24px" },
+                  }}
+                >
+                  {header.title}
+                </Typography>
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
+                  sx={{ flexWrap: "wrap", gap: 1 }}
+                >
+                  <Chip
+                    size="small"
+                    label={`Course ID: ${header.id}`}
+                    sx={{
+                      bgcolor: "#EEF2FF",
+                      color: "#4F46E5",
+                      fontWeight: 600,
+                      fontSize: "11px",
+                    }}
+                  />
+                  <Chip
+                    size="small"
+                    label={`Category: ${header.category}`}
+                    sx={{
+                      bgcolor: "#F0FDF4",
+                      color: "#16A34A",
+                      fontWeight: 600,
+                      fontSize: "11px",
+                    }}
+                  />
+                  <Chip
+                    size="small"
+                    label={`Instructor: ${header.instructor}`}
+                    sx={{
+                      bgcolor: "#FEF3C7",
+                      color: "#D97706",
+                      fontWeight: 600,
+                      fontSize: "11px",
+                    }}
+                  />
+                </Stack>
+              </Box>
+
+              <Stack direction="row" alignItems="center" spacing={1.5}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    bgcolor: "#FFFBEB",
+                    px: 2,
+                    py: 1,
+                    borderRadius: 2,
+                    border: "1px solid #FDE68A",
+                  }}
+                >
+                  <StarRounded sx={{ color: "#F59E0B", fontSize: 20 }} />
                   <Typography
                     variant="h6"
                     fontWeight={700}
-                    sx={{ color: "#1E293B", fontSize: "16px" }}
+                    sx={{ color: "#92400E" }}
                   >
-                    Overall Completion Rate
+                    {header.rating.toFixed(1)}
                   </Typography>
-                }
-                subheader={
                   <Typography
                     variant="body2"
-                    sx={{ color: "#64748B", fontSize: "12px", mt: 0.5 }}
+                    sx={{ color: "#78350F", fontSize: "12px" }}
                   >
-                    Live cohort performance
+                    ({header.reviews} reviews)
                   </Typography>
-                }
+                </Box>
+                <Button
+                  endIcon={<ArrowOutwardRounded />}
+                  variant="contained"
+                  sx={{
+                    bgcolor: "#6A42AB",
+                    "&:hover": { bgcolor: "#5B3A94" },
+                    textTransform: "none",
+                    fontWeight: 600,
+                    px: 2.5,
+                  }}
+                >
+                  View Reviews
+                </Button>
+              </Stack>
+            </Stack>
+          </Box>
+        </Box>
+
+        {/* Main Content */}
+        <Box sx={{ flex: 1, px: { xs: 2, sm: 3, md: 4 }, py: 3 }}>
+          {/* KPI Row */}
+          <Box sx={{ mb: 3 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                color: "#1E293B",
+                fontWeight: 700,
+                mb: 2,
+                fontSize: "18px",
+              }}
+            >
+              Key Performance Indicators
+            </Typography>
+            <Grid container spacing={2.5}>
+              {kpis.map((k) => (
+                <Grid item xs={12} sm={6} md={3} key={k.label}>
+                  <StatCard {...k} />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+
+          {/* Overview + Analytics top */}
+          <Grid container spacing={2.5} sx={{ mb: 3, mt: 0 }}>
+            {/* Course Overview with ring */}
+            <Grid item xs={12} md={7}>
+              <Card
                 sx={{
-                  borderBottom: "1px solid #F1F5F9",
-                  pb: 2,
+                  borderRadius: 3,
+                  border: "1px solid #E2E8F0",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                  bgcolor: "#FFFFFF",
                 }}
-              />
-              <CardContent>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={5}>
-                    <KPIRing percent={header.completionOverall} />
-                  </Grid>
-                  <Grid item xs={12} md={7}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6}>
-                        <StatMini title="Total Enrolled" value="245" />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <StatMini title="Completion Rate" value="68%" />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <StatMini title="Revenue Generated" value="$12,450" />
-                      </Grid>
-                      <Grid item xs={6}>
-                        <StatMini title="Completed Learners" value="20" />
+              >
+                <CardHeader
+                  action={
+                    <IconButton size="small" sx={{ color: "#64748B" }}>
+                      <MoreVertRounded />
+                    </IconButton>
+                  }
+                  title={
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      sx={{ color: "#1E293B", fontSize: "16px" }}
+                    >
+                      Overall Completion Rate
+                    </Typography>
+                  }
+                  subheader={
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "#64748B", fontSize: "12px", mt: 0.5 }}
+                    >
+                      Live cohort performance
+                    </Typography>
+                  }
+                  sx={{
+                    borderBottom: "1px solid #F1F5F9",
+                    pb: 2,
+                  }}
+                />
+                <CardContent>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={5}>
+                      <KPIRing percent={header.completionOverall} />
+                    </Grid>
+                    <Grid item xs={12} md={7}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <StatMini title="Total Enrolled" value="245" />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <StatMini title="Completion Rate" value="68%" />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <StatMini title="Revenue Generated" value="$12,450" />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <StatMini title="Completed Learners" value="20" />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Small analytics card */}
-          <Grid item xs={12} md={5}>
-            <Card
-              sx={{
-                borderRadius: 3,
-                height: "100%",
-                border: "1px solid #E2E8F0",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                bgcolor: "#FFFFFF",
-              }}
-            >
-              <CardHeader
-                action={
-                  <IconButton size="small" sx={{ color: "#64748B" }}>
-                    <MoreVertRounded />
-                  </IconButton>
-                }
-                title={
-                  <Typography
-                    variant="h6"
-                    fontWeight={700}
-                    sx={{ color: "#1E293B", fontSize: "16px" }}
-                  >
-                    Analytics
-                  </Typography>
-                }
-                subheader={
-                  <Typography
-                    variant="body2"
-                    sx={{ color: "#64748B", fontSize: "12px", mt: 0.5 }}
-                  >
-                    Distribution & engagement
-                  </Typography>
-                }
+            {/* Small analytics card */}
+            <Grid item xs={12} md={5}>
+              <Card
                 sx={{
-                  borderBottom: "1px solid #F1F5F9",
-                  pb: 2,
+                  borderRadius: 3,
+                  height: "100%",
+                  border: "1px solid #E2E8F0",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                  bgcolor: "#FFFFFF",
                 }}
-              />
-              <CardContent>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <StatMini
-                      title="Average Progress"
-                      value={`${analytics.avgProgress}%`}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <StatMini
-                      title="Active Learners"
-                      value={analytics.active}
-                    />
-                  </Grid>
-                </Grid>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Box sx={{ height: 220 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={analytics.distribution}
-                        innerRadius={55}
-                        outerRadius={85}
-                        dataKey="value"
-                        nameKey="name"
-                        paddingAngle={2}
-                      >
-                        {analytics.distribution.map((_, i) => (
-                          <Cell
-                            key={i}
-                            fill={PIE_COLORS[i % PIE_COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Legend verticalAlign="bottom" height={36} />
-                      <ReTooltip />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Learners + Drop-off */}
-        <Grid container spacing={2.5} sx={{ mb: 3 }}>
-          {/* Learners Table */}
-          <Grid item xs={12} md={8}>
-            <Card
-              sx={{
-                borderRadius: 3,
-                border: "1px solid #E2E8F0",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                bgcolor: "#FFFFFF",
-              }}
-            >
-              <CardHeader
-                title={
-                  <Typography
-                    variant="h6"
-                    fontWeight={700}
-                    sx={{ color: "#1E293B", fontSize: "16px" }}
-                  >
-                    Learners ({learners.length})
-                  </Typography>
-                }
-                sx={{
-                  borderBottom: "1px solid #F1F5F9",
-                  pb: 2,
-                }}
-                action={
-                  <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-                    <TextField
-                      size="small"
-                      placeholder="Search by name or email"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SearchRounded />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <Button
-                      variant="outlined"
-                      startIcon={<DownloadRounded />}
-                      onClick={() => exportCSV(filteredLearners)}
-                      sx={{
-                        borderColor: "#CBD5E1",
-                        color: "#475569",
-                        textTransform: "none",
-                        fontWeight: 600,
-                        "&:hover": {
-                          borderColor: "#6A42AB",
-                          bgcolor: "#F3E8FF",
-                        },
-                      }}
+              >
+                <CardHeader
+                  action={
+                    <IconButton size="small" sx={{ color: "#64748B" }}>
+                      <MoreVertRounded />
+                    </IconButton>
+                  }
+                  title={
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      sx={{ color: "#1E293B", fontSize: "16px" }}
                     >
-                      Export
-                    </Button>
-                    <Button
-                      variant="contained"
-                      startIcon={<AddRounded />}
-                      onClick={() => setAddOpen(true)}
-                      sx={{
-                        bgcolor: "#6A42AB",
-                        textTransform: "none",
-                        fontWeight: 600,
-                        "&:hover": { bgcolor: "#5B3A94" },
-                      }}
+                      Analytics
+                    </Typography>
+                  }
+                  subheader={
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "#64748B", fontSize: "12px", mt: 0.5 }}
                     >
-                      Add Learner
-                    </Button>
-                  </Stack>
-                }
-              />
-              <CardContent sx={{ p: 0 }}>
-                <TableContainer
-                  component={Paper}
-                  variant="outlined"
+                      Distribution & engagement
+                    </Typography>
+                  }
                   sx={{
-                    borderRadius: 2,
-                    border: "none",
-                    boxShadow: "none",
+                    borderBottom: "1px solid #F1F5F9",
+                    pb: 2,
                   }}
-                >
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow
+                />
+                <CardContent>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                      <StatMini
+                        title="Average Progress"
+                        value={`${analytics.avgProgress}%`}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <StatMini
+                        title="Active Learners"
+                        value={analytics.active}
+                      />
+                    </Grid>
+                  </Grid>
+
+                  <Divider sx={{ my: 2 }} />
+
+                  <Box sx={{ height: 220 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={analytics.distribution}
+                          innerRadius={55}
+                          outerRadius={85}
+                          dataKey="value"
+                          nameKey="name"
+                          paddingAngle={2}
+                        >
+                          {analytics.distribution.map((_, i) => (
+                            <Cell
+                              key={i}
+                              fill={PIE_COLORS[i % PIE_COLORS.length]}
+                            />
+                          ))}
+                        </Pie>
+                        <Legend verticalAlign="bottom" height={36} />
+                        <ReTooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+
+          {/* Learners + Drop-off */}
+          <Grid container spacing={2.5} sx={{ mb: 3 }}>
+            {/* Learners Table */}
+            <Grid item xs={12} md={8}>
+              <Card
+                sx={{
+                  borderRadius: 3,
+                  border: "1px solid #E2E8F0",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                  bgcolor: "#FFFFFF",
+                }}
+              >
+                <CardHeader
+                  title={
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      sx={{ color: "#1E293B", fontSize: "16px" }}
+                    >
+                      Learners ({learners.length})
+                    </Typography>
+                  }
+                  sx={{
+                    borderBottom: "1px solid #F1F5F9",
+                    pb: 2,
+                  }}
+                  action={
+                    <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                      <TextField
+                        size="small"
+                        placeholder="Search by name or email"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <SearchRounded />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      <Button
+                        variant="outlined"
+                        startIcon={<DownloadRounded />}
+                        onClick={() => exportCSV(filteredLearners)}
                         sx={{
-                          bgcolor: "#F8FAFC",
-                          "& th": {
-                            color: "#475569",
-                            fontWeight: 700,
-                            fontSize: "12px",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                            borderBottom: "2px solid #E2E8F0",
-                            py: 2,
+                          borderColor: "#CBD5E1",
+                          color: "#475569",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          "&:hover": {
+                            borderColor: "#6A42AB",
+                            bgcolor: "#F3E8FF",
                           },
                         }}
                       >
-                        <TableCell>Learner</TableCell>
-                        <TableCell>Enrolled Date</TableCell>
-                        <TableCell>Progress</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Last Active</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {filteredLearners.map((l) => (
+                        Export
+                      </Button>
+                      <Button
+                        variant="contained"
+                        startIcon={<AddRounded />}
+                        onClick={() => setAddOpen(true)}
+                        sx={{
+                          bgcolor: "#6A42AB",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          "&:hover": { bgcolor: "#5B3A94" },
+                        }}
+                      >
+                        Add Learner
+                      </Button>
+                    </Stack>
+                  }
+                />
+                <CardContent sx={{ p: 0 }}>
+                  <TableContainer
+                    component={Paper}
+                    variant="outlined"
+                    sx={{
+                      borderRadius: 2,
+                      border: "none",
+                      boxShadow: "none",
+                    }}
+                  >
+                    <Table size="small">
+                      <TableHead>
                         <TableRow
-                          key={l.id}
-                          hover
                           sx={{
-                            "&:hover": {
-                              bgcolor: "#F8FAFC",
-                            },
-                            "& td": {
-                              borderBottom: "1px solid #F1F5F9",
+                            bgcolor: "#F8FAFC",
+                            "& th": {
+                              color: "#475569",
+                              fontWeight: 700,
+                              fontSize: "12px",
+                              textTransform: "uppercase",
+                              letterSpacing: "0.5px",
+                              borderBottom: "2px solid #E2E8F0",
                               py: 2,
                             },
                           }}
                         >
-                          <TableCell>
-                            <Stack
-                              direction="row"
-                              spacing={1.5}
-                              alignItems="center"
-                            >
-                              <Avatar sx={{ width: 28, height: 28 }}>
-                                {l.name.charAt(0)}
-                              </Avatar>
-                              <Box>
-                                <Typography fontWeight={600}>
-                                  {l.name}
-                                </Typography>
-                                {l.email && (
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                  >
-                                    {l.email}
+                          <TableCell>Learner</TableCell>
+                          <TableCell>Enrolled Date</TableCell>
+                          <TableCell>Progress</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell>Last Active</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {filteredLearners.map((l) => (
+                          <TableRow
+                            key={l.id}
+                            hover
+                            sx={{
+                              "&:hover": {
+                                bgcolor: "#F8FAFC",
+                              },
+                              "& td": {
+                                borderBottom: "1px solid #F1F5F9",
+                                py: 2,
+                              },
+                            }}
+                          >
+                            <TableCell>
+                              <Stack
+                                direction="row"
+                                spacing={1.5}
+                                alignItems="center"
+                              >
+                                <Avatar sx={{ width: 28, height: 28 }}>
+                                  {l.name.charAt(0)}
+                                </Avatar>
+                                <Box>
+                                  <Typography fontWeight={600}>
+                                    {l.name}
                                   </Typography>
-                                )}
-                              </Box>
-                            </Stack>
-                          </TableCell>
-                          <TableCell>{l.enrolled}</TableCell>
-                          <TableCell>
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              spacing={1}
-                              sx={{ minWidth: 160 }}
-                            >
-                              <Box sx={{ flex: 1 }}>
-                                <LinearProgress
-                                  variant="determinate"
-                                  value={l.progress}
-                                  sx={{ height: 8, borderRadius: 999 }}
-                                />
-                              </Box>
-                              <Chip
-                                label={`${l.progress}%`}
-                                size="small"
-                                sx={{
-                                  bgcolor:
-                                    l.progress === 100
-                                      ? "#DBEAFE"
-                                      : l.progress >= 70
+                                  {l.email && (
+                                    <Typography
+                                      variant="caption"
+                                      color="text.secondary"
+                                    >
+                                      {l.email}
+                                    </Typography>
+                                  )}
+                                </Box>
+                              </Stack>
+                            </TableCell>
+                            <TableCell>{l.enrolled}</TableCell>
+                            <TableCell>
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                spacing={1}
+                                sx={{ minWidth: 160 }}
+                              >
+                                <Box sx={{ flex: 1 }}>
+                                  <LinearProgress
+                                    variant="determinate"
+                                    value={l.progress}
+                                    sx={{ height: 8, borderRadius: 999 }}
+                                  />
+                                </Box>
+                                <Chip
+                                  label={`${l.progress}%`}
+                                  size="small"
+                                  sx={{
+                                    bgcolor:
+                                      l.progress === 100
+                                        ? "#DBEAFE"
+                                        : l.progress >= 70
                                         ? "#D1FAE5"
                                         : l.progress >= 40
-                                          ? "#FEF3C7"
-                                          : "#FEE2E2",
-                                  color:
-                                    l.progress === 100
-                                      ? "#1E40AF"
-                                      : l.progress >= 70
+                                        ? "#FEF3C7"
+                                        : "#FEE2E2",
+                                    color:
+                                      l.progress === 100
+                                        ? "#1E40AF"
+                                        : l.progress >= 70
                                         ? "#065F46"
                                         : l.progress >= 40
-                                          ? "#92400E"
-                                          : "#991B1B",
-                                  fontWeight: 600,
-                                  fontSize: "11px",
-                                }}
-                              />
-                            </Stack>
-                          </TableCell>
-                          <TableCell>
-                            <StatusChip status={l.status} />
-                          </TableCell>
-                          <TableCell>{l.lastActive}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
-            </Card>
-          </Grid>
+                                        ? "#92400E"
+                                        : "#991B1B",
+                                    fontWeight: 600,
+                                    fontSize: "11px",
+                                  }}
+                                />
+                              </Stack>
+                            </TableCell>
+                            <TableCell>
+                              <StatusChip status={l.status} />
+                            </TableCell>
+                            <TableCell>{l.lastActive}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Drop-off + Rating */}
-          <Grid item xs={12} md={4}>
-            <Card
-              sx={{
-                borderRadius: 3,
-                border: "1px solid #E2E8F0",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                bgcolor: "#FFFFFF",
-              }}
-            >
+            {/* Drop-off + Rating */}
+            <Grid item xs={12} md={4}>
+              <Card
+                sx={{
+                  borderRadius: 3,
+                  border: "1px solid #E2E8F0",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                  bgcolor: "#FFFFFF",
+                }}
+              >
+                <CardContent sx={{ pt: 3, pb: 3 }}>
+                  {/* Rating Section */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      pb: 3,
+                      mb: 3,
+                      borderBottom: "1px solid #F1F5F9",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "#64748B",
+                          fontWeight: 500,
+                          fontSize: "12px",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.5px",
+                          mb: 1,
+                        }}
+                      >
+                        Course Rating & Feedback
+                      </Typography>
+                    </Box>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      alignItems="center"
+                      divider={
+                        <Divider
+                          orientation="vertical"
+                          flexItem
+                          sx={{ borderColor: "#E2E8F0", height: 24 }}
+                        />
+                      }
+                    >
+                      <Stack direction="row" spacing={1} alignItems="baseline">
+                        <StarRounded
+                          sx={{
+                            color: "#F59E0B",
+                            fontSize: 20,
+                          }}
+                        />
+                        <Typography
+                          variant="h5"
+                          fontWeight={700}
+                          sx={{
+                            color: "#1E293B",
+                            fontSize: "28px",
+                            lineHeight: 1,
+                          }}
+                        >
+                          {analytics.rating.value.toFixed(1)}
+                        </Typography>
+                      </Stack>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "#64748B",
+                          fontSize: "13px",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {analytics.rating.reviews} reviews
+                      </Typography>
+                    </Stack>
+                  </Box>
 
-              <CardContent sx={{ pt: 3, pb: 3 }}>
-                {/* Rating Section */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    pb: 3,
-                    mb: 3,
-                    borderBottom: "1px solid #F1F5F9",
-                  }}
-                >
+                  {/* Drop-off Points Section */}
                   <Box>
                     <Typography
                       variant="body2"
                       sx={{
+                        mb: 2.5,
                         color: "#64748B",
-                        fontWeight: 500,
+                        fontWeight: 600,
                         fontSize: "12px",
                         textTransform: "uppercase",
                         letterSpacing: "0.5px",
-                        mb: 1,
                       }}
                     >
-                      Course Rating & Feedback
+                      Common Drop-off Points
                     </Typography>
-                  </Box>
-                  <Stack
-                    direction="row"
-                    spacing={2}
-                    alignItems="center"
-                    divider={
-                      <Divider
-                        orientation="vertical"
-                        flexItem
-                        sx={{ borderColor: "#E2E8F0", height: 24 }}
-                      />
-                    }
-                  >
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      alignItems="baseline"
-                    >
-                      <StarRounded
-                        sx={{
-                          color: "#F59E0B",
-                          fontSize: 20,
-                        }}
-                      />
-                      <Typography
-                        variant="h5"
-                        fontWeight={700}
-                        sx={{
-                          color: "#1E293B",
-                          fontSize: "28px",
-                          lineHeight: 1,
-                        }}
-                      >
-                        {analytics.rating.value.toFixed(1)}
-                      </Typography>
-                    </Stack>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "#64748B",
-                        fontSize: "13px",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {analytics.rating.reviews} reviews
-                    </Typography>
-                  </Stack>
-                </Box>
 
-                {/* Drop-off Points Section */}
-                <Box>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      mb: 2.5,
-                      color: "#64748B",
-                      fontWeight: 600,
-                      fontSize: "12px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    Common Drop-off Points
-                  </Typography>
-
-                  <Stack spacing={1.5}>
-                    {analytics.dropoff.map((d) => {
-                      const getColorScheme = (value: number) => {
-                        if (value >= 20)
-                          return {
-                            bg: "#FEF2F2",
-                            text: "#1E293B",
-                            bar: "#FCA5A5",
-                            border: "#FEE2E2",
-                          };
-                        if (value >= 15)
+                    <Stack spacing={1.5}>
+                      {analytics.dropoff.map((d) => {
+                        const getColorScheme = (value: number) => {
+                          if (value >= 20)
+                            return {
+                              bg: "#FEF2F2",
+                              text: "#1E293B",
+                              bar: "#FCA5A5",
+                              border: "#FEE2E2",
+                            };
+                          if (value >= 15)
+                            return {
+                              bg: "#FFFBEB",
+                              text: "#1E293B",
+                              bar: "#FCD34D",
+                              border: "#FEF3C7",
+                            };
                           return {
                             bg: "#FFFBEB",
                             text: "#1E293B",
-                            bar: "#FCD34D",
+                            bar: "#FBBF24",
                             border: "#FEF3C7",
                           };
-                        return {
-                          bg: "#FFFBEB",
-                          text: "#1E293B",
-                          bar: "#FBBF24",
-                          border: "#FEF3C7",
                         };
-                      };
-                      const colors = getColorScheme(d.value);
-                      return (
-                        <Box
-                          key={d.lesson}
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 1,
-                            p: 2,
-                            borderRadius: 2,
-                            bgcolor: "#FFFFFF",
-                            border: `1px solid ${colors.border}`,
-                            transition: "all 0.2s ease",
-                            cursor: "pointer",
-                            "&:hover": {
-                              borderColor: "#6A42AB",
-                              bgcolor: "#F8FAFC",
-                              boxShadow: "0 2px 8px rgba(106, 66, 171, 0.08)",
-                              transform: "translateY(-1px)",
-                              "& .dropoff-text": {
-                                color: "#6A42AB",
-                              },
-                              "& .dropoff-percent": {
-                                color: "#6A42AB",
-                              },
-                            },
-                          }}
-                        >
+                        const colors = getColorScheme(d.value);
+                        return (
                           <Box
+                            key={d.lesson}
                             sx={{
                               display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <Typography
-                              variant="body2"
-                              className="dropoff-text"
-                              sx={{
-                                color: colors.text,
-                                fontWeight: 500,
-                                fontSize: "13px",
-                                transition: "color 0.2s",
-                              }}
-                            >
-                              {d.lesson}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              className="dropoff-percent"
-                              sx={{
-                                color: colors.text,
-                                fontWeight: 600,
-                                fontSize: "13px",
-                                transition: "color 0.2s",
-                              }}
-                            >
-                              {d.value}%
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              width: "100%",
-                              height: 8,
-                              borderRadius: 4,
-                              bgcolor: "#F1F5F9",
-                              overflow: "hidden",
-                              position: "relative",
+                              flexDirection: "column",
+                              gap: 1,
+                              p: 2,
+                              borderRadius: 2,
+                              bgcolor: "#FFFFFF",
+                              border: `1px solid ${colors.border}`,
+                              transition: "all 0.2s ease",
+                              cursor: "pointer",
+                              "&:hover": {
+                                borderColor: "#6A42AB",
+                                bgcolor: "#F8FAFC",
+                                boxShadow: "0 2px 8px rgba(106, 66, 171, 0.08)",
+                                transform: "translateY(-1px)",
+                                "& .dropoff-text": {
+                                  color: "#6A42AB",
+                                },
+                                "& .dropoff-percent": {
+                                  color: "#6A42AB",
+                                },
+                              },
                             }}
                           >
                             <Box
                               sx={{
-                                width: `${d.value}%`,
-                                height: "100%",
-                                bgcolor: colors.bar,
-                                borderRadius: 4,
-                                transition: "width 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
                               }}
-                            />
+                            >
+                              <Typography
+                                variant="body2"
+                                className="dropoff-text"
+                                sx={{
+                                  color: colors.text,
+                                  fontWeight: 500,
+                                  fontSize: "13px",
+                                  transition: "color 0.2s",
+                                }}
+                              >
+                                {d.lesson}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                className="dropoff-percent"
+                                sx={{
+                                  color: colors.text,
+                                  fontWeight: 600,
+                                  fontSize: "13px",
+                                  transition: "color 0.2s",
+                                }}
+                              >
+                                {d.value}%
+                              </Typography>
+                            </Box>
+                            <Box
+                              sx={{
+                                width: "100%",
+                                height: 8,
+                                borderRadius: 4,
+                                bgcolor: "#F1F5F9",
+                                overflow: "hidden",
+                                position: "relative",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  width: `${d.value}%`,
+                                  height: "100%",
+                                  bgcolor: colors.bar,
+                                  borderRadius: 4,
+                                  transition:
+                                    "width 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                }}
+                              />
+                            </Box>
                           </Box>
-                        </Box>
-                      );
-                    })}
-                  </Stack>
-                </Box>
-              </CardContent>
-            </Card>
+                        );
+                      })}
+                    </Stack>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
 
-        {/* Enrollments Over Time */}
-        <Grid container spacing={2.5}>
-          <Grid item xs={12}>
-            <Card
+          {/* Enrollments Over Time */}
+          <Grid container spacing={2.5}>
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  borderRadius: 3,
+                  border: "1px solid #E2E8F0",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                  bgcolor: "#FFFFFF",
+                }}
+              >
+                <CardHeader
+                  title={
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      sx={{ color: "#1E293B", fontSize: "16px" }}
+                    >
+                      Enrollments Over Time
+                    </Typography>
+                  }
+                  sx={{
+                    borderBottom: "1px solid #F1F5F9",
+                    pb: 2,
+                  }}
+                  action={
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <FormControl size="small">
+                        <Select
+                          value={granularity}
+                          onChange={(e) =>
+                            setGranularity(e.target.value as any)
+                          }
+                        >
+                          <MenuItem value="Weekly">Weekly</MenuItem>
+                          <MenuItem value="Monthly">Monthly</MenuItem>
+                          <MenuItem value="Quarterly">Quarterly</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor: "#CBD5E1",
+                          color: "#475569",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          "&:hover": {
+                            borderColor: "#6A42AB",
+                            bgcolor: "#F3E8FF",
+                          },
+                        }}
+                      >
+                        Last 6 Weeks
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor: "#CBD5E1",
+                          color: "#475569",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          "&:hover": {
+                            borderColor: "#6A42AB",
+                            bgcolor: "#F3E8FF",
+                          },
+                        }}
+                      >
+                        Last 3 Months
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor: "#CBD5E1",
+                          color: "#475569",
+                          textTransform: "none",
+                          fontWeight: 600,
+                          "&:hover": {
+                            borderColor: "#6A42AB",
+                            bgcolor: "#F3E8FF",
+                          },
+                        }}
+                      >
+                        Year to Date
+                      </Button>
+                    </Stack>
+                  }
+                />
+                <CardContent>
+                  <Box sx={{ height: 300 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart
+                        data={enrollments.series}
+                        margin={{ left: 8, right: 8, top: 8, bottom: 8 }}
+                      >
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <ReTooltip />
+                        <Line
+                          type="monotone"
+                          dataKey="value"
+                          stroke={theme.palette.primary.main}
+                          strokeWidth={3}
+                          dot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </Box>
+
+                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <StatMini
+                        title="Total Enrollment"
+                        value={enrollments.total.toLocaleString()}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <StatMini
+                        title="Unique Students"
+                        value={enrollments.unique.toLocaleString()}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+
+        {/* Floating Quick Actions */}
+        <Stack
+          direction="column"
+          spacing={1.5}
+          sx={{ position: "fixed", right: 24, bottom: 24, zIndex: 100 }}
+        >
+          <Tooltip title="Send Announcement">
+            <Fab color="primary" onClick={() => setAnnOpen(true)}>
+              <CampaignRounded />
+            </Fab>
+          </Tooltip>
+          <Tooltip title="Add Learner">
+            <Fab color="secondary" onClick={() => setAddOpen(true)}>
+              <AddRounded />
+            </Fab>
+          </Tooltip>
+          <Tooltip title="Export Data">
+            <Fab
+              onClick={() => exportCSV(filteredLearners)}
               sx={{
-                borderRadius: 3,
-                border: "1px solid #E2E8F0",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-                bgcolor: "#FFFFFF",
+                bgcolor: "success.main",
+                color: "white",
+                "&:hover": { bgcolor: "success.dark" },
               }}
             >
-              <CardHeader
-                title={
-                  <Typography
-                    variant="h6"
-                    fontWeight={700}
-                    sx={{ color: "#1E293B", fontSize: "16px" }}
-                  >
-                    Enrollments Over Time
-                  </Typography>
-                }
-                sx={{
-                  borderBottom: "1px solid #F1F5F9",
-                  pb: 2,
-                }}
-                action={
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <FormControl size="small">
-                      <Select
-                        value={granularity}
-                        onChange={(e) => setGranularity(e.target.value as any)}
-                      >
-                        <MenuItem value="Weekly">Weekly</MenuItem>
-                        <MenuItem value="Monthly">Monthly</MenuItem>
-                        <MenuItem value="Quarterly">Quarterly</MenuItem>
-                      </Select>
-                    </FormControl>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderColor: "#CBD5E1",
-                        color: "#475569",
-                        textTransform: "none",
-                        fontWeight: 600,
-                        "&:hover": {
-                          borderColor: "#6A42AB",
-                          bgcolor: "#F3E8FF",
-                        },
-                      }}
-                    >
-                      Last 6 Weeks
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderColor: "#CBD5E1",
-                        color: "#475569",
-                        textTransform: "none",
-                        fontWeight: 600,
-                        "&:hover": {
-                          borderColor: "#6A42AB",
-                          bgcolor: "#F3E8FF",
-                        },
-                      }}
-                    >
-                      Last 3 Months
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      sx={{
-                        borderColor: "#CBD5E1",
-                        color: "#475569",
-                        textTransform: "none",
-                        fontWeight: 600,
-                        "&:hover": {
-                          borderColor: "#6A42AB",
-                          bgcolor: "#F3E8FF",
-                        },
-                      }}
-                    >
-                      Year to Date
-                    </Button>
-                  </Stack>
-                }
-              />
-              <CardContent>
-                <Box sx={{ height: 300 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={enrollments.series}
-                      margin={{ left: 8, right: 8, top: 8, bottom: 8 }}
-                    >
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <ReTooltip />
-                      <Line
-                        type="monotone"
-                        dataKey="value"
-                        stroke={theme.palette.primary.main}
-                        strokeWidth={3}
-                        dot={false}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </Box>
+              <DownloadRounded />
+            </Fab>
+          </Tooltip>
+        </Stack>
 
-                <Grid container spacing={2} sx={{ mt: 1 }}>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <StatMini
-                      title="Total Enrollment"
-                      value={enrollments.total.toLocaleString()}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <StatMini
-                      title="Unique Students"
-                      value={enrollments.unique.toLocaleString()}
-                    />
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+        {/* Dialogs */}
+        <AddLearnerDialog
+          open={addOpen}
+          onClose={() => setAddOpen(false)}
+          onAdd={handleAdd}
+        />
+        <AnnouncementDialog open={annOpen} onClose={() => setAnnOpen(false)} />
 
-      {/* Floating Quick Actions */}
-      <Stack
-        direction="column"
-        spacing={1.5}
-        sx={{ position: "fixed", right: 24, bottom: 24, zIndex: 100 }}
-      >
-        <Tooltip title="Send Announcement">
-          <Fab color="primary" onClick={() => setAnnOpen(true)}>
-            <CampaignRounded />
-          </Fab>
-        </Tooltip>
-        <Tooltip title="Add Learner">
-          <Fab color="secondary" onClick={() => setAddOpen(true)}>
-            <AddRounded />
-          </Fab>
-        </Tooltip>
-        <Tooltip title="Export Data">
-          <Fab
-            onClick={() => exportCSV(filteredLearners)}
-            sx={{
-              bgcolor: "success.main",
-              color: "white",
-              "&:hover": { bgcolor: "success.dark" },
-            }}
-          >
-            <DownloadRounded />
-          </Fab>
-        </Tooltip>
-      </Stack>
-
-      {/* Dialogs */}
-      <AddLearnerDialog
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        onAdd={handleAdd}
-      />
-      <AnnouncementDialog open={annOpen} onClose={() => setAnnOpen(false)} />
-
-      <Snackbar
-        open={!!snack}
-        autoHideDuration={3000}
-        onClose={() => setSnack(null)}
-      >
-        <Alert
-          icon={<CheckCircleOutline />}
+        <Snackbar
+          open={!!snack}
+          autoHideDuration={3000}
           onClose={() => setSnack(null)}
-          severity="success"
-          variant="filled"
-          sx={{ width: "100%" }}
         >
-          {snack}
-        </Alert>
-      </Snackbar>
+          <Alert
+            icon={<CheckCircleOutline />}
+            onClose={() => setSnack(null)}
+            severity="success"
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {snack}
+          </Alert>
+        </Snackbar>
+      </Box>
     </Box>
   );
 }
