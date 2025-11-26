@@ -37,7 +37,7 @@ interface ICreateCourseContent {
   blogTags?: string[];
   videoUrl?: string;
   videoFileName?: string;
-  duration?: number; // ✅ added
+  duration?: number; 
 }
 
 interface IManualQuestionFormProps {
@@ -193,27 +193,6 @@ export function ManualQuestionForm({
           />
         )}
       />
-
-      {/* Duration Field */}
-      {effectiveType === "video" && (
-        <Controller
-          name="duration"
-          control={control}
-          rules={{ required: "Duration is required for video" }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              type="number"
-              label="Video Duration (seconds)"
-              fullWidth
-              error={!!errors.duration}
-              helperText={errors.duration?.message}
-              sx={{ mb: 3 }}
-            />
-          )}
-        />
-      )}
-
       {/* Dynamic Fields */}
       {(() => {
         const FieldsComponent = getContentTypeComponent(effectiveType);
