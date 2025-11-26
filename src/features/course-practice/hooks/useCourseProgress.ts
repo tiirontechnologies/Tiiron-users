@@ -4,6 +4,7 @@ import {
   useGetContentByTopicIdQuery,
 } from "../api/courseProgressApi";
 import { useParams } from "react-router-dom";
+import { transformApiResponse } from "../utils/transformApiResponse";
 
 export const useCourseProgress = () => {
   const params = useParams<{ courseId: string; id?: string }>();
@@ -20,13 +21,20 @@ export const useCourseProgress = () => {
   );
 
   const {
-    data: unitsData,
+    data: unitsDataRaw,
     isFetching: isUnitsLoading,
     isError: isUnitsError,
+    refetch: refetchContent,
   } = useGetContentByTopicIdQuery(
     { unitId: selectedUnitId },
     { skip: !selectedUnitId }
   );
+
+  // Transform API response to extract questions, practice, and unit data
+  const transformedData = transformApiResponse(unitsDataRaw);
+  const unitsData = transformedData.questions;
+  const practiceData = transformedData.practice;
+  const unitInfo = transformedData.unit;
 
   const selectUnit = useCallback((unitId: string) => {
     setSelectedUnitId(unitId);
@@ -44,56 +52,51 @@ export const useCourseProgress = () => {
   }, [courseData, selectedUnitId]);
 
   /**
-   * @param
+   * Calculate practice stats from the new API structure
    */
-  const getPracticeStats = (data: any) => {
-    const unitContent = (data as any)?.data ?? data;
-    if (!unitContent || !Array.isArray(unitContent)) {
+  const getPracticeStats = useCallback(() => {
+    // Use practice data from API response if available
+    if (practiceData) {
       return {
-        totoalQuestions: 0,
-        attemptedQuestions: 0,
-        correctAnswers: 0,
-        accuracy: 0,
+        totalSessions: 1, // Single practice session per unit
+        completedSessions: practiceData.isCompleted ? 1 : 0,
+        averageScore: practiceData.score || 0,
+        progressPercent: practiceData.isCompleted ? 100 : 0,
       };
     }
 
-    const allPractices: any[] = [];
-    unitContent.forEach((unit: any) => {
-      if (unit.practices && Array.isArray(unit.practices)) {
-        allPractices.push(...unit.practices);
-      }
-    });
+    // Fallback: calculate from questions if practice data not available
+    if (!unitsData || !Array.isArray(unitsData)) {
+      return {
+        totalSessions: 0,
+        completedSessions: 0,
+        averageScore: 0,
+        progressPercent: 0,
+      };
+    }
 
-    const totalPractices = allPractices.length;
-    const completedPractice = allPractices.filter(
-      (p) => p.score !== null && p.score !== undefined
-    ).length;
-    const totalScore = allPractices.reduce((sum, p) => sum + (p.score || 0), 0);
-    const averageScore =
-      completedPractice > 0 ? Math.round(totalScore / completedPractice) : 0;
-
+    // If we have transformed questions but no practice data, return empty stats
     return {
-      totalSessions: totalPractices,
-      completedSessions: completedPractice,
-      averageScore: averageScore,
-      progressPercent:
-        totalPractices > 0
-          ? Math.round((completedPractice / totalPractices) * 100)
-          : 0,
+      totalSessions: 0,
+      completedSessions: 0,
+      averageScore: 0,
+      progressPercent: 0,
     };
-  };
+  }, [practiceData, unitsData]);
 
-  const practiceStats = getPracticeStats(unitsData);
+  const practiceStats = getPracticeStats();
 
   const isLoading = isCourseLoading || isUnitsLoading;
   const hasError = isCourseError || isUnitsError;
   const hasData = Boolean((courseData as any)?.data ?? courseData);
-  const hasUnits = Boolean((unitsData as any)?.data ?? unitsData);
+  const hasUnits = Boolean(unitsData && Array.isArray(unitsData) && unitsData.length > 0);
 
   return {
     courseId,
     courseData,
-    unitsData,
+    unitsData, // Now returns transformed questions array
+    practiceData, // Practice info (isCompleted, score)
+    unitInfo, // Unit information
     selectedUnitId,
     selectUnit,
     isLoading,
@@ -105,5 +108,6 @@ export const useCourseProgress = () => {
     isCourseError,
     isUnitsError,
     practiceStats,
+    refetchContent, // Refetch function for content/practice data
   };
 };

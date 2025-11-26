@@ -20,6 +20,8 @@ const CourseProgress: React.FC = () => {
     courseId,
     courseData,
     unitsData,
+    practiceData,
+    selectedUnitId,
     selectUnit,
     isLoading,
     hasError,
@@ -30,6 +32,7 @@ const CourseProgress: React.FC = () => {
     isCourseError,
     isUnitsError,
     practiceStats = EMPTY_STATS,
+    refetchContent,
   } = useCourseProgress();
 
   if (!courseData?.data) {
@@ -77,9 +80,6 @@ const CourseProgress: React.FC = () => {
     );
   }
 
-  const finalcourseId = courseData.data?.id;
-  console.log("Final Course ID in CourseProgress:", finalcourseId);
-
   return (
     <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>
       {/* Sidebar */}
@@ -88,6 +88,8 @@ const CourseProgress: React.FC = () => {
         onUnitSelect={selectUnit}
         courseId={courseData.data?.id}
         practiceStats={practiceStats}
+        selectedUnitId={selectedUnitId}
+        practiceData={practiceData}
       />
 
       {/* Header */}
@@ -127,7 +129,11 @@ const CourseProgress: React.FC = () => {
           <EmptyState />
         </Box>
       ) : (
-        <MainContent questions={unitsData?.data || []} />
+        <MainContent 
+          questions={Array.isArray(unitsData) ? unitsData : []} 
+          practiceData={practiceData}
+          refetchContent={refetchContent}
+        />
       )}
     </Box>
   );

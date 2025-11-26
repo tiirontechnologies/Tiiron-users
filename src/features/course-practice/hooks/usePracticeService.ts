@@ -23,7 +23,7 @@ interface PracticeServiceState {
 }
 
 // Development mode flag - set to false when backend is ready
-const USE_DEV_MODE = true;
+const USE_DEV_MODE = false;
 
 export const usePracticeService = ({
   courseId,
@@ -165,7 +165,8 @@ export const usePracticeService = ({
       }
 
       try {
-        // Use bulk submit endpoint (matches your backend format)
+        // Use onsubmitbulk endpoint to post practice data
+        console.log("📤 Submitting practice data to onsubmitbulk API:", sessionData);
         const result = await submitPracticeBulk(sessionData).unwrap();
 
         // Clear auto-save interval

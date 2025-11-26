@@ -19,6 +19,11 @@ interface SidebarProps {
   onUnitSelect: (unitId: string) => void;
   courseId?: string;
   practiceStats: PracticeStats;
+  selectedUnitId?: string;
+  practiceData?: {
+    isCompleted: boolean;
+    score: number;
+  } | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -26,6 +31,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   onUnitSelect,
   courseId,
   practiceStats,
+  selectedUnitId,
+  practiceData,
 }) => {
   const navigate = useNavigate();
 
@@ -131,7 +138,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       <Divider sx={{ my: 2, opacity: 0.3 }} />
 
       {/* Navigation List */}
-      <NavigationList chapters={data?.chapters} onUnitSelect={onUnitSelect} />
+      <NavigationList 
+        chapters={data?.chapters} 
+        onUnitSelect={onUnitSelect}
+        selectedUnitId={selectedUnitId}
+        practiceData={practiceData}
+      />
     </Box>
   );
 };

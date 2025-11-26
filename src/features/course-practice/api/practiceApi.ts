@@ -46,11 +46,11 @@ export const practiceApiSlice = baseApi.injectEndpoints({
       PracticeSessionData
     >({
       query: (practiceData) => ({
-        url: "/practice/submit-bulk",
+        url: "practice/submit-bulk",
         method: "POST",
         body: practiceData,
       }),
-      invalidatesTags: ["PracticeSession"],
+      invalidatesTags: ["PracticeSession", "Unit"], // Invalidate Unit to refetch content with updated practice data
     }),
 
     // Save practice session data

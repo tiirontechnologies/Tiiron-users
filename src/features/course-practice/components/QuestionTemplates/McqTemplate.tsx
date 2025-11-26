@@ -21,7 +21,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
   const allowMultipleSelection =
     question.content?.allowMultipleSelection || false;
 
-  // Update local state when userAnswer prop changes
+  // Update local state when userAnswer prop changes or when previousPractice exists
   useEffect(() => {
     if (userAnswer) {
       if (typeof userAnswer === "string") {
@@ -29,15 +29,20 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
       } else if (Array.isArray(userAnswer)) {
         setSelectedAnswers(userAnswer);
       }
+    } else if (question.previousPractice?.selectedOptionId) {
+      // If no userAnswer but there's a previous practice, show the previously selected option
+      setSelectedAnswers([question.previousPractice.selectedOptionId.toString()]);
     } else {
       setSelectedAnswers([]);
     }
-  }, [userAnswer]);
+  }, [userAnswer, question.previousPractice]);
 
   const handleOptionClick = (optionIndex: number) => {
     if (!practiceMode) return;
 
-    const optionId = optionIndex.toString();
+    // Use the option ID from API if available, otherwise fall back to index
+    const option = question.content.options?.[optionIndex];
+    const optionId = option?.id?.toString() ?? optionIndex.toString();
 
     if (allowMultipleSelection) {
       // Multiple selection logic
@@ -58,15 +63,48 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
     return null;
   }
 
+  // Check if we should show previous practice info
+  const hasPreviousPractice = question.previousPractice && !practiceMode;
+  const previousScore = question.previousPractice?.score;
+  const previousIsCorrect = question.previousPractice?.isCorrect;
+
   return (
     <Box sx={{ mt: 2 }}>
+      {/* Show previous practice score if available and not in practice mode */}
+      {hasPreviousPractice && previousScore !== undefined && (
+        <Box
+          sx={{
+            mb: 2,
+            p: 2,
+            borderRadius: "8px",
+            background: previousIsCorrect
+              ? "linear-gradient(135deg, #ECFDF8 0%, #D1FAE5 100%)"
+              : "linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%)",
+            border: `2px solid ${previousIsCorrect ? "#10B981" : "#EF4444"}`,
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "14px",
+              fontWeight: 600,
+              color: previousIsCorrect ? "#065F46" : "#991B1B",
+            }}
+          >
+            {previousIsCorrect ? "✓ Correct Answer" : "✗ Incorrect Answer"} - Score: {previousScore}
+          </Typography>
+        </Box>
+      )}
       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
         {question.content.options.map((opt, oidx) => {
-          const optionId = oidx.toString();
+          // Use API option ID if available, otherwise fall back to index
+          const optionId = opt.id?.toString() ?? oidx.toString();
           const isSelected = selectedAnswers.includes(optionId);
           const isCorrect = opt.isCorrect;
           const showCorrectAnswer = showAnswers && isCorrect;
           const showUserAnswer = showAnswers && isSelected;
+          // Show previous selection if not in practice mode and this option was previously selected
+          const isPreviouslySelected = hasPreviousPractice && 
+            question.previousPractice?.selectedOptionId?.toString() === optionId;
 
           // Determine styling based on mode
           let borderColor = "#E6E6E6";
@@ -93,6 +131,11 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
               backgroundColor = "#FEF2F2";
               textColor = "#991B1B";
             }
+          } else if (hasPreviousPractice && isPreviouslySelected) {
+            // Show previously selected option when viewing completed practice
+            borderColor = previousIsCorrect ? "#10B981" : "#EF4444";
+            backgroundColor = previousIsCorrect ? "#ECFDF8" : "#FEF2F2";
+            textColor = previousIsCorrect ? "#065F46" : "#991B1B";
           }
 
           return (
@@ -121,12 +164,12 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
             >
               <input
                 type={allowMultipleSelection ? "checkbox" : "radio"}
-                checked={isSelected}
+                checked={isSelected || isPreviouslySelected}
                 disabled={!practiceMode}
                 onChange={() => handleOptionClick(oidx)}
                 style={{
                   marginRight: 12,
-                  accentColor: isSelected ? "#6A42AB" : "#E6E6E6",
+                  accentColor: (isSelected || isPreviouslySelected) ? "#6A42AB" : "#E6E6E6",
                   cursor: practiceMode ? "pointer" : "default",
                 }}
               />
@@ -162,6 +205,18 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                   }}
                 >
                   ✗ Your Answer
+                </Typography>
+              )}
+              {hasPreviousPractice && isPreviouslySelected && !showAnswers && (
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    color: previousIsCorrect ? "#10B981" : "#EF4444",
+                    fontWeight: 600,
+                    ml: 1,
+                  }}
+                >
+                  {previousIsCorrect ? "✓ Previously Selected" : "✗ Previously Selected"}
                 </Typography>
               )}
             </Box>

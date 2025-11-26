@@ -3,6 +3,16 @@ export interface Question {
   text: string;
   contentType: QuestionType;
   content: QuestionContent;
+  description?: {
+    html: string;
+    title: string;
+  };
+  previousAnswer?: string | null; // Previously selected answer
+  previousPractice?: {
+    selectedOptionId?: number;
+    score: number;
+    isCorrect: boolean;
+  } | null;
 }
 
 export interface QuestionContent {
@@ -17,6 +27,7 @@ export interface QuestionContent {
 }
 
 export interface QuestionOption {
+  id?: number; // API option ID for submission
   text: string;
   isCorrect: boolean;
 }

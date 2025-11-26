@@ -13,6 +13,11 @@ import PracticeFooter from "./PracticeFooter";
 
 interface MainContentProps {
   questions: Question[];
+  practiceData?: {
+    isCompleted: boolean;
+    score: number;
+  } | null;
+  refetchContent?: () => void;
 }
 
 interface PracticeState {
@@ -38,9 +43,22 @@ interface PracticeState {
   questionStartTimes: Record<string, Date>;
 }
 
-const MainContent: React.FC<MainContentProps> = ({ questions }) => {
+const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refetchContent }) => {
+  console.log("Questions in MainContent:", questions);
+  console.log("Practice Data:", practiceData);
   const { courseId } = useParams<{ courseId: string }>();
   const unitId = "current-unit";
+  
+  // Initialize userAnswers with previously selected answers if unit is completed
+  const initializeUserAnswers = useCallback(() => {
+    const initialAnswers: Record<string, string | string[]> = {};
+    questions.forEach((question) => {
+      if (question.previousAnswer) {
+        initialAnswers[question.id] = question.previousAnswer;
+      }
+    });
+    return initialAnswers;
+  }, [questions]);
 
   const {
     isAutoSaving,
@@ -70,10 +88,10 @@ const MainContent: React.FC<MainContentProps> = ({ questions }) => {
     isPracticeMode: false,
     currentQuestionIndex: 0,
     userAnswers: {},
-    score: 0,
+    score: practiceData?.score || 0,
     totalQuestions: questions.length,
-    completedQuestions: 0,
-    showResults: false,
+    completedQuestions: practiceData?.isCompleted ? questions.length : 0,
+    showResults: practiceData?.isCompleted || false,
     timeStarted: null,
     timeCompleted: null,
     practiceData: {
@@ -271,6 +289,11 @@ const MainContent: React.FC<MainContentProps> = ({ questions }) => {
     try {
       await submitSession(finalPracticeData, finalScore);
 
+      // Refetch content to get updated practice data (isCompleted, score, etc.)
+      if (refetchContent) {
+        refetchContent();
+      }
+
       setPracticeState((prev) => ({
         ...prev,
         isPracticeMode: false,
@@ -313,6 +336,7 @@ const MainContent: React.FC<MainContentProps> = ({ questions }) => {
     practiceState.timeStarted,
     submitSession,
     stopAutoSave,
+    refetchContent,
   ]);
 
   const resetPractice = useCallback(() => {
@@ -479,13 +503,25 @@ const MainContent: React.FC<MainContentProps> = ({ questions }) => {
     practiceState.timeStarted,
     currentTime,
   ]);
+  // Initialize userAnswers when questions change
+  useEffect(() => {
+    const initialAnswers = initializeUserAnswers();
+    setPracticeState((prev) => ({
+      ...prev,
+      userAnswers: initialAnswers,
+      completedQuestions: practiceData?.isCompleted ? questions.length : Object.keys(initialAnswers).length,
+      showResults: practiceData?.isCompleted || prev.showResults,
+      score: practiceData?.score || prev.score,
+    }));
+  }, [questions, practiceData, initializeUserAnswers]);
+
   useEffect(() => {
     const answeredQuestions = Object.keys(practiceState.userAnswers).length;
     setPracticeState((prev) => ({
       ...prev,
-      completedQuestions: answeredQuestions,
+      completedQuestions: practiceData?.isCompleted ? questions.length : answeredQuestions,
     }));
-  }, [practiceState.userAnswers]);
+  }, [practiceState.userAnswers, practiceData, questions.length]);
 
   useEffect(() => {
     setPracticeState((prev) => ({
