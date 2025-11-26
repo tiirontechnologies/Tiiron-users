@@ -37,6 +37,7 @@ interface ICreateCourseContent {
   blogTags?: string[];
   videoUrl?: string;
   videoFileName?: string;
+  duration?: number; 
 }
 
 interface IManualQuestionFormProps {
@@ -53,6 +54,7 @@ export function ManualQuestionForm({
   onSubmit: handleFormSubmit,
   isLoading,
 }: IManualQuestionFormProps) {
+
   const effectiveType: ContentType = ((): ContentType => {
     if ((type as string) === "code" || (type as string) === "mcq")
       return "multiple_choice";
@@ -80,6 +82,7 @@ export function ManualQuestionForm({
       blogTags: [],
       videoUrl: "",
       videoFileName: "",
+      duration: 0, 
     },
     mode: "onChange",
   });
@@ -93,10 +96,8 @@ export function ManualQuestionForm({
 
   useEffect(() => {
     if (effectiveType === "single_choice") {
-      
       const index = watchedOptions.findIndex((op: any) => op.isCorrect);
       if (index > -1) {
-        
         watchedOptions.forEach((op: any, i: number) => {
           op.isCorrect = i === index;
         });
@@ -104,7 +105,7 @@ export function ManualQuestionForm({
     }
   }, [watchedOptions, effectiveType]);
 
-  // Validate at least one correct answer for MCQ/Single Choice
+  // ✅ Validate at least one correct answer
   const validateAtLeastOneCorrect = () => {
     if (
       effectiveType === "multiple_choice" ||
@@ -124,26 +125,23 @@ export function ManualQuestionForm({
     return true;
   };
 
-  // Handle submit
+  // ✅ Handle Submit
   const onSubmit: SubmitHandler<ICreateCourseContent> = async (data) => {
     console.log("🚀 Manual form data:", data);
 
-    // Validate for MCQ/Single Choice
-    if (!validateAtLeastOneCorrect()) {
-      return;
-    }
+    if (!validateAtLeastOneCorrect()) return;
 
     try {
       await handleFormSubmit(data);
     } catch (error) {
       console.error("❌ Manual form submission error:", error);
-      // Error is already handled in parent, just log here
     }
   };
 
-  // ---------- ✅ Return JSX ----------
+  // ✅ JSX
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
+
       {/* Title */}
       <Typography mb={1}>Title:</Typography>
       <Controller
@@ -195,11 +193,11 @@ export function ManualQuestionForm({
           />
         )}
       />
-
-      {/* Dynamic Fields by Content Type */}
+      {/* Dynamic Fields */}
       {(() => {
         const FieldsComponent = getContentTypeComponent(effectiveType);
         if (!FieldsComponent) return null;
+
         return (
           <FieldsComponent
             control={control}
@@ -219,6 +217,7 @@ export function ManualQuestionForm({
         <Button onClick={onClose} variant="outlined" disabled={isLoading}>
           Cancel
         </Button>
+
         <Button type="submit" variant="contained" disabled={isLoading}>
           {isLoading ? (
             <>
@@ -230,6 +229,7 @@ export function ManualQuestionForm({
           )}
         </Button>
       </Box>
+
     </form>
   );
 }

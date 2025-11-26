@@ -42,6 +42,7 @@ export interface ICreateCourseContent {
   blogTags?: string[];
   videoUrl?: string;
   videoFileName?: string;
+  duration?: number;
 }
 
 interface GeneratedQuestion {
@@ -254,7 +255,7 @@ export function AddCourseContentForm({
               },
               title: data.text,
               url: data.videoUrl || "",
-              duration: 0,
+              duration: data.duration ,
             },
           }).unwrap();
           break;
