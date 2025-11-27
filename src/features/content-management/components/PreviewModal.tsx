@@ -13,7 +13,6 @@ import {
   Paper,
   Radio,
   Checkbox,
-  FormControlLabel,
 } from "@mui/material";
 
 import {
@@ -23,7 +22,7 @@ import {
   Delete as DeleteIcon,
 } from "@mui/icons-material";
 
-// Types
+// ---------- TYPES ----------
 type ContentType =
   | "multiple_choice"
   | "single_choice"
@@ -52,7 +51,7 @@ interface PreviewModalProps {
   contentType: ContentType;
 }
 
-// 📌 FIX: Missing Function
+// ---------- LABEL ----------
 const getContentTypeLabel = (type: ContentType) => {
   switch (type) {
     case "multiple_choice":
@@ -73,16 +72,17 @@ const getContentTypeLabel = (type: ContentType) => {
 };
 
 export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
-  // 🔥 STATIC DATA
+  // ---------- STATIC DATA ----------
   const STATIC_QUESTIONS: GeneratedQuestion[] = [
     {
       id: "1",
       type: "multiple_choice",
-      text: "Which planet is known as the Red Planet?",
+      text: "check3",
       options: [
-        { text: "Earth", isCorrect: false },
-        { text: "Mars", isCorrect: true },
-        { text: "Venus", isCorrect: false },
+        { text: "check4", isCorrect: false },
+        { text: "check5", isCorrect: true },
+        { text: "check6", isCorrect: false },
+        { text: "check7", isCorrect: false },
       ],
       score: 5,
     },
@@ -109,7 +109,7 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editData, setEditData] = useState<GeneratedQuestion | null>(null);
 
-  // Drag Functions
+  // ---------- DRAG ----------
   const handleDragStart = (index: number) => setDraggedIndex(index);
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
@@ -136,7 +136,7 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
     onClose();
   };
 
-  // --- EDIT LOGIC -------------------
+  // ---------- EDIT ----------
   const openEditModal = (index: number) => {
     setEditIndex(index);
     setEditData({ ...questions[index] });
@@ -156,6 +156,7 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
     closeEditModal();
   };
 
+  // ---------- RENDER QUESTION ----------
   const renderQuestionContent = (question: GeneratedQuestion) => {
     switch (question.type) {
       case "multiple_choice":
@@ -166,26 +167,42 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
               {question.text}
             </Typography>
 
-            <Box sx={{ pl: 2 }}>
+            {/* ✅ OPTIONS LIKE YOUR SCREENSHOT */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: 2,
+              }}
+            >
               {question.options?.map((option, idx) => (
-                <FormControlLabel
+                <Box
                   key={idx}
-                  control={
-                    question.type === "single_choice" ? (
-                      <Radio checked={option.isCorrect} disabled />
-                    ) : (
-                      <Checkbox checked={option.isCorrect} disabled />
-                    )
-                  }
-                  label={option.text}
                   sx={{
-                    display: "block",
-                    mb: 1,
-                    bgcolor: option.isCorrect ? "success.50" : "transparent",
-                    borderRadius: 1,
-                    px: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    border: "1px solid #e0e0e0",
+                    borderRadius: 2,
+                    px: 2,
+                    py: 1.2,
+                    bgcolor: option.isCorrect ? "#f1f8e9" : "#fff",
                   }}
-                />
+                >
+                  {question.type === "single_choice" ? (
+                    <Radio checked={option.isCorrect} disabled size="small" />
+                  ) : (
+                    <Checkbox
+                      checked={option.isCorrect}
+                      disabled
+                      size="small"
+                    />
+                  )}
+
+                  <Typography fontSize={14}>
+                    {option.text}
+                  </Typography>
+                </Box>
               ))}
             </Box>
           </Box>
@@ -197,8 +214,7 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
             <Typography sx={{ mb: 2, fontWeight: 500 }}>
               {question.text}
             </Typography>
-
-            <Box sx={{ bgcolor: "success.50", p: 2, borderRadius: 1 }}>
+            <Box sx={{ bgcolor: "#f1f8e9", p: 2, borderRadius: 1 }}>
               <Typography variant="body2">Correct Answer:</Typography>
               <Typography sx={{ fontWeight: 600 }}>
                 {question.correctAnswer}
@@ -216,7 +232,9 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
             {question.description && (
               <Typography
                 variant="body2"
-                dangerouslySetInnerHTML={{ __html: question.description }}
+                dangerouslySetInnerHTML={{
+                  __html: question.description,
+                }}
               />
             )}
           </Box>
@@ -227,6 +245,7 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
     }
   };
 
+  // ---------- UI ----------
   return (
     <>
       <Dialog
@@ -241,48 +260,32 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
           },
         }}
       >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Preview Generated Content
-          </Typography>
-          <Chip
-            label={`${questions.length} ${questions.length === 1 ? "Item" : "Items"
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Preview Generated Content
+            </Typography>
+            <Chip
+              label={`${questions.length} ${
+                questions.length === 1 ? "Item" : "Items"
               }`}
-            size="small"
-            color="primary"
-          />
-        </Box>
-        <IconButton onClick={onClose} size="small">
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-
-      <DialogContent dividers>
-        {questions.length === 0 ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              py: 8,
-            }}
-          >
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-              No content generated yet
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Generate content using AI to preview here
-            </Typography>
+              size="small"
+              color="primary"
+            />
           </Box>
-        ) : (
+
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent dividers>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {questions.map((question, index) => (
               <Paper
@@ -297,95 +300,64 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
                   cursor: "grab",
                   transition: "all 0.2s",
                   opacity: draggedIndex === index ? 0.5 : 1,
-                  "&:hover": {
-                    boxShadow: 3,
-                  },
-                  "&:active": {
-                    cursor: "grabbing",
-                  },
                 }}
               >
-                {/* Header */}
+                {/* HEADER */}
                 <Box
                   sx={{
-                    p: 3,
-                    cursor: "grab",
-                    transition: "all 0.2s",
-                    opacity: draggedIndex === index ? 0.5 : 1,
-                    "&:hover": { boxShadow: 3 },
-                    "&:active": { cursor: "grabbing" },
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mb: 2,
                   }}
                 >
-                  {/* Header */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      mb: 2,
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <DragIcon
-                        sx={{ color: "text.secondary", cursor: "grab" }}
-                      />
-
-                      {/* FIXED: Wrong label syntax */}
+                  <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                    <DragIcon sx={{ color: "text.secondary" }} />
+                    <Chip label={`#${index + 1}`} size="small" />
+                    <Chip
+                      label={getContentTypeLabel(question.type)}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
+                    {question.score && (
                       <Chip
-                        label={`#${index + 1}`}
+                        label={`${question.score} pts`}
                         size="small"
-                        sx={{ minWidth: 45 }}
-                      />
-
-                      <Chip
-                        label={getContentTypeLabel(question.type)}
-                        size="small"
-                        color="primary"
+                        color="success"
                         variant="outlined"
                       />
-
-                      {question.score && (
-                        <Chip
-                          label={`${question.score} pts`}
-                          size="small"
-                          color="success"
-                          variant="outlined"
-                        />
-                      )}
-                    </Box>
-
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={() => openEditModal(index)}
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => handleDelete(index)}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </Box>
+                    )}
                   </Box>
 
-                  {/* Content */}
-                  {renderQuestionContent(question)}
+                  <Box>
+                    <IconButton
+                      size="small"
+                      onClick={() => openEditModal(index)}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={() => handleDelete(index)}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </Box>
+
+                {/* CONTENT */}
+                {renderQuestionContent(question)}
               </Paper>
-              ))}
-            </Box>
-          )}
+            ))}
+          </Box>
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
+          <Button onClick={onClose} variant="outlined">
             Close
           </Button>
-          <Button variant="contained" onClick={handleSave}>
+          <Button onClick={handleSave} variant="contained">
             Save All ({questions.length})
           </Button>
         </DialogActions>
@@ -401,71 +373,21 @@ export function PreviewModal({ open, onClose, onSave }: PreviewModalProps) {
         <DialogTitle>Edit Question</DialogTitle>
         <DialogContent dividers>
           {editData && (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {/* EDIT TEXT */}
+            <Box display="flex" flexDirection="column" gap={2}>
               <TextField
-                label="Question Text"
-                fullWidth
+                label="Question"
                 value={editData.text}
+                fullWidth
                 onChange={(e) =>
                   setEditData({ ...editData, text: e.target.value })
                 }
               />
-
-              {/* EDIT DESCRIPTION */}
-              <TextField
-                label="Description (HTML allowed)"
-                fullWidth
-                multiline
-                rows={3}
-                value={editData.description || ""}
-                onChange={(e) =>
-                  setEditData({ ...editData, description: e.target.value })
-                }
-              />
-
-              {/* EDIT OPTIONS (MCQ / SINGLE CHOICE) */}
-              {(editData.type === "multiple_choice" ||
-                editData.type === "single_choice") && (
-                <Box>
-                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                    Options:
-                  </Typography>
-
-                  {editData.options?.map((opt, idx) => (
-                    <Box
-                      key={idx}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                        mb: 1,
-                      }}
-                    >
-                      <DeleteIcon width={16} height={18} />
-                    </Box>
-                  ))}
-                </Box>
-              )}
-
-              {/* EDIT FILL-UP ANSWER */}
-              {editData.type === "fill_up" && (
-                <TextField
-                  label="Correct Answer"
-                  fullWidth
-                  value={editData.correctAnswer || ""}
-                  onChange={(e) =>
-                    setEditData({ ...editData, correctAnswer: e.target.value })
-                  }
-                />
-              )}
             </Box>
           )}
         </DialogContent>
-
         <DialogActions>
           <Button onClick={closeEditModal}>Cancel</Button>
-          <Button variant="contained" onClick={updateQuestion}>
+          <Button onClick={updateQuestion} variant="contained">
             Save Changes
           </Button>
         </DialogActions>
