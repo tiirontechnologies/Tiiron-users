@@ -4,7 +4,7 @@ import { Visibility as VisibilityIcon } from "@mui/icons-material";
 import { CustomTabs } from "@components/ui";
 import QuestionConfigurator from "../components/QuestionAI";
 import { ManualQuestionForm } from "../components/ManualQuestionForm";
-import { PreviewModal } from "../components/PreviewModal";
+import {PreviewModal}  from "../components/previewModal/PreviewModal";
 
 import {
   useCreateVideoContentMutation,
