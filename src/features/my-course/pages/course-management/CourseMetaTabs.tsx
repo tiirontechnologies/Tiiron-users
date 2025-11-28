@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   Tab,
@@ -25,17 +27,18 @@ import {
 import ToolBar from "../../components/toolbar";
 // import MoreButton from "../../../course-settings/components/MoreButton";
 // import PublishButton from "../../../course-settings/components/PublishButton";
-import { useParams, useNavigate } from "react-router-dom";
-import { useGetCourseByIdQuery } from "../../api/courseApi";
+import { useParams, } from "react-router-dom";
+import { useGetCourseByIdQuery } from "../../../course/api/courseApi";
 import { useGetChaptersQuery } from "../../../lesson-management/api/chapterApi";
 import Loader from "@components/ui/Spinner";
-import { CourseContext } from "./index";
+import { CourseContext } from "../../../course/pages/course-management/index";
 
 const CourseMetaTabs = () => {
   const [value, setValue] = useState(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { courseId } = useParams<{ courseId: string }>();
+  const id = Number(courseId);
   const courseContext = useContext(CourseContext);
 
   // Fetch course data
@@ -45,7 +48,7 @@ const CourseMetaTabs = () => {
     error: courseError,
   } = useGetCourseByIdQuery(
     {
-      id: courseId || "",
+      id,
     },
     {
       skip: !courseId, // Skip the query if courseId is not available

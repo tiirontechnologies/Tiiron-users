@@ -36,7 +36,7 @@ const PracticeProgressStats: React.FC<PracticeProgressStatsProps> = ({
         mt: 2,
         p: 1,
         borderRadius: "8px",
-        background: COLORS.background.default,
+        background: COLORS.background.lighter,
       }}
     >
       <Typography
@@ -68,7 +68,7 @@ const PracticeProgressStats: React.FC<PracticeProgressStatsProps> = ({
           Avg. Score:
         </Typography>
         <Typography
-          sx={{ fontSize: "12px", fontWeight: 700, color: COLORS.success }}
+          sx={{ fontSize: "12px", fontWeight: 700, color: COLORS.primary }}
         >
           {averageScore.toFixed(0)}%
         </Typography>

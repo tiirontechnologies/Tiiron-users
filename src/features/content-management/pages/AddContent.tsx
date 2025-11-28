@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Box, Button } from "@mui/material";
 import { Visibility as VisibilityIcon } from "@mui/icons-material";
@@ -419,7 +420,6 @@ export function AddCourseContentForm({
         contentType={effectiveType}
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
-        questions={generatedQuestions}
         onSave={handleSavePreview}
         key={generatedQuestions.length} // Force re-render when questions change
       />

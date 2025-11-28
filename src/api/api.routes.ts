@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AUTH_URL, SERVER_URL } from '../constants/constants';
 
@@ -56,7 +57,7 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Course', 'Chapter', 'Question', 'QuestionBank', 'Unit', 'Auth', 'Cart', 'Enrollment'],
+  tagTypes: ['Course', 'Chapter', 'Question', 'QuestionBank', 'Unit', 'Auth', 'Cart', 'Enrollment','PracticeSession'],
   endpoints: (builder) => ({}),
 });
 
