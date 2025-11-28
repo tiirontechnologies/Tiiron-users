@@ -3,7 +3,7 @@ name: Deploy to GCS
 on:
   push:
     branches:
-      - tiiron_dev  
+      - main  
 
 jobs:
   deploy:
