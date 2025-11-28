@@ -94,7 +94,7 @@ export function AddNewCourseModal({
           variant="outlined"
           margin="normal"
           {...register("title", {
-            required: "Course name is required",
+            required: " is required",
             minLength: { value: 2, message: "Minimum 2 characters required" },
           })}
           error={!!errors.title}

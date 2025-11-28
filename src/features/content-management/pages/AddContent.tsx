@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Snackbar, Alert } from "@mui/material";
 import { Visibility as VisibilityIcon } from "@mui/icons-material";
 import { CustomTabs } from "@components/ui";
 import QuestionConfigurator from "../components/QuestionAI";
@@ -172,6 +172,15 @@ export function AddCourseContentForm({
   const [generatedQuestions, setGeneratedQuestions] = useState<
     GeneratedQuestion[]
   >([]);
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info";
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   // Normalize legacy types
   const effectiveType: ContentType = ((): ContentType => {
@@ -324,6 +333,19 @@ export function AddCourseContentForm({
       }
 
       console.log("✅ Content created successfully:", response);
+
+      // Show success notification
+      setNotification({
+        open: true,
+        message: "Question saved successfully!",
+        severity: "success",
+      });
+
+      // Close the modal after a short delay to show the success message
+      setTimeout(() => {
+        onClose();
+      }, 1500);
+
       return response;
     } catch (error: any) {
       console.error("❌ Error creating content:", error);
@@ -332,6 +354,14 @@ export function AddCourseContentForm({
         status: error.status,
         data: error.data,
       });
+
+      // Show error notification
+      setNotification({
+        open: true,
+        message: error?.data?.message || "Failed to save question. Please try again.",
+        severity: "error",
+      });
+
       throw error;
     }
   };
@@ -423,6 +453,22 @@ export function AddCourseContentForm({
         onSave={handleSavePreview}
         key={generatedQuestions.length} // Force re-render when questions change
       />
+
+      {/* Success/Error Notification */}
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
+          severity={notification.severity}
+          sx={{ width: "100%" }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

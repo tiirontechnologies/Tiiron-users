@@ -179,7 +179,7 @@ export const RightSideTools = () => {
             letterSpacing: "0.01em",
           }}
         >
-          No Rating
+          No Rating hai
         </Typography>
       </Box>
 
