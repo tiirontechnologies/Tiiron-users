@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box } from "@mui/material";
 import ToolBar, { RightSideTools } from "../../components/toolbar";
 import CourseMetaTabs from "./CourseMetaTabs";
@@ -9,12 +10,13 @@ import { createContext, useState } from "react";
 export const CourseContext = createContext<any>("");
 
 const Index = () => {
-  const { courseId } = useParams();
+  const { courseId } = useParams<{ courseId: string }>();
+  const id = Number(courseId);
   const navigate = useNavigate();
   if (!courseId) navigate(-1);
 
-  const { data, isFetching, isError } = useGetChaptersQuery({ page: 1, limit: 10, id: courseId! });
-  const { data: courseData, isFetching: isCourseFetching, isError: isCourseError } = useGetCourseByIdQuery({ id: courseId! });
+  const { data, isFetching, isError } = useGetChaptersQuery({ page: 1, limit: 10, id });
+  const { data: courseData, isFetching: isCourseFetching, isError: isCourseError } = useGetCourseByIdQuery({ id });
 
   /**SNACKBAR */
   const [snackbarOpen, setSnackbarOpen] = useState(false);
