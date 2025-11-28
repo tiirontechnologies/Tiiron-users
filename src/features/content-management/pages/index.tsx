@@ -101,7 +101,7 @@ export default function ContentCreateForm() {
     // 4. If description is object
     if (item?.description && typeof item.description === "object") {
       
-      return item.description.title || "";
+      return (item.description as { title?: string }).title || "";
     }
 
     return `Content ${item.id}`;

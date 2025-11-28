@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Button, Chip, TextField, Typography } from "@mui/material";
 import { useCreateCourseMutation } from "../api/courseApi";
 import { Controller, useForm } from "react-hook-form";
@@ -108,7 +109,7 @@ export function AddNewCourseModal({
           {...register("price", {
             valueAsNumber: true,
             validate: (value) =>
-              parseInt(value) > 0 || "Price must be greater than 0",
+               typeof value === "number" && value > 0 || "Price must be greater than 0",
           })}
           error={!!errors.price}
           helperText={errors.price?.message}
