@@ -101,7 +101,7 @@ export const QuestionEditMain = () => {
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <Typography
-            sx={{ color: "#6A42AB", fontSize: "24px", fontWeight: "600" }}
+            sx={{ color: "#4F39F6", fontSize: "24px", fontWeight: "600" }}
           >
             02
           </Typography>

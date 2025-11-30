@@ -21,11 +21,11 @@ export default function CourseGlossaryTabs({ activeTab, onTabChange }: CourseGlo
           fontSize: { xs: "14px", sm: "15px", md: "16px" },
         },
         "& .MuiTab-root.Mui-selected": {
-          color: "#6A42AB",
+          color: "#4F39F6",
           fontWeight: 600,
         },
         "& .MuiTabs-indicator": {
-          backgroundColor: "#6A42AB",
+          backgroundColor: "#4F39F6",
           height: 3,
         },
       }}

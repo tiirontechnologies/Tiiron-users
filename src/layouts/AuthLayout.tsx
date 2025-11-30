@@ -211,24 +211,25 @@ const AuthLayout = ({
                 type="submit"
                 disabled={isLoading}
                 sx={{
-                  backgroundColor: "#6A42AB",
+                  backgroundColor: "#4F39F6",
                   color: "#FFFFFF",
                   textTransform: "none",
                   px: 3,
                   fontWeight: 600,
-                  boxShadow: "0px 6px 18px rgba(106, 66, 171, 0.35)",
+                  boxShadow: "0px 6px 18px rgba(79, 57, 246, 0.35)",
                   transition: "background-color 0.2s ease, box-shadow 0.2s ease",
                   "&:hover": {
-                    backgroundColor: "#5B3798",
-                    boxShadow: "0px 10px 24px rgba(106, 66, 171, 0.45)",
+                    backgroundColor: "#3E2DC4",
+                    color: "#FFFFFF",
+                    boxShadow: "0px 10px 24px rgba(79, 57, 246, 0.45)",
                   },
                   "&:active": {
-                    backgroundColor: "#4A2C73",
-                    boxShadow: "0px 2px 8px rgba(74, 44, 115, 0.4)",
+                    backgroundColor: "#3E2DC4",
+                    boxShadow: "0px 2px 8px rgba(79, 57, 246, 0.4)",
                     color: "#FFFFFF",
                   },
                   "&:focus-visible": {
-                    outline: "3px solid rgba(106, 66, 171, 0.35)",
+                    outline: "3px solid rgba(79, 57, 246, 0.35)",
                     outlineOffset: "2px",
                   },
                   "&.Mui-disabled": {
@@ -347,15 +348,16 @@ const AuthLayout = ({
                     variant="contained"
                     fullWidth
                     sx={{
-                      backgroundColor: "#6A42AB",
+                      backgroundColor: "#4F39F6",
                       color: "#FFFFFF",
                       textTransform: "none",
                       fontWeight: 600,
                       "&:hover": {
-                        backgroundColor: "#5B3798",
+                        backgroundColor: "#3E2DC4",
+                        color: "#FFFFFF",
                       },
                       "&:active": {
-                        backgroundColor: "#4A2C73",
+                        backgroundColor: "#3E2DC4",
                         color: "#FFFFFF",
                       },
                       "&.Mui-disabled": {

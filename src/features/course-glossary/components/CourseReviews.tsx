@@ -96,10 +96,10 @@ export default function CourseReviews() {
                 transition: "all 0.2s ease",
                 "&:hover": {
                   backgroundColor: "#F8FAFC",
-                  borderColor: "#6A42AB",
-                  color: "#6A42AB",
+                  borderColor: "#4F39F6",
+                  color: "#4F39F6",
                   transform: "translateY(-1px)",
-                  boxShadow: "0 4px 6px rgba(106, 66, 171, 0.1)",
+                  boxShadow: "0 4px 6px rgba(79, 57, 246, 0.1)",
                 },
               }}
             >

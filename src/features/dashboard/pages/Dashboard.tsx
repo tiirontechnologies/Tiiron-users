@@ -110,8 +110,8 @@ function StatCard({ label, value, suffix }: KPI) {
       };
     }
     return {
-      bg: "linear-gradient(135deg, #6A42AB 0%, #5B3A94 100%)",
-      border: "#6A42AB",
+      bg: "linear-gradient(135deg, #4F39F6 0%, #3E2DC4 100%)",
+      border: "#4F39F6",
       iconBg: "#F3E8FF",
     };
   };
@@ -211,8 +211,8 @@ function StatMini({ title, value }: { title: string; value: React.ReactNode }) {
         boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
         transition: "all 0.2s",
         "&:hover": {
-          borderColor: "#6A42AB",
-          boxShadow: "0 2px 6px rgba(106, 66, 171, 0.1)",
+          borderColor: "#4F39F6",
+          boxShadow: "0 2px 6px rgba(79, 57, 246, 0.1)",
         },
       }}
     >
@@ -583,8 +583,12 @@ export default function Dashboard() {
                   endIcon={<ArrowOutwardRounded />}
                   variant="contained"
                   sx={{
-                    bgcolor: "#6A42AB",
-                    "&:hover": { bgcolor: "#5B3A94" },
+                    bgcolor: "#4F39F6",
+                    color: "#FFFFFF",
+                    "&:hover": {
+                      bgcolor: "#3E2DC4",
+                      color: "#FFFFFF"
+                    },
                     textTransform: "none",
                     fontWeight: 600,
                     px: 2.5,
@@ -823,7 +827,7 @@ export default function Dashboard() {
                           textTransform: "none",
                           fontWeight: 600,
                           "&:hover": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                             bgcolor: "#F3E8FF",
                           },
                         }}
@@ -835,10 +839,14 @@ export default function Dashboard() {
                         startIcon={<AddRounded />}
                         onClick={() => setAddOpen(true)}
                         sx={{
-                          bgcolor: "#6A42AB",
+                          bgcolor: "#4F39F6",
+                          color: "#FFFFFF",
                           textTransform: "none",
                           fontWeight: 600,
-                          "&:hover": { bgcolor: "#5B3A94" },
+                          "&:hover": {
+                            bgcolor: "#3E2DC4",
+                            color: "#FFFFFF"
+                          },
                         }}
                       >
                         Add Learner
@@ -941,18 +949,18 @@ export default function Dashboard() {
                                       l.progress === 100
                                         ? "#DBEAFE"
                                         : l.progress >= 70
-                                        ? "#D1FAE5"
-                                        : l.progress >= 40
-                                        ? "#FEF3C7"
-                                        : "#FEE2E2",
+                                          ? "#D1FAE5"
+                                          : l.progress >= 40
+                                            ? "#FEF3C7"
+                                            : "#FEE2E2",
                                     color:
                                       l.progress === 100
                                         ? "#1E40AF"
                                         : l.progress >= 70
-                                        ? "#065F46"
-                                        : l.progress >= 40
-                                        ? "#92400E"
-                                        : "#991B1B",
+                                          ? "#065F46"
+                                          : l.progress >= 40
+                                            ? "#92400E"
+                                            : "#991B1B",
                                     fontWeight: 600,
                                     fontSize: "11px",
                                   }}
@@ -1109,15 +1117,15 @@ export default function Dashboard() {
                               transition: "all 0.2s ease",
                               cursor: "pointer",
                               "&:hover": {
-                                borderColor: "#6A42AB",
+                                borderColor: "#4F39F6",
                                 bgcolor: "#F8FAFC",
-                                boxShadow: "0 2px 8px rgba(106, 66, 171, 0.08)",
+                                boxShadow: "0 2px 8px rgba(79, 57, 246, 0.08)",
                                 transform: "translateY(-1px)",
                                 "& .dropoff-text": {
-                                  color: "#6A42AB",
+                                  color: "#4F39F6",
                                 },
                                 "& .dropoff-percent": {
-                                  color: "#6A42AB",
+                                  color: "#4F39F6",
                                 },
                               },
                             }}
@@ -1232,7 +1240,7 @@ export default function Dashboard() {
                           textTransform: "none",
                           fontWeight: 600,
                           "&:hover": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                             bgcolor: "#F3E8FF",
                           },
                         }}
@@ -1247,7 +1255,7 @@ export default function Dashboard() {
                           textTransform: "none",
                           fontWeight: 600,
                           "&:hover": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                             bgcolor: "#F3E8FF",
                           },
                         }}
@@ -1262,7 +1270,7 @@ export default function Dashboard() {
                           textTransform: "none",
                           fontWeight: 600,
                           "&:hover": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                             bgcolor: "#F3E8FF",
                           },
                         }}

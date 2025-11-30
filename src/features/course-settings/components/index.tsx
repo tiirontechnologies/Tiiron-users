@@ -12,7 +12,7 @@ import WestIcon from "@mui/icons-material/West";
 import MoreButton from "../../../components/ui/MoreButton";
 import PublishButton from "../../../components/ui/PublishButton";
 import { Link, useNavigate, useParams } from "react-router-dom";
-const ToolBar = ({ children, courseName,previousPage }: { courseName?: string; children: React.ReactNode; previousPage?: string }) => {
+const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; children: React.ReactNode; previousPage?: string }) => {
   return (
     <Box>
       {/* Header */}
@@ -64,13 +64,13 @@ export const RightSideTools = () => {
         sx={{
           padding: "12px 32px",
           height: "48px",
-          color: "#6A42AB",
-          border: "1px solid #6A42AB",
+          color: "#4F39F6",
+          border: "1px solid #4F39F6",
           borderRadius: "8px",
           backgroundColor: "transparent",
           textTransform: "none", // keeps "Preview" as-is
           "&:hover": {
-            border: "2px solid #6A42AB",
+            border: "2px solid #4F39F6",
             backgroundColor: "rgba(255, 255, 255, 0.1)", // subtle hover
           },
           "&:focus": {
@@ -78,7 +78,7 @@ export const RightSideTools = () => {
             boxShadow: "none",
           },
           "&:active": {
-            border: "1px solid #6A42AB",
+            border: "1px solid #4F39F6",
             boxShadow: "none",
           },
         }}

@@ -19,6 +19,8 @@ import {
   useTheme,
   alpha,
   Paper,
+  Rating,
+  CardMedia,
 } from '@mui/material';
 
 import {
@@ -26,6 +28,9 @@ import {
   PlayArrow as PlayArrowIcon,
   ChevronRight as ChevronRightIcon,
   FlashOn as FlashOnIcon,
+  CheckCircle as CheckCircleIcon,
+  Star as StarIcon,
+  ArrowForward as ArrowForwardIcon,
 } from '@mui/icons-material';
 
 import { useNavigate } from 'react-router-dom';
@@ -124,7 +129,7 @@ const Landing = () => {
       {/* -------------------------------------- */}
       {/* HERO SECTION */}
       {/* -------------------------------------- */}
-      <Box component="section" sx={{ bgcolor: '#f6f8ff', py: { xs: 6, md: 10 } }}>
+      <Box component="section" sx={{ bgcolor: '#f6f8ff', py: { xs: 6, md: 8 } }}>
         <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
             {/* LEFT */}
@@ -177,27 +182,150 @@ const Landing = () => {
 
             {/* RIGHT */}
             <Grid item xs={12} md={5}>
-              <Card elevation={6} sx={{ borderRadius: 3 }}>
-                <Box sx={{ p: { xs: 3, md: 5 } }}>
-                  <Typography variant="caption" sx={{ color: '#667085' }}>
-                    AI Mentor
-                  </Typography>
+              <Card
+                elevation={0}
+                sx={{
+                  borderRadius: 3,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.06)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.15)}`,
+                    transform: 'translateY(-4px)',
+                  },
+                }}
+              >
+                <Box sx={{ p: { xs: 3, md: 4 }, position: 'relative', zIndex: 1 }}>
+                  {/* Header */}
+                  <Box sx={{ mb: 3 }}>
+                    <Chip
+                      label="AI Mentor"
+                      size="small"
+                      sx={{
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        color: theme.palette.primary.main,
+                        fontWeight: 600,
+                        fontSize: '0.75rem',
+                        mb: 1.5,
+                        height: 24,
+                      }}
+                    />
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontWeight: 700,
+                        color: '#0f1724',
+                        fontSize: { xs: '1.25rem', sm: '1.5rem' },
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      Practice Mode Active
+                    </Typography>
+                  </Box>
 
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-                    Practice Mode Active
-                  </Typography>
-
-                  <Stack spacing={1} component="ul" sx={{ pl: 2 }}>
-                    <Typography component="li">Personalized quizzes</Typography>
-                    <Typography component="li">Analytics dashboard</Typography>
-                    <Typography component="li">Progress tracking</Typography>
+                  {/* Features List */}
+                  <Stack spacing={2} sx={{ mb: 3 }}>
+                    {[
+                      'Personalized quizzes',
+                      'Analytics dashboard',
+                      'Progress tracking',
+                    ].map((feature, index) => (
+                      <Stack
+                        key={index}
+                        direction="row"
+                        alignItems="center"
+                        spacing={1.5}
+                        sx={{
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            transform: 'translateX(4px)',
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: '50%',
+                            bgcolor: theme.palette.primary.main,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                            boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.3)}`,
+                          }}
+                        >
+                          <CheckCircleIcon
+                            sx={{
+                              color: '#ffffff',
+                              fontSize: 14,
+                            }}
+                          />
+                        </Box>
+                        <Typography
+                          sx={{
+                            fontWeight: 500,
+                            color: '#1e293b',
+                            fontSize: '0.9375rem',
+                          }}
+                        >
+                          {feature}
+                        </Typography>
+                      </Stack>
+                    ))}
                   </Stack>
 
-                  <Chip
-                    label="98% Success"
-                    size="small"
-                    sx={{ mt: 3, bgcolor: '#eef2ff', fontWeight: 700 }}
-                  />
+                  {/* Success Metric */}
+                  <Box
+                    sx={{
+                      p: 2.5,
+                      borderRadius: 2,
+                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        sx={{
+                          fontSize: '2rem',
+                          fontWeight: 800,
+                          color: theme.palette.primary.main,
+                          lineHeight: 1,
+                        }}
+                      >
+                        98%
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: '0.8125rem',
+                          fontWeight: 600,
+                          color: '#556080',
+                          mt: 0.5,
+                        }}
+                      >
+                        Success Rate
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: '50%',
+                        background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: `0 4px 16px ${alpha(theme.palette.primary.main, 0.4)}`,
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ color: '#ffffff', fontSize: 28 }} />
+                    </Box>
+                  </Box>
                 </Box>
               </Card>
 
@@ -261,16 +389,75 @@ const Landing = () => {
       {/* -------------------------------------- */}
       <Box sx={{ py: 4 }}>
         <Container maxWidth="lg">
-          <Stack direction="row" justifyContent="space-between" sx={{ mb: 6 }}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            spacing={{ xs: 2, sm: 0 }}
+            sx={{ mb: 6 }}
+          >
             <Box>
-              <Typography variant="h2" fontWeight={700}>
+              <Typography
+                variant="h5"
+                fontWeight={700}
+                sx={{
+                  fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+                  color: '#0f1724',
+                  mb: 0.5,
+                }}
+              >
                 Featured Courses
               </Typography>
-              <Typography>Top-rated courses chosen by our AI</Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: '#556080',
+                  fontSize: { xs: '0.875rem', sm: '0.9375rem' },
+                }}
+              >
+                Top-rated courses chosen by our AI
+              </Typography>
             </Box>
 
-            <Button endIcon={<ChevronRightIcon />} onClick={() => navigate('/learner/browse-courses')}>
-              View All
+            <Button
+              variant="outlined"
+              endIcon={
+                <ChevronRightIcon
+                  sx={{
+                    fontSize: '1.25rem',
+                    transition: 'transform 0.3s ease',
+                  }}
+                />
+              }
+              onClick={() => navigate('/learner/browse-courses')}
+              sx={{
+                px: { xs: 3, sm: 4 },
+                py: 1.5,
+                borderRadius: 2,
+                borderColor: theme.palette.primary.main,
+                color: theme.palette.primary.main,
+                fontWeight: 600,
+                fontSize: '0.9375rem',
+                textTransform: 'none',
+                minWidth: { xs: '100%', sm: 'auto' },
+                whiteSpace: 'nowrap',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                '&:hover': {
+                  borderColor: theme.palette.primary.main,
+                  backgroundColor: theme.palette.primary.main,
+                  color: '#ffffff',
+                  transform: 'translateY(-2px)',
+                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
+                  '& .MuiButton-endIcon': {
+                    transform: 'translateX(4px)',
+                  },
+                },
+                '&:active': {
+                  transform: 'translateY(0)',
+                },
+              }}
+            >
+              View All Courses
             </Button>
           </Stack>
 
@@ -312,6 +499,635 @@ const Landing = () => {
               })}
             </Grid>
           )}
+        </Container>
+      </Box>
+
+      {/* -------------------------------------- */}
+      {/* TRENDING COURSES */}
+      {/* -------------------------------------- */}
+      <Box component="section" sx={{ py: 6, bgcolor: alpha(theme.palette.grey[50], 0.5) }}>
+        <Container maxWidth="lg">
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            sx={{
+              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+              color: '#0f1724',
+              mb: 4,
+            }}
+          >
+            Trending courses
+          </Typography>
+
+          <Grid container spacing={3}>
+            {/* Most Popular Column */}
+            <Grid item xs={12} md={4}>
+              <Box
+                sx={{
+                  bgcolor: alpha(theme.palette.primary.main, 0.04),
+                  borderRadius: 3,
+                  p: 3,
+                  height: '100%',
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                }}
+              >
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ mb: 3 }}
+                >
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ color: '#0f1724', fontSize: '1.125rem' }}
+                  >
+                    Most popular
+                  </Typography>
+                  <ArrowForwardIcon
+                    sx={{
+                      fontSize: '1.25rem',
+                      color: theme.palette.primary.main,
+                      cursor: 'pointer',
+                      '&:hover': { transform: 'translateX(4px)' },
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
+                </Stack>
+
+                <Stack spacing={2.5}>
+                  {(featuredCoursesData?.slice(0, 3) || []).map((course) => (
+                    <Card
+                      key={course.id}
+                      elevation={0}
+                      sx={{
+                        bgcolor: '#ffffff',
+                        borderRadius: 2,
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                        '&:hover': {
+                          boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
+                          transform: 'translateY(-2px)',
+                        },
+                      }}
+                      onClick={() => navigate(`/course-glossary/${course.id}`)}
+                    >
+                      <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
+                        <Box
+                          sx={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: 1.5,
+                            overflow: 'hidden',
+                            flexShrink: 0,
+                            bgcolor: theme.palette.grey[200],
+                          }}
+                        >
+                          {course.image ? (
+                            <CardMedia
+                              component="img"
+                              image={course.image}
+                              alt={course.title}
+                              sx={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                              }}
+                            />
+                          ) : (
+                            <Box
+                              sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: theme.palette.text.secondary,
+                                fontSize: '0.75rem',
+                              }}
+                            >
+                              No Image
+                            </Box>
+                          )}
+                        </Box>
+
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={0.5}
+                            sx={{ mb: 0.5 }}
+                          >
+                            <Box
+                              sx={{
+                                width: 16,
+                                height: 16,
+                                borderRadius: '50%',
+                                bgcolor: theme.palette.primary.main,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '0.625rem',
+                                color: '#ffffff',
+                                fontWeight: 700,
+                              }}
+                            >
+                              {course.createdBy?.[0]?.toUpperCase() || 'T'}
+                            </Box>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: '#556080',
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {course.createdBy || 'Tiiron'}
+                            </Typography>
+                          </Stack>
+
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 600,
+                              color: '#0f1724',
+                              fontSize: '0.875rem',
+                              mb: 0.5,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {course.title}
+                          </Typography>
+
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: '#556080',
+                              fontSize: '0.6875rem',
+                              mb: 0.5,
+                            }}
+                          >
+                            {course.tags?.[0] || 'Course'}
+                          </Typography>
+
+                          <Stack direction="row" alignItems="center" spacing={0.5}>
+                            <Rating
+                              value={4.8}
+                              precision={0.1}
+                              readOnly
+                              size="small"
+                              sx={{
+                                '& .MuiRating-iconFilled': {
+                                  color: '#FFB400',
+                                },
+                                '& .MuiRating-iconEmpty': {
+                                  color: '#E2E8F0',
+                                },
+                                '& .MuiRating-icon': {
+                                  fontSize: '0.875rem',
+                                },
+                              }}
+                            />
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: '#556080',
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                              }}
+                            >
+                              4.8
+                            </Typography>
+                          </Stack>
+                        </Box>
+                      </Stack>
+                    </Card>
+                  ))}
+                </Stack>
+              </Box>
+            </Grid>
+
+            {/* Weekly Spotlight Column */}
+            <Grid item xs={12} md={4}>
+              <Box
+                sx={{
+                  bgcolor: alpha(theme.palette.primary.main, 0.04),
+                  borderRadius: 3,
+                  p: 3,
+                  height: '100%',
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                }}
+              >
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ mb: 3 }}
+                >
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ color: '#0f1724', fontSize: '1.125rem' }}
+                  >
+                    Weekly spotlight
+                  </Typography>
+                  <ArrowForwardIcon
+                    sx={{
+                      fontSize: '1.25rem',
+                      color: theme.palette.primary.main,
+                      cursor: 'pointer',
+                      '&:hover': { transform: 'translateX(4px)' },
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
+                </Stack>
+
+                <Stack spacing={2.5}>
+                  {(featuredCoursesData?.slice(1, 4) || []).map((course, index) => (
+                    <Card
+                      key={course.id || `spotlight-${index}`}
+                      elevation={0}
+                      sx={{
+                        bgcolor: '#ffffff',
+                        borderRadius: 2,
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                        '&:hover': {
+                          boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
+                          transform: 'translateY(-2px)',
+                        },
+                      }}
+                      onClick={() => navigate(`/course-glossary/${course.id}`)}
+                    >
+                      <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
+                        <Box
+                          sx={{
+                            width: 80,
+                            height: 80,
+                            borderRadius: 1.5,
+                            overflow: 'hidden',
+                            flexShrink: 0,
+                            bgcolor: theme.palette.grey[200],
+                          }}
+                        >
+                          {course.image ? (
+                            <CardMedia
+                              component="img"
+                              image={course.image}
+                              alt={course.title}
+                              sx={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                              }}
+                            />
+                          ) : (
+                            <Box
+                              sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: theme.palette.text.secondary,
+                                fontSize: '0.75rem',
+                              }}
+                            >
+                              No Image
+                            </Box>
+                          )}
+                        </Box>
+
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={0.5}
+                            sx={{ mb: 0.5 }}
+                          >
+                            <Box
+                              sx={{
+                                width: 16,
+                                height: 16,
+                                borderRadius: '50%',
+                                bgcolor: theme.palette.secondary?.main || theme.palette.primary.main,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '0.625rem',
+                                color: '#ffffff',
+                                fontWeight: 700,
+                              }}
+                            >
+                              {course.createdBy?.[0]?.toUpperCase() || 'T'}
+                            </Box>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: '#556080',
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {course.createdBy || 'Tiiron'}
+                            </Typography>
+                          </Stack>
+
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 600,
+                              color: '#0f1724',
+                              fontSize: '0.875rem',
+                              mb: 0.5,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {course.title}
+                          </Typography>
+
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: '#556080',
+                              fontSize: '0.6875rem',
+                              mb: 0.5,
+                            }}
+                          >
+                            {course.tags?.[0] || 'Course'}
+                          </Typography>
+
+                          <Stack direction="row" alignItems="center" spacing={0.5}>
+                            <Rating
+                              value={4.7}
+                              precision={0.1}
+                              readOnly
+                              size="small"
+                              sx={{
+                                '& .MuiRating-iconFilled': {
+                                  color: '#FFB400',
+                                },
+                                '& .MuiRating-iconEmpty': {
+                                  color: '#E2E8F0',
+                                },
+                                '& .MuiRating-icon': {
+                                  fontSize: '0.875rem',
+                                },
+                              }}
+                            />
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: '#556080',
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                              }}
+                            >
+                              4.7
+                            </Typography>
+                          </Stack>
+                        </Box>
+                      </Stack>
+                    </Card>
+                  ))}
+                </Stack>
+              </Box>
+            </Grid>
+
+            {/* In-demand AI skills Column */}
+            <Grid item xs={12} md={4}>
+              <Box
+                sx={{
+                  bgcolor: alpha(theme.palette.primary.main, 0.04),
+                  borderRadius: 3,
+                  p: 3,
+                  height: '100%',
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                }}
+              >
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ mb: 3 }}
+                >
+                  <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    sx={{ color: '#0f1724', fontSize: '1.125rem' }}
+                  >
+                    In-demand AI skills
+                  </Typography>
+                  <ArrowForwardIcon
+                    sx={{
+                      fontSize: '1.25rem',
+                      color: theme.palette.primary.main,
+                      cursor: 'pointer',
+                      '&:hover': { transform: 'translateX(4px)' },
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
+                </Stack>
+
+                <Stack spacing={2.5}>
+                  {(() => {
+                    // Filter for AI-related courses if available, otherwise show first 3
+                    const aiCourses = featuredCoursesData?.filter(
+                      (c) =>
+                        c.title?.toLowerCase().includes('ai') ||
+                        c.title?.toLowerCase().includes('artificial intelligence') ||
+                        c.tags?.some((tag) => tag?.toLowerCase().includes('ai'))
+                    ) || [];
+
+                    const displayCourses = aiCourses.length >= 3
+                      ? aiCourses.slice(0, 3)
+                      : [...(aiCourses || []), ...(featuredCoursesData?.slice(0, 3 - (aiCourses?.length || 0)) || [])];
+
+                    return displayCourses.slice(0, 3).map((displayCourse, index) => {
+                      if (!displayCourse) return null;
+                      return (
+                        <Card
+                          key={displayCourse.id || `ai-${index}`}
+                          elevation={0}
+                          sx={{
+                            bgcolor: '#ffffff',
+                            borderRadius: 2,
+                            overflow: 'hidden',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                            '&:hover': {
+                              boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
+                              transform: 'translateY(-2px)',
+                            },
+                          }}
+                          onClick={() => navigate(`/course-glossary/${displayCourse.id}`)}
+                        >
+                          <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
+                            <Box
+                              sx={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 1.5,
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                bgcolor: theme.palette.grey[200],
+                              }}
+                            >
+                              {displayCourse.image ? (
+                                <CardMedia
+                                  component="img"
+                                  image={displayCourse.image}
+                                  alt={displayCourse.title}
+                                  sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                  }}
+                                />
+                              ) : (
+                                <Box
+                                  sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: theme.palette.text.secondary,
+                                    fontSize: '0.75rem',
+                                  }}
+                                >
+                                  No Image
+                                </Box>
+                              )}
+                            </Box>
+
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                spacing={0.5}
+                                sx={{ mb: 0.5 }}
+                              >
+                                <Box
+                                  sx={{
+                                    width: 16,
+                                    height: 16,
+                                    borderRadius: '50%',
+                                    bgcolor: '#9333EA',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '0.625rem',
+                                    color: '#ffffff',
+                                    fontWeight: 700,
+                                  }}
+                                >
+                                  {displayCourse.createdBy?.[0]?.toUpperCase() || 'A'}
+                                </Box>
+                                <Typography
+                                  variant="caption"
+                                  sx={{
+                                    color: '#556080',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 500,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  {displayCourse.createdBy || 'Tiiron'}
+                                </Typography>
+                              </Stack>
+
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  fontWeight: 600,
+                                  color: '#0f1724',
+                                  fontSize: '0.875rem',
+                                  mb: 0.5,
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  lineHeight: 1.3,
+                                }}
+                              >
+                                {displayCourse.title}
+                              </Typography>
+
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: '#556080',
+                                  fontSize: '0.6875rem',
+                                  mb: 0.5,
+                                }}
+                              >
+                                {displayCourse.tags?.[0] || 'AI Course'}
+                              </Typography>
+
+                              <Stack direction="row" alignItems="center" spacing={0.5}>
+                                <Rating
+                                  value={4.8}
+                                  precision={0.1}
+                                  readOnly
+                                  size="small"
+                                  sx={{
+                                    '& .MuiRating-iconFilled': {
+                                      color: '#FFB400',
+                                    },
+                                    '& .MuiRating-iconEmpty': {
+                                      color: '#E2E8F0',
+                                    },
+                                    '& .MuiRating-icon': {
+                                      fontSize: '0.875rem',
+                                    },
+                                  }}
+                                />
+                                <Typography
+                                  variant="caption"
+                                  sx={{
+                                    color: '#556080',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  4.8
+                                </Typography>
+                              </Stack>
+                            </Box>
+                          </Stack>
+                        </Card>
+                      );
+                    });
+                  })()}
+                </Stack>
+              </Box>
+            </Grid>
+          </Grid>
         </Container>
       </Box>
 
@@ -370,16 +1186,16 @@ const Landing = () => {
       {/* -------------------------------------- */}
       {/* CTA */}
       {/* -------------------------------------- */}
-      <Container maxWidth="lg" sx={{ py: 5 }}>
+      <Container maxWidth="lg" sx={{ pt: 5, pb: 6 }}>
         <Card
           sx={{
-            p: 6,
+            p: 4,
             textAlign: 'center',
             borderRadius: 6,
             background: alpha(theme.palette.primary.main, 0.08),
           }}
         >
-          <Typography variant="h3" fontWeight={700} sx={{ mb: 2 }}>
+          <Typography variant="h4" fontWeight={700} sx={{ mb: 2 }}>
             Ready to Start Your Journey?
           </Typography>
 
@@ -392,7 +1208,7 @@ const Landing = () => {
               variant="contained"
               sx={{
                 px: 5,
-                py: 2,
+                py: 1,
                 borderRadius: 3,
                 fontSize: '1.1rem',
               }}
@@ -404,7 +1220,7 @@ const Landing = () => {
               variant="outlined"
               sx={{
                 px: 5,
-                py: 2,
+                py: 1,
                 borderRadius: 3,
               }}
             >

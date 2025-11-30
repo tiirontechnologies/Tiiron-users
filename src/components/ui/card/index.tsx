@@ -247,10 +247,10 @@ export default function CourseCard({
               sx={{
                 height: 6,
                 borderRadius: "999px",
-                backgroundColor: "rgba(106,66,171,0.14)",
+                backgroundColor: "rgba(79,57,246,0.14)",
                 "& .MuiLinearProgress-bar": {
                   background:
-                    "linear-gradient(90deg, #6A42AB 0%, #8B5FD4 50%, #A87BEC 100%)",
+                    "linear-gradient(90deg, #4F39F6 0%, #8B5FD4 50%, #A87BEC 100%)",
                   borderRadius: "999px",
                   boxShadow: "0 2px 6px rgba(138,92,212,0.35)",
                 },
@@ -272,19 +272,19 @@ export default function CourseCard({
               onClick={handleStartCourse}
               sx={{
                 width: "54%", // slightly reduced width
-                backgroundColor: "#6A42AB",
+                backgroundColor: "#4F39F6",
                 color: "#fff",
                 textTransform: "none",
                 fontWeight: 600,
                 fontSize: "13.5px",
                 py: 0.5,
                 borderRadius: "10px",
-                border: "1px solid #6A42AB",
-                boxShadow: "0 6px 16px rgba(106,66,171,0.25)",
+                border: "1px solid #4F39F6",
+                boxShadow: "0 6px 16px rgba(79,57,246,0.25)",
                 "&:hover": {
-                  backgroundColor: "#5a3796",
-                  borderColor: "#5a3796",
-                  boxShadow: "0 8px 20px rgba(106,66,171,0.35)",
+                  backgroundColor: "#3E2DC4",
+                  borderColor: "#3E2DC4",
+                  boxShadow: "0 8px 20px rgba(79,57,246,0.35)",
                 },
                 transition:
                   "background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
@@ -656,15 +656,16 @@ export default function CourseCard({
                 fontSize: "13.5px",
                 fontWeight: 600,
                 color: isInCart ? "#94A3B8" : "#FFFFFF",
-                backgroundColor: "#6A42AB",
-                border: "1px solid #6A42AB",
-                boxShadow: "0 6px 16px rgba(106,66,171,0.25)",
+                backgroundColor: "#4F39F6",
+                border: "1px solid #4F39F6",
+                boxShadow: "0 6px 16px rgba(79,57,246,0.25)",
                 transition:
                   "background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
                 "&:hover": {
-                  backgroundColor: "#5a3796",
-                  borderColor: "#5a3796",
-                  boxShadow: "0 8px 20px rgba(106,66,171,0.35)",
+                  backgroundColor: "#3E2DC4",
+                  borderColor: "#3E2DC4",
+                  color: "#FFFFFF",
+                  boxShadow: "0 8px 20px rgba(79,57,246,0.35)",
                 },
                 "&:disabled": {
                   backgroundColor: "#F1F5F9",

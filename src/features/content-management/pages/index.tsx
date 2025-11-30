@@ -100,7 +100,7 @@ export default function ContentCreateForm() {
 
     // 4. If description is object
     if (item?.description && typeof item.description === "object") {
-      
+
       return (item.description as { title?: string }).title || "";
     }
 
@@ -196,12 +196,12 @@ export default function ContentCreateForm() {
                       sx={{
                         border:
                           selectedId === c.id
-                            ? "1px solid #6A42AB"
+                            ? "1px solid #4F39F6"
                             : "1px solid #CCCCCC",
                         p: "16px",
                         borderLeft:
                           selectedId === c.id
-                            ? "4px solid #6A42AB"
+                            ? "4px solid #4F39F6"
                             : "1px solid #CCCCCC",
                         borderRadius: "8px",
                         display: "flex",

@@ -9,6 +9,7 @@ import {
   useTheme,
   Drawer,
   Typography,
+  alpha,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -66,14 +67,15 @@ const navigationItems: NavItem[] = [
   //   ],
   // },
   // Example of a plain clickable nav item (no dropdown)
-  {
-    name: "Courses",
-    href: "/courses",
-    hasDropdown: false,
-  },
+
   {
     name: "Learning Paths",
     href: "/paths",
+    hasDropdown: false,
+  },
+  {
+    name: "Creator",
+    href: "https://creator.tiiron.com",
     hasDropdown: false,
   },
 ];
@@ -319,6 +321,13 @@ const Navbar: React.FC = () => {
             fontSize: 15,
             textDecoration: "none",
             color: isActive(item.href) ? "#ef4444" : "#111827",
+            transition: "color 0.2s ease",
+            "&:hover": {
+              color: "transparent",
+              background: "linear-gradient(to right,#ef4444,#a855f7)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            },
           }}
         >
           {item.name}
@@ -424,10 +433,17 @@ const Navbar: React.FC = () => {
               )}
             </Box>
 
-            {/* Center: Desktop nav */}
+            {/* Center: Desktop nav + Generate Quiz */}
             {!isMobile && (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mx: 3, flexShrink: 0 }}>
                 {navigationItems.map((item) => renderDesktopNavItem(item))}
+                {!isLoggedIn && (
+                  <RouterLink to="/" style={{ textDecoration: "none" }}>
+                    <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff', fontWeight: 600 }}>
+                      ⚡ Generate Quiz
+                    </Button>
+                  </RouterLink>
+                )}
               </Box>
             )}
 
@@ -454,21 +470,51 @@ const Navbar: React.FC = () => {
               {!isMobile && (isLoggedIn ? (
                 <ProfilePopup />
               ) : (
-                <>
-                  <RouterLink to="/" style={{ textDecoration: "none" }}>
-                    <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff' }}>
-                      ⚡ Generate Quiz
-                    </Button>
-                  </RouterLink>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mx: 2, px: 2, borderLeft: "1px solid #e5e7eb" }}>
                   <RouterLink to="/login" style={{ textDecoration: "none" }}>
-                    <Button variant="contained" size="large" sx={{ bgcolor: '#f3f4f6' }}>Login</Button>
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      sx={{
+                        borderColor: '#5b3cff',
+                        color: '#5b3cff',
+                        fontWeight: 600,
+                        borderWidth: 2,
+                        minWidth: '120px',
+                        height: '40px',
+                        padding: '8px 24px',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          borderColor: '#5b3cff',
+                          backgroundColor: '#5b3cff',
+                          color: '#ffffff',
+                          transform: 'translateY(-1px)',
+                          boxShadow: `0 4px 12px ${alpha('#5b3cff', 0.3)}`,
+                        },
+                        '&:active': {
+                          transform: 'translateY(0)',
+                        }
+                      }}
+                    >
+                      Login
+                    </Button>
                   </RouterLink>
                   <RouterLink to="/sign-up" style={{ textDecoration: "none" }}>
-                    <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff' }}>
-                      Sing Up
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{
+                        bgcolor: '#5b3cff',
+                        minWidth: '120px',
+                        height: '40px',
+                        padding: '8px 24px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Sign Up
                     </Button>
                   </RouterLink>
-                </>
+                </Box>
               ))}
 
               {/* Mobile menu toggle */}
@@ -504,9 +550,29 @@ const Navbar: React.FC = () => {
 
             <Box sx={{ flex: 1, overflowY: "auto", px: 2 }}>
               {navigationItems.map((item) => renderMobileNavItem(item))}
+              {!isLoggedIn && (
+                <Box sx={{ mb: 1 }}>
+                  <RouterLink to="/" onClick={closeMobileMenu} style={{ textDecoration: "none" }}>
+                    <Box sx={{
+                      textAlign: "center",
+                      p: 1.25,
+                      borderRadius: 2,
+                      bgcolor: '#5b3cff',
+                      color: "#fff",
+                      fontWeight: 600,
+                      minHeight: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      ⚡ Generate Quiz
+                    </Box>
+                  </RouterLink>
+                </Box>
+              )}
             </Box>
 
-            <Box sx={{ p: 2, borderTop: "1px solid #e5e7eb", display: "flex", flexDirection: "column", gap: 1 }}>
+            <Box sx={{ p: 2, borderTop: "1px solid #e5e7eb" }}>
               {isLoggedIn ? (
                 <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
                   <IconButton onClick={() => { handleOpenCart(); closeMobileMenu(); }} sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}>
@@ -517,21 +583,64 @@ const Navbar: React.FC = () => {
                   <ProfilePopup />
                 </Box>
               ) : (
-                <>
-                <RouterLink to="/" onClick={closeMobileMenu} style={{ textDecoration: "none" }}>
-                    <Box sx={{ textAlign: "center", p: 1, borderRadius: 2, background: "linear-gradient(to right,#ef4444,#ec4899)", color: "#fff" }}>
-                      ⚡ Generate Quiz
-                    </Box>
-                  </RouterLink>
-                  <RouterLink to="/login" onClick={closeMobileMenu} style={{ textDecoration: "none" }}>
-                    <Box sx={{ textAlign: "center", p: 1, bgcolor: "#f3f4f6", borderRadius: 2 }}>Login</Box>
-                  </RouterLink>
-                  <RouterLink to="/sign-up" onClick={closeMobileMenu} style={{ textDecoration: "none" }}>
-                    <Box sx={{ textAlign: "center", p: 1, borderRadius: 2, background: "linear-gradient(to right,#ef4444,#ec4899)", color: "#fff" }}>
-                      Sign Up
-                    </Box>
-                  </RouterLink>
-                </>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <RouterLink to="/login" onClick={closeMobileMenu} style={{ textDecoration: "none", flex: 1 }}>
+                      <Box
+                        sx={{
+                          textAlign: "center",
+                          p: 1,
+                          borderRadius: 2,
+                          border: '2px solid #5b3cff',
+                          color: '#5b3cff',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          minHeight: '40px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                          '&:hover': {
+                            borderColor: '#5b3cff',
+                            backgroundColor: '#5b3cff',
+                            color: '#ffffff',
+                            transform: 'translateY(-1px)',
+                            boxShadow: `0 4px 12px ${alpha('#5b3cff', 0.3)}`,
+                          },
+                          '&:active': {
+                            transform: 'translateY(0)',
+                          }
+                        }}
+                      >
+                        Login
+                      </Box>
+                    </RouterLink>
+                    <RouterLink to="/sign-up" onClick={closeMobileMenu} style={{ textDecoration: "none", flex: 1 }}>
+                      <Box sx={{
+                        textAlign: "center",
+                        p: 1.25,
+                        borderRadius: 2,
+                        bgcolor: '#5b3cff',
+                        color: "#fff",
+                        fontWeight: 600,
+                        minHeight: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                          transform: 'translateY(-1px)',
+                          boxShadow: `0 4px 12px ${alpha('#5b3cff', 0.3)}`,
+                        },
+                        '&:active': {
+                          transform: 'translateY(0)',
+                        }
+                      }}>
+                        Sign Up
+                      </Box>
+                    </RouterLink>
+                  </Box>
+                </Box>
               )}
             </Box>
           </Box>

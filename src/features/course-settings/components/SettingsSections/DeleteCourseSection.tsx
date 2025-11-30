@@ -31,9 +31,26 @@ export const DeleteCourseSection = ({ onDelete }: DeleteCourseSectionProps) => {
       <Button
         variant="contained"
         onClick={onDelete}
+        disableElevation
         sx={{
-          bgcolor: "#C54644",
-          "&:hover": { bgcolor: "#b91c1c" },
+          bgcolor: "#DC2626 !important",
+          backgroundColor: "#DC2626 !important",
+          color: "#fff !important",
+          "&:hover": {
+            bgcolor: "#b91c1c !important",
+            backgroundColor: "#b91c1c !important",
+            color: "#fff !important",
+          },
+          "&:focus": {
+            bgcolor: "#dc2626 !important",
+            backgroundColor: "#dc2626 !important",
+            color: "#fff !important",
+          },
+          "&:active": {
+            bgcolor: "#991b1b !important",
+            backgroundColor: "#991b1b !important",
+            color: "#fff !important",
+          },
         }}
       >
         Delete Course

@@ -15,10 +15,15 @@ export function CertificatesSection() {
           variant="contained"
           sx={{
             borderRadius: 2,
-            bgcolor: "#6A42AB",
+            bgcolor: "#4F39F6",
+            color: "#FFFFFF",
             py: "10px",
             px: "20px",
             mt: "32px",
+            "&:hover": {
+              bgcolor: "#3E2DC4",
+              color: "#FFFFFF",
+            },
           }}
         >
           Create Certificate

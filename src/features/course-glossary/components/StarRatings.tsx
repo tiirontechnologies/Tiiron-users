@@ -109,7 +109,7 @@ export default function StarRatings() {
                 sx={{
                   height: "100%",
                   width: `${rating.percent}%`,
-                  bgcolor: "#6A42AB",
+                  bgcolor: "#4F39F6",
                   borderRadius: 4,
                   transition: "opacity 0.2s ease",
                 }}
