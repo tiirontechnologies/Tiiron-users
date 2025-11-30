@@ -22,6 +22,7 @@ import SearchBox from "./header/SearchBox";
 import FilterButton from "./header/FilterButton";
 import ProfilePopup from "./header/profilePopup";
 import { CartModal } from "./cart/cartModal";
+import { GenerateQuizModal } from "./quiz/GenerateQuizModal";
 import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -69,7 +70,7 @@ const navigationItems: NavItem[] = [
   // Example of a plain clickable nav item (no dropdown)
 
   {
-    name: "Learning Paths",
+    name: "Learning Path",
     href: "/paths",
     hasDropdown: false,
   },
@@ -125,6 +126,7 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const isActive = (href?: string) =>
@@ -154,6 +156,12 @@ const Navbar: React.FC = () => {
     setIsCartOpen(true);
   };
   const handleCloseCart = () => setIsCartOpen(false);
+  const handleOpenQuizModal = () => {
+    setIsQuizModalOpen(true);
+  };
+  const handleCloseQuizModal = () => {
+    setIsQuizModalOpen(false);
+  };
 
   /* ========== Render helpers ========== */
 
@@ -437,13 +445,14 @@ const Navbar: React.FC = () => {
             {!isMobile && (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mx: 3, flexShrink: 0 }}>
                 {navigationItems.map((item) => renderDesktopNavItem(item))}
-                {!isLoggedIn && (
-                  <RouterLink to="/" style={{ textDecoration: "none" }}>
-                    <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff', fontWeight: 600 }}>
-                      ⚡ Generate Quiz
-                    </Button>
-                  </RouterLink>
-                )}
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleOpenQuizModal}
+                  sx={{ bgcolor: '#5b3cff', fontWeight: 600 }}
+                >
+                  ⚡ Generate Quiz
+                </Button>
               </Box>
             )}
 
@@ -451,25 +460,65 @@ const Navbar: React.FC = () => {
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               {!isMobile && isLoggedIn && (
                 <>
-                  <IconButton aria-label="Upgrade" sx={{ color: "#0f172a" }}>
-                    <WorkspacePremiumIcon />
-                  </IconButton>
+                  {/* Vertical divider after center nav items */}
+                  <Box sx={{ height: '32px', width: '1px', backgroundColor: '#e5e7eb', mx: 1 }} />
 
-                  <IconButton aria-label="Cart" onClick={handleOpenCart} sx={{ color: "#0f172a" }}>
-                    <Badge badgeContent={cartItemCount} color="error" invisible={cartItemCount === 0}>
-                      <ShoppingCartIcon />
-                    </Badge>
-                  </IconButton>
+                  {/* Grouped action buttons with hover effects */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                    <IconButton
+                      aria-label="Upgrade"
+                      sx={{
+                        color: "#0f172a",
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          backgroundColor: alpha('#EF4444', 0.1),
+                          color: '#EF4444',
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      <WorkspacePremiumIcon />
+                    </IconButton>
 
-                  <IconButton aria-label="Notifications" sx={{ color: "#0f172a" }}>
-                    <NotificationsIcon />
-                  </IconButton>
+                    <IconButton
+                      aria-label="Cart"
+                      onClick={handleOpenCart}
+                      sx={{
+                        color: "#0f172a",
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          backgroundColor: alpha('#2563eb', 0.1),
+                          color: '#2563eb',
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      <Badge badgeContent={cartItemCount} color="error" invisible={cartItemCount === 0}>
+                        <ShoppingCartIcon />
+                      </Badge>
+                    </IconButton>
+
+                    <IconButton
+                      aria-label="Notifications"
+                      sx={{
+                        color: "#0f172a",
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          backgroundColor: alpha('#F59E0B', 0.1),
+                          color: '#F59E0B',
+                          transform: 'scale(1.1)',
+                        }
+                      }}
+                    >
+                      <NotificationsIcon />
+                    </IconButton>
+                  </Box>
+
+                  <ProfilePopup />
                 </>
               )}
 
-              {!isMobile && (isLoggedIn ? (
-                <ProfilePopup />
-              ) : (
+              {!isMobile && !isLoggedIn && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mx: 2, px: 2, borderLeft: "1px solid #e5e7eb" }}>
                   <RouterLink to="/login" style={{ textDecoration: "none" }}>
                     <Button
@@ -515,7 +564,7 @@ const Navbar: React.FC = () => {
                     </Button>
                   </RouterLink>
                 </Box>
-              ))}
+              )}
 
               {/* Mobile menu toggle */}
               <IconButton onClick={toggleMobileMenu} sx={{ display: { xs: "inline-flex", lg: "none" }, color: "#0f172a" }}>
@@ -550,26 +599,34 @@ const Navbar: React.FC = () => {
 
             <Box sx={{ flex: 1, overflowY: "auto", px: 2 }}>
               {navigationItems.map((item) => renderMobileNavItem(item))}
-              {!isLoggedIn && (
-                <Box sx={{ mb: 1 }}>
-                  <RouterLink to="/" onClick={closeMobileMenu} style={{ textDecoration: "none" }}>
-                    <Box sx={{
-                      textAlign: "center",
-                      p: 1.25,
-                      borderRadius: 2,
-                      bgcolor: '#5b3cff',
-                      color: "#fff",
-                      fontWeight: 600,
-                      minHeight: '40px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      ⚡ Generate Quiz
-                    </Box>
-                  </RouterLink>
+              <Box sx={{ mb: 1 }}>
+                <Box
+                  onClick={() => {
+                    handleOpenQuizModal();
+                    closeMobileMenu();
+                  }}
+                  sx={{
+                    textAlign: "center",
+                    p: 1.25,
+                    borderRadius: 2,
+                    bgcolor: '#5b3cff',
+                    color: "#fff",
+                    fontWeight: 600,
+                    minHeight: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      bgcolor: '#4a2fd4',
+                      transform: 'translateY(-1px)',
+                    }
+                  }}
+                >
+                  ⚡ Generate Quiz
                 </Box>
-              )}
+              </Box>
             </Box>
 
             <Box sx={{ p: 2, borderTop: "1px solid #e5e7eb" }}>
@@ -652,6 +709,9 @@ const Navbar: React.FC = () => {
 
       {/* Cart Modal */}
       {isLoggedIn && <CartModal isOpen={isCartOpen} onClose={handleCloseCart} />}
+
+      {/* Generate Quiz Modal */}
+      <GenerateQuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} />
     </>
   );
 };
