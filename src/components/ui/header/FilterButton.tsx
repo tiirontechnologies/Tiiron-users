@@ -14,7 +14,7 @@ const FilterButton = () => {
         padding: { xs: "8px", sm: "10px" },
         "&:hover": {
           backgroundColor: "#f5f5f5",
-          borderColor: "rgba(106, 66, 171, 1)",
+          borderColor: "rgba(79, 57, 246, 1)",
         },
         "& svg": {
           fontSize: { xs: "18px", sm: "20px" },

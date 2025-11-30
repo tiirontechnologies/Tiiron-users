@@ -121,7 +121,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
                 transition: "all 0.2s ease",
                 "&:hover": {
                   bgcolor: "#F1E5FF",
-                  borderColor: "#6A42AB",
+                  borderColor: "#4F39F6",
                   transform: "translateX(4px)",
                 },
               }}
@@ -131,7 +131,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
                   width: 24,
                   height: 24,
                   borderRadius: "50%",
-                  bgcolor: "#6A42AB",
+                  bgcolor: "#4F39F6",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -197,7 +197,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <AccessTimeIcon sx={{ fontSize: 20, color: "#6A42AB" }} />
+              <AccessTimeIcon sx={{ fontSize: 20, color: "#4F39F6" }} />
               <Typography
                 sx={{
                   fontSize: "12px",
@@ -233,7 +233,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <SchoolIcon sx={{ fontSize: 20, color: "#6A42AB" }} />
+              <SchoolIcon sx={{ fontSize: 20, color: "#4F39F6" }} />
               <Typography
                 sx={{
                   fontSize: "12px",
@@ -269,7 +269,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <LanguageIcon sx={{ fontSize: 20, color: "#6A42AB" }} />
+              <LanguageIcon sx={{ fontSize: 20, color: "#4F39F6" }} />
               <Typography
                 sx={{
                   fontSize: "12px",
@@ -305,7 +305,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <StarIcon sx={{ fontSize: 20, color: "#6A42AB" }} />
+              <StarIcon sx={{ fontSize: 20, color: "#4F39F6" }} />
               <Typography
                 sx={{
                   fontSize: "12px",
@@ -354,7 +354,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
                   label={tag}
                   sx={{
                     bgcolor: "#F1E5FF",
-                    color: "#6A42AB",
+                    color: "#4F39F6",
                     fontWeight: 500,
                     fontSize: "13px",
                     height: 32,

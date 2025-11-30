@@ -251,6 +251,8 @@ const NotFound = () => {
                         "&:hover": {
                           borderColor: "#0ea5e9",
                           backgroundColor: alpha("#0ea5e9", 0.08),
+                          color: "#0ea5e9",
+                          boxShadow: "0 4px 12px rgba(14, 165, 233, 0.2)",
                         },
                       }}
                     >

@@ -175,11 +175,11 @@ const ViewProfile: React.FC = () => {
                 color: "#64748b",
               },
               "& .MuiTab-root.Mui-selected": {
-                color: "#6A42AB",
+                color: "#4F39F6",
                 fontWeight: 600,
               },
               "& .MuiTabs-indicator": {
-                backgroundColor: "#6A42AB",
+                backgroundColor: "#4F39F6",
                 height: 3,
               },
             }}
@@ -296,7 +296,7 @@ const ViewProfile: React.FC = () => {
                                 borderColor: "#E2E8F0",
                               },
                               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "#6A42AB",
+                                borderColor: "#4F39F6",
                               },
                             },
                           }}
@@ -373,7 +373,7 @@ const ViewProfile: React.FC = () => {
                                 borderColor: "#E2E8F0",
                               },
                               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "#6A42AB",
+                                borderColor: "#4F39F6",
                               },
                             },
                           }}
@@ -457,7 +457,7 @@ const ViewProfile: React.FC = () => {
                             borderColor: "#E2E8F0",
                           },
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                           },
                         },
                       }}
@@ -497,7 +497,7 @@ const ViewProfile: React.FC = () => {
                             borderColor: "#E2E8F0",
                           },
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                           },
                         },
                       }}
@@ -537,7 +537,7 @@ const ViewProfile: React.FC = () => {
                             borderColor: "#E2E8F0",
                           },
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                           },
                         },
                       }}
@@ -577,7 +577,7 @@ const ViewProfile: React.FC = () => {
                             borderColor: "#E2E8F0",
                           },
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                           },
                         },
                       }}
@@ -617,7 +617,7 @@ const ViewProfile: React.FC = () => {
                             borderColor: "#E2E8F0",
                           },
                           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#6A42AB",
+                            borderColor: "#4F39F6",
                           },
                         },
                       }}
@@ -632,7 +632,7 @@ const ViewProfile: React.FC = () => {
                     variant="contained"
                     disabled={isUpdating}
                     sx={{
-                      backgroundColor: "#6A42AB",
+                      backgroundColor: "#4F39F6",
                       color: "#fff",
                       px: 4,
                       py: 1.5,
@@ -640,7 +640,8 @@ const ViewProfile: React.FC = () => {
                       fontWeight: 600,
                       textTransform: "none",
                       "&:hover": {
-                        backgroundColor: "#5A2A9B",
+                        backgroundColor: "#3E2DC4",
+                        color: "#FFFFFF",
                       },
                     }}
                   >

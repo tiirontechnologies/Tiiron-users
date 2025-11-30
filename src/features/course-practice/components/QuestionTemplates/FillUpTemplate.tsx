@@ -64,7 +64,7 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
       <Typography
         sx={{
           fontSize: "14px",
-          color: practiceMode ? "#374151" : "#6A42AB",
+          color: practiceMode ? "#374151" : "#4F39F6",
           fontWeight: 600,
         }}
       >
@@ -79,8 +79,8 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
           practiceMode
             ? answer
             : showAnswers
-            ? question.content.correctAnswer || ""
-            : ""
+              ? question.content.correctAnswer || ""
+              : ""
         }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleAnswerChange(e.target.value)
@@ -90,7 +90,7 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
         sx={{
           p: "8px 12px",
           borderRadius: "6px",
-          border: "1px solid #6A42AB",
+          border: "1px solid #4F39F6",
           background: "#fff",
           fontWeight: 500,
           color: "#222",
@@ -98,8 +98,8 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
           outline: "none",
           cursor: practiceMode ? "text" : "default",
           "&:focus": {
-            borderColor: "#6A42AB",
-            boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
+            borderColor: "#4F39F6",
+            boxShadow: "0 0 0 3px rgba(79, 57, 246, 0.1)",
           },
           "&:disabled": {
             background: "#F3F4F6",

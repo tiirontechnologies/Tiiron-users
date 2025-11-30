@@ -31,11 +31,11 @@ export default function Topics({
         <Box
           sx={{
             border: selectedId === question.topicId
-              ? "1px solid #6A42AB"
+              ? "1px solid #4F39F6"
               : "1px solid #CCCCCC",
             p: "16px",
             borderLeft: selectedId === question.topicId
-              ? "4px solid #6A42AB"
+              ? "4px solid #4F39F6"
               : "1px solid #CCCCCC",
             borderRadius: "8px",
             display: "flex",
@@ -68,7 +68,7 @@ export default function Topics({
           onClick={() => {
             handleMenuClose();
             setFormType("multiple_choice");
-          } }
+          }}
         >
           Multiple Choice
         </MenuItem>
@@ -76,7 +76,7 @@ export default function Topics({
           onClick={() => {
             handleMenuClose();
             setFormType("single_choice");
-          } }
+          }}
         >
           Single Choice
         </MenuItem>
@@ -84,7 +84,7 @@ export default function Topics({
           onClick={() => {
             handleMenuClose();
             setFormType("fill_up");
-          } }
+          }}
         >
           Fill Ups
         </MenuItem>
@@ -109,12 +109,12 @@ export const QuestionsSideList = ({
           sx={{
             border:
               selectedId === question.questionId
-                ? "1px solid #6A42AB"
+                ? "1px solid #4F39F6"
                 : "1px solid #CCCCCC",
             p: "16px",
             borderLeft:
               selectedId === question.questionId
-                ? "4px solid #6A42AB"
+                ? "4px solid #4F39F6"
                 : "1px solid #CCCCCC",
             borderRadius: "8px",
             display: "flex",

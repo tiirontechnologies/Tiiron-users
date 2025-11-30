@@ -12,36 +12,10 @@ import { useTheme } from "@mui/material/styles";
 // icons
 import WestIcon from "@mui/icons-material/West";
 
-import MoreButton from "@components/ui/MoreButton";
-import PublishButton from "@components/ui/PublishButton";
-import { useNavigate, useParams } from "react-router-dom";
-
+import MoreButton from "../../../components/ui/MoreButton";
+import PublishButton from "../../../components/ui/PublishButton";
+import { Link, useNavigate, useParams } from "react-router-dom";
 const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; children: React.ReactNode; previousPage?: string }) => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-
-  const iconButtonSx = {
-    width: 40,
-    height: 40,
-    borderRadius: "12px",
-    border: "1px solid rgba(148, 163, 184, 0.4)",
-    color: "#475467",
-    backgroundColor: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "all 0.2s ease",
-    "&:hover": {
-      borderColor: "#6A42AB",
-      color: "#6A42AB",
-      boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
-      backgroundColor: "rgba(106, 66, 171, 0.04)",
-    },
-    "& svg": {
-      fontSize: "1.15rem",
-    },
-  };
-
   return (
     <Box sx={{ width: "100%" }}>
       {/* Header */}
@@ -116,25 +90,24 @@ export const RightSideTools = () => {
         variant="outlined"
         onClick={() => navigate(`/course-practice/${courseId}`)}
         sx={{
-          padding: "10px 24px",
-          height: "40px",
-          color: "#6A42AB",
-          border: "1px solid rgba(148, 163, 184, 0.4)",
-          borderRadius: "12px",
-          backgroundColor: "#fff",
-          textTransform: "none",
-          fontWeight: 500,
-          fontSize: "0.95rem",
-          transition: "all 0.2s ease",
+          padding: "12px 32px",
+          height: "48px",
+          color: "#4F39F6",
+          border: "1px solid #4F39F6",
+          borderRadius: "8px",
+          backgroundColor: "transparent",
+          textTransform: "none", // keeps "Preview" as-is
           "&:hover": {
-            borderColor: "#6A42AB",
-            color: "#6A42AB",
-            boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
-            backgroundColor: "rgba(106, 66, 171, 0.04)",
+            border: "2px solid #4F39F6",
+            backgroundColor: "rgba(255, 255, 255, 0.1)", // subtle hover
           },
           "&:focus": {
             outline: "none",
-            boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
+            boxShadow: "none",
+          },
+          "&:active": {
+            border: "1px solid #4F39F6",
+            boxShadow: "none",
           },
         }}
       >

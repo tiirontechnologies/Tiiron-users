@@ -50,7 +50,7 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
           textTransform: "none",
           "&:hover": {
             borderColor: COLORS.primaryDark,
-            background: "rgba(106, 66, 171, 0.05)",
+            background: "rgba(79, 57, 246, 0.05)",
           },
           "&:disabled": {
             borderColor: "#E5E7EB",
@@ -83,11 +83,11 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
                   idx === practiceState.currentQuestionIndex
                     ? GRADIENTS.primary
                     : practiceState.userAnswers[question.id]
-                    ? "#10B981"
-                    : "#E5E7EB",
+                      ? "#10B981"
+                      : "#E5E7EB",
                 color:
                   idx === practiceState.currentQuestionIndex ||
-                  practiceState.userAnswers[question.id]
+                    practiceState.userAnswers[question.id]
                     ? "white"
                     : COLORS.text.muted,
                 fontWeight: 600,
@@ -97,8 +97,8 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
                     idx === practiceState.currentQuestionIndex
                       ? GRADIENTS.primaryHover
                       : practiceState.userAnswers[question.id]
-                      ? "#059669"
-                      : "#D1D5DB",
+                        ? "#059669"
+                        : "#D1D5DB",
                 },
               }}
             >
@@ -122,7 +122,7 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
           textTransform: "none",
           "&:hover": {
             borderColor: COLORS.primaryDark,
-            background: "rgba(106, 66, 171, 0.05)",
+            background: "rgba(79, 57, 246, 0.05)",
           },
           "&:disabled": {
             borderColor: "#E5E7EB",

@@ -31,10 +31,10 @@ const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; 
     justifyContent: "center",
     transition: "all 0.2s ease",
     "&:hover": {
-      borderColor: "#6A42AB",
-      color: "#6A42AB",
-      boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
-      backgroundColor: "rgba(106, 66, 171, 0.04)",
+      borderColor: "#4F39F6",
+      color: "#4F39F6",
+      boxShadow: "0 6px 16px rgba(79, 57, 246, 0.18)",
+      backgroundColor: "rgba(79, 57, 246, 0.04)",
     },
     "& svg": {
       fontSize: "1.15rem",
@@ -114,7 +114,7 @@ export const RightSideTools = () => {
         sx={{
           padding: "10px 24px",
           height: "40px",
-          color: "#6A42AB",
+          color: "#4F39F6",
           border: "1px solid rgba(148, 163, 184, 0.4)",
           borderRadius: "12px",
           backgroundColor: "#fff",
@@ -123,14 +123,14 @@ export const RightSideTools = () => {
           fontSize: "0.95rem",
           transition: "all 0.2s ease",
           "&:hover": {
-            borderColor: "#6A42AB",
-            color: "#6A42AB",
-            boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
-            backgroundColor: "rgba(106, 66, 171, 0.04)",
+            borderColor: "#4F39F6",
+            color: "#4F39F6",
+            boxShadow: "0 6px 16px rgba(79, 57, 246, 0.18)",
+            backgroundColor: "rgba(79, 57, 246, 0.04)",
           },
           "&:focus": {
             outline: "none",
-            boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
+            boxShadow: "0 0 0 3px rgba(79, 57, 246, 0.1)",
           },
         }}
       >

@@ -214,7 +214,8 @@ export function LearnersTab() {
                         fullWidth={isSmallScreen}
                         sx={{
                             textTransform: 'none',
-                            bgcolor: '#6A42AB',
+                            bgcolor: '#4F39F6',
+                            color: '#FFFFFF',
                             borderRadius: 2,
                             px: { xs: 2, sm: 2.5 },
                             py: { xs: 1.2, sm: 1 },
@@ -222,7 +223,8 @@ export function LearnersTab() {
                             fontSize: { xs: '14px', sm: '16px' },
                             minHeight: { xs: 44, sm: 'auto' },
                             '&:hover': {
-                                bgcolor: '#5a3691',
+                                bgcolor: '#3E2DC4',
+                                color: '#FFFFFF',
                             },
                         }}
                     >
@@ -390,7 +392,7 @@ export default function Learners() {
                             fontWeight: 500,
                             minHeight: { xs: 40, sm: 48 },
                             '&.Mui-selected': {
-                                color: '#6A42AB',
+                                color: '#4F39F6',
                                 fontWeight: 600
                             },
                         }}
@@ -405,7 +407,7 @@ export default function Learners() {
                             fontWeight: 500,
                             minHeight: { xs: 40, sm: 48 },
                             '&.Mui-selected': {
-                                color: '#6A42AB',
+                                color: '#4F39F6',
                                 fontWeight: 600
                             },
                         }}

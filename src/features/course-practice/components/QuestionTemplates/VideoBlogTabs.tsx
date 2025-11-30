@@ -27,11 +27,11 @@ const VideoBlogTabs: React.FC<VideoBlogTabsProps> = ({ question }) => {
             minHeight: '48px',
             px: 3,
             '&.Mui-selected': {
-              color: '#6A42AB',
+              color: '#4F39F6',
             }
           },
           '& .MuiTabs-indicator': {
-            backgroundColor: '#6A42AB',
+            backgroundColor: '#4F39F6',
             height: '3px',
             borderRadius: '2px'
           }
@@ -40,9 +40,9 @@ const VideoBlogTabs: React.FC<VideoBlogTabsProps> = ({ question }) => {
         <Tab label="📹 Video Content" />
         <Tab label="📝 Blog Content" />
       </Tabs>
-      
-      <Box sx={{ 
-        display: 'flex', 
+
+      <Box sx={{
+        display: 'flex',
         gap: 3,
         minHeight: '400px',
         '& > *': {
@@ -50,16 +50,16 @@ const VideoBlogTabs: React.FC<VideoBlogTabsProps> = ({ question }) => {
         }
       }}>
         {/* Video Section */}
-        <Box sx={{ 
+        <Box sx={{
           display: activeTab === 0 ? 'block' : 'none',
           opacity: activeTab === 0 ? 1 : 0,
           transition: 'opacity 0.3s ease'
         }}>
           <VideoTemplate question={question} />
         </Box>
-        
+
         {/* Blog Section */}
-        <Box sx={{ 
+        <Box sx={{
           display: activeTab === 1 ? 'block' : 'none',
           opacity: activeTab === 1 ? 1 : 0,
           transition: 'opacity 0.3s ease'

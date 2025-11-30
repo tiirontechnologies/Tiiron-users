@@ -32,7 +32,7 @@ export default function UserTestimonial({
         transition: "all 0.2s ease",
         "&:hover": {
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          borderColor: "#6A42AB",
+          borderColor: "#4F39F6",
         },
         wordBreak: "break-word",
       }}

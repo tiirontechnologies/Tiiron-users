@@ -61,7 +61,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
           <Typography
             variant="h4"
             sx={{
-              background: "linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #6A42AB 100%)",
+              background: "linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #4F39F6 100%)",
               backgroundClip: "text",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -79,7 +79,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
                 left: 0,
                 width: "60px",
                 height: "4px",
-                background: "linear-gradient(90deg, #6A42AB 0%, #8B5CF6 100%)",
+                background: "linear-gradient(90deg, #4F39F6 0%, #8B5CF6 100%)",
                 borderRadius: "2px",
               },
             }}
@@ -106,7 +106,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
               top: 0,
               bottom: 0,
               width: "4px",
-              background: "linear-gradient(180deg, #6A42AB 0%, #8B5CF6 50%, #A78BFA 100%)",
+              background: "linear-gradient(180deg, #4F39F6 0%, #8B5CF6 50%, #A78BFA 100%)",
               borderRadius: "2px",
               display: { xs: "none", md: "block" },
             }}
@@ -169,7 +169,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
                           "&:first-of-type::first-letter": {
                             fontSize: { xs: "32px", md: "36px", lg: "40px" },
                             fontWeight: 700,
-                            color: "#6A42AB",
+                            color: "#4F39F6",
                             float: "left",
                             lineHeight: 0.9,
                             marginRight: "10px",
@@ -202,7 +202,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
               sx={{
                 mt: 1, ml: 4,
                 alignSelf: { xs: "center", md: "flex-start" },
-                color: "#6A42AB",
+                color: "#4F39F6",
                 fontWeight: 700,
                 fontSize: { xs: "14px", md: "15px" },
                 cursor: "pointer",
@@ -241,7 +241,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
             }}
           >
             <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Box component="span" sx={{ fontWeight: 700, color: "#6A42AB" }}>4.6</Box>
+              <Box component="span" sx={{ fontWeight: 700, color: "#4F39F6" }}>4.6</Box>
               {Array(5).fill(null).map((_, i) => (
                 <img
                   key={i}

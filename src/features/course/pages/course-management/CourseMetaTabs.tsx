@@ -277,9 +277,8 @@ const CourseMetaTabs = () => {
         TabIndicatorProps={{
           style: {
             display: isMobile ? "block" : "none",
-            backgroundColor: isMobile ? "#6A42AB" : "transparent",
-            height: isMobile ? "3px" : "0px",
-            borderRadius: isMobile ? "24px" : "0px",
+            backgroundColor: isMobile ? "#4F39F6" : "transparent",
+            height: isMobile ? "2px" : "0px",
           },
         }}
       >
@@ -336,11 +335,14 @@ const CourseMetaTabs = () => {
                 xs: "none",
                 md:
                   value === index
-                    ? "4px solid #6A42AB"
+                    ? "4px solid #4F39F6"
                     : "4px solid transparent",
               },
               borderBottom: {
-                xs: "none", // Remove borderBottom for horizontal tabs to match CustomTabs
+                xs:
+                  value === index
+                    ? "2px solid #4F39F6"
+                    : "2px solid transparent",
                 md: "none",
               },
               justifyContent: "center",

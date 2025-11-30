@@ -61,14 +61,14 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
               },
               transition: "all 0.2s ease",
               "&:hover": {
-                borderColor: "#6A42AB",
-                boxShadow: "0 2px 8px rgba(106, 66, 171, 0.1)",
+                borderColor: "#4F39F6",
+                boxShadow: "0 2px 8px rgba(79, 57, 246, 0.1)",
               },
             }}
           >
             <AccordionSummary
               expandIcon={
-                <ExpandMoreIcon sx={{ color: "#6A42AB" }} />
+                <ExpandMoreIcon sx={{ color: "#4F39F6" }} />
               }
               aria-controls={`panel${chapterIdx}-content`}
               id={`panel${chapterIdx}-header`}
@@ -106,7 +106,7 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#6A42AB",
+                      color: "#4F39F6",
                       fontWeight: 600,
                       fontSize: "14px",
                     }}
@@ -152,9 +152,9 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
                       flexDirection: { xs: "column", sm: "row" },
                       gap: { xs: 1.5, sm: 2 },
                       "&:hover": {
-                        borderColor: "#6A42AB",
+                        borderColor: "#4F39F6",
                         backgroundColor: "#FBF8FF",
-                        boxShadow: "0 2px 4px rgba(106, 66, 171, 0.1)",
+                        boxShadow: "0 2px 4px rgba(79, 57, 246, 0.1)",
                       },
                     }}
                   >
@@ -169,7 +169,7 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          color: "#6A42AB",
+                          color: "#4F39F6",
                         }}
                       >
                         <PlayArrowIcon sx={{ fontSize: 20 }} />
@@ -189,7 +189,7 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
                       onClick={() => handleStartLesson(unit?.id)}
                       startIcon={<PlayArrowIcon />}
                       sx={{
-                        bgcolor: "#6A42AB",
+                        bgcolor: "#4F39F6",
                         color: "#fff",
                         fontSize: { xs: "12px", md: "14px" },
                         fontWeight: 600,
@@ -197,12 +197,13 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
                         py: { xs: 0.75, md: 1 },
                         borderRadius: 2,
                         textTransform: "none",
-                        boxShadow: "0 2px 4px rgba(106, 66, 171, 0.2)",
+                        boxShadow: "0 2px 4px rgba(79, 57, 246, 0.2)",
                         transition: "all 0.2s ease",
                         width: { xs: "100%", sm: "auto" },
                         "&:hover": {
-                          bgcolor: "#5A2A9B",
-                          boxShadow: "0 4px 6px rgba(106, 66, 171, 0.3)",
+                          bgcolor: "#3E2DC4",
+                          color: "#FFFFFF",
+                          boxShadow: "0 4px 6px rgba(79, 57, 246, 0.3)",
                           transform: "translateY(-1px)",
                         },
                         "&:active": {

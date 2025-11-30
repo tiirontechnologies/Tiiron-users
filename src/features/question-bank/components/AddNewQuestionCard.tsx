@@ -103,22 +103,22 @@ export default function AddNewQuestionCard({ title, setTitle }: Props) {
             padding: "4px 0",
           }}
           onFocus={(e) => {
-            e.currentTarget.style.border = "1px solid #6A42AB";
+            e.currentTarget.style.border = "1px solid #4F39F6";
             e.currentTarget.style.borderRadius = "4px";
             e.currentTarget.style.backgroundColor = "white";
             e.currentTarget.style.padding = "6px 8px";
-          } }
+          }}
           onBlur={(e) => {
             e.currentTarget.style.border = "none";
             e.currentTarget.style.backgroundColor = "transparent";
             e.currentTarget.style.padding = "4px 0";
-          } } />
+          }} />
       </Box>
 
       {/* Question Bank Creation Modal */}
-      <CreateQuestionBankModal 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal} 
+      <CreateQuestionBankModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
       />
     </Box>
   );

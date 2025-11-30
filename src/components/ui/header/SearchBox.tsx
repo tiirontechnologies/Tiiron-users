@@ -139,7 +139,7 @@ const SearchBox = () => {
     >
       <TextField
         variant="outlined"
-        placeholder="Search your course here...."
+        placeholder="What do you want to learn?"
         size="small"
         value={query}
         onChange={handleInputChange}
@@ -165,7 +165,7 @@ const SearchBox = () => {
               borderColor: "#bdbdbd",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "rgba(106, 66, 171, 1)",
+              borderColor: "rgba(79, 57, 246, 1)",
             },
             "& .MuiInputBase-input": {
               padding: { xs: "6px 10px", sm: "8px 12px" },
@@ -193,7 +193,7 @@ const SearchBox = () => {
           ),
           endAdornment: (isLoading || isFetching) && debouncedQuery.trim() ? (
             <InputAdornment position="end">
-              <CircularProgress size={20} sx={{ color: "rgba(106, 66, 171, 1)" }} />
+              <CircularProgress size={20} sx={{ color: "rgba(79, 57, 246, 1)" }} />
             </InputAdornment>
           ) : null,
         }}
@@ -226,7 +226,7 @@ const SearchBox = () => {
                 py: 3,
               }}
             >
-              <CircularProgress size={24} sx={{ color: "rgba(106, 66, 171, 1)" }} />
+              <CircularProgress size={24} sx={{ color: "rgba(79, 57, 246, 1)" }} />
               <Typography
                 sx={{
                   ml: 2,
@@ -258,10 +258,10 @@ const SearchBox = () => {
                       px: 2,
                       backgroundColor:
                         selectedIndex === index
-                          ? "rgba(106, 66, 171, 0.08)"
+                          ? "rgba(79, 57, 246, 0.08)"
                           : "transparent",
                       "&:hover": {
-                        backgroundColor: "rgba(106, 66, 171, 0.08)",
+                        backgroundColor: "rgba(79, 57, 246, 0.08)",
                       },
                     }}
                   >

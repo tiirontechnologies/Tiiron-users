@@ -26,7 +26,7 @@ export default function MultipleChoiceFields(props: ContentFieldsProps) {
                     <Controller
                         control={control}
                         name={`options.${idx}.text`}
-                        rules={{ 
+                        rules={{
                             required: "Option is required",
                             minLength: { value: 1, message: "Option cannot be empty" },
                             validate: {
@@ -57,7 +57,7 @@ export default function MultipleChoiceFields(props: ContentFieldsProps) {
                                         borderRadius: 1.5,
                                         '& fieldset': { borderColor: '#D0D5DD' },
                                         '&:hover fieldset': { borderColor: '#98A2B3' },
-                                        '&.Mui-focused fieldset': { borderColor: '#6A42AB', borderWidth: 2 },
+                                        '&.Mui-focused fieldset': { borderColor: '#4F39F6', borderWidth: 2 },
                                     },
                                 }}
                             />
@@ -74,8 +74,8 @@ export default function MultipleChoiceFields(props: ContentFieldsProps) {
                                     field.onChange(e.target.checked);
                                 }}
                                 sx={{
-                                    color: '#6A42AB',
-                                    '&.Mui-checked': { color: '#6A42AB' },
+                                    color: '#4F39F6',
+                                    '&.Mui-checked': { color: '#4F39F6' },
                                 }}
                             />
                         )}

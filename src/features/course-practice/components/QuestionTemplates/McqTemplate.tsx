@@ -103,7 +103,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
           const showCorrectAnswer = showAnswers && isCorrect;
           const showUserAnswer = showAnswers && isSelected;
           // Show previous selection if not in practice mode and this option was previously selected
-          const isPreviouslySelected = hasPreviousPractice && 
+          const isPreviouslySelected = hasPreviousPractice &&
             question.previousPractice?.selectedOptionId?.toString() === optionId;
 
           // Determine styling based on mode
@@ -114,7 +114,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
           if (practiceMode) {
             // Practice mode styling
             if (isSelected) {
-              borderColor = "#6A42AB";
+              borderColor = "#4F39F6";
               backgroundColor = "#ECFDF8";
             } else {
               borderColor = "#E6E6E6";
@@ -156,9 +156,9 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                 transition: "all 0.2s ease",
                 "&:hover": practiceMode
                   ? {
-                      borderColor: "#6A42AB",
-                      backgroundColor: "#F3F4F6",
-                    }
+                    borderColor: "#4F39F6",
+                    backgroundColor: "#F3F4F6",
+                  }
                   : {},
               }}
             >
@@ -169,7 +169,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                 onChange={() => handleOptionClick(oidx)}
                 style={{
                   marginRight: 12,
-                  accentColor: (isSelected || isPreviouslySelected) ? "#6A42AB" : "#E6E6E6",
+                  accentColor: (isSelected || isPreviouslySelected) ? "#4F39F6" : "#E6E6E6",
                   cursor: practiceMode ? "pointer" : "default",
                 }}
               />

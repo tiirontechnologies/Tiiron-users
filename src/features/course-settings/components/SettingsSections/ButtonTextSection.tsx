@@ -48,10 +48,30 @@ export function ButtonTextSection() {
         </Box>
 
         <Stack direction="row" justifyContent="flex-end" spacing={2} mt={2}>
-          <Button variant="contained" disabled sx={{ borderRadius: 2 }}>
+          <Button
+            variant="contained"
+            disabled
+            sx={{
+              borderRadius: 2,
+              color: "#fff",
+              "&.Mui-disabled": {
+                color: "#fff",
+              }
+            }}
+          >
             Reset All
           </Button>
-          <Button variant="contained" disabled sx={{ borderRadius: 2 }}>
+          <Button
+            variant="contained"
+            disabled
+            sx={{
+              borderRadius: 2,
+              color: "#fff",
+              "&.Mui-disabled": {
+                color: "#fff",
+              }
+            }}
+          >
             Save
           </Button>
         </Stack>
