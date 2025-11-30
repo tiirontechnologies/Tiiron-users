@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { AddCourseContentForm } from "./AddContent";
 import { useLocation, useParams } from "react-router-dom";
 import { useGetUnitsWithQuestionsQuery } from "../../lesson-management/api/chapterApi";
+import { useGetCourseByIdQuery } from "../../course/api/courseApi";
 
 import CourseInfoHeader from "../components/CourseInfoHeader";
 import ContentTypeSelector from "../components/ContentTypeSelector";
@@ -59,15 +60,49 @@ export default function ContentCreateForm() {
   const [showForm, setShowForm] = useState(!!defaultType);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
+<<<<<<< Updated upstream
   // ✅ Route Params
   const courseId = params.courseId ? Number(params.courseId) : undefined;
   const unitId = params.unitId ? Number(params.unitId) : undefined;
 
   // ✅ API Call
+=======
+  // Helper function to get display text from content
+  const getContentDisplayText = (contentItem: Content): string => {
+    if (typeof contentItem.content === 'string') {
+      return contentItem.content;
+    }
+
+    if (typeof contentItem.content === 'object' && contentItem.content !== null) {
+      return contentItem.content.title ||
+        contentItem.content.question ||
+        `Content ${contentItem.contentId}`;
+    }
+
+    return `Content ${contentItem.contentId}`;
+  };
+
+  // Get courseId and unitId from route params
+  const courseId = params.courseId ? Number(params.courseId) : undefined;
+  const unitId = params.unitId ? Number(params.unitId) : undefined;
+
+  // Fetch course data to get course name
+  const {
+    data: courseData,
+    isFetching: isCourseFetching,
+    isError: isCourseError
+  } = useGetCourseByIdQuery(
+    { id: courseId! },
+    { skip: !courseId }
+  );
+
+  // Fetch content for the unit
+>>>>>>> Stashed changes
   const {
     data: questionsData,
     isLoading: isLoadingQuestions,
     error: questionsError,
+<<<<<<< Updated upstream
     refetch: refetchQuestions,
   } = useGetUnitsWithQuestionsQuery(
     { unitId: unitId!.toString(), courseId: courseId!.toString() },
@@ -76,10 +111,24 @@ export default function ContentCreateForm() {
 
   // ✅ Normalize API Response
   // eslint-disable-next-line react-hooks/exhaustive-deps
+=======
+    refetch: refetchQuestions
+  } = useGetUnitsWithQuestionsQuery(
+    { unitId: unitId!.toString() },
+    { skip: !unitId }
+  );
+
+  // Handle the API response structure properly
+  console.log("🔍 API Response Data:", questionsData);
+  console.log("🔍 Data Type:", typeof questionsData);
+  console.log("🔍 Is Array:", Array.isArray(questionsData));
+
+>>>>>>> Stashed changes
   const content: Content[] = Array.isArray(questionsData)
     ? questionsData
     : questionsData?.questions || questionsData?.data || [];
 
+<<<<<<< Updated upstream
   // ✅ Auto select first item
   useEffect(() => {
     if (content.length > 0 && !selectedId) {
@@ -106,6 +155,15 @@ export default function ContentCreateForm() {
 
     return `Content ${item.id}`;
   };
+=======
+  console.log("🔍 Processed Content:", content);
+  console.log("🔍 First content item:", content[0]);
+  console.log("🔍 Content structure:", content[0]?.content);
+
+  const [selectedId, setSelectedId] = useState<number | null>(
+    content.length > 0 ? content[0].contentId : null
+  );
+>>>>>>> Stashed changes
 
   const handleAddClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -127,7 +185,7 @@ export default function ContentCreateForm() {
 
   return (
     <Box>
-      <ToolBar>
+      <ToolBar courseName={courseData?.data?.title}>
         <CourseInfoHeader />
       </ToolBar>
 
