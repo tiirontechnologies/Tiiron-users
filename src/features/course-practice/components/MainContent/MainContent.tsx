@@ -168,25 +168,46 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
     let correctAnswers = 0;
     questions.forEach((question) => {
       const userAnswer = practiceState.userAnswers[question.id];
-      if (userAnswer && question.content?.correctAnswer) {
-        if (
-          typeof userAnswer === "string" &&
-          typeof question.content.correctAnswer === "string"
-        ) {
+
+      // Handle MCQ and Single Choice questions
+      if (
+        (question.contentType === "mcq" || question.contentType === "single_choice") &&
+        question.content?.options
+      ) {
+        if (userAnswer) {
+          // Get indices of correct options
+          const correctOptionIndices = question.content.options
+            .map((opt, idx) => (opt.isCorrect ? idx.toString() : null))
+            .filter((idx): idx is string => idx !== null)
+            .sort();
+
+          // Get user selected option indices
+          const userSelectedIndices = Array.isArray(userAnswer)
+            ? userAnswer.map(String).sort()
+            : [String(userAnswer)].sort();
+
+          // Compare if all correct options are selected and no incorrect ones
           if (
-            userAnswer.toLowerCase().trim() ===
-            question.content.correctAnswer.toLowerCase().trim()
+            correctOptionIndices.length === userSelectedIndices.length &&
+            JSON.stringify(correctOptionIndices) === JSON.stringify(userSelectedIndices)
           ) {
             correctAnswers++;
           }
-        } else if (
-          Array.isArray(userAnswer) &&
-          Array.isArray(question.content.correctAnswer)
-        ) {
-          if (
-            JSON.stringify(userAnswer.sort()) ===
-            JSON.stringify(question.content.correctAnswer.sort())
-          ) {
+        }
+      }
+      // Handle Fill Up and Subjective questions (text-based answers)
+      else if (
+        (question.contentType === "fill_up" || question.contentType === "subjective") &&
+        question.content?.correctAnswer
+      ) {
+        if (userAnswer && typeof userAnswer === "string") {
+          const userAnswerNormalized = userAnswer.toLowerCase().trim();
+          const correctAnswerNormalized =
+            typeof question.content.correctAnswer === "string"
+              ? question.content.correctAnswer.toLowerCase().trim()
+              : "";
+
+          if (userAnswerNormalized === correctAnswerNormalized) {
             correctAnswers++;
           }
         }
@@ -276,8 +297,8 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
       }),
       totalTimeSpent: practiceState.timeStarted
         ? Math.floor(
-            (endTime.getTime() - practiceState.timeStarted.getTime()) / 1000
-          )
+          (endTime.getTime() - practiceState.timeStarted.getTime()) / 1000
+        )
         : 0,
     };
 
@@ -454,8 +475,8 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
         const questionStartTime = practiceState.questionStartTimes[question.id];
         const timeSpent = questionStartTime
           ? Math.floor(
-              (currentTime.getTime() - questionStartTime.getTime()) / 1000
-            )
+            (currentTime.getTime() - questionStartTime.getTime()) / 1000
+          )
           : 0;
 
         const userAnswer = practiceState.userAnswers[question.id];
@@ -492,8 +513,8 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
       }),
       totalTimeSpent: practiceState.timeStarted
         ? Math.floor(
-            (currentTime.getTime() - practiceState.timeStarted.getTime()) / 1000
-          )
+          (currentTime.getTime() - practiceState.timeStarted.getTime()) / 1000
+        )
         : 0,
     };
   }, [
@@ -594,6 +615,7 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
         open={notification.open}
         autoHideDuration={6000}
         onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
           onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
