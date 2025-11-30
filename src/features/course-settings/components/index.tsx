@@ -16,6 +16,9 @@ import MoreButton from "../../../components/ui/MoreButton";
 import PublishButton from "../../../components/ui/PublishButton";
 import { Link, useNavigate, useParams } from "react-router-dom";
 const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; children: React.ReactNode; previousPage?: string }) => {
+  const navigate = useNavigate();
+  const theme = useTheme();
+
   return (
     <Box sx={{ width: "100%" }}>
       {/* Header */}
@@ -40,9 +43,6 @@ const ToolBar = ({ children, courseName, previousPage }: { courseName?: string; 
           <Tooltip title="Go back">
             <IconButton
               onClick={() => navigate(-1)}
-              sx={{
-                ...iconButtonSx,
-              }}
             >
               <WestIcon />
             </IconButton>
