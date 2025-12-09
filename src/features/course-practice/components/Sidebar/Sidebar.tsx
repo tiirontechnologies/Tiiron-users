@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CourseData } from "../../types";
 import NavigationList from "./NavigationList";
 import PracticeProgressStats from "./PracticeProgressStats";
-import { GRADIENTS, COLORS } from "../../constants";
+import { GRADIENTS, COLORS, SHADOWS } from "../../constants";
 
 interface PracticeStats {
   totalSessions: number;
@@ -56,9 +56,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         left: 0,
         width: "289px",
         height: "100vh",
-        background: GRADIENTS.background,
-        boxShadow: "4px 0 20px rgba(0,0,0,0.08)",
-        borderRight: "1px solid #e2e8f0",
+        background: COLORS.background.white,
+        boxShadow: SHADOWS.xl,
+        borderRight: `1px solid ${COLORS.border.light}`,
         p: "24px",
         overflowY: "auto",
         "&::-webkit-scrollbar": {
@@ -79,18 +79,21 @@ const Sidebar: React.FC<SidebarProps> = ({
         onClick={() => navigate(-1)}
         startIcon={<KeyboardBackspace sx={{ color: COLORS.text.muted }} />}
         sx={{
-          background: GRADIENTS.background,
+          background: COLORS.background.light,
           borderRadius: "12px",
           padding: "8px 16px",
           color: COLORS.text.secondary,
           fontWeight: 600,
           fontSize: "14px",
           textTransform: "none",
-          border: "1px solid #e2e8f0",
+          border: `1px solid ${COLORS.border.light}`,
+          transition: "all 0.2s ease",
           "&:hover": {
-            background: "linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)",
+            background: COLORS.background.lighter,
+            borderColor: COLORS.primary,
+            color: COLORS.primary,
             transform: "translateY(-1px)",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            boxShadow: SHADOWS.md,
           },
         }}
       >
@@ -135,11 +138,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         {practiceStats && <PracticeProgressStats stats={practiceStats} />}
       </Box>
 
-      <Divider sx={{ my: 2, opacity: 0.3 }} />
+      <Divider sx={{ my: 2, borderColor: COLORS.border.light }} />
 
       {/* Navigation List */}
-      <NavigationList 
-        chapters={data?.chapters} 
+      <NavigationList
+        chapters={data?.chapters}
         onUnitSelect={onUnitSelect}
         selectedUnitId={selectedUnitId}
         practiceData={practiceData}

@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Box, Snackbar, Alert } from "@mui/material";
 // NOTE: Retaining all original imports for types and hooks
 import { Question } from "../../types";
-import { GRADIENTS } from "../../constants";
+import { GRADIENTS, COLORS } from "../../constants";
 import { usePracticeService } from "../../hooks/usePracticeService";
 import { useParams } from "react-router-dom";
-
+import VideoTemplate from "../QuestionTemplates/VideoTemplate";
+import { CustomTabs } from "../../../../components/ui/CustomTabPanel";
 // NEW COMPONENT IMPORTS
-import PracticeHeader from "../Header/PracticeHeader";
 import QuestionViewer from "./QuestionViewer";
 import PracticeFooter from "./PracticeFooter";
 
@@ -48,7 +48,7 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
   console.log("Practice Data:", practiceData);
   const { courseId } = useParams<{ courseId: string }>();
   const unitId = "current-unit";
-  
+
   // Initialize userAnswers with previously selected answers if unit is completed
   const initializeUserAnswers = useCallback(() => {
     const initialAnswers: Record<string, string | string[]> = {};
@@ -575,31 +575,50 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
         paddingBottom: "120px",
         height: "calc(100vh - 64px)",
         overflowY: "auto",
-        background: GRADIENTS.background,
+        background: COLORS.background.light,
         minHeight: "100vh",
       }}
     >
       {/* 1. Header Section */}
-      <PracticeHeader
-        practiceState={practiceState}
-        questionsLength={questions.length}
-        timeSpent={getTimeSpent()}
-        isAutoSaving={isAutoSaving}
-        hasUnsavedChanges={hasUnsavedChanges}
-        progressPercentage={getProgressPercentage()}
-        startPractice={startPractice}
-        endPractice={endPractice}
-        resetPractice={resetPractice}
-      />
+      <VideoTemplate question={{
+        id: "1",
+        contentType: "video",
+        content: {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        },
+      }
+      } />
 
-      {/* 2. Question Viewer Section */}
-      <QuestionViewer
+      <CustomTabs tabs={["Assignment", "Quiz", "Test", "Blog"]} panels={[<QuestionViewer
         questions={questions}
         practiceState={practiceState}
         updateAnswer={updateAnswer}
         goToNextQuestion={goToNextQuestion}
         goToPreviousQuestion={goToPreviousQuestion}
         goToQuestion={goToQuestion}
+      />,
+      <VideoTemplate question={{
+        id: "1",
+        contentType: "video",
+        content: {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        },
+      } as Question} />,
+      <VideoTemplate question={{
+        id: "1",
+        contentType: "video",
+        content: {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        },
+      } as Question} />,
+      <VideoTemplate question={{
+        id: "1",
+        contentType: "video",
+        content: {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        },
+      } as Question} />
+      ]}
       />
 
       {/* 3. Bottom Footer Section */}

@@ -35,8 +35,10 @@ const PracticeProgressStats: React.FC<PracticeProgressStatsProps> = ({
       sx={{
         mt: 2,
         p: 1,
-        borderRadius: "8px",
-        background: COLORS.background.lighter,
+        borderRadius: "12px",
+        background: COLORS.background.light,
+        border: `1px solid ${COLORS.border.light}`,
+        p: 2,
       }}
     >
       <Typography

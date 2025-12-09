@@ -87,9 +87,18 @@ export default function ContentCreateForm() {
 
   // ✅ Normalize API Response
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const content: Content[] = Array.isArray(questionsData)
-    ? questionsData
-    : questionsData?.questions || questionsData?.data || [];
+  const content: Content[] = (() => {
+    if (Array.isArray(questionsData)) {
+      return questionsData;
+    }
+    if (Array.isArray(questionsData?.questions)) {
+      return questionsData.questions;
+    }
+    if (Array.isArray(questionsData?.data)) {
+      return questionsData.data;
+    }
+    return [];
+  })();
 
   // ✅ Auto select first item
   useEffect(() => {

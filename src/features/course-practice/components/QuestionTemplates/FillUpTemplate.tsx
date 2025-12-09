@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { Question } from "../../types";
+import { COLORS, SHADOWS } from "../../constants";
 
 interface FillUpTemplateProps {
   question: Question;
@@ -47,16 +48,20 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
       sx={{
         p: 2,
         borderRadius: "8px",
-        background: practiceMode ? "#ffffff" : "#F9FAFA",
-        border: practiceMode ? "2px solid #D1D5DB" : "1px solid #E6E6E6",
+        background: practiceMode ? COLORS.background.white : COLORS.background.light,
+        border: practiceMode ? `2px solid ${COLORS.border.medium}` : `1px solid ${COLORS.border.light}`,
         display: "flex",
         flexDirection: "column",
         gap: 1.5,
         transition: "all 0.2s ease",
+        "&:hover": practiceMode ? {
+          boxShadow: SHADOWS.sm,
+          borderColor: COLORS.primary,
+        } : {},
       }}
     >
       {/* Question */}
-      <Typography sx={{ fontSize: "15px", color: "#374151", fontWeight: 600 }}>
+      <Typography sx={{ fontSize: "15px", color: COLORS.text.primary, fontWeight: 600 }}>
         {question.content.question}
       </Typography>
 
@@ -64,7 +69,7 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
       <Typography
         sx={{
           fontSize: "14px",
-          color: practiceMode ? "#374151" : "#4F39F6",
+          color: practiceMode ? COLORS.text.secondary : COLORS.primary,
           fontWeight: 600,
         }}
       >
@@ -90,20 +95,26 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
         sx={{
           p: "8px 12px",
           borderRadius: "6px",
-          border: "1px solid #4F39F6",
-          background: "#fff",
+          border: `1px solid ${COLORS.primary}`,
+          background: COLORS.background.white,
           fontWeight: 500,
-          color: "#222",
+          color: COLORS.text.primary,
           minWidth: 120,
           outline: "none",
           cursor: practiceMode ? "text" : "default",
+          transition: "all 0.2s ease",
           "&:focus": {
-            borderColor: "#4F39F6",
-            boxShadow: "0 0 0 3px rgba(79, 57, 246, 0.1)",
+            borderColor: COLORS.primaryDark,
+            boxShadow: `0 0 0 3px rgba(79, 57, 246, 0.1)`,
           },
+          "&:hover": practiceMode ? {
+            borderColor: COLORS.primaryDark,
+            boxShadow: SHADOWS.sm,
+          } : {},
           "&:disabled": {
-            background: "#F3F4F6",
+            background: COLORS.background.lighter,
             cursor: "not-allowed",
+            borderColor: COLORS.border.light,
           },
         }}
       />

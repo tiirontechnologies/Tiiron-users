@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { Question } from "../../types";
 import { getYouTubeEmbedUrl } from "../../utils";
+import { COLORS, SHADOWS } from "../../constants";
 
 interface VideoTemplateProps {
   question: Question;
@@ -30,8 +31,9 @@ const VideoTemplate: React.FC<VideoTemplateProps> = ({
             height: 0,
             paddingBottom: "56.25%", // 16:9 aspect ratio
             overflow: "hidden",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            borderRadius: "12px",
+            boxShadow: SHADOWS.md,
+            border: `1px solid ${COLORS.border.light}`,
           }}
         >
           <iframe
@@ -50,7 +52,7 @@ const VideoTemplate: React.FC<VideoTemplateProps> = ({
           />
         </Box>
       ) : (
-        <Typography sx={{ color: "#666", fontStyle: "italic" }}>
+        <Typography sx={{ color: COLORS.text.muted, fontStyle: "italic" }}>
           Invalid YouTube URL
         </Typography>
       )}

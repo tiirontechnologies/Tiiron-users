@@ -34,8 +34,8 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({
       elevation={0}
       sx={{
         borderRadius: "20px",
-        background: "white",
-        border: "1px solid #E5E7EB",
+        background: COLORS.background.white,
+        border: `1px solid ${COLORS.border.light}`,
         overflow: "hidden",
         boxShadow: SHADOWS.xl,
       }}
@@ -57,7 +57,7 @@ const QuestionViewer: React.FC<QuestionViewerProps> = ({
                 practiceMode={true}
                 userAnswer={
                   practiceState.userAnswers[
-                    questions[practiceState.currentQuestionIndex]?.id
+                  questions[practiceState.currentQuestionIndex]?.id
                   ]
                 }
                 onAnswerChange={(answer) =>

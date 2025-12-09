@@ -1,8 +1,8 @@
 export interface Question {
   id: string;
-  text: string;
-  contentType: QuestionType;
-  content: QuestionContent;
+  text?: string;
+  contentType?: QuestionType;
+  content?: QuestionContent;
   description?: {
     html: string;
     title: string;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, IconButton, Tooltip } from "@mui/material";
 // NOTE: Re-importing necessary constants/types
-import { COLORS, GRADIENTS } from "../../constants";
+import { COLORS, GRADIENTS, SHADOWS } from "../../constants";
 import { Question } from "../../types";
 
 // NOTE: Interfaces for PracticeState are defined minimally for this component
@@ -29,8 +29,8 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
     <Box
       sx={{
         p: 3,
-        borderTop: "1px solid #E5E7EB",
-        background: "#f8fafc",
+        borderTop: `1px solid ${COLORS.border.light}`,
+        background: COLORS.background.light,
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
@@ -50,11 +50,13 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
           textTransform: "none",
           "&:hover": {
             borderColor: COLORS.primaryDark,
-            background: "rgba(79, 57, 246, 0.05)",
+            background: "rgba(79, 57, 246, 0.08)",
+            boxShadow: SHADOWS.purple,
           },
           "&:disabled": {
-            borderColor: "#E5E7EB",
-            color: "#9CA3AF",
+            borderColor: COLORS.border.light,
+            color: COLORS.text.light,
+            background: COLORS.background.light,
           },
         }}
       >
@@ -84,21 +86,24 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
                     ? GRADIENTS.primary
                     : practiceState.userAnswers[question.id]
                       ? "#10B981"
-                      : "#E5E7EB",
+                      : COLORS.border.light,
                 color:
                   idx === practiceState.currentQuestionIndex ||
                     practiceState.userAnswers[question.id]
                     ? "white"
-                    : COLORS.text.muted,
+                    : COLORS.text.secondary,
                 fontWeight: 600,
                 fontSize: "14px",
+                transition: "all 0.2s ease",
                 "&:hover": {
                   background:
                     idx === practiceState.currentQuestionIndex
                       ? GRADIENTS.primaryHover
                       : practiceState.userAnswers[question.id]
                         ? "#059669"
-                        : "#D1D5DB",
+                        : COLORS.border.medium,
+                  transform: "scale(1.05)",
+                  boxShadow: SHADOWS.md,
                 },
               }}
             >
@@ -122,11 +127,13 @@ const QuestionNavigator: React.FC<QuestionNavigatorProps> = ({
           textTransform: "none",
           "&:hover": {
             borderColor: COLORS.primaryDark,
-            background: "rgba(79, 57, 246, 0.05)",
+            background: "rgba(79, 57, 246, 0.08)",
+            boxShadow: SHADOWS.purple,
           },
           "&:disabled": {
-            borderColor: "#E5E7EB",
-            color: "#9CA3AF",
+            borderColor: COLORS.border.light,
+            color: COLORS.text.light,
+            background: COLORS.background.light,
           },
         }}
       >

@@ -10,7 +10,7 @@ interface HeaderProps {
   progress?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
+const Header: React.FC<HeaderProps> = ({
   courseName = "Advanced React Development",
   chapterInfo = "Chapter 1 - Lesson 1",
   score = "25/30",
@@ -24,13 +24,13 @@ const Header: React.FC<HeaderProps> = ({
         left: "289px",
         right: 0,
         height: "84px",
-        background: GRADIENTS.background,
+        background: COLORS.background.white,
         color: COLORS.text.primary,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         p: "0 32px",
-        borderBottom: "1px solid #e2e8f0",
+        borderBottom: `1px solid ${COLORS.border.light}`,
         boxShadow: SHADOWS.sm,
         zIndex: 1000,
       }}
@@ -92,10 +92,10 @@ const Header: React.FC<HeaderProps> = ({
           display: "flex",
           alignItems: "center",
           gap: 2,
-          background: GRADIENTS.background,
+          background: COLORS.background.light,
           padding: "12px 20px",
           borderRadius: "16px",
-          border: "1px solid #e2e8f0",
+          border: `1px solid ${COLORS.border.light}`,
         }}
       >
         <Box
@@ -115,6 +115,7 @@ const Header: React.FC<HeaderProps> = ({
               fontSize: "18px",
               fontWeight: "700",
               lineHeight: 1,
+              color: "white !important",
             }}
           >
             {score}
