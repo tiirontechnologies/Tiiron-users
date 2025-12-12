@@ -5,7 +5,7 @@ import { Visibility as VisibilityIcon } from "@mui/icons-material";
 import { CustomTabs } from "@components/ui";
 import QuestionConfigurator from "../components/QuestionAI";
 import { ManualQuestionForm } from "../components/ManualQuestionForm";
-import {PreviewModal}  from "../components/previewModal/PreviewModal";
+import { PreviewModal } from "../components/previewModal/PreviewModal";
 
 import {
   useCreateVideoContentMutation,
@@ -259,13 +259,11 @@ export function AddCourseContentForm({
               unitId,
               quesTypeId: 6,
               contentTypeId: 1,
-              description: {
-                html: data.description || "",
-                title: data.videoFileName || "",
-              },
               title: data.text,
+              description: data.description || "",
+              score: data.score,
               url: data.videoUrl || "",
-              duration: data.duration ,
+              duration: data.duration,
             },
           }).unwrap();
           break;
@@ -277,10 +275,9 @@ export function AddCourseContentForm({
               unitId,
               quesTypeId: effectiveType === "multiple_choice" ? 1 : 2,
               contentTypeId: 2,
-              description: {
-                html: data.description || "",
-                title: data.text,
-              },
+              title: data.text,
+              description: data.description || "",
+              score: data.score,
               options: data.options || [],
             },
           }).unwrap();
@@ -292,11 +289,11 @@ export function AddCourseContentForm({
               unitId,
               quesTypeId: 3,
               contentTypeId: 4,
-              description: {
-                html: data.description || "",
-                title: data.text,
-                correctAnswer: data.correctAnswer || "",
-              },
+              title: data.text,
+              description: data.description || "",
+              score: data.score,
+              text: data.text,
+              correctAnswer: data.correctAnswer || "",
             },
           }).unwrap();
           break;
@@ -322,7 +319,9 @@ export function AddCourseContentForm({
               unitId,
               quesTypeId: 4,
               contentTypeId: 3,
-              description: { html: data.description || "" },
+              title: data.text,
+              description: data.description || "",
+              score: data.score,
               question: data.text,
             },
           }).unwrap();
