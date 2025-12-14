@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Box, Button, Snackbar, Alert } from "@mui/material";
-import { Visibility as VisibilityIcon } from "@mui/icons-material";
+import { Box, Button, Snackbar, Alert, Tabs, Tab } from "@mui/material";
+import { Visibility as VisibilityIcon, AutoAwesome as AutoAwesomeIcon, Edit as EditIcon } from "@mui/icons-material";
 import { CustomTabs } from "@components/ui";
 import QuestionConfigurator from "../components/QuestionAI";
 import { ManualQuestionForm } from "../components/ManualQuestionForm";
@@ -169,6 +169,7 @@ export function AddCourseContentForm({
   onClose,
 }: IAddCourseContentFormProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
   const [generatedQuestions, setGeneratedQuestions] = useState<
     GeneratedQuestion[]
   >([]);
@@ -392,57 +393,162 @@ export function AddCourseContentForm({
       <Box
         sx={{
           backgroundColor: "#FFFFFF",
-          borderRadius: 2,
-          p: 3,
+          borderRadius: "16px",
+          p: 4,
           border: "1px solid #EAECF0",
           boxShadow:
             "0px 1px 3px rgba(16,24,40,0.10), 0px 1px 2px rgba(16,24,40,0.06)",
+          minHeight: "calc(100vh - 200px)",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
+        {/* Header Section with Tabs and Preview Button */}
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mb: 2,
+            mb: 0,
+            flexWrap: "wrap",
+            gap: 2,
+            pb: 2,
+            borderBottom: "1px solid #EAECF0",
           }}
-        ></Box>
-        <Box sx={{ flex: 1, position: "relative" }}>
+        >
+          <Tabs
+            value={activeTab}
+            onChange={(_, newValue) => setActiveTab(newValue)}
+            sx={{
+              "& .MuiTabs-indicator": {
+                height: "3px",
+                borderRadius: "3px 3px 0 0",
+                backgroundColor: "#4F39F6",
+              },
+              "& .MuiTab-root": {
+                textTransform: "none",
+                fontWeight: 500,
+                fontSize: "14px",
+                minHeight: "48px",
+                padding: "12px 24px",
+                color: "#667085",
+                "&.Mui-selected": {
+                  color: "#4F39F6",
+                  fontWeight: 600,
+                },
+                "&:hover": {
+                  color: "#4F39F6",
+                  backgroundColor: "rgba(79, 57, 246, 0.04)",
+                },
+              },
+            }}
+          >
+            <Tab
+              icon={
+                <AutoAwesomeIcon
+                  sx={{
+                    fontSize: "18px",
+                    color: activeTab === 0 ? "#10B981" : "#667085",
+                    transition: "all 0.2s ease",
+                  }}
+                />
+              }
+              iconPosition="start"
+              label="Generate using AI"
+              sx={{
+                "&.Mui-selected": {
+                  "& .MuiSvgIcon-root": {
+                    color: "#10B981",
+                  },
+                },
+                "&:hover": {
+                  "& .MuiSvgIcon-root": {
+                    color: "#10B981",
+                  },
+                },
+                "& .MuiTab-iconWrapper": {
+                  marginRight: "8px",
+                },
+              }}
+            />
+            <Tab
+              icon={
+                <EditIcon
+                  sx={{
+                    fontSize: "18px",
+                    color: activeTab === 1 ? "#4F39F6" : "#667085",
+                    transition: "all 0.2s ease",
+                  }}
+                />
+              }
+              iconPosition="start"
+              label="Create Manually"
+              sx={{
+                "&.Mui-selected": {
+                  "& .MuiSvgIcon-root": {
+                    color: "#4F39F6",
+                  },
+                },
+                "&:hover": {
+                  "& .MuiSvgIcon-root": {
+                    color: "#4F39F6",
+                  },
+                },
+                "& .MuiTab-iconWrapper": {
+                  marginRight: "8px",
+                },
+              }}
+            />
+          </Tabs>
           <Button
             variant="outlined"
             startIcon={<VisibilityIcon />}
             onClick={handlePreview}
             disabled={isLoading}
             sx={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              zIndex: 1,
+              minWidth: "220px",
+              height: "48px",
+              borderRadius: "12px",
+              borderColor: "#D0D5DD",
+              color: "#344054",
+              fontWeight: 500,
+              fontSize: "14px",
+              textTransform: "none",
+              whiteSpace: "nowrap",
+              "&:hover": {
+                borderColor: "#4F39F6",
+                backgroundColor: "#F9FAFB",
+                color: "#4F39F6",
+              },
+              "&:disabled": {
+                borderColor: "#D0D5DD",
+                color: "#98A2B3",
+              },
             }}
           >
             Preview Generated Questions
           </Button>
-          <CustomTabs
-            tabs={["Generate using Ai", "Create Manually"]}
-            panels={[
-              <QuestionConfigurator
-                key="ai"
-                type={effectiveType}
-                unitId={unitId}
-                onClose={onClose}
-                onSubmit={handleAIGenerate}
-                isLoading={isLoading}
-              />,
-              <ManualQuestionForm
-                key="manual"
-                type={effectiveType}
-                unitId={unitId}
-                onClose={onClose}
-                onSubmit={handleContentSubmit}
-                isLoading={isLoading}
-              />,
-            ]}
-          />
+        </Box>
+
+        {/* Content Area - No extra spacing */}
+        <Box sx={{ flex: 1, mt: 3, overflow: "auto" }}>
+          {activeTab === 0 ? (
+            <QuestionConfigurator
+              type={effectiveType}
+              unitId={unitId}
+              onClose={onClose}
+              onSubmit={handleAIGenerate}
+              isLoading={isLoading}
+            />
+          ) : (
+            <ManualQuestionForm
+              type={effectiveType}
+              unitId={unitId}
+              onClose={onClose}
+              onSubmit={handleContentSubmit}
+              isLoading={isLoading}
+            />
+          )}
         </Box>
       </Box>
       <PreviewModal

@@ -151,7 +151,7 @@ export default function ContentCreateForm() {
         <CourseInfoHeader />
       </ToolBar>
 
-      <Box sx={{ display: "flex", height: "100vh", p: "24px" }}>
+      <Box sx={{ display: "flex", height: "100vh", pt: 0, pr: "24px", pb: "24px", pl: "24px" }}>
         <CreateContentLayout
           heading="Content Order"
           mainContent={
