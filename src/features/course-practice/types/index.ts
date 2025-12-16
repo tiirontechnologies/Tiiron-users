@@ -1,18 +1,12 @@
 export interface Question {
   id: string;
-  text?: string;
-  contentType?: QuestionType;
-  content?: QuestionContent;
+  text: string;
+  contentType: QuestionType;
+  content: QuestionContent;
   description?: {
     html: string;
     title: string;
   };
-  previousAnswer?: string | null; // Previously selected answer
-  previousPractice?: {
-    selectedOptionId?: number;
-    score: number;
-    isCorrect: boolean;
-  } | null;
 }
 
 export interface QuestionContent {

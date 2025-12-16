@@ -41,7 +41,11 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
   };
 
   const isCorrect =
-    normalize(answer) === normalize(question.content.correctAnswer);
+    normalize(answer) === normalize(question.content?.correctAnswer);
+
+  // Safely get question text and correct answer
+  const questionText = question.content?.question || question.text || '';
+  const correctAnswer = question.content?.correctAnswer || '';
 
   return (
     <Box
@@ -62,7 +66,7 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
     >
       {/* Question */}
       <Typography sx={{ fontSize: "15px", color: COLORS.text.primary, fontWeight: 600 }}>
-        {question.content.question}
+        {questionText}
       </Typography>
 
       {/* Label */}
@@ -84,7 +88,7 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
           practiceMode
             ? answer
             : showAnswers
-              ? question.content.correctAnswer || ""
+              ? correctAnswer
               : ""
         }
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

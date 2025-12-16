@@ -20,7 +20,6 @@ const CourseProgress: React.FC = () => {
     courseId,
     courseData,
     unitsData,
-    practiceData,
     selectedUnitId,
     selectUnit,
     isLoading,
@@ -35,68 +34,82 @@ const CourseProgress: React.FC = () => {
     refetchContent,
   } = useCourseProgress();
 
-  if (!courseData?.data) {
-    return (
-      <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>
-        {isCourseLoading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            <Loader />
-          </Box>
-        ) : isCourseError ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            <Paper sx={{ p: 4, textAlign: "center", borderRadius: "16px" }}>
-              <Typography color="error" variant="h6">
-                Error loading course data
-              </Typography>
-            </Paper>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            <Typography>Course ID is required</Typography>
-          </Box>
-        )}
-      </Box>
-    );
-  }
-
+  // if (!courseData?.data) {
+  //   return (
+  //     <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>
+  //       {isCourseLoading ? (
+  //         <Box
+  //           sx={{
+  //             display: "flex",
+  //             justifyContent: "center",
+  //             alignItems: "center",
+  //             height: "100vh",
+  //           }}
+  //         >
+  //           <Loader />
+  //         </Box>
+  //       ) : isCourseError ? (
+  //         <Box
+  //           sx={{
+  //             display: "flex",
+  //             justifyContent: "center",
+  //             alignItems: "center",
+  //             height: "100vh",
+  //           }}
+  //         >
+  //           <Paper sx={{ p: 4, textAlign: "center", borderRadius: "16px" }}>
+  //             <Typography color="error" variant="h6">
+  //               Error loading course data
+  //             </Typography>
+  //           </Paper>
+  //         </Box>
+  //       ) : (
+  //         <Box
+  //           sx={{
+  //             display: "flex",
+  //             justifyContent: "center",
+  //             alignItems: "center",
+  //             height: "100vh",
+  //           }}
+  //         >
+  //           <Typography>Course ID is required</Typography>
+  //         </Box>
+  //       )}
+  //     </Box>
+  //   );
+  // }
+  
+  console.log("Units Data:", unitsData);
+  console.log("Course Data:", courseData);
+  
+  // Extract course data - handle both { data: ... } and direct data structures
+  const course = (courseData as any)?.data ?? courseData;
+  const courseDataForSidebar = course?.chapters ? course : { chapters: [] };
+  
   return (
     <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>
       {/* Sidebar */}
       <Sidebar
-        data={courseData.data}
+        data={courseDataForSidebar}
         onUnitSelect={selectUnit}
-        courseId={courseData.data?.id}
+        courseId={courseId}
         practiceStats={practiceStats}
-        selectedUnitId={selectedUnitId}
-        practiceData={practiceData}
       />
 
       {/* Header */}
       <Header />
 
+      <MainContent 
+          questions={Array.isArray(unitsData) ? unitsData : []} 
+          practiceData={{
+            isCompleted: false,
+            score: 0,
+          }}
+          refetchContent={refetchContent}
+        />
+
       {/* Main Content */}
-      {isUnitsLoading ? (
+      {/* {isUnitsLoading ? (
         <Box
           sx={{
             display: "flex",
@@ -131,10 +144,14 @@ const CourseProgress: React.FC = () => {
       ) : (
         <MainContent 
           questions={Array.isArray(unitsData) ? unitsData : []} 
-          practiceData={practiceData}
+          practiceData={{
+            isCompleted: false,
+            score: 0,
+          }}
           refetchContent={refetchContent}
         />
-      )}
+      )} */}
+      
     </Box>
   );
 };

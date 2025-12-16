@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CourseData } from "../../types";
 import NavigationList from "./NavigationList";
 import PracticeProgressStats from "./PracticeProgressStats";
-import { GRADIENTS, COLORS, SHADOWS } from "../../constants";
+import { GRADIENTS, COLORS } from "../../constants";
 
 interface PracticeStats {
   totalSessions: number;
@@ -19,11 +19,6 @@ interface SidebarProps {
   onUnitSelect: (unitId: string) => void;
   courseId?: string;
   practiceStats: PracticeStats;
-  selectedUnitId?: string;
-  practiceData?: {
-    isCompleted: boolean;
-    score: number;
-  } | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -31,14 +26,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   onUnitSelect,
   courseId,
   practiceStats,
-  selectedUnitId,
-  practiceData,
 }) => {
   const navigate = useNavigate();
 
-  console.log("Sidebar", data.chapters, onUnitSelect, courseId);
+  console.log("Sidebar", data?.chapters, onUnitSelect, courseId);
   console.log("sidebar Practice stats:", practiceStats);
-  <PracticeProgressStats stats={practiceStats} />;
 
   const progressStats = {
     current: 3,
@@ -56,9 +48,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         left: 0,
         width: "289px",
         height: "100vh",
-        background: COLORS.background.white,
-        boxShadow: SHADOWS.xl,
-        borderRight: `1px solid ${COLORS.border.light}`,
+        background: GRADIENTS.background,
+        boxShadow: "4px 0 20px rgba(0,0,0,0.08)",
+        borderRight: "1px solid #e2e8f0",
         p: "24px",
         overflowY: "auto",
         "&::-webkit-scrollbar": {
@@ -79,21 +71,18 @@ const Sidebar: React.FC<SidebarProps> = ({
         onClick={() => navigate(-1)}
         startIcon={<KeyboardBackspace sx={{ color: COLORS.text.muted }} />}
         sx={{
-          background: COLORS.background.light,
+          background: GRADIENTS.background,
           borderRadius: "12px",
           padding: "8px 16px",
           color: COLORS.text.secondary,
           fontWeight: 600,
           fontSize: "14px",
           textTransform: "none",
-          border: `1px solid ${COLORS.border.light}`,
-          transition: "all 0.2s ease",
+          border: "1px solid #e2e8f0",
           "&:hover": {
-            background: COLORS.background.lighter,
-            borderColor: COLORS.primary,
-            color: COLORS.primary,
+            background: "linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)",
             transform: "translateY(-1px)",
-            boxShadow: SHADOWS.md,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           },
         }}
       >
@@ -138,15 +127,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         {practiceStats && <PracticeProgressStats stats={practiceStats} />}
       </Box>
 
-      <Divider sx={{ my: 2, borderColor: COLORS.border.light }} />
+      <Divider sx={{ my: 2, opacity: 0.3 }} />
 
       {/* Navigation List */}
-      <NavigationList
-        chapters={data?.chapters}
-        onUnitSelect={onUnitSelect}
-        selectedUnitId={selectedUnitId}
-        practiceData={practiceData}
-      />
+      <NavigationList chapters={data?.chapters || []} onUnitSelect={onUnitSelect} />
     </Box>
   );
 };

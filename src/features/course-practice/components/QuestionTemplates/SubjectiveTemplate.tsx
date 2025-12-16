@@ -31,10 +31,13 @@ const SubjectiveTemplate: React.FC<SubjectiveTemplateProps> = ({
     onAnswerChange?.(value);
   };
 
+  // Safely get question text
+  const questionText = question.content?.question || question.text || '';
+
   return (
     <Box sx={{ mt: 2 }}>
       <Typography sx={{ mb: 2, fontWeight: 500, color: "#374151" }}>
-        {question.content.question}
+        {questionText}
       </Typography>
       <Box
         component="textarea"

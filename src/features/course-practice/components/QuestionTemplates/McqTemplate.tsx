@@ -60,7 +60,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
     }
   };
 
-  if (!Array.isArray(question.content.options)) {
+  // Safety check: ensure content and options exist
+  if (!question.content || !Array.isArray(question.content.options)) {
     return null;
   }
 
