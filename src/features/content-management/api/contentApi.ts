@@ -75,7 +75,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       query: ({ body }) => {
         console.log("🌐 API Call: Creating video content", body);
         return {
-          url: '/content/with-type',
+          url: '/question',
           method: 'POST',
           body,
         };
@@ -91,7 +91,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       query: ({ body }) => {
         console.log("🌐 API Call: Creating MCQ content", body);
         return {
-          url: '/content/with-type',
+          url: '/question',
           method: 'POST',
           body,
         };
@@ -105,7 +105,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       { body: CreateFillUpContentPayload }
     >({
       query: ({ body }) => ({
-        url: '/content/with-type',
+        url: '/question',
         method: 'POST',
         body,
       }),
@@ -118,7 +118,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       { body: CreateBlogContentPayload }
     >({
       query: ({ body }) => ({
-        url: '/content/with-type',
+        url: '/question',
         method: 'POST',
         body,
       }),
@@ -131,7 +131,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       { body: CreateSubjectiveContentPayload }
     >({
       query: ({ body }) => ({
-        url: '/content/with-type',
+        url: '/question',
         method: 'POST',
         body,
       }),
