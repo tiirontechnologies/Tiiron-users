@@ -22,7 +22,8 @@ declare module "@mui/material/styles" {
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#6A42AB",
+      main: "#4F39F6",
+      dark: "#3E2DC4",
     },
     text: {
       secondary: "#000000",
@@ -47,6 +48,10 @@ const theme = createTheme({
           textTransform: "none", // optional: removes uppercase text
           borderRadius: "8px", // optional: rounded corners
           padding: "10px 20px", // optional: custom padding
+          "&:hover": {
+            backgroundColor: "#3E2DC4",
+            color: "#FFFFFF",
+          },
         },
       },
     },

@@ -10,73 +10,136 @@ import {
     Paper,
     Button,
     Divider,
+    Container,
+    Breadcrumbs,
 } from '@mui/material';
-import { Link } from "react-router-dom"
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { useGetCartQuery } from '../../course-browse/api/courseApi';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import HomeIcon from '@mui/icons-material/Home';
 
 export default function CheckoutPage() {
-    return (
-        <Box>
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
+    const { data: cartData } = useGetCartQuery();
 
+    // Get course ID from multiple sources (priority order)
+    const getCourseId = (): number => {
+        // 1. Try URL search params
+        const courseIdParam = searchParams.get('courseId');
+        if (courseIdParam) {
+            const id = Number(courseIdParam);
+            if (!isNaN(id) && id > 0) return id;
+        }
+
+        // 2. Try location state
+        const stateCourseId = (location.state as any)?.courseId;
+        if (stateCourseId) {
+            const id = Number(stateCourseId);
+            if (!isNaN(id) && id > 0) return id;
+        }
+
+        // 3. Try to get from cart (first course)
+        const firstCartItem = cartData?.data?.items?.[0];
+        if (firstCartItem?.courseId) {
+            return Number(firstCartItem.courseId);
+        }
+
+        // 4. Default fallback
+        return 7;
+    };
+
+    const courseId = getCourseId();
+
+    return (
+        <Box sx={{ minHeight: "100vh", bgcolor: "#F7F7F7" }}>
             <Navbar />
-            <Box
-                paddingInline={{ xs: "16px", sm: "40px", md: "80px" }}
-                bgcolor={"#fff"}
+            <Container
+                maxWidth="xl"
+                sx={{
+                    backgroundColor: "transparent",
+                    minHeight: "calc(100vh - 72px)",
+                    px: { xs: 2, sm: 3, md: 4, lg: 6, xl: 8 },
+                    pt: 0,
+                    pb: { xs: 3, md: 4, lg: 5 },
+                    boxSizing: "border-box",
+                }}
             >
                 <Box
                     sx={{
-                        p: { xs: 2, md: 4 },
-                        mx: "auto",
                         fontFamily: 'Inter, sans-serif',
                         width: "100%",
-                        display: "grid",
-                        justifyContent: "center"
+                        maxWidth: "1440px",
+                        mx: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
                     }}
                 >
                     {/* Header */}
                     <Box
                         sx={{
-                            mb: 4,
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            alignItems: 'center',
-                            gap: "25px",
+                            mb: { xs: 4, md: 6 },
+                            width: "100%",
+                            maxWidth: { xs: "100%", md: "1280px" },
                         }}
                     >
-                        <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>Checkout Page</Typography>
-                        <BreadCrumb items={[{ label: "Details" }, { label: "Checkout", path: "#" }]} />
+                        <BreadCrumb
+                            items={[
+                                { label: "Home", path: "/", icon: <HomeIcon sx={{ fontSize: 18 }} /> },
+                                { label: "Course Glossary", path: `/course-glossary/${courseId}` },
+                                { label: "Checkout", path: "#" }
+                            ]}
+                        />
+                        <Typography
+                            sx={{
+                                fontSize: { xs: '20px', md: '28px', lg: '32px' },
+                                fontWeight: 700,
+                                color: '#0F172A',
+                                mt: { xs: 2, md: 3 }
+                            }}
+                        >
+                            Checkout Page
+                        </Typography>
                     </Box>
 
                     {/* Form and Sidebar */}
-
                     <Box
                         sx={{
                             display: "flex",
-                            gap: "40px",
+                            gap: { xs: 3, md: 5 },
                             flexDirection: {
                                 xs: 'column',
                                 md: 'row',
                             },
+                            alignItems: { xs: 'stretch', md: 'flex-start' },
+                            justifyContent: "center",
+                            width: "100%",
+                            maxWidth: { xs: "100%", md: "1280px" },
                         }}
                     >
                         {/* Left: Form */}
                         <Box
                             component="form"
                             sx={{
-                                border: '1px solid #e2e8f0',
-                                borderRadius: 4,
-                                p: 3,
+                                bgcolor: 'white',
+                                border: '1px solid #E2E8F0',
+                                borderRadius: 3,
+                                p: { xs: 3, md: 4, lg: 5 },
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: 4,
-                                width: { xs: "100%", md: "60%", lg: "820px" },
+                                gap: { xs: 3, md: 4 },
+                                width: { xs: "100%", md: "calc(60% - 20px)", lg: "820px" },
                                 maxWidth: "100%",
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                                flexShrink: 0,
                             }}
                         >
                             {/* Country & State */}
                             <Box
                                 sx={{
                                     display: 'grid',
-                                    gap: "17px",
+                                    gap: { xs: 2, md: 3 },
                                     gridTemplateColumns: {
                                         xs: '1fr',
                                         sm: '1fr 1fr',
@@ -84,7 +147,9 @@ export default function CheckoutPage() {
                                 }}
                             >
                                 <Box>
-                                    <Typography sx={{ fontWeight: 600, fontSize: '18px', mb: 0.5 }}>Country</Typography>
+                                    <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, mb: 1.5, color: '#0F172A' }}>
+                                        Country
+                                    </Typography>
                                     <TextField
                                         fullWidth
                                         placeholder="Enter Country"
@@ -94,12 +159,23 @@ export default function CheckoutPage() {
                                             sx: {
                                                 borderRadius: 2,
                                                 bgcolor: '#fff',
+                                                '& .MuiOutlinedInput-notchedOutline': {
+                                                    borderColor: '#E2E8F0',
+                                                },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                    borderColor: '#CBD5E1',
+                                                },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                    borderColor: '#4F39F6',
+                                                },
                                             },
                                         }}
                                     />
                                 </Box>
                                 <Box>
-                                    <Typography sx={{ fontWeight: 600, fontSize: '18px', mb: 0.5 }}>State/Union Territory</Typography>
+                                    <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, mb: 1.5, color: '#0F172A' }}>
+                                        State/Union Territory
+                                    </Typography>
                                     <TextField
                                         fullWidth
                                         placeholder="Enter State"
@@ -109,6 +185,15 @@ export default function CheckoutPage() {
                                             sx: {
                                                 borderRadius: 2,
                                                 bgcolor: '#fff',
+                                                '& .MuiOutlinedInput-notchedOutline': {
+                                                    borderColor: '#E2E8F0',
+                                                },
+                                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                    borderColor: '#CBD5E1',
+                                                },
+                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                    borderColor: '#4F39F6',
+                                                },
                                             },
                                         }}
                                     />
@@ -116,23 +201,25 @@ export default function CheckoutPage() {
                             </Box>
 
                             {/* Payment */}
-                            <FormControl component="fieldset" sx={{ width: '100%', bgcolor: '#f8fafc' }}>
-                                <FormLabel component="legend" sx={{ fontWeight: 600, fontSize: '18px', color: '#0f172a', mb: 2 }}>
+                            <FormControl component="fieldset" sx={{ width: '100%', bgcolor: '#F8FAFC', borderRadius: 2, p: { xs: 2, md: 3 } }}>
+                                <FormLabel component="legend" sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, color: '#0F172A', mb: 3 }}>
                                     Payment Method
                                 </FormLabel>
 
                                 {/* Card Option */}
                                 <Paper
                                     sx={{
-                                        p: 2,
-                                        bgcolor: '#F8FAFC',
+                                        p: 2.5,
+                                        bgcolor: '#fff',
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
-                                        border: 'none',
+                                        border: '1px solid #E2E8F0',
+                                        borderRadius: 2,
                                         boxShadow: 'none',
                                         flexWrap: 'wrap',
                                         gap: 1,
+                                        mb: 3,
                                     }}
                                 >
                                     <Box display="flex" alignItems="center" gap={1.5}>
@@ -141,13 +228,13 @@ export default function CheckoutPage() {
                                             value="card"
                                             sx={{
                                                 p: 0.5,
-                                                color: '#7c3aed',
+                                                color: '#4F39F6',
                                                 '&.Mui-checked': {
-                                                    color: '#7c3aed',
+                                                    color: '#4F39F6',
                                                 },
                                             }}
                                         />
-                                        <Typography sx={{ fontWeight: 600, fontSize: '18px', color: '#0f172a' }}>
+                                        <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, color: '#0F172A' }}>
                                             Credit/Debit Card
                                         </Typography>
                                     </Box>
@@ -162,14 +249,56 @@ export default function CheckoutPage() {
                                 </Paper>
 
                                 {/* Card Fields */}
-                                <Stack spacing={2} px={1}>
+                                <Stack spacing={2.5} px={0.5}>
                                     <Box>
-                                        <Typography sx={{ fontSize: '0.75rem', mb: 0.5 }}>Name of Card</Typography>
-                                        <TextField fullWidth placeholder="Name of card" size="medium" />
+                                        <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
+                                            Name of Card
+                                        </Typography>
+                                        <TextField
+                                            fullWidth
+                                            placeholder="Name of card"
+                                            size="medium"
+                                            InputProps={{
+                                                sx: {
+                                                    borderRadius: 2,
+                                                    bgcolor: '#fff',
+                                                    '& .MuiOutlinedInput-notchedOutline': {
+                                                        borderColor: '#E2E8F0',
+                                                    },
+                                                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                        borderColor: '#CBD5E1',
+                                                    },
+                                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                        borderColor: '#4F39F6',
+                                                    },
+                                                },
+                                            }}
+                                        />
                                     </Box>
                                     <Box>
-                                        <Typography sx={{ fontSize: '0.75rem', mb: 0.5 }}>Card Number</Typography>
-                                        <TextField fullWidth placeholder="Card Number" size="medium" />
+                                        <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
+                                            Card Number
+                                        </Typography>
+                                        <TextField
+                                            fullWidth
+                                            placeholder="Card Number"
+                                            size="medium"
+                                            InputProps={{
+                                                sx: {
+                                                    borderRadius: 2,
+                                                    bgcolor: '#fff',
+                                                    '& .MuiOutlinedInput-notchedOutline': {
+                                                        borderColor: '#E2E8F0',
+                                                    },
+                                                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                        borderColor: '#CBD5E1',
+                                                    },
+                                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                        borderColor: '#4F39F6',
+                                                    },
+                                                },
+                                            }}
+                                        />
                                     </Box>
                                     <Box
                                         sx={{
@@ -178,16 +307,58 @@ export default function CheckoutPage() {
                                                 xs: '1fr',
                                                 sm: '1fr 1fr',
                                             },
-                                            gap: 2,
+                                            gap: 2.5,
                                         }}
                                     >
                                         <Box>
-                                            <Typography sx={{ fontSize: '0.75rem', mb: 0.5 }}>Expiry Date</Typography>
-                                            <TextField fullWidth placeholder="MM/YY" size="medium" />
+                                            <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
+                                                Expiry Date
+                                            </Typography>
+                                            <TextField
+                                                fullWidth
+                                                placeholder="MM/YY"
+                                                size="medium"
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: 2,
+                                                        bgcolor: '#fff',
+                                                        '& .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#E2E8F0',
+                                                        },
+                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#CBD5E1',
+                                                        },
+                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#4F39F6',
+                                                        },
+                                                    },
+                                                }}
+                                            />
                                         </Box>
                                         <Box>
-                                            <Typography sx={{ fontSize: '0.75rem', mb: 0.5 }}>CVC/CVV</Typography>
-                                            <TextField fullWidth placeholder="CVC" size="medium" />
+                                            <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
+                                                CVC/CVV
+                                            </Typography>
+                                            <TextField
+                                                fullWidth
+                                                placeholder="CVC"
+                                                size="medium"
+                                                InputProps={{
+                                                    sx: {
+                                                        borderRadius: 2,
+                                                        bgcolor: '#fff',
+                                                        '& .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#E2E8F0',
+                                                        },
+                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#CBD5E1',
+                                                        },
+                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                            borderColor: '#4F39F6',
+                                                        },
+                                                    },
+                                                }}
+                                            />
                                         </Box>
                                     </Box>
                                 </Stack>
@@ -195,13 +366,14 @@ export default function CheckoutPage() {
                                 {/* PayPal Option */}
                                 <Paper
                                     sx={{
-                                        mt: 2,
-                                        p: 2,
-                                        bgcolor: '#f8fafc',
+                                        mt: 3,
+                                        p: 2.5,
+                                        bgcolor: '#fff',
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
-                                        border: 'none',
+                                        border: '1px solid #E2E8F0',
+                                        borderRadius: 2,
                                         boxShadow: 'none',
                                         flexWrap: 'wrap',
                                         gap: 1,
@@ -212,13 +384,13 @@ export default function CheckoutPage() {
                                             value="paypal"
                                             sx={{
                                                 p: 0.5,
-                                                color: '#7c3aed',
+                                                color: '#4F39F6',
                                                 '&.Mui-checked': {
-                                                    color: '#7c3aed',
+                                                    color: '#4F39F6',
                                                 },
                                             }}
                                         />
-                                        <Typography sx={{ fontWeight: 600, fontSize: '18px', color: '#0f172a' }}>
+                                        <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, color: '#0F172A' }}>
                                             PayPal
                                         </Typography>
                                     </Box>
@@ -238,13 +410,14 @@ export default function CheckoutPage() {
                         <Box
                             sx={{
                                 fontFamily: 'Inter, sans-serif',
-                                width: { xs: "100%", md: "40%", lg: "400px" },
+                                width: { xs: "100%", md: "calc(40% - 20px)", lg: "400px" },
                                 display: "grid",
-                                gap: "16px",
+                                gap: { xs: 2.5, md: 3 },
+                                flexShrink: 0,
                             }}
                         >
                             {/* Order Header */}
-                            <Typography sx={{ fontWeight: 600, fontSize: '20px' }}>
+                            <Typography sx={{ fontWeight: 700, fontSize: { xs: '18px', md: '22px' }, color: '#0F172A' }}>
                                 Order Details
                             </Typography>
 
@@ -254,10 +427,12 @@ export default function CheckoutPage() {
                                 sx={{
                                     display: 'flex',
                                     flexDirection: { xs: 'column', sm: 'row' },
-                                    p: 1.5,
+                                    p: { xs: 2, md: 2.5 },
                                     borderRadius: 2,
                                     maxWidth: "100%",
-                                    bgcolor: "#F8FAFC",
+                                    bgcolor: "#fff",
+                                    border: '1px solid #E2E8F0',
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                                     gap: 2,
                                 }}
                             >
@@ -279,19 +454,19 @@ export default function CheckoutPage() {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         justifyContent: 'space-between',
-                                        bgcolor: "#F8FAFC",
+                                        gap: 1,
                                     }}
                                 >
-                                    <Typography sx={{ fontSize: '14px', color: '#6A42AB', fontWeight: 500 }}>
+                                    <Typography sx={{ fontSize: '14px', color: '#4F39F6', fontWeight: 600 }}>
                                         Design
                                     </Typography>
-                                    <Typography sx={{ fontSize: '18px', fontWeight: 600, lineHeight: 1.3 }}>
+                                    <Typography sx={{ fontSize: { xs: '16px', md: '18px' }, fontWeight: 600, lineHeight: 1.4, color: '#0F172A' }}>
                                         Introduction to User Experience Design
                                     </Typography>
-                                    <Typography sx={{ fontSize: '14px', color: '#64748b' }}>
+                                    <Typography sx={{ fontSize: '14px', color: '#64748B', fontWeight: 400 }}>
                                         155 Lectures · 22 Total Hours
                                     </Typography>
-                                    <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>
+                                    <Typography sx={{ fontSize: { xs: '18px', md: '20px' }, fontWeight: 700, color: '#0F172A' }}>
                                         $45.00
                                     </Typography>
                                 </Box>
@@ -301,20 +476,27 @@ export default function CheckoutPage() {
                             <Paper
                                 variant="outlined"
                                 sx={{
-                                    p: 2,
+                                    p: { xs: 2, md: 2.5 },
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: 1,
+                                    gap: 1.5,
                                     borderRadius: 2,
                                     cursor: 'pointer',
-                                    bgcolor: "#F8FAFC",
+                                    bgcolor: "#fff",
+                                    border: '1px solid #E2E8F0',
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                                    transition: 'all 0.2s ease',
+                                    '&:hover': {
+                                        borderColor: '#4F39F6',
+                                        boxShadow: "0 4px 12px rgba(79, 57, 246, 0.15)",
+                                    },
                                 }}
                             >
                                 <Typography
                                     sx={{
                                         fontSize: '14px',
-                                        fontWeight: 500,
-                                        color: '#0f172a',
+                                        fontWeight: 600,
+                                        color: '#0F172A',
                                         display: "flex",
                                         alignItems: "center",
                                         gap: "10px"
@@ -329,29 +511,31 @@ export default function CheckoutPage() {
                             <Paper
                                 variant="outlined"
                                 sx={{
-                                    p: 2,
+                                    p: { xs: 2.5, md: 3 },
                                     borderRadius: 2,
-                                    bgcolor: "#F8FAFC",
+                                    bgcolor: "#fff",
+                                    border: '1px solid #E2E8F0',
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                                 }}
                             >
-                                <Box display="flex" justifyContent="space-between" mb={"16px"}>
-                                    <Typography sx={{ fontSize: '16px' }}>Price</Typography>
-                                    <Typography sx={{ fontWeight: 600, fontSize: "18px" }}>$300.00</Typography>
+                                <Box display="flex" justifyContent="space-between" mb={2.5}>
+                                    <Typography sx={{ fontSize: '16px', color: '#64748B', fontWeight: 400 }}>Price</Typography>
+                                    <Typography sx={{ fontWeight: 600, fontSize: "18px", color: '#0F172A' }}>$300.00</Typography>
                                 </Box>
-                                <Box display="flex" justifyContent="space-between" mb={"16px"}>
-                                    <Typography sx={{ fontSize: '16px' }}>Discount</Typography>
-                                    <Typography sx={{ fontWeight: 600, fontSize: "18px" }}>- $10.00</Typography>
+                                <Box display="flex" justifyContent="space-between" mb={2.5}>
+                                    <Typography sx={{ fontSize: '16px', color: '#64748B', fontWeight: 400 }}>Discount</Typography>
+                                    <Typography sx={{ fontWeight: 600, fontSize: "18px", color: '#10B981' }}>- $10.00</Typography>
                                 </Box>
-                                <Box display="flex" justifyContent="space-between" mb={"16px"}>
-                                    <Typography sx={{ fontSize: '16px' }}>Tax</Typography>
-                                    <Typography sx={{ fontWeight: 600, fontSize: "18px" }}>$20.00</Typography>
+                                <Box display="flex" justifyContent="space-between" mb={2.5}>
+                                    <Typography sx={{ fontSize: '16px', color: '#64748B', fontWeight: 400 }}>Tax</Typography>
+                                    <Typography sx={{ fontWeight: 600, fontSize: "18px", color: '#0F172A' }}>$20.00</Typography>
                                 </Box>
 
-                                <Divider sx={{ my: 1 }} />
+                                <Divider sx={{ my: 2.5, borderColor: '#E2E8F0' }} />
 
                                 <Box display="flex" justifyContent="space-between">
-                                    <Typography sx={{ fontSize: '20px', fontWeight: 600 }}>Total</Typography>
-                                    <Typography sx={{ fontSize: '20px', fontWeight: 600 }}>$290.00</Typography>
+                                    <Typography sx={{ fontSize: { xs: '18px', md: '20px' }, fontWeight: 700, color: '#0F172A' }}>Total</Typography>
+                                    <Typography sx={{ fontSize: { xs: '18px', md: '20px' }, fontWeight: 700, color: '#0F172A' }}>$290.00</Typography>
                                 </Box>
                             </Paper>
 
@@ -360,15 +544,19 @@ export default function CheckoutPage() {
                                 fullWidth
                                 variant="contained"
                                 sx={{
-                                    bgcolor: '#0f172a',
+                                    bgcolor: '#0F172A',
                                     color: '#fff',
                                     textTransform: 'none',
                                     borderRadius: 2,
-                                    fontWeight: 500,
-                                    py: 1.25,
-                                    fontSize: '0.9rem',
+                                    fontWeight: 600,
+                                    py: { xs: 1.5, md: 1.75 },
+                                    fontSize: { xs: '16px', md: '18px' },
+                                    boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)',
+                                    transition: 'all 0.2s ease',
                                     '&:hover': {
-                                        bgcolor: '#1e293b',
+                                        bgcolor: '#1E293B',
+                                        boxShadow: '0 6px 16px rgba(15, 23, 42, 0.3)',
+                                        transform: 'translateY(-1px)',
                                     },
                                 }}
                             >
@@ -377,32 +565,111 @@ export default function CheckoutPage() {
                         </Box>
                     </Box>
                 </Box>
-            </Box>
+            </Container>
         </Box>
-
     )
 }
 
-export function BreadCrumb({ items }: {
-    items: {
-        label: string;
-        path?: string;
-    }[];
-}) {
-    return <nav aria-label="breadcrumb">
-        <ol style={{ display: 'flex', listStyle: 'none', padding: 0, margin: 0 }}>
-            {items.map((item, index) => (
-                <li key={index} style={{ display: 'flex', alignItems: 'center', fontSize: "14px" }}>
-                    {item?.path ? (
-                        <Link to={item?.path} style={{ textDecoration: 'none', color: '#702DFF' }}>
-                            {item?.label}
-                        </Link>
-                    ) : (
-                        <span>{item?.label}</span>
-                    )}
-                    {index < items.length - 1 && <img src="icons/right_arrow.png" style={{ margin: '0 8px' }} />}
-                </li>
-            ))}
-        </ol>
-    </nav>
+interface BreadCrumbItem {
+    label: string;
+    path?: string;
+    icon?: React.ReactNode;
+}
+
+export function BreadCrumb({ items }: { items: BreadCrumbItem[] }) {
+    return (
+        <Breadcrumbs
+            separator={<NavigateNextIcon sx={{ fontSize: 18, color: '#94A3B8' }} />}
+            aria-label="breadcrumb"
+            sx={{
+                mb: { xs: 1, md: 1.5 },
+                '& .MuiBreadcrumbs-ol': {
+                    flexWrap: 'wrap',
+                },
+            }}
+        >
+            {items.map((item, index) => {
+                const isLast = index === items.length - 1;
+
+                if (isLast || !item.path) {
+                    return (
+                        <Box
+                            key={index}
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5,
+                                color: '#64748B',
+                                fontSize: { xs: '13px', sm: '14px' },
+                                fontWeight: 500,
+                                cursor: 'default',
+                            }}
+                        >
+                            {item.icon && (
+                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#64748B' }}>
+                                    {item.icon}
+                                </Box>
+                            )}
+                            <Typography
+                                component="span"
+                                sx={{
+                                    fontSize: 'inherit',
+                                    fontWeight: 'inherit',
+                                    color: 'inherit',
+                                }}
+                            >
+                                {item.label}
+                            </Typography>
+                        </Box>
+                    );
+                }
+
+                return (
+                    <Link
+                        key={index}
+                        to={item.path}
+                        style={{ textDecoration: 'none' }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5,
+                                color: '#4F39F6',
+                                fontSize: { xs: '13px', sm: '14px' },
+                                fontWeight: 500,
+                                transition: 'all 0.2s ease',
+                                '&:hover': {
+                                    color: '#3E2DC4',
+                                    textDecoration: 'underline',
+                                },
+                            }}
+                        >
+                            {item.icon && (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        color: 'inherit',
+                                    }}
+                                >
+                                    {item.icon}
+                                </Box>
+                            )}
+                            <Typography
+                                component="span"
+                                sx={{
+                                    fontSize: 'inherit',
+                                    fontWeight: 'inherit',
+                                    color: 'inherit',
+                                }}
+                            >
+                                {item.label}
+                            </Typography>
+                        </Box>
+                    </Link>
+                );
+            })}
+        </Breadcrumbs>
+    );
 }

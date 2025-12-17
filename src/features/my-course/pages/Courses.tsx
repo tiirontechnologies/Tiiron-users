@@ -16,7 +16,8 @@ const PAGE_LAYOUT_SX = {
   maxWidth: "1440px",
   mx: "auto",
   px: { xs: 3, sm: 5, md: 10, lg: 15 },
-  py: { xs: 3, md: 4 },
+  pt: { xs: 3, md: 4 },
+  pb: { xs: 1, md: 2 },
 };
 
 export default function Courses({ onCourseClick }: CoursesProps) {
@@ -143,7 +144,8 @@ export default function Courses({ onCourseClick }: CoursesProps) {
               },
               justifyItems: "center",
               alignItems: "stretch",
-              py: { xs: 1, md: 2 },
+              pt: { xs: 1, md: 2 },
+              pb: 0,
             }}
           >
             {courses.map((course) => {

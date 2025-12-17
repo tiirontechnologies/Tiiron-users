@@ -79,7 +79,7 @@ export default function ProductCard({ course }: ProductCardProps) {
           variant="h4"
           fontWeight="700"
           sx={{
-            color: "#6A42AB",
+            color: "#4F39F6",
             fontSize: { xs: "28px", md: "32px" },
           }}
         >
@@ -116,14 +116,14 @@ export default function ProductCard({ course }: ProductCardProps) {
       </Box>
 
       <Link
-        to="/checkout"
+        to={course?.id ? `/checkout?courseId=${course.id}` : "/checkout"}
         style={{ textDecoration: "none", width: "100%", display: "block" }}
       >
         <Button
           variant="contained"
           fullWidth
           sx={{
-            bgcolor: "#6A42AB",
+            bgcolor: "#4F39F6",
             color: "#fff",
             py: 1.75,
             mb: 2.5,
@@ -131,11 +131,12 @@ export default function ProductCard({ course }: ProductCardProps) {
             fontWeight: 600,
             borderRadius: 2,
             textTransform: "none",
-            boxShadow: "0 4px 6px -1px rgba(106, 66, 171, 0.3)",
+            boxShadow: "0 4px 6px -1px rgba(79, 57, 246, 0.3)",
             transition: "all 0.2s ease",
             "&:hover": {
-              bgcolor: "#5A2A9B",
-              boxShadow: "0 6px 8px -1px rgba(106, 66, 171, 0.4)",
+              bgcolor: "#3E2DC4",
+              color: "#FFFFFF",
+              boxShadow: "0 6px 8px -1px rgba(79, 57, 246, 0.4)",
               transform: "translateY(-1px)",
             },
             "&:active": {

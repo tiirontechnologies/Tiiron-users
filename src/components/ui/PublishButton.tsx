@@ -87,21 +87,21 @@ const PublishButton = () => {
             height: "40px",
             borderRadius: "12px",
             border: "1px solid rgba(148, 163, 184, 0.4)",
-            color: "#6A42AB",
+            color: "#4F39F6",
             backgroundColor: "#fff",
             textTransform: "none",
             fontWeight: 500,
             fontSize: "0.95rem",
             transition: "all 0.2s ease",
             "&:hover": {
-              borderColor: "#6A42AB",
-              color: "#6A42AB",
-              boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
-              backgroundColor: "rgba(106, 66, 171, 0.04)",
+              borderColor: "#4F39F6",
+              color: "#4F39F6",
+              boxShadow: "0 6px 16px rgba(79, 57, 246, 0.18)",
+              backgroundColor: "rgba(79, 57, 246, 0.04)",
             },
             "&:focus": {
               outline: "none",
-              boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
+              boxShadow: "0 0 0 3px rgba(79, 57, 246, 0.1)",
             },
           }}
         >

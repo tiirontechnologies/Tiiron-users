@@ -1,4 +1,4 @@
-const ListAddIcon = ({ color = "#6A42AB" }) => {
+const ListAddIcon = ({ color = "#4F39F6" }) => {
   return (
     <svg
       width="24"

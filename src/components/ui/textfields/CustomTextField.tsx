@@ -48,7 +48,7 @@ const CustomTextField = ({
         {...rest}
         InputProps={{
           sx: {
-            py:"10px",
+            py: "10px",
             backgroundColor: "#fff",
             borderRadius: "6px",
             "& .MuiOutlinedInput-notchedOutline": {
@@ -58,7 +58,7 @@ const CustomTextField = ({
               borderColor: "#E2E8F0",
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#6A42AB", // Active color
+              borderColor: "#4F39F6", // Active color
             },
             "& input::placeholder": {
               color: "#94A3B8",

@@ -64,16 +64,16 @@ export const SettingsTab = ({
             {icon}
           </Box>
           <Box minWidth={0} flex={1}>
-            <Typography sx={{ 
-              fontWeight: 600, 
+            <Typography sx={{
+              fontWeight: 600,
               fontSize: { xs: "16px", sm: "18px" },
               lineHeight: 1.2,
               mb: 0.5
             }}>
               {title}
             </Typography>
-            <Typography sx={{ 
-              color: "#64748b", 
+            <Typography sx={{
+              color: "#64748b",
               fontSize: { xs: "12px", sm: "14px" },
               lineHeight: 1.3,
               overflow: 'hidden',
@@ -106,6 +106,7 @@ export const SettingsTab = ({
             "&:hover": {
               borderColor: "#5b21b6",
               backgroundColor: "#f3e8ff",
+              color: "#5b21b6",
             },
           }}
         >

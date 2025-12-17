@@ -22,13 +22,13 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../../features/auth/Firebase";
 
 import CloseIcon from "@mui/icons-material/Close";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
 import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const menuItems = [
   {
@@ -56,6 +56,14 @@ const menuItems = [
     }
   },
   {
+    text: "Create Course",
+    icon: <AddCircleOutlineIcon />,
+    color: "#00BCD4",
+    onClick: (navigate: NavigateFunction) => {
+      navigate("/courses");
+    }
+  },
+  {
     text: "Tiiron Business",
     icon: <BusinessOutlinedIcon />,
     color: "#FF5722",
@@ -64,11 +72,6 @@ const menuItems = [
     }
   },
   { text: "Publish The Course", icon: <PublishOutlinedIcon />, color: "#00BCD4" },
-  {
-    text: "Notification Settings",
-    icon: <NotificationsNoneOutlinedIcon />,
-    color: "#FFC107",
-  },
 ];
 
 const ProfileCenterPopup = () => {

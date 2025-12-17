@@ -251,9 +251,21 @@ const CourseMetaTabs = () => {
         sx={{
           width: { xs: "100%", md: 112 },
           backgroundColor: "#fff",
-          borderBottom: { xs: "1px solid #e0e0e0", md: "none" },
+          borderBottom: { xs: "none", md: "none" },
           borderRight: { xs: "none", md: "1px solid #e0e0e0" },
           minHeight: { xs: "auto", md: "100%" },
+          // Horizontal tab styling to match CustomTabs
+          ...(isMobile && {
+            background: "#fff",
+            borderRadius: "16px",
+            width: "fit-content",
+            p: "0px 20px",
+            "& .MuiTabs-indicator": {
+              height: "3px",
+              borderRadius: "24px",
+              backgroundColor: "#6A42AB",
+            },
+          }),
           "& .MuiTabs-flexContainer": {
             flexDirection: { xs: "row", md: "column" },
             gap: { xs: 0, md: 0 },
@@ -265,7 +277,7 @@ const CourseMetaTabs = () => {
         TabIndicatorProps={{
           style: {
             display: isMobile ? "block" : "none",
-            backgroundColor: isMobile ? "#6A42AB" : "transparent",
+            backgroundColor: isMobile ? "#4F39F6" : "transparent",
             height: isMobile ? "2px" : "0px",
           },
         }}
@@ -284,7 +296,7 @@ const CourseMetaTabs = () => {
                 alignItems="center"
                 gap={{ xs: 1, md: 0 }}
                 sx={{
-                  background: value === index ? "#FBF8FF" : "#fff",
+                  background: isMobile ? "transparent" : (value === index ? "#FBF8FF" : "#fff"),
                   width: "100%",
                 }}
               >
@@ -303,9 +315,9 @@ const CourseMetaTabs = () => {
                 <Typography
                   sx={{
                     fontSize: { xs: "14px", md: "12px" },
-                    fontWeight: 500,
+                    fontWeight: isMobile ? (value === index ? 600 : 600) : 500,
                     mt: { xs: 0, md: "6px" },
-                    color: "#000000",
+                    color: isMobile ? (value === index ? "#000000" : "#9499A1") : "#000000",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -323,24 +335,38 @@ const CourseMetaTabs = () => {
                 xs: "none",
                 md:
                   value === index
-                    ? "4px solid #6A42AB"
+                    ? "4px solid #4F39F6"
                     : "4px solid transparent",
               },
               borderBottom: {
                 xs:
                   value === index
-                    ? "2px solid #6A42AB"
+                    ? "2px solid #4F39F6"
                     : "2px solid transparent",
                 md: "none",
               },
               justifyContent: "center",
               textTransform: "none",
-              background: value === index ? "#FBF8FF" : "#fff",
-              px: { xs: 2, md: 0 },
-              py: { xs: 1, md: 0 },
-              "&:hover": {
-                backgroundColor: value === index ? "#FBF8FF" : "#f5f5f5",
-              },
+              // Horizontal tab styling to match CustomTabs
+              ...(isMobile && {
+                fontWeight: 600,
+                color: value === index ? "#000000" : "#9499A1",
+                background: "transparent",
+                px: 2,
+                py: 1,
+                "&:hover": {
+                  backgroundColor: "transparent",
+                },
+              }),
+              // Vertical tab styling (desktop)
+              ...(!isMobile && {
+                background: value === index ? "#FBF8FF" : "#fff",
+                px: 0,
+                py: 0,
+                "&:hover": {
+                  backgroundColor: value === index ? "#FBF8FF" : "#f5f5f5",
+                },
+              }),
             }}
           />
         ))}

@@ -64,12 +64,32 @@ export function DurationSection() {
         </Box>
         <Box display="flex" gap={2}>
           <Box>
-            <Button variant="contained" disabled sx={{ borderRadius: 2 }}>
+            <Button
+              variant="contained"
+              disabled
+              sx={{
+                borderRadius: 2,
+                color: "#fff",
+                "&.Mui-disabled": {
+                  color: "#fff",
+                }
+              }}
+            >
               Save
             </Button>
           </Box>
           <Box>
-            <Button variant="contained" disabled sx={{ borderRadius: 2 }}>
+            <Button
+              variant="contained"
+              disabled
+              sx={{
+                borderRadius: 2,
+                color: "#fff",
+                "&.Mui-disabled": {
+                  color: "#fff",
+                }
+              }}
+            >
               Cancel
             </Button>
           </Box>

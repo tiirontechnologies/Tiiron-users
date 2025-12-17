@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { AddCourseContentForm } from "./AddContent";
 import { useLocation, useParams } from "react-router-dom";
 import { useGetUnitsWithQuestionsQuery } from "../../lesson-management/api/chapterApi";
+import { useGetCourseByIdQuery } from "../../course/api/courseApi";
 
 import CourseInfoHeader from "../components/CourseInfoHeader";
 import ContentTypeSelector from "../components/ContentTypeSelector";
@@ -63,6 +64,16 @@ export default function ContentCreateForm() {
   const courseId = params.courseId ? Number(params.courseId) : undefined;
   const unitId = params.unitId ? Number(params.unitId) : undefined;
 
+  // Fetch course data to get course name
+  const {
+    data: courseData,
+    isFetching: isCourseFetching,
+    isError: isCourseError
+  } = useGetCourseByIdQuery(
+    { id: courseId! },
+    { skip: !courseId }
+  );
+
   // ✅ API Call
   const {
     data: questionsData,
@@ -100,7 +111,7 @@ export default function ContentCreateForm() {
 
     // 4. If description is object
     if (item?.description && typeof item.description === "object") {
-      
+
       return (item.description as { title?: string }).title || "";
     }
 
@@ -127,7 +138,7 @@ export default function ContentCreateForm() {
 
   return (
     <Box>
-      <ToolBar>
+      <ToolBar courseName={courseData?.data?.title}>
         <CourseInfoHeader />
       </ToolBar>
 
@@ -196,12 +207,12 @@ export default function ContentCreateForm() {
                       sx={{
                         border:
                           selectedId === c.id
-                            ? "1px solid #6A42AB"
+                            ? "1px solid #4F39F6"
                             : "1px solid #CCCCCC",
                         p: "16px",
                         borderLeft:
                           selectedId === c.id
-                            ? "4px solid #6A42AB"
+                            ? "4px solid #4F39F6"
                             : "1px solid #CCCCCC",
                         borderRadius: "8px",
                         display: "flex",

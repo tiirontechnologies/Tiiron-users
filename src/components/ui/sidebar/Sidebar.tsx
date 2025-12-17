@@ -28,7 +28,7 @@ const SidebarMenu = ({ routes, open }: any) => {
     setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
   };
 
-  const ACTIVE_COLOR = "rgba(106, 66, 171, 1)";
+  const ACTIVE_COLOR = "rgba(79, 57, 246, 1)";
   const INACTIVE_COLOR = "rgba(51, 51, 51, 1)";
 
   const renderIconWithColor = (icon: any, color: string) => {
@@ -76,7 +76,7 @@ const SidebarMenu = ({ routes, open }: any) => {
                   primary={route.label}
                   sx={{
                     color: isRouteActive(route)
-                      ? "rgba(106, 66, 171, 1)"
+                      ? "rgba(79, 57, 246, 1)"
                       : "rgba(28, 28, 28, 1)",
                     fontSize: "16px",
                     fontWeight: "400",

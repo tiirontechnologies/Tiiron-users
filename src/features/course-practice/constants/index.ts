@@ -1,8 +1,8 @@
 export const COLORS = {
-  primary: '#6A42AB',
+  primary: '#4F39F6',
   primaryLight: '#8B5CF6',
-  primaryDark: '#5A2A9B',
-  primaryDarker: '#4C1D95',
+  primaryDark: '#3E2DC4',
+  primaryDarker: '#2D1F8C',
   background: {
     light: '#f8fafc',
     lighter: '#f1f5f9',
@@ -21,8 +21,8 @@ export const COLORS = {
 } as const;
 
 export const GRADIENTS = {
-  primary: 'linear-gradient(135deg, #6A42AB 0%, #8B5CF6 100%)',
-  primaryHover: 'linear-gradient(135deg, #5A2A9B 0%, #4C1D95 100%)',
+  primary: 'linear-gradient(135deg, #4F39F6 0%, #8B5CF6 100%)',
+  primaryHover: 'linear-gradient(135deg, #3E2DC4 0%, #2D1F8C 100%)',
   background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
   card: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
 } as const;
@@ -51,6 +51,6 @@ export const SHADOWS = {
   md: '0 4px 6px rgba(0,0,0,0.1)',
   lg: '0 8px 25px rgba(0,0,0,0.1)',
   xl: '0 4px 20px rgba(0,0,0,0.08)',
-  purple: '0 4px 12px rgba(106, 66, 171, 0.3)',
-  purpleHover: '0 6px 16px rgba(106, 66, 171, 0.4)',
+  purple: '0 4px 12px rgba(79, 57, 246, 0.3)',
+  purpleHover: '0 6px 16px rgba(79, 57, 246, 0.4)',
 } as const;

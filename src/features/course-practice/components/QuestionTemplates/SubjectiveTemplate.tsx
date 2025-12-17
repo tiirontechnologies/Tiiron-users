@@ -62,9 +62,9 @@ const SubjectiveTemplate: React.FC<SubjectiveTemplateProps> = ({
           cursor: practiceMode ? "text" : "default",
           "&:focus": practiceMode
             ? {
-                borderColor: "#6A42AB",
-                boxShadow: "0 0 0 3px rgba(106, 66, 171, 0.1)",
-              }
+              borderColor: "#4F39F6",
+              boxShadow: "0 0 0 3px rgba(79, 57, 246, 0.1)",
+            }
             : {},
           "&:disabled": {
             backgroundColor: "#F9FAFA",

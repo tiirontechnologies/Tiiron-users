@@ -152,7 +152,7 @@ export default function VideoFields({
                   "& fieldset": { borderColor: "#D0D5DD" },
                   "&:hover fieldset": { borderColor: "#98A2B3" },
                   "&.Mui-focused fieldset": {
-                    borderColor: "#6A42AB",
+                    borderColor: "#4F39F6",
                     borderWidth: 2,
                   },
                 },

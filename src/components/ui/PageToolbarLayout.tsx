@@ -37,10 +37,10 @@ const PageToolbarLayout: React.FC<PageToolbarLayoutProps> = ({
     justifyContent: "center",
     transition: "all 0.2s ease",
     "&:hover": {
-      borderColor: "#6A42AB",
-      color: "#6A42AB",
-      boxShadow: "0 6px 16px rgba(106, 66, 171, 0.18)",
-      backgroundColor: "rgba(106, 66, 171, 0.04)",
+      borderColor: "#4F39F6",
+      color: "#4F39F6",
+      boxShadow: "0 6px 16px rgba(79, 57, 246, 0.18)",
+      backgroundColor: "rgba(79, 57, 246, 0.04)",
     },
     "& svg": {
       fontSize: "1.15rem",

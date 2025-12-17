@@ -25,7 +25,9 @@ function CustomTabPanel(props: TabPanelProps) {
 
 export default CustomTabPanel;
 // Styled Tab with conditional styles for active/inactive state
-const StyledTab = styled(Tab)<{ selectedtab: boolean }>(
+const StyledTab = styled(Tab, {
+  shouldForwardProp: (prop) => prop !== 'selectedtab',
+})<{ selectedtab: boolean }>(
   ({ selectedtab, theme }) => ({
     textTransform: "none",
     fontWeight: selectedtab ? "600" : "600",
