@@ -208,6 +208,7 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
 
               return {
                 contentId: q.id,
+                questionTypeId: q.questiontypeId,
                 selectedOptionId,
                 answer: answerText,
                 timeSpent: 0, // TODO: Track time spent
