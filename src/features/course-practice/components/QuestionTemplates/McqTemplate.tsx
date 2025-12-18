@@ -61,8 +61,19 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
   };
 
   // Safety check: ensure content and options exist
-  if (!question.content || !Array.isArray(question.content.options)) {
-    return null;
+  if (!question.content || !Array.isArray(question.content.options) || question.content.options.length === 0) {
+    return (
+      <Box sx={{ mt: 2, p: 2, background: COLORS.background.light, borderRadius: "8px" }}>
+        <Typography variant="body2" sx={{ color: COLORS.text.muted }}>
+          No options available for this question.
+        </Typography>
+        {process.env.NODE_ENV === 'development' && (
+          <Typography variant="caption" sx={{ color: COLORS.text.muted, display: 'block', mt: 1 }}>
+            Debug: content={!!question.content}, options={Array.isArray(question.content?.options) ? question.content.options.length : 'not array'}
+          </Typography>
+        )}
+      </Box>
+    );
   }
 
   // Check if we should show previous practice info

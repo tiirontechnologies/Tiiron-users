@@ -169,8 +169,18 @@ export const transformApiQuestion = (apiQuestion: any): Question => {
     content.html = apiQuestion.description || '';
     content.text = apiQuestion.title || '';
   } else if (contentType === 'video') {
-    // Video content transformation - API doesn't provide video structure
-    content.url = '';
+    // Video content transformation - check for video object or extract from description
+    content.url = apiQuestion.video?.url || apiQuestion.videoUrl || apiQuestion.url || '';
+    
+    // Try to extract YouTube URL from description if not found
+    if (!content.url && apiQuestion.description) {
+      const urlMatch = apiQuestion.description.match(
+        /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/
+      );
+      if (urlMatch) {
+        content.url = apiQuestion.description;
+      }
+    }
   }
 
   return {
