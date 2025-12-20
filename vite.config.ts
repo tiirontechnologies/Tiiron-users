@@ -38,4 +38,7 @@ export default defineConfig({
       "@images": path.resolve(__dirname, "src/assets/images"),
     },
   },
+  optimizeDeps: {
+    include: ["@emotion/styled", "@emotion/react", "@mui/material"],
+  },
 });
