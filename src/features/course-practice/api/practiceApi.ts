@@ -3,7 +3,7 @@ import { baseApi } from "../../../api/api.routes";
 // Practice session data types
 export interface PracticeSessionData {
   questions: Array<{
-    contentId: number;
+    questionId: number;
     questionTypeId?: number;
     selectedOptionId?: number | number[];
     answer?: string;
