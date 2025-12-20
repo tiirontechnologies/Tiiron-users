@@ -15,18 +15,35 @@ const CreateContentLayout = ({
 }: CreateContentLayoutProps) => {
   return (
     <Box sx={{ display: "flex", gap: "24px", width: "100%" }}>
-      {/* Sidebar Panel */}
+      {/* Sidebar Panel - Reduced width for better main content space */}
       <Box
-        sx={{ flex: 0.4, bgcolor: "#F9FAFA", borderRadius: "16px", p: "16px" }}
+        sx={{
+          width: "320px",
+          minWidth: "320px",
+          maxWidth: "320px",
+          bgcolor: "#F9FAFA",
+          borderRadius: "16px",
+          p: "24px",
+          boxShadow: "0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06)",
+        }}
       >
-        <Typography sx={{ mb: "24px", fontSize: "16px", py: "16px" }}>
+        <Typography
+          sx={{
+            mb: "24px",
+            fontSize: "18px",
+            fontWeight: 600,
+            py: "16px",
+            color: "#101828",
+            borderBottom: "1px solid #EAECF0",
+          }}
+        >
           {heading}
         </Typography>
         {sidebarContent}
       </Box>
 
-      {/* Main Panel */}
-      <Box sx={{ flex: 1 }}>{mainContent}</Box>
+      {/* Main Panel - More space for content */}
+      <Box sx={{ flex: 1, minWidth: 0 }}>{mainContent}</Box>
     </Box>
   );
 };

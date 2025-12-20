@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Tabs, Tab, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { COLORS, SHADOWS } from "../../features/course-practice/constants";
 // Tab panel component
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -28,10 +29,14 @@ export default CustomTabPanel;
 const StyledTab = styled(Tab, {
   shouldForwardProp: (prop) => prop !== 'selectedtab',
 })<{ selectedtab: boolean }>(
-  ({ selectedtab, theme }) => ({
+  ({ selectedtab }) => ({
     textTransform: "none",
-    fontWeight: selectedtab ? "600" : "600",
-    color: selectedtab ? theme.palette.text.primary : "#9499A1",
+    fontWeight: selectedtab ? "600" : "500",
+    color: selectedtab ? COLORS.primary : COLORS.text.muted,
+    transition: "all 0.2s ease",
+    "&:hover": {
+      color: COLORS.primary,
+    },
   })
 );
 
@@ -55,13 +60,16 @@ export function CustomTabs({ tabs, panels }: CustomTabsProps) {
           value={value}
           onChange={handleChange}
           sx={{
-            background: "#fff",
+            background: COLORS.background.white,
             borderRadius: "16px",
             width: "fit-content",
             p: "0px 20px",
+            boxShadow: SHADOWS.sm,
+            border: `1px solid ${COLORS.border.light}`,
             "& .MuiTabs-indicator": {
               height: "3px",
               borderRadius: "24px",
+              background: COLORS.primary,
             },
           }}
         >

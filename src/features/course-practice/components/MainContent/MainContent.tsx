@@ -1,18 +1,24 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Box, Snackbar, Alert } from "@mui/material";
 // NOTE: Retaining all original imports for types and hooks
 import { Question } from "../../types";
-import { GRADIENTS } from "../../constants";
+import { GRADIENTS, COLORS } from "../../constants";
 import { usePracticeService } from "../../hooks/usePracticeService";
 import { useParams } from "react-router-dom";
-
+import VideoTemplate from "../QuestionTemplates/VideoTemplate";
+import { CustomTabs } from "../../../../components/ui/CustomTabPanel";
 // NEW COMPONENT IMPORTS
-import PracticeHeader from "../Header/PracticeHeader";
 import QuestionViewer from "./QuestionViewer";
 import PracticeFooter from "./PracticeFooter";
+import McqTemplate from "../QuestionTemplates/McqTemplate";
+import FillUpTemplate from "../QuestionTemplates/FillUpTemplate";
+import SubjectiveTemplate from "../QuestionTemplates/SubjectiveTemplate";
+import BlogTemplate from "../QuestionTemplates/BlogTemplate";
+import { transformApiQuestion } from "../../utils/transformApiResponse";
+
 
 interface MainContentProps {
-  questions: Question[];
+  questions: any;
   practiceData?: {
     isCompleted: boolean;
     score: number;
@@ -43,23 +49,30 @@ interface PracticeState {
   questionStartTimes: Record<string, Date>;
 }
 
+const CustomComponent = ({ questiontypeId, question }: { questiontypeId: number, question: Question }) => {
+  switch (questiontypeId) {
+    case 1: // Multiple Choice
+      return <McqTemplate question={question} />;
+    case 2: // Quiz (also MCQ)
+      return <McqTemplate question={question} />;
+    case 3: // Fill Ups
+      return <FillUpTemplate question={question} />;
+    case 4: // Subjective
+      return <SubjectiveTemplate question={question} />;
+    case 5: // Blog
+      return <BlogTemplate question={question} />;
+    case 6: // Video
+      return <VideoTemplate question={question} />;
+    default:
+      return null;
+  }
+};
+
 const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refetchContent }) => {
-  console.log("Questions in MainContent:", questions);
-  console.log("Practice Data:", practiceData);
   const { courseId } = useParams<{ courseId: string }>();
   const unitId = "current-unit";
-  
-  // Initialize userAnswers with previously selected answers if unit is completed
-  const initializeUserAnswers = useCallback(() => {
-    const initialAnswers: Record<string, string | string[]> = {};
-    questions.forEach((question) => {
-      if (question.previousAnswer) {
-        initialAnswers[question.id] = question.previousAnswer;
-      }
-    });
-    return initialAnswers;
-  }, [questions]);
 
+  console.log("Questions in MainContent:", questions);
   const {
     isAutoSaving,
     hasUnsavedChanges,
@@ -74,498 +87,65 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
     questions,
   });
 
-  const [notification, setNotification] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error" | "info";
-  }>({
-    open: false,
-    message: "",
-    severity: "info",
-  });
+  const { contentTabs, contentPanel } = useMemo(() => {
+    const tabs: string[] = [];
+    const panels: React.ReactNode[] = [];
 
-  const [practiceState, setPracticeState] = useState<PracticeState>({
-    isPracticeMode: false,
-    currentQuestionIndex: 0,
-    userAnswers: {},
-    score: practiceData?.score || 0,
-    totalQuestions: questions.length,
-    completedQuestions: practiceData?.isCompleted ? questions.length : 0,
-    showResults: practiceData?.isCompleted || false,
-    timeStarted: null,
-    timeCompleted: null,
-    practiceData: {
-      questions: [],
-      totalTimeSpent: 0,
-    },
-    questionStartTimes: {},
-  });
-
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  const getTimeSpent = useCallback(() => {
-    if (!practiceState.timeStarted) return 0;
-    const endTime = practiceState.timeCompleted || currentTime;
-    return Math.floor(
-      (endTime.getTime() - practiceState.timeStarted.getTime()) / 1000
-    );
-  }, [practiceState.timeStarted, practiceState.timeCompleted, currentTime]);
-
-  const startPractice = useCallback(async () => {
-    const startTime = new Date();
-
-    try {
-      const backendSessionId = await startSession();
-
-      setPracticeState((prev) => ({
-        ...prev,
-        isPracticeMode: true,
-        currentQuestionIndex: 0,
-        userAnswers: {},
-        score: 0,
-        completedQuestions: 0,
-        showResults: false,
-        timeStarted: startTime,
-        timeCompleted: null,
-        practiceData: {
-          questions: [],
-          totalTimeSpent: 0,
-        },
-        questionStartTimes: {
-          [questions[0]?.id || "0"]: startTime,
-        },
-      }));
-
-      startAutoSave(() => ({
-        currentQuestionIndex: practiceState.currentQuestionIndex,
-        userAnswers: practiceState.userAnswers,
-        timeSpent: getTimeSpent(),
-      }));
-
-      setNotification({
-        open: true,
-        message: `Practice session started!`,
-        severity: "success",
+    if (questions?.[0]?.contents) {
+      questions[0].contents.forEach((content: any) => {
+        console.log("Content:", content);
+        tabs.push(content.contentTypeCon.name);
+        
+        // Create one panel per content that contains all questions for that content
+        panels.push(
+          <Box key={content.id}>
+            {content.question?.map((apiQuestion: any, qIndex: number) => {
+              // Transform API question to Question format
+              const transformedQuestion = transformApiQuestion(apiQuestion);
+              return (
+                <CustomComponent
+                  key={`${content.id}-${apiQuestion.id}-${qIndex}`}
+                  questiontypeId={apiQuestion.questiontypeId}
+                  question={transformedQuestion}
+                />
+              );
+            })}
+          </Box>
+        );
       });
-    } catch (error) {
-      setNotification({
-        open: true,
-        message: "Failed to start practice session. Please try again.",
-        severity: "error",
-      });
-      console.error("Failed to start practice:", error);
-    }
-  }, [
-    questions,
-    startSession,
-    startAutoSave,
-    practiceState.currentQuestionIndex,
-    practiceState.userAnswers,
-    getTimeSpent,
-  ]);
-
-  const calculateScore = useCallback(() => {
-    let correctAnswers = 0;
-    questions.forEach((question) => {
-      const userAnswer = practiceState.userAnswers[question.id];
-
-      // Handle MCQ and Single Choice questions
-      if (
-        (question.contentType === "mcq" || question.contentType === "single_choice") &&
-        question.content?.options
-      ) {
-        if (userAnswer) {
-          // Get indices of correct options
-          const correctOptionIndices = question.content.options
-            .map((opt, idx) => (opt.isCorrect ? idx.toString() : null))
-            .filter((idx): idx is string => idx !== null)
-            .sort();
-
-          // Get user selected option indices
-          const userSelectedIndices = Array.isArray(userAnswer)
-            ? userAnswer.map(String).sort()
-            : [String(userAnswer)].sort();
-
-          // Compare if all correct options are selected and no incorrect ones
-          if (
-            correctOptionIndices.length === userSelectedIndices.length &&
-            JSON.stringify(correctOptionIndices) === JSON.stringify(userSelectedIndices)
-          ) {
-            correctAnswers++;
-          }
-        }
-      }
-      // Handle Fill Up and Subjective questions (text-based answers)
-      else if (
-        (question.contentType === "fill_up" || question.contentType === "subjective") &&
-        question.content?.correctAnswer
-      ) {
-        if (userAnswer && typeof userAnswer === "string") {
-          const userAnswerNormalized = userAnswer.toLowerCase().trim();
-          const correctAnswerNormalized =
-            typeof question.content.correctAnswer === "string"
-              ? question.content.correctAnswer.toLowerCase().trim()
-              : "";
-
-          if (userAnswerNormalized === correctAnswerNormalized) {
-            correctAnswers++;
-          }
-        }
-      }
-    });
-    return correctAnswers;
-  }, [questions, practiceState.userAnswers]);
-
-  const endPractice = useCallback(async () => {
-    console.log("Ending practice session...");
-    const finalScore = calculateScore();
-    const endTime = new Date();
-
-    console.log("🐛 Debug Info:");
-    console.log("Time Started:", practiceState.timeStarted);
-    console.log("Time Completed:", endTime);
-    console.log("User Answers:", practiceState.userAnswers);
-    console.log("Question Start Times:", practiceState.questionStartTimes);
-
-    const finalPracticeData = {
-      questions: questions.map((question, index) => {
-        const questionStartTime = practiceState.questionStartTimes[question.id];
-
-        let timeSpent = 0;
-        if (questionStartTime) {
-          const nextQuestionId = questions[index + 1]?.id;
-          const nextQuestionStartTime = nextQuestionId
-            ? practiceState.questionStartTimes[nextQuestionId]
-            : null;
-
-          const effectiveEndTime = nextQuestionStartTime || endTime;
-          timeSpent = Math.floor(
-            (effectiveEndTime.getTime() - questionStartTime.getTime()) / 1000
-          );
-        }
-
-        const userAnswer = practiceState.userAnswers[question.id];
-
-        console.log(`Question ${index + 1} Debug:`, {
-          id: question.id,
-          userAnswer,
-          userAnswerType: typeof userAnswer,
-          contentType: question.contentType,
-          options: question.content?.options,
-          timeSpent,
-        });
-
-        const questionData: {
-          contentId: number;
-          selectedOptionId?: number | number[];
-          answer?: string;
-          timeSpent: number;
-        } = {
-          contentId: parseInt(question.id) || index + 1,
-          timeSpent,
-        };
-
-        if (
-          question.contentType === "mcq" ||
-          question.contentType === "single_choice"
-        ) {
-          if (Array.isArray(userAnswer)) {
-            questionData.selectedOptionId = userAnswer
-              .map((id) => {
-                const numId = typeof id === "number" ? id : parseInt(id);
-                return isNaN(numId) ? null : numId;
-              })
-              .filter((id): id is number => id !== null);
-          } else if (userAnswer !== undefined) {
-            const numId =
-              typeof userAnswer === "number"
-                ? userAnswer
-                : parseInt(String(userAnswer));
-
-            if (!isNaN(numId)) {
-              questionData.selectedOptionId = numId;
-            }
-          }
-        } else {
-          questionData.answer =
-            typeof userAnswer === "string" ? userAnswer : "";
-        }
-
-        console.log(`Question ${index + 1} Final Data:`, questionData);
-
-        return questionData;
-      }),
-      totalTimeSpent: practiceState.timeStarted
-        ? Math.floor(
-          (endTime.getTime() - practiceState.timeStarted.getTime()) / 1000
-        )
-        : 0,
-    };
-
-    console.log(
-      "📊 Final Practice Data:",
-      JSON.stringify(finalPracticeData, null, 2)
-    );
-
-    try {
-      await submitSession(finalPracticeData, finalScore);
-
-      // Refetch content to get updated practice data (isCompleted, score, etc.)
-      if (refetchContent) {
-        refetchContent();
-      }
-
-      setPracticeState((prev) => ({
-        ...prev,
-        isPracticeMode: false,
-        showResults: true,
-        score: finalScore,
-        timeCompleted: endTime,
-        practiceData: finalPracticeData,
-      }));
-
-      stopAutoSave();
-
-      setNotification({
-        open: true,
-        message: `Practice completed! Score: ${finalScore}/${questions.length}`,
-        severity: "success",
-      });
-    } catch (error) {
-      setNotification({
-        open: true,
-        message:
-          "Failed to submit practice session. Your progress may not be saved.",
-        severity: "error",
-      });
-      console.error("Failed to submit practice:", error);
-
-      setPracticeState((prev) => ({
-        ...prev,
-        isPracticeMode: false,
-        showResults: true,
-        score: finalScore,
-        timeCompleted: endTime,
-        practiceData: finalPracticeData,
-      }));
-    }
-  }, [
-    calculateScore,
-    questions,
-    practiceState.questionStartTimes,
-    practiceState.userAnswers,
-    practiceState.timeStarted,
-    submitSession,
-    stopAutoSave,
-    refetchContent,
-  ]);
-
-  const resetPractice = useCallback(() => {
-    setPracticeState({
-      isPracticeMode: false,
-      currentQuestionIndex: 0,
-      userAnswers: {},
-      score: 0,
-      totalQuestions: questions.length,
-      completedQuestions: 0,
-      showResults: false,
-      timeStarted: null,
-      timeCompleted: null,
-      practiceData: {
-        questions: [],
-        totalTimeSpent: 0,
-      },
-      questionStartTimes: {},
-    });
-  }, [questions.length]);
-
-  const goToNextQuestion = useCallback(() => {
-    if (practiceState.currentQuestionIndex < questions.length - 1) {
-      const nextQuestionId =
-        questions[practiceState.currentQuestionIndex + 1]?.id;
-      const now = new Date();
-
-      setPracticeState((prev) => ({
-        ...prev,
-        currentQuestionIndex: prev.currentQuestionIndex + 1,
-        questionStartTimes: {
-          ...prev.questionStartTimes,
-          [nextQuestionId]: now,
-        },
-      }));
-    }
-  }, [practiceState.currentQuestionIndex, questions]);
-
-  const goToPreviousQuestion = useCallback(() => {
-    if (practiceState.currentQuestionIndex > 0) {
-      const prevQuestionId =
-        questions[practiceState.currentQuestionIndex - 1]?.id;
-      const now = new Date();
-
-      setPracticeState((prev) => ({
-        ...prev,
-        currentQuestionIndex: prev.currentQuestionIndex - 1,
-        questionStartTimes: {
-          ...prev.questionStartTimes,
-          [prevQuestionId]: now,
-        },
-      }));
-    }
-  }, [practiceState.currentQuestionIndex, questions]);
-
-  const goToQuestion = useCallback(
-    (index: number) => {
-      if (index >= 0 && index < questions.length) {
-        const targetQuestionId = questions[index]?.id;
-        const now = new Date();
-
-        setPracticeState((prev) => ({
-          ...prev,
-          currentQuestionIndex: index,
-          questionStartTimes: {
-            ...prev.questionStartTimes,
-            [targetQuestionId]: now,
-          },
-        }));
-      }
-    },
-    [questions]
-  );
-
-  const updateAnswer = useCallback(
-    (questionId: string, answer: string | string[]) => {
-      setPracticeState((prev) => ({
-        ...prev,
-        userAnswers: {
-          ...prev.userAnswers,
-          [questionId]: answer,
-        },
-      }));
-
-      markAsChanged();
-    },
-    [markAsChanged]
-  );
-
-  const getProgressPercentage = useCallback(() => {
-    return questions.length > 0
-      ? (practiceState.completedQuestions / questions.length) * 100
-      : 0;
-  }, [practiceState.completedQuestions, questions.length]);
-
-  // NOTE: This function is not used in the final JSX, but kept for logic integrity
-  const getCurrentQuestionTimeSpent = useCallback(() => {
-    const currentQuestionId = questions[practiceState.currentQuestionIndex]?.id;
-    const questionStartTime =
-      practiceState.questionStartTimes[currentQuestionId];
-    if (!questionStartTime) return 0;
-    return Math.floor(
-      (currentTime.getTime() - questionStartTime.getTime()) / 1000
-    );
-  }, [
-    practiceState.currentQuestionIndex,
-    practiceState.questionStartTimes,
-    questions,
-    currentTime,
-  ]);
-
-  const getPracticeDataForSubmission = useCallback(() => {
-    return {
-      questions: questions.map((question, index) => {
-        const questionStartTime = practiceState.questionStartTimes[question.id];
-        const timeSpent = questionStartTime
-          ? Math.floor(
-            (currentTime.getTime() - questionStartTime.getTime()) / 1000
-          )
-          : 0;
-
-        const userAnswer = practiceState.userAnswers[question.id];
-        const questionData: {
-          contentId: number;
-          selectedOptionId?: number | number[];
-          answer?: string;
-          timeSpent: number;
-        } = {
-          contentId: parseInt(question.id) || index + 1,
-          timeSpent,
-        };
-
-        if (
-          question.contentType === "mcq" ||
-          question.contentType === "single_choice"
-        ) {
-          if (question.content?.allowMultipleSelection) {
-            questionData.selectedOptionId = Array.isArray(userAnswer)
-              ? userAnswer.map((id) => parseInt(id)).filter((id) => !isNaN(id))
-              : undefined;
-          } else {
-            questionData.selectedOptionId =
-              userAnswer && typeof userAnswer === "string"
-                ? parseInt(userAnswer)
-                : undefined;
-          }
-        } else {
-          questionData.answer =
-            typeof userAnswer === "string" ? userAnswer : "";
-        }
-
-        return questionData;
-      }),
-      totalTimeSpent: practiceState.timeStarted
-        ? Math.floor(
-          (currentTime.getTime() - practiceState.timeStarted.getTime()) / 1000
-        )
-        : 0,
-    };
-  }, [
-    questions,
-    practiceState.questionStartTimes,
-    practiceState.userAnswers,
-    practiceState.timeStarted,
-    currentTime,
-  ]);
-  // Initialize userAnswers when questions change
-  useEffect(() => {
-    const initialAnswers = initializeUserAnswers();
-    setPracticeState((prev) => ({
-      ...prev,
-      userAnswers: initialAnswers,
-      completedQuestions: practiceData?.isCompleted ? questions.length : Object.keys(initialAnswers).length,
-      showResults: practiceData?.isCompleted || prev.showResults,
-      score: practiceData?.score || prev.score,
-    }));
-  }, [questions, practiceData, initializeUserAnswers]);
-
-  useEffect(() => {
-    const answeredQuestions = Object.keys(practiceState.userAnswers).length;
-    setPracticeState((prev) => ({
-      ...prev,
-      completedQuestions: practiceData?.isCompleted ? questions.length : answeredQuestions,
-    }));
-  }, [practiceState.userAnswers, practiceData, questions.length]);
-
-  useEffect(() => {
-    setPracticeState((prev) => ({
-      ...prev,
-      totalQuestions: questions.length,
-    }));
-  }, [questions.length]);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (practiceState.isPracticeMode) {
-      interval = setInterval(() => {
-        setCurrentTime(new Date());
-      }, 1000); // Update every second
     }
 
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [practiceState.isPracticeMode]);
+    console.log("Content Tabs:", tabs);
+    console.log("Content Panel:", panels);
+    
+    return { contentTabs: tabs, contentPanel: panels };
+  }, [questions]);
+
+  // useEffect(() => {
+  //   const initialAnswers = initializeUserAnswers();
+  //   setPracticeState((prev) => ({
+  //     ...prev,
+  //     userAnswers: initialAnswers,
+  //     completedQuestions: practiceData?.isCompleted ? questions.length : Object.keys(initialAnswers).length,
+  //     showResults: practiceData?.isCompleted || prev.showResults,
+  //     score: practiceData?.score || prev.score,
+  //   }));
+  // }, [questions, practiceData, initializeUserAnswers]);
+
+  // useEffect(() => {
+  //   const answeredQuestions = Object.keys(practiceState.userAnswers).length;
+  //   setPracticeState((prev) => ({
+  //     ...prev,
+  //     completedQuestions: practiceData?.isCompleted ? questions.length : answeredQuestions,
+  //   }));
+  // }, [practiceState.userAnswers, practiceData, questions.length]);
+
+  // useEffect(() => {
+  //   setPracticeState((prev) => ({
+  //     ...prev,
+  //     totalQuestions: questions.length,
+  //   }));
+  // }, [questions.length]);
   return (
     <Box
       sx={{
@@ -575,43 +155,34 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
         paddingBottom: "120px",
         height: "calc(100vh - 64px)",
         overflowY: "auto",
-        background: GRADIENTS.background,
+        background: COLORS.background.light,
         minHeight: "100vh",
       }}
     >
       {/* 1. Header Section */}
-      <PracticeHeader
-        practiceState={practiceState}
-        questionsLength={questions.length}
-        timeSpent={getTimeSpent()}
-        isAutoSaving={isAutoSaving}
-        hasUnsavedChanges={hasUnsavedChanges}
-        progressPercentage={getProgressPercentage()}
-        startPractice={startPractice}
-        endPractice={endPractice}
-        resetPractice={resetPractice}
-      />
+      {/* <VideoTemplate question={{
+        id: "1",
+        contentType: "video",
+        content: {
+          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        },
+      }
+      } /> */}
 
-      {/* 2. Question Viewer Section */}
-      <QuestionViewer
-        questions={questions}
-        practiceState={practiceState}
-        updateAnswer={updateAnswer}
-        goToNextQuestion={goToNextQuestion}
-        goToPreviousQuestion={goToPreviousQuestion}
-        goToQuestion={goToQuestion}
+
+      <CustomTabs tabs={contentTabs} panels={contentPanel}
       />
 
       {/* 3. Bottom Footer Section */}
-      <PracticeFooter
+      {/* <PracticeFooter
         practiceState={practiceState}
         questionsLength={questions.length}
         startPractice={startPractice}
         endPractice={endPractice}
-      />
+      /> */}
 
       {/* Snackbar for Notifications (kept here as it relies on notification state) */}
-      <Snackbar
+      {/* <Snackbar
         open={notification.open}
         autoHideDuration={6000}
         onClose={() => setNotification((prev) => ({ ...prev, open: false }))}
@@ -624,7 +195,7 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
         >
           {notification.message}
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </Box>
   );
 };

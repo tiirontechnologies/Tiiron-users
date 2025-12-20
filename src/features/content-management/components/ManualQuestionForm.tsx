@@ -37,7 +37,7 @@ interface ICreateCourseContent {
   blogTags?: string[];
   videoUrl?: string;
   videoFileName?: string;
-  duration?: number; 
+  duration?: number;
 }
 
 interface IManualQuestionFormProps {
@@ -82,7 +82,7 @@ export function ManualQuestionForm({
       blogTags: [],
       videoUrl: "",
       videoFileName: "",
-      duration: 0, 
+      duration: 0,
     },
     mode: "onChange",
   });
@@ -141,95 +141,287 @@ export function ManualQuestionForm({
   // ✅ JSX
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+          maxWidth: "100%",
+        }}
+      >
+        {/* Basic Information Section */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            p: 3,
+            backgroundColor: "#FAFBFC",
+            borderRadius: "12px",
+            border: "1px solid #EAECF0",
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: "16px",
+              fontWeight: 600,
+              color: "#101828",
+              mb: 1,
+            }}
+          >
+            Basic Information
+          </Typography>
 
-      {/* Title */}
-      <Typography mb={1}>Title:</Typography>
-      <Controller
-        name="text"
-        control={control}
-        rules={{ required: "Title is required" }}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            fullWidth
-            label="Title"
-            error={!!errors.text}
-            helperText={errors.text?.message}
-            sx={{ mb: 3 }}
-          />
-        )}
-      />
-
-      {/* Description */}
-      <Typography mb={1}>Description:</Typography>
-      <Controller
-        name="description"
-        control={control}
-        render={({ field }) => (
-          <Box sx={{ mb: 3 }}>
-            <RichTextEditor
-              value={field.value}
-              onChange={(value) => {
-                clearErrors("description");
-                field.onChange(value);
+          {/* Title */}
+          <Box>
+            <Typography
+              sx={{
+                fontSize: "14px",
+                fontWeight: 500,
+                color: "#344054",
+                mb: 1,
               }}
-              placeholder="Add description..."
+            >
+              Question Title <span style={{ color: "#D92D20" }}>*</span>
+            </Typography>
+            <Controller
+              name="text"
+              control={control}
+              rules={{ required: "Question title is required" }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  placeholder="Enter the question title"
+                  error={!!errors.text}
+                  helperText={errors.text?.message}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "#FFFFFF",
+                      borderRadius: "8px",
+                      "& fieldset": {
+                        borderColor: errors.text ? "#D92D20" : "#D0D5DD",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: errors.text ? "#D92D20" : "#98A2B3",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: errors.text ? "#D92D20" : "#4F39F6",
+                        borderWidth: "2px",
+                      },
+                    },
+                    "& .MuiInputBase-input": {
+                      fontSize: "14px",
+                      padding: "10px 14px",
+                    },
+                  }}
+                />
+              )}
             />
           </Box>
-        )}
-      />
 
-      {/* Score */}
-      <Controller
-        name="score"
-        control={control}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            type="number"
-            label="Score"
-            fullWidth
-            sx={{ mb: 3 }}
-          />
-        )}
-      />
-      {/* Dynamic Fields */}
-      {(() => {
-        const FieldsComponent = getContentTypeComponent(effectiveType);
-        if (!FieldsComponent) return null;
+          {/* Description */}
+          <Box>
+            <Typography
+              sx={{
+                fontSize: "14px",
+                fontWeight: 500,
+                color: "#344054",
+                mb: 1,
+              }}
+            >
+              Description
+            </Typography>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <Box
+                  sx={{
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: "8px",
+                    border: "1px solid #D0D5DD",
+                    "&:hover": {
+                      borderColor: "#98A2B3",
+                    },
+                    "&:focus-within": {
+                      borderColor: "#4F39F6",
+                      borderWidth: "2px",
+                    },
+                  }}
+                >
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={(value) => {
+                      clearErrors("description");
+                      field.onChange(value);
+                    }}
+                    placeholder="Add a detailed description or instructions for this question..."
+                  />
+                </Box>
+              )}
+            />
+          </Box>
 
-        return (
-          <FieldsComponent
-            control={control}
-            errors={errors}
-            clearErrors={clearErrors}
-            watch={watch}
-            fields={fields}
-            append={append}
-            remove={remove}
-            setValue={setValue}
-          />
-        );
-      })()}
+          {/* Score */}
+          <Box>
+            <Typography
+              sx={{
+                fontSize: "14px",
+                fontWeight: 500,
+                color: "#344054",
+                mb: 1,
+              }}
+            >
+              Points/Score <span style={{ color: "#D92D20" }}>*</span>
+            </Typography>
+            <Controller
+              name="score"
+              control={control}
+              rules={{
+                required: "Score is required",
+                min: { value: 1, message: "Score must be at least 1" },
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="number"
+                  placeholder="Enter points for this question"
+                  error={!!errors.score}
+                  inputProps={{ min: 1 }}
+                  sx={{
+                    maxWidth: "200px",
+                    "& .MuiOutlinedInput-root": {
+                      backgroundColor: "#FFFFFF",
+                      borderRadius: "8px",
+                      "& fieldset": {
+                        borderColor: errors.score ? "#D92D20" : "#D0D5DD",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: errors.score ? "#D92D20" : "#98A2B3",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: errors.score ? "#D92D20" : "#4F39F6",
+                        borderWidth: "2px",
+                      },
+                    },
+                    "& .MuiInputBase-input": {
+                      fontSize: "14px",
+                      padding: "10px 14px",
+                    },
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === "" ? "" : Number(value));
+                  }}
+                />
+              )}
+            />
+          </Box>
+        </Box>
 
-      {/* Action Buttons */}
-      <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
-        <Button onClick={onClose} variant="outlined" disabled={isLoading}>
-          Cancel
-        </Button>
+        {/* Dynamic Fields Section */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            p: 3,
+            backgroundColor: "#FAFBFC",
+            borderRadius: "12px",
+            border: "1px solid #EAECF0",
+          }}
+        >
+          {(() => {
+            const FieldsComponent = getContentTypeComponent(effectiveType);
+            if (!FieldsComponent) return null;
 
-        <Button type="submit" variant="contained" disabled={isLoading}>
-          {isLoading ? (
-            <>
-              <CircularProgress size={20} sx={{ mr: 1 }} />
-              Saving...
-            </>
-          ) : (
-            "Save Content"
-          )}
-        </Button>
+            return (
+              <FieldsComponent
+                control={control}
+                errors={errors}
+                clearErrors={clearErrors}
+                watch={watch}
+                fields={fields}
+                append={append}
+                remove={remove}
+                setValue={setValue}
+              />
+            );
+          })()}
+        </Box>
+
+        {/* Action Buttons */}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            justifyContent: "flex-end",
+            pt: 2,
+            borderTop: "1px solid #EAECF0",
+          }}
+        >
+          <Button
+            onClick={onClose}
+            variant="outlined"
+            disabled={isLoading}
+            sx={{
+              minWidth: "120px",
+              height: "44px",
+              borderRadius: "8px",
+              borderColor: "#D0D5DD",
+              color: "#344054",
+              fontWeight: 500,
+              fontSize: "14px",
+              textTransform: "none",
+              "&:hover": {
+                borderColor: "#98A2B3",
+                backgroundColor: "#F9FAFB",
+              },
+              "&:disabled": {
+                borderColor: "#D0D5DD",
+                color: "#98A2B3",
+              },
+            }}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isLoading}
+            sx={{
+              minWidth: "140px",
+              height: "44px",
+              borderRadius: "8px",
+              backgroundColor: "#4F39F6",
+              fontWeight: 500,
+              fontSize: "14px",
+              textTransform: "none",
+              boxShadow: "0px 1px 2px rgba(16, 24, 40, 0.05)",
+              "&:hover": {
+                backgroundColor: "#4330D9",
+                boxShadow: "0px 4px 8px rgba(79, 57, 246, 0.2)",
+              },
+              "&:disabled": {
+                backgroundColor: "#D0D5DD",
+                color: "#98A2B3",
+              },
+            }}
+          >
+            {isLoading ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <CircularProgress size={18} sx={{ color: "#FFFFFF" }} />
+                <span>Saving...</span>
+              </Box>
+            ) : (
+              "Save Question"
+            )}
+          </Button>
+        </Box>
       </Box>
-
     </form>
   );
 }

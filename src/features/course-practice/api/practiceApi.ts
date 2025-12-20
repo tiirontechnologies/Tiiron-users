@@ -4,6 +4,7 @@ import { baseApi } from "../../../api/api.routes";
 export interface PracticeSessionData {
   questions: Array<{
     contentId: number;
+    questionTypeId?: number;
     selectedOptionId?: number | number[];
     answer?: string;
     timeSpent: number;

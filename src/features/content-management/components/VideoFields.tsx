@@ -2,14 +2,7 @@ import UploadBox from "@components/ui/uploadbox/UploadBox";
 import { Box, Typography, TextField } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/PlayCircleOutline";
 import { Controller } from "react-hook-form";
-
-type Props = {
-  control: any;
-  errors: any;
-  clearErrors: (name?: any) => void;
-  watch: (name?: any) => any;
-  setValue: (name: string, value: any, options?: any) => void;
-};
+import { ContentFieldsProps } from "./ContentFields.types";
 
 function getYouTubeEmbed(url: string): string | null {
   try {
@@ -34,7 +27,7 @@ export default function VideoFields({
   clearErrors,
   watch,
   setValue,
-}: Props) {
+}: ContentFieldsProps) {
   const videoUrl: string = watch("videoUrl");
   const videoFileName: string = watch("videoFileName");
 
@@ -92,69 +85,125 @@ export default function VideoFields({
         width: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: 3,
       }}
     >
-      {/* ✅ Duration Field (Number Type) */}
-      <Controller
-        name="duration"
-        control={control}
-        rules={{
-          required: "Duration is required for video",
-          min: { value: 1, message: "Duration must be greater than 0" },
-        }}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            type="number"
-            label="Video Duration (seconds)"
-            fullWidth
-            error={!!errors.duration}
-            helperText={errors.duration?.message}
-            sx={{ mb: 3 }}
-            inputProps={{ min: 1 }}
+      {/* Video Duration Section */}
+      <Box>
+        <Typography
+          sx={{
+            fontSize: "14px",
+            fontWeight: 500,
+            color: "#344054",
+            mb: 1,
+          }}
+        >
+          Video Duration (seconds) <span style={{ color: "#D92D20" }}>*</span>
+        </Typography>
+        <Controller
+          name="duration"
+          control={control}
+          rules={{
+            required: "Duration is required for video",
+            min: { value: 1, message: "Duration must be greater than 0" },
+          }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              type="number"
+              placeholder="Enter video duration in seconds"
+              fullWidth
+              error={!!errors.duration}
+              inputProps={{ min: 1 }}
+              sx={{
+                maxWidth: "300px",
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "8px",
+                  "& fieldset": {
+                    borderColor: errors.duration ? "#D92D20" : "#D0D5DD",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: errors.duration ? "#D92D20" : "#98A2B3",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: errors.duration ? "#D92D20" : "#4F39F6",
+                    borderWidth: "2px",
+                  },
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "14px",
+                  padding: "10px 14px",
+                },
+              }}
+              onChange={(e) => {
+                const value = e.target.value;
+                field.onChange(value === "" ? "" : Number(value));
+              }}
+            />
+          )}
+        />
+      </Box>
 
-            // ✅ Force number type in form state
-            onChange={(e) => {
-              const value = e.target.value;
-              field.onChange(value === "" ? "" : Number(value));
+      {/* Video Link Section */}
+      <Box>
+        <Box sx={{ mb: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: "16px",
+              fontWeight: 600,
+              color: "#101828",
+              mb: 0.5,
             }}
-          />
-        )}
-      />
+          >
+            Video Source
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "14px",
+              color: "#667085",
+            }}
+          >
+            Provide a video URL or upload a video file. Supported formats: YouTube, Vimeo, or direct .mp4 links.
+          </Typography>
+        </Box>
 
-      <Typography mb={1}>Video link:</Typography>
-
-      <Controller
-        name="videoUrl"
-        control={control}
-        rules={{
-          validate: (value: string) => {
-            const hasLink = !!(value && value.trim());
-            const hasFile = !!(videoFileName && String(videoFileName).trim());
-            return hasLink || hasFile || "Provide a link or upload a file";
-          },
-        }}
-        render={({ field }) => (
-          <Box sx={{ mb: 0 }}>
+        <Controller
+          name="videoUrl"
+          control={control}
+          rules={{
+            validate: (value: string) => {
+              const hasLink = !!(value && value.trim());
+              const hasFile = !!(videoFileName && String(videoFileName).trim());
+              return hasLink || hasFile || "Provide a link or upload a file";
+            },
+          }}
+          render={({ field }) => (
             <TextField
               {...field}
               fullWidth
-              placeholder="Paste YouTube/Vimeo or direct .mp4 link"
+              placeholder="Paste YouTube, Vimeo, or direct .mp4 video link"
               variant="outlined"
               error={!!errors.videoUrl}
-              helperText={errors.videoUrl?.message as string}
               sx={{
-                backgroundColor: "#FAFAFB",
-                borderRadius: 1.5,
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: 1.5,
-                  "& fieldset": { borderColor: "#D0D5DD" },
-                  "&:hover fieldset": { borderColor: "#98A2B3" },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#4F39F6",
-                    borderWidth: 2,
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "8px",
+                  "& fieldset": {
+                    borderColor: errors.videoUrl ? "#D92D20" : "#D0D5DD",
                   },
+                  "&:hover fieldset": {
+                    borderColor: errors.videoUrl ? "#D92D20" : "#98A2B3",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: errors.videoUrl ? "#D92D20" : "#4F39F6",
+                    borderWidth: "2px",
+                  },
+                },
+                "& .MuiInputBase-input": {
+                  fontSize: "14px",
+                  padding: "10px 14px",
                 },
               }}
               onChange={(e) => {
@@ -162,40 +211,124 @@ export default function VideoFields({
                 field.onChange(e.target.value);
               }}
             />
+          )}
+        />
+
+        {/* Video Preview */}
+        {renderPreview() && (
+          <Box sx={{ mt: 2 }}>
+            <Typography
+              sx={{
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "#667085",
+                mb: 1,
+              }}
+            >
+              Preview
+            </Typography>
+            {renderPreview()}
           </Box>
         )}
-      />
-
-      {/* ✅ Video Preview */}
-      {renderPreview()}
-
-      <Typography mb={1}>
-        Upload video (optional if link provided):
-      </Typography>
-
-      <Box width={"100%"}>
-        <UploadBox
-          icon={<CloudUploadIcon sx={{ fontSize: 28, color: "#7e22ce" }} />}
-          description={" (Max. File size: 25 MB)"}
-          coloredTitle={"Click to Upload "}
-          title={"or drag and drop"}
-          onFilesDropped={handleFiles}
-        />
       </Box>
 
-      {/* ✅ Selected File Name */}
-      {videoFileName && (
-        <Typography sx={{ mt: 1, color: "#667085" }}>
-          Selected: {videoFileName}
-        </Typography>
-      )}
+      {/* Video Upload Section */}
+      <Box>
+        <Box sx={{ mb: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: "16px",
+              fontWeight: 600,
+              color: "#101828",
+              mb: 0.5,
+            }}
+          >
+            Upload Video File
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "14px",
+              color: "#667085",
+            }}
+          >
+            Alternatively, upload a video file directly. Maximum file size: 25 MB.
+          </Typography>
+        </Box>
 
-      {/* ✅ Error when neither link nor file */}
-      {!videoUrl && !videoFileName && (
-        <Typography color="error" sx={{ mt: 1 }}>
-          Provide a link or upload a file
-        </Typography>
-      )}
+        <Box
+          sx={{
+            width: "100%",
+            border: "1px dashed #D0D5DD",
+            borderRadius: "12px",
+            p: 2,
+            backgroundColor: "#FAFBFC",
+            "&:hover": {
+              borderColor: "#4F39F6",
+              backgroundColor: "#F9FAFB",
+            },
+          }}
+        >
+          <UploadBox
+            icon={<CloudUploadIcon sx={{ fontSize: 28, color: "#4F39F6" }} />}
+            description={" (Max. File size: 25 MB)"}
+            coloredTitle={"Click to Upload "}
+            title={"or drag and drop"}
+            onFilesDropped={handleFiles}
+          />
+        </Box>
+
+        {/* Selected File Name */}
+        {videoFileName && (
+          <Box
+            sx={{
+              mt: 2,
+              p: 2,
+              backgroundColor: "#F0F9FF",
+              borderRadius: "8px",
+              border: "1px solid #B2DDFF",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "13px",
+                fontWeight: 500,
+                color: "#344054",
+                mb: 0.5,
+              }}
+            >
+              Selected File
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "14px",
+                color: "#4F39F6",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              ✓ {videoFileName}
+            </Typography>
+          </Box>
+        )}
+
+        {/* Error when neither link nor file */}
+        {!videoUrl && !videoFileName && errors.videoUrl && (
+          <Typography
+            sx={{
+              mt: 1,
+              fontSize: "13px",
+              color: "#D92D20",
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+            }}
+          >
+            ⚠️ {errors.videoUrl.message as string}
+          </Typography>
+        )}
+      </Box>
     </Box>
   );
 }

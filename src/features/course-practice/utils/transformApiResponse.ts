@@ -1,83 +1,86 @@
 import { Question, QuestionType } from '../types';
 
-// API Response Types
-interface ApiContentItem {
-  id: number;
-  unitId: number;
-  queTypeId: number;
-  score: number | null;
-  contentTypeId: number;
-  description: {
-    html: string;
-    title: string;
-  };
-  mcq?: {
-    id: number;
-    contentId: number;
-    options: Array<{
-      id: number;
-      mcqId?: number;
-      text: string;
-      isCorrect?: boolean;
-    }>;
-  };
-  video?: any;
-  blog?: any;
-  subjective?: any;
-  fillUp?: any;
-  contentTypeCon: {
-    id: number;
-    name: string;
-    icon: string;
-    order: number;
-  };
-  questionTypeCon: {
-    id: number;
-    name: string;
-    order: number;
-  };
-  practices?: Array<{
-    selectedOptionId?: number;
-    selectedOption?: {
-      id: number;
-      mcqId: number;
-      text: string;
-      isCorrect: boolean;
-    };
-    score: number;
-    userAnswer: string | null;
-    isCorrect: boolean;
-  }>;
-}
+// // API Response Types
+// interface ApiContentItem {
+//   id: number;
+//   unitId: number;
+//   queTypeId: number;
+//   score: number | null;
+//   contentTypeId: number;
+//   description: {
+//     html: string;
+//     title: string;
+//   };
+//   mcq?: {
+//     id: number;
+//     contentId: number;
+//     options: Array<{
+//       id: number;
+//       mcqId?: number;
+//       text: string;
+//       isCorrect?: boolean;
+//     }>;
+//   };
+//   video?: any;
+//   blog?: any;
+//   subjective?: any;
+//   fillUp?: any;
+//   contentTypeCon: {
+//     id: number;
+//     name: string;
+//     icon: string;
+//     order: number;
+//   };
+//   questionTypeCon: {
+//     id: number;
+//     name: string;
+//     order: number;
+//   };
+//   practices?: Array<{
+//     selectedOptionId?: number;
+//     selectedOption?: {
+//       id: number;
+//       mcqId: number;
+//       text: string;
+//       isCorrect: boolean;
+//     };
+//     score: number;
+//     userAnswer: string | null;
+//     isCorrect: boolean;
+//   }>;
+// }
 
-interface ApiResponse {
-  success: boolean;
-  message: string;
-  data: {
-    practice: {
-      isCompleted: boolean;
-      score: number;
-    };
-    unit: {
-      unit: {
-        id: number;
-        title: string;
-        content: string;
-        chapterId: number;
-        createdAt: string;
-        updatedAt: string;
-        chapter: {
-          id: number;
-          title: string;
-          courseId: number;
-          createdAt: string;
-          updatedAt: string;
-        };
-      };
-      content: ApiContentItem[];
-    };
-  };
-}
+// interface Question{
+//   id: number;
+//   text: string;
+//   questionTypeId: QuestionType;
+//   titile: string;
+//   description: string;
+// }
+
+// interface ApiResponse {
+//   success: boolean;
+//   message: string;
+//   data: {
+//     practice: {
+//       isCompleted: boolean;
+//       score: number;
+//     };
+//     unit: {
+//       id: number;
+//       title: string;
+//       chapters: {
+//         id: number;
+//         content: {
+//           contentTypeId: number;
+//           name: string;
+//           icon: string;
+//           questions: Question[];
+//         };
+//       };
+//     };
+//   };
+// }
 
 /**
  * Maps question type name from API to QuestionType
@@ -108,119 +111,103 @@ const mapQuestionType = (typeName: string): QuestionType => {
 };
 
 /**
- * Transforms API content item to Question format
+ * Transforms a single API question to Question format
  */
-const transformContentItem = (item: ApiContentItem): Question => {
-  const questionType = mapQuestionType(item.questionTypeCon?.name || 'Multiple Choice');
+export const transformApiQuestion = (apiQuestion: any): Question => {
+  const questionTypeId = apiQuestion.questiontypeId;
+  const questionTypeName = apiQuestion.questiontypecon?.name || '';
   
-  // Extract question text from description
-  const questionText = item.description?.title || item.description?.html || '';
-  
-  // Transform MCQ options if available
-  let transformedOptions: Array<{ id?: number; text: string; isCorrect: boolean }> = [];
-  if (item.mcq?.options && Array.isArray(item.mcq.options)) {
-    // Get previously selected option from practices array
-    const previousPractice = item.practices && item.practices.length > 0 ? item.practices[0] : null;
-    // Handle both selectedOptionId (direct) and selectedOption.id (nested) formats
-    const previousSelectedOptionId = previousPractice?.selectedOptionId || previousPractice?.selectedOption?.id;
-    
-    // Transform options - preserve the API option ID for submission
-    // Mark correct options based on the option's isCorrect property
-    transformedOptions = item.mcq.options.map((option) => {
-      return {
-        id: option.id, // Preserve API option ID for submission
-        text: option.text,
-        isCorrect: option.isCorrect || false, // Use the isCorrect from the option itself
-      };
-    });
+  // Map question type ID to QuestionType
+  let contentType: QuestionType = 'mcq';
+  if (questionTypeId === 1) {
+    contentType = 'mcq';
+  } else if (questionTypeId === 3) {
+    contentType = 'fill_up';
+  } else if (questionTypeId === 4) {
+    contentType = 'subjective';
+  } else if (questionTypeId === 5) {
+    contentType = 'blog';
+  } else if (questionTypeId === 6) {
+    contentType = 'video';
+  } else {
+    // Fallback to name-based mapping
+    contentType = mapQuestionType(questionTypeName);
   }
-  
+
   // Build content object based on question type
   const content: any = {};
-  
-  if (questionType === 'mcq' || questionType === 'single_choice') {
-    content.options = transformedOptions;
-  } else if (questionType === 'fill_up') {
+
+  if (contentType === 'mcq' || contentType === 'single_choice') {
+    // Transform MCQ options
+    if (apiQuestion.mcq?.options && Array.isArray(apiQuestion.mcq.options)) {
+      content.options = apiQuestion.mcq.options.map((option: any) => ({
+        id: option.id,
+        text: option.text,
+        isCorrect: option.isCorrect || false,
+      }));
+    } else {
+      content.options = [];
+    }
+  } else if (contentType === 'fill_up') {
     // Fill up content transformation
-    if (item.fillUp) {
-      content.correctAnswer = item.fillUp.correctAnswer;
+    if (apiQuestion.fillUp) {
+      content.question = apiQuestion.fillUp.text || apiQuestion.title || '';
+      content.correctAnswer = apiQuestion.fillUp.answer || '';
+    } else {
+      content.question = apiQuestion.title || '';
+      content.correctAnswer = '';
     }
-  } else if (questionType === 'subjective') {
+  } else if (contentType === 'subjective') {
     // Subjective content transformation
-    if (item.subjective) {
-      content.question = item.subjective.question || questionText;
+    if (apiQuestion.subjective) {
+      content.question = apiQuestion.subjective.questionText || apiQuestion.title || '';
+    } else {
+      content.question = apiQuestion.title || '';
     }
-  } else if (questionType === 'blog') {
-    // Blog content transformation
-    if (item.blog) {
-      content.html = item.blog.html || item.description?.html;
-      content.text = item.blog.text;
-    }
-  } else if (questionType === 'video') {
-    // Video content transformation
-    if (item.video) {
-      content.url = item.video.url;
+  } else if (contentType === 'blog') {
+    // Blog content transformation - API doesn't provide blog structure, use title/description
+    content.html = apiQuestion.description || '';
+    content.text = apiQuestion.title || '';
+  } else if (contentType === 'video') {
+    // Video content transformation - check for video object or extract from description
+    content.url = apiQuestion.video?.url || apiQuestion.videoUrl || apiQuestion.url || '';
+    
+    // Try to extract YouTube URL from description if not found
+    if (!content.url && apiQuestion.description) {
+      const urlMatch = apiQuestion.description.match(
+        /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/
+      );
+      if (urlMatch) {
+        content.url = apiQuestion.description;
+      }
     }
   }
-  
-  // Extract previous practice data
-  const previousPractice = item.practices && item.practices.length > 0 ? item.practices[0] : null;
-  // Handle both selectedOptionId (direct) and selectedOption.id (nested) formats
-  const previousSelectedOptionId = previousPractice?.selectedOptionId || previousPractice?.selectedOption?.id;
-  const previousAnswer = previousSelectedOptionId 
-    ? previousSelectedOptionId.toString()
-    : previousPractice?.userAnswer || null;
 
   return {
-    id: item.id.toString(),
-    text: questionText,
-    contentType: questionType,
+    id: apiQuestion.id.toString(),
+    text: apiQuestion.title || '',
+    contentType,
     content,
-    description: item.description,
-    previousAnswer: previousAnswer, // Store previous answer for initialization
-    previousPractice: previousPractice ? {
-      selectedOptionId: previousSelectedOptionId,
-      score: previousPractice.score,
-      isCorrect: previousPractice.isCorrect,
-    } : null,
+    description: {
+      html: apiQuestion.description || '',
+      title: apiQuestion.title || '',
+    },
   };
 };
 
 /**
  * Transforms the new API response structure to extract questions and practice data
  */
-export const transformApiResponse = (response: ApiResponse | any) => {
+export const transformApiResponse = (response: any):any => {
   // Handle both new structure and potential old structure
-  if (!response) {
-    return {
-      questions: [],
-      practice: null,
-      unit: null,
-    };
-  }
+  // if (!response) {
+  //   return {
+  //     questions: [],
+  //     practice: null,
+  //     unit: null,
+  //   };
+  // }
   
-  // Check if it's the new structure
-  if (response.success && response.data) {
-    const { practice, unit } = response.data;
-    
-    // Transform content items to questions
-    const questions = (unit?.content || []).map(transformContentItem);
-    
-    return {
-      questions,
-      practice: practice || null,
-      unit: unit?.unit || null,
-    };
-  }
-  
-  // Fallback: try to extract from old structure
-  const data = response.data || response;
-  const contentArray = Array.isArray(data) ? data : (data?.content || []);
-  
-  return {
-    questions: contentArray.map(transformContentItem),
-    practice: null,
-    unit: null,
-  };
+  return response?.data;
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { Question } from "../../types";
+import { COLORS, SHADOWS } from "../../constants";
 
 interface McqTemplateProps {
   question: Question;
@@ -59,8 +60,20 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
     }
   };
 
-  if (!Array.isArray(question.content.options)) {
-    return null;
+  // Safety check: ensure content and options exist
+  if (!question.content || !Array.isArray(question.content.options) || question.content.options.length === 0) {
+    return (
+      <Box sx={{ mt: 2, p: 2, background: COLORS.background.light, borderRadius: "8px" }}>
+        <Typography variant="body2" sx={{ color: COLORS.text.muted }}>
+          No options available for this question.
+        </Typography>
+        {process.env.NODE_ENV === 'development' && (
+          <Typography variant="caption" sx={{ color: COLORS.text.muted, display: 'block', mt: 1 }}>
+            Debug: content={!!question.content}, options={Array.isArray(question.content?.options) ? question.content.options.length : 'not array'}
+          </Typography>
+        )}
+      </Box>
+    );
   }
 
   // Check if we should show previous practice info
@@ -107,18 +120,18 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
             question.previousPractice?.selectedOptionId?.toString() === optionId;
 
           // Determine styling based on mode
-          let borderColor = "#E6E6E6";
-          let backgroundColor = "#F9FAFA";
-          let textColor = "#222";
+          let borderColor: string = COLORS.border.light;
+          let backgroundColor: string = COLORS.background.light;
+          let textColor: string = COLORS.text.primary;
 
           if (practiceMode) {
             // Practice mode styling
             if (isSelected) {
-              borderColor = "#4F39F6";
+              borderColor = COLORS.primary;
               backgroundColor = "#ECFDF8";
             } else {
-              borderColor = "#E6E6E6";
-              backgroundColor = "#F9FAFA";
+              borderColor = COLORS.border.light;
+              backgroundColor = COLORS.background.light;
             }
           } else if (showAnswers) {
             // Review mode styling
@@ -156,8 +169,10 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                 transition: "all 0.2s ease",
                 "&:hover": practiceMode
                   ? {
-                    borderColor: "#4F39F6",
-                    backgroundColor: "#F3F4F6",
+                    borderColor: COLORS.primary,
+                    backgroundColor: isSelected ? "#D1FAE5" : COLORS.background.lighter,
+                    boxShadow: SHADOWS.sm,
+                    transform: "translateY(-1px)",
                   }
                   : {},
               }}
@@ -169,7 +184,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                 onChange={() => handleOptionClick(oidx)}
                 style={{
                   marginRight: 12,
-                  accentColor: (isSelected || isPreviouslySelected) ? "#4F39F6" : "#E6E6E6",
+                  accentColor: (isSelected || isPreviouslySelected) ? COLORS.primary : COLORS.border.light,
                   cursor: practiceMode ? "pointer" : "default",
                 }}
               />

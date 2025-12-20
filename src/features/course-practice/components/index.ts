@@ -21,3 +21,4 @@ export { default as NavigationList } from './Sidebar/NavigationList';
 
 // Main Content Components
 export { default as MainContent } from './MainContent/MainContent';
+export { default as CoursePracticeContent } from './CoursePracticeContent';

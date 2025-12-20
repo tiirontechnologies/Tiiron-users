@@ -38,9 +38,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       {/* Question Header */}
       <Box
         sx={{
-          background: isFirst ? GRADIENTS.background : "transparent",
+          background: isFirst ? COLORS.background.light : "transparent",
           p: 3,
-          borderBottom: !isLast ? "1px solid #E5E7EB" : "none",
+          borderBottom: !isLast ? `1px solid ${COLORS.border.light}` : "none",
         }}
       >
         <Box
@@ -110,7 +110,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           <span dangerouslySetInnerHTML={{ __html: question.text }} />
         </Typography>
 
-        {!isLast && <Divider sx={{ mb: 3, opacity: 0.3 }} />}
+        {!isLast && <Divider sx={{ mb: 3, borderColor: COLORS.border.light }} />}
 
         <QuestionTemplateFactory
           type={question.contentType}

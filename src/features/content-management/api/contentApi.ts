@@ -13,8 +13,9 @@ export interface CreateVideoContentPayload {
   unitId: number;
   quesTypeId: number; // e.g., 6 for Video
   contentTypeId: number; // e.g., 1
-  description: VideoContentDescription;
   title: string;
+  description: string;
+  score: number;
   url: string; // video url (e.g., YouTube)
   duration: number; // seconds
 }
@@ -28,7 +29,9 @@ export interface CreateMcqContentPayload {
   unitId: number;
   quesTypeId: number; // e.g., 1 for MCQ
   contentTypeId: number; // e.g., 2
-  description: VideoContentDescription; // reuse structure for rich text/meta
+  title: string;
+  description: string;
+  score: number;
   options: McqOptionPayload[];
 }
 
@@ -36,7 +39,11 @@ export interface CreateFillUpContentPayload {
   unitId: number;
   quesTypeId: number; // e.g., 3 for Fill Up
   contentTypeId: number; // e.g., 4
-  description: VideoContentDescription; // reuse structure for rich text/meta
+  title: string;
+  description: string;
+  score: number;
+  text: string;
+  correctAnswer: string;
 }
 
 export interface CreateBlogContentPayload {
@@ -51,7 +58,9 @@ export interface CreateSubjectiveContentPayload {
   unitId: number;
   quesTypeId: number; // e.g., 4 for Subjective/Assignment
   contentTypeId: number; // e.g., 3
-  description: VideoContentDescription;
+  title: string;
+  description: string;
+  score: number;
   question: string;
 }
 
@@ -66,7 +75,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       query: ({ body }) => {
         console.log("🌐 API Call: Creating video content", body);
         return {
-          url: '/content/with-type',
+          url: '/question',
           method: 'POST',
           body,
         };
@@ -82,7 +91,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       query: ({ body }) => {
         console.log("🌐 API Call: Creating MCQ content", body);
         return {
-          url: '/content/with-type',
+          url: '/question',
           method: 'POST',
           body,
         };
@@ -96,7 +105,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       { body: CreateFillUpContentPayload }
     >({
       query: ({ body }) => ({
-        url: '/content/with-type',
+        url: '/question',
         method: 'POST',
         body,
       }),
@@ -109,7 +118,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       { body: CreateBlogContentPayload }
     >({
       query: ({ body }) => ({
-        url: '/content/with-type',
+        url: '/question',
         method: 'POST',
         body,
       }),
@@ -122,7 +131,7 @@ export const contentApiSlice = baseApi.injectEndpoints({
       { body: CreateSubjectiveContentPayload }
     >({
       query: ({ body }) => ({
-        url: '/content/with-type',
+        url: '/question',
         method: 'POST',
         body,
       }),
@@ -131,12 +140,12 @@ export const contentApiSlice = baseApi.injectEndpoints({
   }),
 });
 
-export const { 
-  useCreateVideoContentMutation, 
-  useCreateMcqContentMutation, 
-  useCreateFillUpContentMutation, 
-  useCreateBlogContentMutation, 
-  useCreateSubjectiveContentMutation 
+export const {
+  useCreateVideoContentMutation,
+  useCreateMcqContentMutation,
+  useCreateFillUpContentMutation,
+  useCreateBlogContentMutation,
+  useCreateSubjectiveContentMutation
 } = contentApiSlice;
 
 

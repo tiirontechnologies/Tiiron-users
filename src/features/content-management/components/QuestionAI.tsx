@@ -13,6 +13,13 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
+import {
+  TextFields as TextFieldsIcon,
+  InsertDriveFile as FileIcon,
+  Movie as MovieIcon,
+} from "@mui/icons-material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 
 type ContentType =
@@ -67,11 +74,22 @@ const SPACING = {
 const TYPOGRAPHY = {
   sectionTitle: {
     variant: "h6" as const,
-    sx: { fontWeight: 600, mb: SPACING.section },
+    sx: {
+      fontWeight: 600,
+      mb: SPACING.section,
+      fontSize: "20px",
+      color: "#101828",
+      letterSpacing: "-0.02em",
+    },
   },
   fieldLabel: {
     variant: "body2" as const,
-    sx: { fontWeight: 500, mb: SPACING.label, color: "text.primary" },
+    sx: {
+      fontWeight: 600,
+      mb: SPACING.label,
+      color: "#344054",
+      fontSize: "14px",
+    },
   },
 };
 
@@ -165,32 +183,145 @@ const QuestionConfigurator = ({
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)}>
-      {/* Section Title */}
-      <Typography {...TYPOGRAPHY.sectionTitle}>AI Configuration</Typography>
+      {/* Section Title with Professional Styling */}
+      <Box
+        sx={{
+          mb: 4,
+          pb: 2,
+          borderBottom: "2px solid #EAECF0",
+        }}
+      >
+        <Typography variant="h6" fontWeight={600} fontSize="20px" color="#101828" letterSpacing="-0.02em">
+          AI Configuration
+        </Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            color: "#667085",
+            fontSize: "14px",
+            mt: 0.5,
+            p: 0,
+            fontWeight: 400,
+          }}
+        >
+          Advanced AI Settings for Quality Content Creation
+        </Typography>
+      </Box>
 
-      {/* 🟩 Tabs for Text / File / Video */}
+      {/* 🟩 Enhanced Tabs for Text / File / Video with Icons */}
       {!isVideoType && (
-        <>
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 600,
+              mb: 0.5,
+              color: "#344054",
+              fontSize: "14px",
+            }}
+          >
+            Source Material Type
+          </Typography>
           <Tabs
             value={activeTab}
             onChange={(_, newValue) => setActiveTab(newValue)}
-            sx={{ mb: 3 }}
+            sx={{
+              mb: 3,
+              "& .MuiTabs-indicator": {
+                height: "3px",
+                borderRadius: "3px 3px 0 0",
+                backgroundColor: "#4F39F6",
+              },
+              "& .MuiTab-root": {
+                textTransform: "none",
+                fontWeight: 500,
+                fontSize: "14px",
+                minHeight: "48px",
+                padding: "12px 24px",
+                color: "#667085",
+                "&.Mui-selected": {
+                  color: "#4F39F6",
+                  fontWeight: 600,
+                },
+                "&:hover": {
+                  color: "#4F39F6",
+                  backgroundColor: "rgba(79, 57, 246, 0.04)",
+                },
+              },
+            }}
           >
-            <Tab label="Text" value="text" />
-            <Tab label="File" value="file" />
-            <Tab label="Video" value="video" />
+            <Tab
+              icon={<TextFieldsIcon sx={{ fontSize: "20px", mb: 0.5 }} />}
+              iconPosition="start"
+              label="Text"
+              value="text"
+              sx={{
+                mr: 2,
+                "& .MuiTab-iconWrapper": {
+                  marginRight: "8px",
+                },
+              }}
+            />
+            <Tab
+              icon={<UploadFileIcon sx={{ fontSize: "20px", mb: 0.5 }} />}
+              iconPosition="start"
+              label="File"
+              value="file"
+              sx={{
+                mr: 2,
+                "& .MuiTab-iconWrapper": {
+                  marginRight: "8px",
+                },
+              }}
+            />
+            <Tab
+              icon={<MovieIcon sx={{ fontSize: "20px", mb: 0.5 }} />}
+              iconPosition="start"
+              label="Video"
+              value="video"
+              sx={{
+                "& .MuiTab-iconWrapper": {
+                  marginRight: "8px",
+                },
+              }}
+            />
           </Tabs>
-        </>
+        </Box>
       )}
 
       {/* ========== VIDEO TYPE ========== */}
       {isVideoType && (
         <>
-          <Typography {...TYPOGRAPHY.fieldLabel}>Video Source:</Typography>
+          <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 2 }}>
+            Video Source
+          </Typography>
           <Tabs
             value={videoSourceType}
             onChange={(_, newValue) => setVideoSourceType(newValue)}
-            sx={{ mb: SPACING.label }}
+            sx={{
+              mb: 3,
+              "& .MuiTabs-indicator": {
+                height: "3px",
+                borderRadius: "3px 3px 0 0",
+                backgroundColor: "#4F39F6",
+              },
+              "& .MuiTab-root": {
+                textTransform: "none",
+                fontWeight: 500,
+                fontSize: "14px",
+                minHeight: "48px",
+                padding: "12px 24px",
+                color: "#667085",
+                "&.Mui-selected": {
+                  color: "#4F39F6",
+                  fontWeight: 600,
+                },
+                "&:hover": {
+                  color: "#4F39F6",
+                  backgroundColor: "rgba(79, 57, 246, 0.04)",
+                },
+              },
+            }}
           >
             <Tab label="Upload Video" value="upload" />
             <Tab label="Video URL" value="url" />
@@ -200,28 +331,37 @@ const QuestionConfigurator = ({
             <Box
               sx={{
                 border: "2px dashed",
-                borderColor: "divider",
-                borderRadius: 2,
+                borderColor: "#D0D5DD",
+                borderRadius: "12px",
                 p: 4,
                 textAlign: "center",
                 mb: SPACING.field,
                 cursor: "pointer",
-                bgcolor: "grey.50",
-                transition: "all 0.2s",
+                bgcolor: "#F9FAFB",
+                transition: "all 0.2s ease",
                 "&:hover": {
-                  borderColor: "primary.main",
-                  bgcolor: "primary.50",
+                  borderColor: "#4F39F6",
+                  bgcolor: "#F4F3FF",
                 },
               }}
             >
               <Typography
                 variant="body1"
-                color="text.secondary"
-                sx={{ mb: 0.5 }}
+                sx={{
+                  mb: 0.5,
+                  color: "#344054",
+                  fontWeight: 500,
+                }}
               >
                 Click to upload or drag and drop
               </Typography>
-              <Typography variant="caption" color="text.secondary">
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "#667085",
+                  fontSize: "12px",
+                }}
+              >
                 MP4, MOV, AVI (MAX. 500MB)
               </Typography>
             </Box>
@@ -240,7 +380,18 @@ const QuestionConfigurator = ({
                   placeholder="https://example.com/video.mp4"
                   error={!!errors.videoUrl}
                   helperText={errors.videoUrl?.message}
-                  sx={{ mb: SPACING.field }}
+                  sx={{
+                    mb: SPACING.field,
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                    },
+                  }}
                 />
               )}
             />
@@ -252,9 +403,27 @@ const QuestionConfigurator = ({
               control={control}
               render={({ field }) => (
                 <FormControlLabel
-                  control={<Checkbox {...field} checked={field.value} />}
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={field.value}
+                      sx={{
+                        color: "#4F39F6",
+                        "&.Mui-checked": {
+                          color: "#4F39F6",
+                        },
+                      }}
+                    />
+                  }
                   label="Auto-generate title from video"
-                  sx={{ display: "block", mb: 1 }}
+                  sx={{
+                    display: "block",
+                    mb: 1.5,
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#344054",
+                    },
+                  }}
                 />
               )}
             />
@@ -263,9 +432,27 @@ const QuestionConfigurator = ({
               control={control}
               render={({ field }) => (
                 <FormControlLabel
-                  control={<Checkbox {...field} checked={field.value} />}
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={field.value}
+                      sx={{
+                        color: "#4F39F6",
+                        "&.Mui-checked": {
+                          color: "#4F39F6",
+                        },
+                      }}
+                    />
+                  }
                   label="Auto-generate description from video"
-                  sx={{ display: "block", mb: 1 }}
+                  sx={{
+                    display: "block",
+                    mb: 1.5,
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#344054",
+                    },
+                  }}
                 />
               )}
             />
@@ -274,9 +461,26 @@ const QuestionConfigurator = ({
               control={control}
               render={({ field }) => (
                 <FormControlLabel
-                  control={<Checkbox {...field} checked={field.value} />}
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={field.value}
+                      sx={{
+                        color: "#4F39F6",
+                        "&.Mui-checked": {
+                          color: "#4F39F6",
+                        },
+                      }}
+                    />
+                  }
                   label="Generate video transcript"
-                  sx={{ display: "block" }}
+                  sx={{
+                    display: "block",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#344054",
+                    },
+                  }}
                 />
               )}
             />
@@ -286,164 +490,308 @@ const QuestionConfigurator = ({
 
       {/* ========== NON-VIDEO TYPES: SOURCE MATERIAL ========== */}
 
-      {/* TEXT TAB */}
+      {/* VIDEO TAB - Duplicate section for non-video types */}
       {activeTab === "video" && !isVideoType && (
         <Box>
-          <>
-            <Typography {...TYPOGRAPHY.fieldLabel}>Video Source:</Typography>
-            <Tabs
-              value={videoSourceType}
-              onChange={(_, newValue) => setVideoSourceType(newValue)}
-              sx={{ mb: SPACING.label }}
-            >
-              <Tab label="Upload Video" value="upload" />
-              <Tab label="Video URL" value="url" />
-            </Tabs>
+          <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 2 }}>
+            Video Source
+          </Typography>
+          <Tabs
+            value={videoSourceType}
+            onChange={(_, newValue) => setVideoSourceType(newValue)}
+            sx={{
+              mb: 3,
+              "& .MuiTabs-indicator": {
+                height: "3px",
+                borderRadius: "3px 3px 0 0",
+                backgroundColor: "#4F39F6",
+              },
+              "& .MuiTab-root": {
+                textTransform: "none",
+                fontWeight: 500,
+                fontSize: "14px",
+                minHeight: "48px",
+                padding: "12px 24px",
+                color: "#667085",
+                "&.Mui-selected": {
+                  color: "#4F39F6",
+                  fontWeight: 600,
+                },
+                "&:hover": {
+                  color: "#4F39F6",
+                  backgroundColor: "rgba(79, 57, 246, 0.04)",
+                },
+              },
+            }}
+          >
+            <Tab label="Upload Video" value="upload" />
+            <Tab label="Video URL" value="url" />
+          </Tabs>
 
-            {videoSourceType === "upload" && (
-              <Box
+          {videoSourceType === "upload" && (
+            <Box
+              sx={{
+                border: "2px dashed #D0D5DD",
+                borderRadius: "12px",
+                p: 4,
+                textAlign: "center",
+                mb: SPACING.field,
+                cursor: "pointer",
+                bgcolor: "#F9FAFB",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  borderColor: "#4F39F6",
+                  bgcolor: "#F4F3FF",
+                },
+              }}
+            >
+              <Typography
+                variant="body1"
                 sx={{
-                  border: "2px dashed",
-                  borderColor: "divider",
-                  borderRadius: 2,
-                  p: 4,
-                  textAlign: "center",
-                  mb: SPACING.field,
-                  cursor: "pointer",
-                  bgcolor: "grey.50",
-                  transition: "all 0.2s",
-                  "&:hover": {
-                    borderColor: "primary.main",
-                    bgcolor: "primary.50",
-                  },
+                  mb: 0.5,
+                  color: "#344054",
+                  fontWeight: 500,
                 }}
               >
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{ mb: 0.5 }}
-                >
-                  Click to upload or drag and drop
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  MP4, MOV, AVI (MAX. 500MB)
-                </Typography>
-              </Box>
-            )}
-
-            {videoSourceType === "url" && (
-              <Controller
-                name="videoUrl"
-                control={control}
-                rules={{ required: "Video URL is required" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    label="Video URL"
-                    placeholder="https://example.com/video.mp4"
-                    error={!!errors.videoUrl}
-                    helperText={errors.videoUrl?.message}
-                    sx={{ mb: SPACING.field }}
-                  />
-                )}
-              />
-            )}
-
-            <Box sx={{ mb: SPACING.field }}>
-              <Controller
-                name="autoGenerateTitle"
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={<Checkbox {...field} checked={field.value} />}
-                    label="Auto-generate title from video"
-                    sx={{ display: "block", mb: 1 }}
-                  />
-                )}
-              />
-              <Controller
-                name="autoGenerateDescription"
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={<Checkbox {...field} checked={field.value} />}
-                    label="Auto-generate description from video"
-                    sx={{ display: "block", mb: 1 }}
-                  />
-                )}
-              />
-              <Controller
-                name="generateTranscript"
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={<Checkbox {...field} checked={field.value} />}
-                    label="Generate video transcript"
-                    sx={{ display: "block" }}
-                  />
-                )}
-              />
+                Click to upload or drag and drop
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "#667085",
+                  fontSize: "12px",
+                }}
+              >
+                MP4, MOV, AVI (MAX. 500MB)
+              </Typography>
             </Box>
-          </>
+          )}
+
+          {videoSourceType === "url" && (
+            <Controller
+              name="videoUrl"
+              control={control}
+              rules={{ required: "Video URL is required" }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  label="Video URL"
+                  placeholder="https://example.com/video.mp4"
+                  error={!!errors.videoUrl}
+                  helperText={errors.videoUrl?.message}
+                  sx={{
+                    mb: SPACING.field,
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                    },
+                  }}
+                />
+              )}
+            />
+          )}
+
+          <Box sx={{ mb: SPACING.field }}>
+            <Controller
+              name="autoGenerateTitle"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={field.value}
+                      sx={{
+                        color: "#4F39F6",
+                        "&.Mui-checked": {
+                          color: "#4F39F6",
+                        },
+                      }}
+                    />
+                  }
+                  label="Auto-generate title from video"
+                  sx={{
+                    display: "block",
+                    mb: 1.5,
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#344054",
+                    },
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="autoGenerateDescription"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={field.value}
+                      sx={{
+                        color: "#4F39F6",
+                        "&.Mui-checked": {
+                          color: "#4F39F6",
+                        },
+                      }}
+                    />
+                  }
+                  label="Auto-generate description from video"
+                  sx={{
+                    display: "block",
+                    mb: 1.5,
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#344054",
+                    },
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="generateTranscript"
+              control={control}
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={field.value}
+                      sx={{
+                        color: "#4F39F6",
+                        "&.Mui-checked": {
+                          color: "#4F39F6",
+                        },
+                      }}
+                    />
+                  }
+                  label="Generate video transcript"
+                  sx={{
+                    display: "block",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#344054",
+                    },
+                  }}
+                />
+              )}
+            />
+          </Box>
         </Box>
       )}
 
       {/* TEXT TAB */}
       {activeTab === "text" && !isVideoType && (
         <Box>
-          <>
-            <Typography {...TYPOGRAPHY.fieldLabel}>Source Material:</Typography>
-            <Controller
-              name="sourceText"
-              control={control}
-              rules={{ required: "Source material is required" }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  multiline
-                  minRows={6}
-                  maxRows={12}
-                  placeholder="Paste your source material here..."
-                  error={!!errors.sourceText}
-                  helperText={errors.sourceText?.message}
-                  sx={{ mb: SPACING.field }}
-                />
-              )}
-            />
-          </>
+          <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+            Source Material
+          </Typography>
+          <Controller
+            name="sourceText"
+            control={control}
+            rules={{ required: "Source material is required" }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                multiline
+                minRows={6}
+                maxRows={12}
+                placeholder="Paste your source material here..."
+                error={!!errors.sourceText}
+                helperText={errors.sourceText?.message}
+                sx={{
+                  mb: SPACING.field,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    "&:hover fieldset": {
+                      borderColor: "#4F39F6",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#4F39F6",
+                    },
+                  },
+                }}
+              />
+            )}
+          />
         </Box>
       )}
 
       {/*   FILE TAB */}
       {activeTab === "file" && !isVideoType && (
         <Box>
-          <>
-            <Typography {...TYPOGRAPHY.fieldLabel}>File Material:</Typography>
-            <Controller
-              name="sourceFile"
-              control={control}
-              rules={{ required: "Source material file is required" }}
-              render={({ field }) => (
-                <TextField
+          <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+            File Material
+          </Typography>
+          <Controller
+            name="sourceFile"
+            control={control}
+            rules={{ required: "Source material file is required" }}
+            render={({ field }) => (
+              <Box
+                component="label"
+                htmlFor="file-upload"
+                sx={{
+                  border: "2px dashed #D0D5DD",
+                  borderRadius: "12px",
+                  p: 3,
+                  textAlign: "center",
+                  mb: SPACING.field,
+                  cursor: "pointer",
+                  bgcolor: "#F9FAFB",
+                  transition: "all 0.2s ease",
+                  display: "block",
+                  "&:hover": {
+                    borderColor: "#4F39F6",
+                    bgcolor: "#F4F3FF",
+                  },
+                }}
+              >
+                <FileIcon sx={{ fontSize: "40px", color: "#667085", mb: 1 }} />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#344054",
+                    fontWeight: 500,
+                    mb: 0.5,
+                  }}
+                >
+                  Click to upload or drag and drop
+                </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: "#667085",
+                    fontSize: "12px",
+                  }}
+                >
+                  TXT, PDF, DOC, DOCX, CSV, JSON, MD (MAX. 10MB)
+                </Typography>
+                <input
                   {...field}
                   type="file"
-                  fullWidth
-                  inputProps={{ accept: ".txt,.pdf,.doc,.docx,.csv,.json,.md" }}
-                  error={!!errors.sourceFile}
-                  helperText={errors.sourceFile?.message}
-                  sx={{ mb: SPACING.field }}
+                  accept=".txt,.pdf,.doc,.docx,.csv,.json,.md"
+                  style={{ display: "none" }}
+                  id="file-upload"
                 />
-              )}
-            />
-          </>
+              </Box>
+            )}
+          />
         </Box>
       )}
 
       {/* ========== FOCUS KEYWORD ========== */}
-      <Typography {...TYPOGRAPHY.fieldLabel}>
-        Focus Keyword / Topic {isBlogType && "(Important for SEO)"}:
+      <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+        Focus Keyword / Topic {isBlogType && "(Important for SEO)"}
       </Typography>
       <Controller
         name="focusKeyword"
@@ -453,15 +801,51 @@ const QuestionConfigurator = ({
             {...field}
             fullWidth
             placeholder="e.g., GitHub Actions CI/CD or Repository Forks"
-            sx={{ mb: SPACING.field }}
+            sx={{
+              mb: SPACING.field,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                "&:hover fieldset": {
+                  borderColor: "#4F39F6",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#4F39F6",
+                },
+              },
+            }}
           />
         )}
       />
 
       {/* ========== CONTENT TYPE ========== */}
-      <Typography {...TYPOGRAPHY.fieldLabel}>Content Type:</Typography>
-      <FormControl fullWidth sx={{ mb: SPACING.field }}>
-        <Select value={questionTypeOptions[0].value} disabled>
+      <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+        Content Type
+      </Typography>
+      <FormControl
+        fullWidth
+        sx={{
+          mb: SPACING.field,
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "12px",
+            "&:hover fieldset": {
+              borderColor: "#4F39F6",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#4F39F6",
+            },
+          },
+        }}
+      >
+        <Select
+          value={questionTypeOptions[0].value}
+          disabled
+          sx={{
+            "&.Mui-disabled": {
+              backgroundColor: "#F9FAFB",
+              color: "#667085",
+            },
+          }}
+        >
           {questionTypeOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
@@ -474,12 +858,27 @@ const QuestionConfigurator = ({
       {isBlogType && (
         <Box sx={{ display: "flex", gap: 2, mb: SPACING.field }}>
           <Box sx={{ flex: 1 }}>
-            <Typography {...TYPOGRAPHY.fieldLabel}>Blog Length:</Typography>
+            <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+              Blog Length
+            </Typography>
             <Controller
               name="blogLength"
               control={control}
               render={({ field }) => (
-                <FormControl fullWidth>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                    },
+                  }}
+                >
                   <Select {...field}>
                     <MenuItem value="short">Short (300-500 words)</MenuItem>
                     <MenuItem value="medium">Medium (500-1000 words)</MenuItem>
@@ -491,12 +890,27 @@ const QuestionConfigurator = ({
           </Box>
 
           <Box sx={{ flex: 1 }}>
-            <Typography {...TYPOGRAPHY.fieldLabel}>Writing Tone:</Typography>
+            <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+              Writing Tone
+            </Typography>
             <Controller
               name="writingTone"
               control={control}
               render={({ field }) => (
-                <FormControl fullWidth>
+                <FormControl
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                      "&:hover fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#4F39F6",
+                      },
+                    },
+                  }}
+                >
                   <Select {...field}>
                     <MenuItem value="professional">Professional</MenuItem>
                     <MenuItem value="casual">Casual</MenuItem>
@@ -515,14 +929,27 @@ const QuestionConfigurator = ({
         <Box sx={{ display: "flex", gap: 2, mb: SPACING.field }}>
           {showQuestionCount && (
             <Box sx={{ flex: 1 }}>
-              <Typography {...TYPOGRAPHY.fieldLabel}>
-                Question Count:
+              <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+                Question Count
               </Typography>
               <Controller
                 name="questionCount"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth>
+                  <FormControl
+                    fullWidth
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "12px",
+                        "&:hover fieldset": {
+                          borderColor: "#4F39F6",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#4F39F6",
+                        },
+                      },
+                    }}
+                  >
                     <Select {...field}>
                       {[1, 2, 3, 4, 5].map((count) => (
                         <MenuItem key={count} value={count}>
@@ -538,14 +965,27 @@ const QuestionConfigurator = ({
 
           {showDifficultyLevel && (
             <Box sx={{ flex: 1 }}>
-              <Typography {...TYPOGRAPHY.fieldLabel}>
-                Difficulty Level:
+              <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+                Difficulty Level
               </Typography>
               <Controller
                 name="difficultyLevel"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth>
+                  <FormControl
+                    fullWidth
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "12px",
+                        "&:hover fieldset": {
+                          borderColor: "#4F39F6",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#4F39F6",
+                        },
+                      },
+                    }}
+                  >
                     <Select {...field}>
                       <MenuItem value="Easy">Easy</MenuItem>
                       <MenuItem value="Medium">Medium</MenuItem>
@@ -562,12 +1002,28 @@ const QuestionConfigurator = ({
       {/* ========== OPTIONS COUNT ========== */}
       {showOptionsCount && (
         <>
-          <Typography {...TYPOGRAPHY.fieldLabel}>Options Count:</Typography>
+          <Typography {...TYPOGRAPHY.fieldLabel} sx={{ mb: 1.5 }}>
+            Options Count
+          </Typography>
           <Controller
             name="optionsCount"
             control={control}
             render={({ field }) => (
-              <FormControl fullWidth sx={{ mb: SPACING.field }}>
+              <FormControl
+                fullWidth
+                sx={{
+                  mb: SPACING.field,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "12px",
+                    "&:hover fieldset": {
+                      borderColor: "#4F39F6",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#4F39F6",
+                    },
+                  },
+                }}
+              >
                 <Select {...field}>
                   {[2, 3, 4, 5].map((count) => (
                     <MenuItem key={count} value={count}>
@@ -582,12 +1038,34 @@ const QuestionConfigurator = ({
       )}
 
       {/* ========== ACTION BUTTONS ========== */}
-      <Box sx={{ mt: 4, display: "flex", gap: 2, justifyContent: "flex-end" }}>
+      <Box
+        sx={{
+          mt: 5,
+          pt: 3,
+          borderTop: "1px solid #EAECF0",
+          display: "flex",
+          gap: 2,
+          justifyContent: "flex-end"
+        }}
+      >
         <Button
           onClick={onClose}
           variant="outlined"
           disabled={isLoading}
-          sx={{ minWidth: 100 }}
+          sx={{
+            minWidth: 120,
+            height: "44px",
+            borderRadius: "10px",
+            textTransform: "none",
+            fontWeight: 500,
+            fontSize: "14px",
+            borderColor: "#D0D5DD",
+            color: "#344054",
+            "&:hover": {
+              borderColor: "#98A2B3",
+              backgroundColor: "#F9FAFB",
+            },
+          }}
         >
           Cancel
         </Button>
@@ -595,16 +1073,33 @@ const QuestionConfigurator = ({
           type="submit"
           variant="contained"
           disabled={isLoading}
-          sx={{ minWidth: 160 }}
+          startIcon={
+            isLoading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <AutoAwesomeIcon sx={{ fontSize: "18px" }} />
+            )
+          }
+          sx={{
+            minWidth: 180,
+            height: "44px",
+            borderRadius: "10px",
+            textTransform: "none",
+            fontWeight: 600,
+            fontSize: "14px",
+            backgroundColor: "#4F39F6",
+            boxShadow: "0px 1px 2px rgba(16, 24, 40, 0.05)",
+            "&:hover": {
+              backgroundColor: "#3D2BC4",
+              boxShadow: "0px 4px 8px rgba(79, 57, 246, 0.2)",
+            },
+            "&:disabled": {
+              backgroundColor: "#D0D5DD",
+              color: "#98A2B3",
+            },
+          }}
         >
-          {isLoading ? (
-            <>
-              <CircularProgress size={20} sx={{ mr: 1 }} color="inherit" />
-              Generating...
-            </>
-          ) : (
-            "Generate with AI"
-          )}
+          {isLoading ? "Generating..." : "Generate with AI"}
         </Button>
       </Box>
     </form>

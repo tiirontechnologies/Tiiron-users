@@ -87,9 +87,18 @@ export default function ContentCreateForm() {
 
   // ✅ Normalize API Response
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const content: Content[] = Array.isArray(questionsData)
-    ? questionsData
-    : questionsData?.questions || questionsData?.data || [];
+  const content: Content[] = (() => {
+    if (Array.isArray(questionsData)) {
+      return questionsData;
+    }
+    if (Array.isArray(questionsData?.questions)) {
+      return questionsData.questions;
+    }
+    if (Array.isArray(questionsData?.data)) {
+      return questionsData.data;
+    }
+    return [];
+  })();
 
   // ✅ Auto select first item
   useEffect(() => {
@@ -142,7 +151,7 @@ export default function ContentCreateForm() {
         <CourseInfoHeader />
       </ToolBar>
 
-      <Box sx={{ display: "flex", height: "100vh", p: "24px" }}>
+      <Box sx={{ display: "flex", height: "100vh", pt: 0, pr: "24px", pb: "24px", pl: "24px" }}>
         <CreateContentLayout
           heading="Content Order"
           mainContent={

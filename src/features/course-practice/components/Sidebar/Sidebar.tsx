@@ -19,11 +19,6 @@ interface SidebarProps {
   onUnitSelect: (unitId: string) => void;
   courseId?: string;
   practiceStats: PracticeStats;
-  selectedUnitId?: string;
-  practiceData?: {
-    isCompleted: boolean;
-    score: number;
-  } | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -31,14 +26,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   onUnitSelect,
   courseId,
   practiceStats,
-  selectedUnitId,
-  practiceData,
 }) => {
   const navigate = useNavigate();
 
-  console.log("Sidebar", data.chapters, onUnitSelect, courseId);
+  console.log("Sidebar", data?.chapters, onUnitSelect, courseId);
   console.log("sidebar Practice stats:", practiceStats);
-  <PracticeProgressStats stats={practiceStats} />;
 
   const progressStats = {
     current: 3,
@@ -138,12 +130,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <Divider sx={{ my: 2, opacity: 0.3 }} />
 
       {/* Navigation List */}
-      <NavigationList 
-        chapters={data?.chapters} 
-        onUnitSelect={onUnitSelect}
-        selectedUnitId={selectedUnitId}
-        practiceData={practiceData}
-      />
+      <NavigationList chapters={data?.chapters || []} onUnitSelect={onUnitSelect} />
     </Box>
   );
 };
