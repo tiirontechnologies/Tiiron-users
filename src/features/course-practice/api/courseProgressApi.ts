@@ -8,7 +8,7 @@ export const courseProgressApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getLessonAndTopicByCourseId: builder.query<{ data?: any } | any, { id: string }>({
       query: ({ id }) => ({
-        url: `course/chapter/course/${id}`,
+        url: `course/${id}`,
         method: 'GET',
       }),
       providesTags: ['Course'],
