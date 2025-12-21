@@ -26,7 +26,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const menuItems = [
@@ -56,7 +56,7 @@ const menuItems = [
   },
   {
     text: "Tiiron For Creators",
-    icon: <BusinessOutlinedIcon />,
+    icon: <EditNoteIcon />,
     color: "#FF5722",
     onClick: (_navigate: NavigateFunction) => {
       window.location.href = "https://creator.tiiron.com/";

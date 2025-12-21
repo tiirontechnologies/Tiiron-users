@@ -12,9 +12,7 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   base: "/",
   plugins: [
-    react({
-      jsxImportSource: "@emotion/react",
-    }),
+    react(),
     svgr({
       svgrOptions: {
         icon: true,
@@ -39,31 +37,8 @@ export default defineConfig({
       "@icons": path.resolve(__dirname, "src/assets/icons"),
       "@images": path.resolve(__dirname, "src/assets/images"),
     },
-    dedupe: ["@mui/material", "@mui/material/styles", "@emotion/react", "@emotion/styled"],
   },
   optimizeDeps: {
-    include: [
-      "@emotion/styled",
-      "@emotion/react",
-      "@mui/material",
-      "@mui/material/styles",
-    ],
-    esbuildOptions: {
-      jsx: "automatic",
-      jsxImportSource: "@emotion/react",
-    },
-  },
-  build: {
-    commonjsOptions: {
-      include: [/node_modules/],
-      transformMixedEsModules: true,
-    },
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          "mui-vendor": ["@mui/material", "@mui/material/styles"],
-        },
-      },
-    },
+    include: ["@emotion/styled", "@emotion/react", "@mui/material"],
   },
 });
