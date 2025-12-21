@@ -1,17 +1,104 @@
 import { Box, Button, IconButton, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UPLOADS } from "../../../constants/constants";
 import ShareIcon from "@mui/icons-material/Share";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { ICourse } from "../../../types/course.types";
+import { useInitiateCheckoutMutation, SingleEnrollmentRequest } from "../../course-browse/api/courseApi";
+import { useGetMyEnrolledCoursesQuery } from "../../my-course/api/courseApi";
+import { useSnackbar } from "../../../components/ui/Snackbar/SnackBarProvider";
+import { useState, useEffect, useMemo } from "react";
 
 interface ProductCardProps {
   course: ICourse | undefined;
 }
 
 export default function ProductCard({ course }: ProductCardProps) {
+  const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isEnrolling, setIsEnrolling] = useState(false);
+
+  // Check if course is free
+  const isFreeCourse = useMemo(() => {
+    return course?.price === 0 || course?.price === 0.00;
+  }, [course?.price]);
+
+  // Get enrolled courses to check enrollment status
+  const { data: enrollmentData } = useGetMyEnrolledCoursesQuery();
+
+  // Check if user is enrolled in this course
+  useEffect(() => {
+    if (course?.id && enrollmentData?.data) {
+      const enrolled = enrollmentData.data.some(
+        (enrollment) => enrollment.courseId === course.id
+      );
+      setIsEnrolled(enrolled);
+    }
+  }, [course?.id, enrollmentData]);
+
+  // Enrollment mutation
+  const [initiateCheckout] = useInitiateCheckoutMutation();
+
+  const handleEnrollNow = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (!course?.id) return;
+
+    // If paid course, redirect to checkout
+    if (!isFreeCourse) {
+      navigate(`/checkout?courseId=${course.id}`);
+      return;
+    }
+
+    // If already enrolled, redirect to practice
+    if (isEnrolled) {
+      navigate(`/course-practice/${course.id}`);
+      return;
+    }
+
+    // Enroll in free course
+    setIsEnrolling(true);
+    try {
+      const payload: SingleEnrollmentRequest = {
+        courseId: course.id,
+        status: "active",
+        payment_status: "free",
+      };
+
+      const response = await initiateCheckout(payload).unwrap();
+
+      if (response.success) {
+        setIsEnrolled(true);
+        showSnackbar({
+          message: "Successfully enrolled in the course!",
+          severity: "success",
+          duration: 4000,
+          position: { vertical: "bottom", horizontal: "center" },
+        });
+      }
+    } catch (error) {
+      console.error("Enrollment error:", error);
+      showSnackbar({
+        message: "Failed to enroll. Please try again.",
+        severity: "error",
+        duration: 4000,
+        position: { vertical: "bottom", horizontal: "center" },
+      });
+    } finally {
+      setIsEnrolling(false);
+    }
+  };
+
+  const handlePracticeCourse = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (course?.id) {
+      navigate(`/course-practice/${course.id}`);
+    }
+  };
+
   const handleShare = (platform: string) => {
     const url = window.location.href;
     const title = course?.title || "Check out this course";
@@ -28,6 +115,68 @@ export default function ProductCard({ course }: ProductCardProps) {
   };
 
   const discountPercentage = course?.price ? Math.round(((99.5 - course.price) / 99.5) * 100) : 50;
+
+  // Determine button text and behavior
+  const getButtonConfig = () => {
+    if (isFreeCourse && isEnrolled) {
+      return {
+        text: "Practice Course",
+        onClick: handlePracticeCourse,
+        variant: "contained" as const,
+        sx: {
+          bgcolor: "#10B981",
+          color: "#fff",
+          py: 1.75,
+          mb: 2.5,
+          fontSize: { xs: "14px", md: "16px" },
+          fontWeight: 600,
+          borderRadius: 2,
+          textTransform: "none",
+          boxShadow: "0 4px 6px -1px rgba(16, 185, 129, 0.3)",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            bgcolor: "#059669",
+            color: "#FFFFFF",
+            boxShadow: "0 6px 8px -1px rgba(16, 185, 129, 0.4)",
+            transform: "translateY(-1px)",
+          },
+          "&:active": {
+            transform: "translateY(0)",
+          },
+        },
+      };
+    }
+
+    return {
+
+      text: "Enroll Now",
+      onClick: handleEnrollNow,
+      variant: "contained" as const,
+      sx: {
+        bgcolor: "#4F39F6",
+        color: "#fff",
+        py: 1.75,
+        mb: 2.5,
+        fontSize: { xs: "14px", md: "16px" },
+        fontWeight: 600,
+        borderRadius: 2,
+        textTransform: "none",
+        boxShadow: "0 4px 6px -1px rgba(79, 57, 246, 0.3)",
+        transition: "all 0.2s ease",
+        "&:hover": {
+          bgcolor: "#3E2DC4",
+          color: "#FFFFFF",
+          boxShadow: "0 6px 8px -1px rgba(79, 57, 246, 0.4)",
+          transform: "translateY(-1px)",
+        },
+        "&:active": {
+          transform: "translateY(0)",
+        },
+      },
+    };
+  };
+
+  const buttonConfig = getButtonConfig();
 
   return (
     <Box
@@ -115,38 +264,15 @@ export default function ProductCard({ course }: ProductCardProps) {
         </Box>
       </Box>
 
-      <Link
-        to={course?.id ? `/checkout?courseId=${course.id}` : "/checkout"}
-        style={{ textDecoration: "none", width: "100%", display: "block" }}
+      <Button
+        variant={buttonConfig.variant}
+        fullWidth
+        onClick={buttonConfig.onClick}
+        disabled={isEnrolling}
+        sx={buttonConfig.sx}
       >
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            bgcolor: "#4F39F6",
-            color: "#fff",
-            py: 1.75,
-            mb: 2.5,
-            fontSize: { xs: "14px", md: "16px" },
-            fontWeight: 600,
-            borderRadius: 2,
-            textTransform: "none",
-            boxShadow: "0 4px 6px -1px rgba(79, 57, 246, 0.3)",
-            transition: "all 0.2s ease",
-            "&:hover": {
-              bgcolor: "#3E2DC4",
-              color: "#FFFFFF",
-              boxShadow: "0 6px 8px -1px rgba(79, 57, 246, 0.4)",
-              transform: "translateY(-1px)",
-            },
-            "&:active": {
-              transform: "translateY(0)",
-            },
-          }}
-        >
-          Enroll Now
-        </Button>
-      </Link>
+        {isEnrolling ? "Enrolling..." : buttonConfig.text}
+      </Button>
 
       <Box
         sx={{
