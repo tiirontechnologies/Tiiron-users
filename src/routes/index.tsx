@@ -22,7 +22,6 @@ export const routeConfig = [
     ],
   },
   {
-    path: "/learner",
     element: <UserLayout />,
     children: [...userRoutes]
   },

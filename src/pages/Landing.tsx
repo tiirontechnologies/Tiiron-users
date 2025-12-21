@@ -100,11 +100,11 @@ const Landing = () => {
   // Handlers
   const onSearch = (query?: string) => {
     if (!query.trim()) return;
-    navigate(`/learner/browse-courses?search=${encodeURIComponent(query)}`);
+    navigate(`/browse-courses?search=${encodeURIComponent(query)}`);
   };
 
   const onPickCategory = (categoryId: string) => {
-    navigate(`/learner/browse-courses?category=${categoryId}`);
+    navigate(`/browse-courses?category=${categoryId}`);
   };
 
   const handleAddToCart = async (courseId: number) => {
@@ -429,7 +429,7 @@ const Landing = () => {
                   }}
                 />
               }
-              onClick={() => navigate('/learner/browse-courses')}
+              onClick={() => navigate('/browse-courses')}
               sx={{
                 px: { xs: 3, sm: 4 },
                 py: 1.5,

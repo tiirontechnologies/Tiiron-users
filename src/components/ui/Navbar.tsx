@@ -53,7 +53,7 @@ const navigationItems: NavItem[] = [
   //   name: "Explore",
   //   hasDropdown: true,
   //   dropdown: [
-  //     { name: "Browse Courses", desc: "Explore our course catalog", href: "/learner/browse-courses" },
+  //     { name: "Browse Courses", desc: "Explore our course catalog", href: "/browse-courses" },
   //     // external example (keeps external behavior)
   //     { name: "Tiiron Business", desc: "AI-powered learning solutions", href: "https://tiiron-for-business" },
   //   ],

@@ -8,19 +8,19 @@ import ViewProfile from "../features/user/pages/ViewProfile";
 export const userRoutes: Route[] = [
     {
         label: "Browse Courses",
-        path: "browse-courses",
+        path: "/browse-courses",
         icon: <AutoStoriesIcon />,
         element: <Courses />,
     },
     {
         label: "My Courses",
-        path: "my-courses",
+        path: "/my-courses",
         icon: <LocalLibraryIcon />,
         element: <MyCourses />
     },
     {
         label: "Profile",
-        path: "profile",
+        path: "/profile",
         element: <ViewProfile />
     }
 ];
