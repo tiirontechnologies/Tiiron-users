@@ -1,7 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useGetChaptersQuery } from "../../course/api/courseApi";
-import { useGetCourseByIdQuery } from "../../course/api/courseApi";
+import { useGetChaptersQuery ,useGetCourseByIdQuery} from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
 import { useState } from "react";
