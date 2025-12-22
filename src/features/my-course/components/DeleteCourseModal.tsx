@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, useSnackbar } from "@components/ui";
 import { Box, Button, Typography } from "@mui/material";
-import { useDeleteCourseMutation } from "../../course/api/courseApi";
+import { useDeleteCourseMutation } from "../../course-glossary/api/courseApi";
 
 export function DeleteModal({ isOpen, onClose, id }: { isOpen: boolean, onClose: () => void; id?: number }) {
     const [deleteCourse, { isLoading }] = useDeleteCourseMutation();

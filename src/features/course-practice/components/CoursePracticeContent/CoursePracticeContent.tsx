@@ -235,10 +235,10 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
   // Extract tutorial videos (contentType.name === "Video" AND question.questiontypecon.name === "Video")
   const tutorialVideos = useMemo(() => {
     if (!data?.contentTypes || !Array.isArray(data.contentTypes)) return [];
-    
+
     const videoContentType = data.contentTypes.find(ct => ct.name === "Video");
     if (!videoContentType?.questions) return [];
-    
+
     return videoContentType.questions.filter(
       (q) => q.questiontypecon?.name === "Video"
     );
@@ -264,12 +264,13 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
           if (filteredQuestions.length === 0) return;
         }
 
-        // Get icon from icon path
-        const icon = contentType.icon
+        // Get icon from icon path - ensure it's a valid React element, not null
+        const iconElement = contentType.icon
           ? renderIconFromPath(contentType.icon, {
-              sx: { fontSize: "20px" },
-            })
+            sx: { fontSize: "20px" },
+          })
           : undefined;
+        const icon = iconElement || undefined; // Convert null to undefined
 
         // Calculate total marks for filtered questions
         const totalMarks = filteredQuestions.reduce((total, q) => total + (q.score || 0), 0);
@@ -515,7 +516,7 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                   </Typography>
                 </Box>
               }
-              {...(tab.icon && { icon: tab.icon, iconPosition: "start" as const })}
+              {...(tab.icon ? { icon: tab.icon, iconPosition: "start" as const } : {})}
               selectedtab={activeTab === index}
               id={`custom-tab-${index}`}
               aria-controls={`custom-tabpanel-${index}`}

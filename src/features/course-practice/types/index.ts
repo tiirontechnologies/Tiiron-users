@@ -7,6 +7,7 @@ export interface Question {
     html: string;
     title: string;
   };
+  previousPractice?: ApiPractice;
 }
 
 export interface QuestionContent {
