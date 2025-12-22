@@ -109,7 +109,7 @@ const StyledTab = styled(Tab, {
 
 interface TabData {
   label: string;
-  icon?: React.ReactNode;
+  icon?: React.ReactElement;
   panel: React.ReactNode;
   contentType: ApiContentType;
   totalMarks: number;
@@ -516,7 +516,8 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                   </Typography>
                 </Box>
               }
-              {...(tab.icon ? { icon: tab.icon, iconPosition: "start" as const } : {})}
+              icon={tab.icon}
+              iconPosition={tab.icon ? "start" : undefined}
               selectedtab={activeTab === index}
               id={`custom-tab-${index}`}
               aria-controls={`custom-tabpanel-${index}`}
