@@ -244,47 +244,91 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
     );
   }, [data]);
 
+  // Map contentTypeId to tab label
+  const getTabLabel = (contentTypeId: number): string | null => {
+    switch (contentTypeId) {
+      case 1:
+        return "Video Practice";
+      case 2:
+        return "Quiz";
+      case 3:
+        return "Assessment";
+      case 5:
+        return "Blog";
+      default:
+        return null; // Don't show tabs for other contentTypeIds
+    }
+  };
+
   const { tabsData } = useMemo(() => {
     const tabs: TabData[] = [];
 
     if (data?.contentTypes && Array.isArray(data.contentTypes)) {
-      // Sort contentTypes by order
-      const sortedContentTypes = [...data.contentTypes].sort(
-        (a, b) => a.order - b.order
-      );
+      // First, collect all questions grouped by contentTypeId
+      const questionsByContentTypeId: { [key: number]: ApiQuestion[] } = {};
 
-      sortedContentTypes.forEach((contentType: ApiContentType) => {
-        // Filter out tutorial videos from the Video content type
-        let filteredQuestions = contentType.questions || [];
-        if (contentType.name === "Video") {
-          filteredQuestions = filteredQuestions.filter(
-            (q) => q.questiontypecon?.name !== "Video"
-          );
-          // Skip this tab if no questions left after filtering
-          if (filteredQuestions.length === 0) return;
+      data.contentTypes.forEach((contentType: ApiContentType) => {
+        const contentTypeId = contentType.id;
+
+        // Only process contentTypes with IDs 1, 2, 3, or 5
+        if (![1, 2, 3, 5].includes(contentTypeId)) {
+          return;
         }
 
+        // Initialize array if it doesn't exist
+        if (!questionsByContentTypeId[contentTypeId]) {
+          questionsByContentTypeId[contentTypeId] = [];
+        }
+
+        // Filter questions for this contentType
+        // All questions with this contentTypeId should appear in the corresponding tab
+        const filteredQuestions = contentType.questions || [];
+
+        // Add questions to the group
+        questionsByContentTypeId[contentTypeId].push(...filteredQuestions);
+      });
+
+      // Define tab order: Video Practice (1), Quiz (2), Assessment (3), Blog (5)
+      const tabOrder = [1, 2, 3, 5];
+
+      // Create tabs in the specified order
+      tabOrder.forEach((contentTypeId) => {
+        const questions = questionsByContentTypeId[contentTypeId] || [];
+
+        // Only create tab if there are questions
+        if (questions.length === 0) {
+          return;
+        }
+
+        const tabLabel = getTabLabel(contentTypeId);
+        if (!tabLabel) {
+          return;
+        }
+
+        // Find the contentType to get icon and other metadata
+        const contentType = data.contentTypes.find((ct) => ct.id === contentTypeId);
+
         // Get icon from icon path - ensure it's a valid React element, not null
-        const iconElement = contentType.icon
+        const iconElement = contentType?.icon
           ? renderIconFromPath(contentType.icon, {
             sx: { fontSize: "20px" },
           })
           : undefined;
         const icon = iconElement || undefined; // Convert null to undefined
 
-        // Calculate total marks for filtered questions
-        const totalMarks = filteredQuestions.reduce((total, q) => total + (q.score || 0), 0);
+        // Calculate total marks for questions
+        const totalMarks = questions.reduce((total, q) => total + (q.score || 0), 0);
 
-        // Create panel with questions for this contentType
+        // Create panel with questions for this contentTypeId
         const questionsPanel = (
-          <Box key={contentType.id} sx={{ mt: 3, pb: 10 }}>
-            {filteredQuestions.length > 0 ? (
+          <Box key={contentTypeId} sx={{ mt: 3, pb: 10 }}>
+            {questions.length > 0 ? (
               <>
-                {filteredQuestions.map((apiQuestion: ApiQuestion, qIndex: number) => {
+                {questions.map((apiQuestion: ApiQuestion, qIndex: number) => {
                   // Transform API question to Question format
                   const transformedQuestion = transformApiQuestion(apiQuestion);
                   const questionId = apiQuestion.id.toString();
-                  const userAnswer = getUserAnswer(contentType.id, questionId);
+                  const userAnswer = getUserAnswer(contentTypeId, questionId);
 
                   // Debug: Log question transformation for MCQ
                   if (apiQuestion.questiontypeId === 1 || apiQuestion.questiontypeId === 2) {
@@ -298,7 +342,7 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
 
                   return (
                     <Card
-                      key={`${contentType.id}-${apiQuestion.id}-${qIndex}`}
+                      key={`${contentTypeId}-${apiQuestion.id}-${qIndex}`}
                       sx={{
                         mb: 3,
                         borderRadius: "12px",
@@ -357,7 +401,7 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                           practiceMode={true}
                           userAnswer={userAnswer}
                           onAnswerChange={(answer) =>
-                            handleAnswerChange(contentType.id, questionId, answer)
+                            handleAnswerChange(contentTypeId, questionId, answer)
                           }
                         />
                       </CardContent>
@@ -382,18 +426,28 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                     fontWeight: 500,
                   }}
                 >
-                  No questions available for {contentType.name}
+                  No questions available for {tabLabel}
                 </Typography>
               </Box>
             )}
           </Box>
         );
 
+        // Create a contentType object for the tab
+        const contentTypeForTab: ApiContentType = contentType || {
+          id: contentTypeId,
+          name: tabLabel,
+          icon: "",
+          order: tabOrder.indexOf(contentTypeId),
+          questions: questions,
+          status: { isCompleted: false, totalScore: 0 },
+        };
+
         tabs.push({
-          label: contentType.name,
+          label: `${tabLabel} (${questions.length} ${questions.length === 1 ? 'question' : 'questions'})`,
           icon,
           panel: questionsPanel,
-          contentType: { ...contentType, questions: filteredQuestions },
+          contentType: contentTypeForTab,
           totalMarks,
         });
       });
@@ -502,20 +556,7 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
           {tabsData.map((tab, index) => (
             <StyledTab
               key={index}
-              label={
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <span>{tab.label}</span>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: activeTab === index ? COLORS.primary : COLORS.text.muted,
-                      fontWeight: 600,
-                    }}
-                  >
-                    ({tab.totalMarks} marks)
-                  </Typography>
-                </Box>
-              }
+              label={tab.label}
               icon={tab.icon}
               iconPosition={tab.icon ? "start" : undefined}
               selectedtab={activeTab === index}
