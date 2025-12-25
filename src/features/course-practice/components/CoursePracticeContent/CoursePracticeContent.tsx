@@ -233,14 +233,16 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
   );
 
   // Extract tutorial videos (contentType.name === "Video" AND question.questiontypecon.name === "Video")
+  // These videos should be displayed at the top, not in tabs
   const tutorialVideos = useMemo(() => {
     if (!data?.contentTypes || !Array.isArray(data.contentTypes)) return [];
 
     const videoContentType = data.contentTypes.find(ct => ct.name === "Video");
     if (!videoContentType?.questions) return [];
 
+    // Filter for video questions (questiontypeId === 6 or questiontypecon.name === "Video")
     return videoContentType.questions.filter(
-      (q) => q.questiontypecon?.name === "Video"
+      (q) => q.questiontypeId === 6 || q.questiontypecon?.name === "Video"
     );
   }, [data]);
 
@@ -281,8 +283,16 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
         }
 
         // Filter questions for this contentType
-        // All questions with this contentTypeId should appear in the corresponding tab
-        const filteredQuestions = contentType.questions || [];
+        // For contentTypeId === 1 (Video), exclude video questions (questiontypeId === 6)
+        // because those are displayed in the tutorial section at the top
+        let filteredQuestions = contentType.questions || [];
+
+        if (contentTypeId === 1) {
+          // Exclude video questions from tabs - they're shown in tutorial section
+          filteredQuestions = filteredQuestions.filter(
+            (q) => q.questiontypeId !== 6 && q.questiontypecon?.name !== "Video"
+          );
+        }
 
         // Add questions to the group
         questionsByContentTypeId[contentTypeId].push(...filteredQuestions);
@@ -460,7 +470,8 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
     setActiveTab(newValue);
   };
 
-  if (tabsData.length === 0) {
+  // If there are no tabs but there are tutorial videos, still show the videos
+  if (tabsData.length === 0 && tutorialVideos.length === 0) {
     return (
       <Box
         sx={{
@@ -526,52 +537,57 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
         </Box>
       )}
 
-      <Box
-        sx={{
-          position: "sticky",
-          top: 0, // Sticky to the top of the scrollable container
-          zIndex: 100,
-          background: COLORS.background.light,
-          pb: 2,
-          pt: 1,
-        }}
-      >
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          sx={{
-            background: COLORS.background.white,
-            borderRadius: "16px",
-            width: "fit-content",
-            p: "0px 20px",
-            boxShadow: SHADOWS.sm,
-            border: `1px solid ${COLORS.border.light}`,
-            "& .MuiTabs-indicator": {
-              height: "3px",
-              borderRadius: "24px",
-              background: COLORS.primary,
-            },
-          }}
-        >
-          {tabsData.map((tab, index) => (
-            <StyledTab
-              key={index}
-              label={tab.label}
-              icon={tab.icon}
-              iconPosition={tab.icon ? "start" : undefined}
-              selectedtab={activeTab === index}
-              id={`custom-tab-${index}`}
-              aria-controls={`custom-tabpanel-${index}`}
-            />
-          ))}
-        </Tabs>
-      </Box>
+      {/* Tabs Section - Only show if there are tabs */}
+      {tabsData.length > 0 && (
+        <>
+          <Box
+            sx={{
+              position: "sticky",
+              top: 0, // Sticky to the top of the scrollable container
+              zIndex: 100,
+              background: COLORS.background.light,
+              pb: 2,
+              pt: 1,
+            }}
+          >
+            <Tabs
+              value={activeTab}
+              onChange={handleTabChange}
+              sx={{
+                background: COLORS.background.white,
+                borderRadius: "16px",
+                width: "fit-content",
+                p: "0px 20px",
+                boxShadow: SHADOWS.sm,
+                border: `1px solid ${COLORS.border.light}`,
+                "& .MuiTabs-indicator": {
+                  height: "3px",
+                  borderRadius: "24px",
+                  background: COLORS.primary,
+                },
+              }}
+            >
+              {tabsData.map((tab, index) => (
+                <StyledTab
+                  key={index}
+                  label={tab.label}
+                  icon={tab.icon}
+                  iconPosition={tab.icon ? "start" : undefined}
+                  selectedtab={activeTab === index}
+                  id={`custom-tab-${index}`}
+                  aria-controls={`custom-tabpanel-${index}`}
+                />
+              ))}
+            </Tabs>
+          </Box>
 
-      {tabsData.map((tab, index) => (
-        <CustomTabPanel key={index} value={activeTab} index={index}>
-          {tab.panel}
-        </CustomTabPanel>
-      ))}
+          {tabsData.map((tab, index) => (
+            <CustomTabPanel key={index} value={activeTab} index={index}>
+              {tab.panel}
+            </CustomTabPanel>
+          ))}
+        </>
+      )}
 
       {/* Footer for submitting */}
       {activeContentType && (
