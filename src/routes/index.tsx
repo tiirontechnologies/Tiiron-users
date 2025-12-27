@@ -3,7 +3,7 @@ import { appRoutes } from "./appRoutess";
 import { globalRoutes } from "./globalRoutes";
 import { authRoutes } from "./authRoutes";
 import { homeRoutes } from "./homeRoutes";
-import { CourseProgress } from "../features";
+import { CourseProgress, CodeEditorPage } from "../features";
 import NotFound from "../pages/NotFound";
 import { userRoutes } from "./learnerRoute";
 import UserLayout from "@layouts/UserLayout";
@@ -28,6 +28,10 @@ export const routeConfig = [
   {
     path: "/course-practice/:courseId",
     element: <CourseProgress />,
+  },
+  {
+    path: "/code-editor/:courseId/:questionId",
+    element: <CodeEditorPage />,
   },
   ...homeRoutes,
   ...authRoutes,
