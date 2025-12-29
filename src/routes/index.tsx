@@ -8,6 +8,7 @@ import NotFound from "../pages/NotFound";
 import { userRoutes } from "./learnerRoute";
 import UserLayout from "@layouts/UserLayout";
 import SearchResults from "../pages/SearchResults";
+import PrivateRoute from "@layouts/PrivateRoute";
 
 export const routeConfig = [
   {
@@ -27,7 +28,11 @@ export const routeConfig = [
   },
   {
     path: "/course-practice/:courseId",
-    element: <CourseProgress />,
+    element: (
+          <PrivateRoute >
+            <CourseProgress />
+          </PrivateRoute>
+        ),
   },
   ...homeRoutes,
   ...authRoutes,
