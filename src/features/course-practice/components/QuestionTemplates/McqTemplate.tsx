@@ -179,7 +179,9 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
             >
               <input
                 type={allowMultipleSelection ? "checkbox" : "radio"}
-                checked={isSelected || isPreviouslySelected}
+                name={allowMultipleSelection ? undefined : `question-${question.id || 'mcq'}`}
+                value={optionId}
+                checked={!!(isSelected || isPreviouslySelected)}
                 disabled={!practiceMode}
                 onChange={() => handleOptionClick(oidx)}
                 style={{
