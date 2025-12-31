@@ -107,6 +107,34 @@ export interface ApiPractice {
   selectedOptionId: number | null;
 }
 
+export interface ApiCodeTestCase {
+  input: Record<string, any>;
+  description: string;
+  expectedOutput: string;
+}
+
+export interface ApiCodeTemplate {
+  template: {
+    [language: string]: string;
+  };
+}
+
+export interface ApiCodeTemplateItem {
+  code: string;
+  languageId: number;
+}
+
+// codeTemplate can be either an array (actual API format) or an object with template property (legacy)
+export type ApiCodeTemplateUnion = ApiCodeTemplateItem[] | ApiCodeTemplate;
+
+export interface ApiCode {
+  id: number;
+  questionId: number;
+  testCases: ApiCodeTestCase[];
+  codeTemplate: ApiCodeTemplateUnion;
+  alllowedLanguage: number[];
+}
+
 export interface ApiQuestion {
   id: number;
   title: string;
@@ -122,6 +150,7 @@ export interface ApiQuestion {
   mcq: ApiMcq | null;
   subjective: ApiSubjective | null;
   fillUp: ApiFillUp | null;
+  code: ApiCode | null;
   practices: ApiPractice[];
 }
 

@@ -8,6 +8,7 @@ import NotFound from "../pages/NotFound";
 import { userRoutes } from "./learnerRoute";
 import UserLayout from "@layouts/UserLayout";
 import SearchResults from "../pages/SearchResults";
+import CodeTestPage from "../pages/CodeTestPage";
 
 export const routeConfig = [
   {
@@ -32,6 +33,10 @@ export const routeConfig = [
   {
     path: "/code-editor/:courseId/:questionId",
     element: <CodeEditorPage />,
+  },
+  {
+    path: "/code-test",
+    element: <CodeTestPage />,
   },
   ...homeRoutes,
   ...authRoutes,

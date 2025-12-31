@@ -308,8 +308,12 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                         key={`${contentType.id}-${apiQuestion.id}-${qIndex}`}
                         question={apiQuestion}
                         onSolve={() => {
-                          // Navigate to code editor page
-                          navigate(`/code-editor/${courseId}/${apiQuestion.id}`);
+                          // Navigate to code editor page with question data in state
+                          navigate(`/code-editor/${courseId}/${apiQuestion.id}`, {
+                            state: {
+                              question: apiQuestion,
+                            },
+                          });
                         }}
                         onBookmark={() => {
                           // Handle bookmark toggle
