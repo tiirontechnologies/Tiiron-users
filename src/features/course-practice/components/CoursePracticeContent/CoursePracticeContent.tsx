@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { Box, Typography, Tabs, Tab, Button, Card, CardContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import CustomTabPanel from "../../../../components/ui/CustomTabPanel";
 import { transformApiQuestion } from "../../utils/transformApiResponse";
 import { CoursePracticeApiResponse, ApiContentType, ApiQuestion } from "../../types";
@@ -12,6 +12,7 @@ import FillUpTemplate from "../QuestionTemplates/FillUpTemplate";
 import SubjectiveTemplate from "../QuestionTemplates/SubjectiveTemplate";
 import BlogTemplate from "../QuestionTemplates/BlogTemplate";
 import VideoTemplate from "../QuestionTemplates/VideoTemplate";
+import CodeChallengeCard from "../QuestionTemplates/CodeChallengeCard";
 import { useSubmitPracticeBulkMutation } from "../../api/practiceApi";
 import Scoresvg from "@icons/Score.svg";
 
@@ -84,6 +85,9 @@ const QuestionComponent = ({
       return <BlogTemplate question={question} practiceMode={practiceMode} />;
     case 6: // Video
       return <VideoTemplate question={question} practiceMode={practiceMode} />;
+    case 7: // Code
+      // Code challenges are rendered as CodeChallengeCard, not through QuestionComponent
+      return null;
     default:
       return null;
   }
@@ -122,6 +126,7 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
   unitId: propUnitId,
 }) => {
   const params = useParams<{ courseId: string }>();
+  const navigate = useNavigate();
   const courseId = propCourseId || params.courseId || "";
   const unitId = propUnitId || "";
   const [activeTab, setActiveTab] = useState(0);
@@ -350,6 +355,30 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                     });
                   }
 
+                  // Render Code Challenge Card for questiontypeId 7
+                  if (apiQuestion.questiontypeId === 7) {
+                    return (
+                      <CodeChallengeCard
+                        key={`${contentType.id}-${apiQuestion.id}-${qIndex}`}
+                        question={apiQuestion}
+                        onSolve={() => {
+                          // Navigate to code editor page with question data in state
+                          navigate(`/code-editor/${courseId}/${apiQuestion.id}`, {
+                            state: {
+                              question: apiQuestion,
+                            },
+                          });
+                        }}
+                        onBookmark={() => {
+                          // Handle bookmark toggle
+                          console.log("Toggle bookmark:", apiQuestion.id);
+                        }}
+                        isBookmarked={false}
+                      />
+                    );
+                  }
+
+                  // Render regular question card for other question types
                   return (
                     <Card
                       key={`${contentTypeId}-${apiQuestion.id}-${qIndex}`}

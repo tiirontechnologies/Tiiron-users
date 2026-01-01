@@ -3,12 +3,13 @@ import { appRoutes } from "./appRoutess";
 import { globalRoutes } from "./globalRoutes";
 import { authRoutes } from "./authRoutes";
 import { homeRoutes } from "./homeRoutes";
-import { CourseProgress } from "../features";
+import { CourseProgress, CodeEditorPage } from "../features";
 import NotFound from "../pages/NotFound";
 import { userRoutes } from "./learnerRoute";
 import UserLayout from "@layouts/UserLayout";
 import SearchResults from "../pages/SearchResults";
 import PrivateRoute from "@layouts/PrivateRoute";
+import CodeTestPage from "../pages/CodeTestPage";
 
 export const routeConfig = [
   {
@@ -28,11 +29,15 @@ export const routeConfig = [
   },
   {
     path: "/course-practice/:courseId",
-    element: (
-          <PrivateRoute >
-            <CourseProgress />
-          </PrivateRoute>
-        ),
+    element: <CourseProgress />,
+  },
+  {
+    path: "/code-editor/:courseId/:questionId",
+    element: <CodeEditorPage />,
+  },
+  {
+    path: "/code-test",
+    element: <CodeTestPage />,
   },
   ...homeRoutes,
   ...authRoutes,

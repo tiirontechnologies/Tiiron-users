@@ -21,12 +21,76 @@ export const courseProgressApiSlice = baseApi.injectEndpoints({
       }),
       providesTags: ['Unit'],
     }),
+
+    getQuestionById: builder.query<{ data?: any } | any, { questionId: string, courseId: string }>({
+      query: ({ courseId, questionId }) => ({
+        url: `/practice/course/${courseId}/question/${questionId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Question'],
+    }),
+
+    // Test code submission endpoint
+    testCodeSubmission: builder.mutation<
+      {
+        success: boolean;
+        data?: {
+          passed: number;
+          failed: number;
+          total: number;
+          testCases: Array<{
+            testCaseId: number;
+            passed: boolean;
+            input?: any;
+            expectedOutput?: string;
+            actualOutput?: string;
+            error?: string;
+            executionTime?: number;
+          }>;
+        };
+        message?: string;
+      },
+      {
+        questionId: number;
+        sourceCode: string;
+        languageId: number;
+      }
+    >({
+      query: (payload) => ({
+        url: '/question/code/test-all',
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+
+    // Get available programming languages
+    getCodeLanguages: builder.query<
+      {
+        success: boolean;
+        data?: Array<{
+          id: number;
+          name: string;
+          value?: string;
+          label?: string;
+        }>;
+      },
+      void
+    >({
+      query: () => ({
+        url: '/question/code/languages',
+        method: 'GET',
+      }),
+      providesTags: ['Question'],
+    }),
   }),
 });
 
 export const {
   useGetLessonAndTopicByCourseIdQuery,
   useGetContentByTopicIdQuery,
+  useGetQuestionByIdQuery,
+  useTestCodeSubmissionMutation,
+  useGetCodeLanguagesQuery,
 } = courseProgressApiSlice;
 
 

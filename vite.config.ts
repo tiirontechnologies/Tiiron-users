@@ -12,7 +12,12 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   base: "/",
   plugins: [
-    react(),
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
+      },
+    }),
     svgr({
       svgrOptions: {
         icon: true,
@@ -39,6 +44,10 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["@emotion/styled", "@emotion/react", "@mui/material"],
+    include: ["@emotion/styled", "@emotion/react", "@mui/material", "@mui/system"],
+    esbuildOptions: {
+      jsx: "automatic",
+      jsxImportSource: "@emotion/react",
+    },
   },
 });
