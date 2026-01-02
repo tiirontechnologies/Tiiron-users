@@ -213,19 +213,25 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
   >("success");
   const handleSnackbarClose = () => setSnackbarOpen(false);
 
-  // --- LOOPING CHECKOUT HANDLER ---
+  // --- CHECKOUT HANDLER ---
   const handleCheckout = async () => {
     if (isCartEmpty || isCheckingOut || isCartFetching) return;
 
-    SetSnackbarMessage("Starting enrollment process...");
+    const isFree = cartTotal === 0;
+
+    // If cart has paid courses, redirect to checkout page
+    if (!isFree) {
+      onClose();
+      navigate("/checkout");
+      return;
+    }
+
+    // If all courses are free, enroll automatically
+    SetSnackbarMessage("Enrolling in course(s)...");
     setSnackbarSeverity("info");
     setSnackbarOpen(true);
 
-    const isFree = cartTotal === 0;
-    const paymentStatus = isFree ? "free" : "pending";
-
     const successfullyEnrolledIds: number[] = [];
-    const enrolledCourseIds: number[] = [];
 
     try {
       for (const item of cartItems) {
@@ -239,7 +245,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
         const payload: SingleEnrollmentRequest = {
           courseId: courseId,
           status: "active",
-          payment_status: paymentStatus,
+          payment_status: "free",
         };
 
         const response = await initiateCheckout(payload).unwrap();
@@ -250,43 +256,20 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
 
       // --- Final Success Check ---
       if (successfullyEnrolledIds.length > 0) {
-        if (isFree) {
-          if (successfullyEnrolledIds.length == 1) {
-            const courseIdToRedirect = enrolledCourseIds[0];
-
-            SetSnackbarMessage(
-              `Successfully enrolled! Redirecting to course...`
-            );
-            setSnackbarSeverity("success");
-            setSnackbarOpen(true);
-            onClose();
-            navigate(`/course-practice/${courseIdToRedirect}`);
-          } else {
-            // API (invalidatesTags) will refetch the cart, making it empty
-            SetSnackbarMessage(
-              `Successfully enrolled in ${successfullyEnrolledIds.length} FREE course(s).`
-            );
-            setSnackbarSeverity("success");
-            setSnackbarOpen(true);
-            setTimeout(onClose, 2000);
-          }
-
-          // ... (Payment Gateway logic) ...
-        } else {
-          SetSnackbarMessage(
-            `Enrollment successful for ${successfullyEnrolledIds.length} paid course(s).`
-          );
-          setSnackbarSeverity("success");
-          setSnackbarOpen(true);
-          setTimeout(onClose, 3000);
-        }
+        SetSnackbarMessage("Enrolled successfully");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        
+        // Close modal after showing success message
+        setTimeout(() => {
+          onClose();
+        }, 2000);
       } else {
         throw new Error(
           "Checkout failed. No courses were successfully enrolled."
         );
       }
     } catch (error: any) {
-      // ... (Error handling logic remains the same) ...
       let errorMessage = "Checkout failed due to a server or network error.";
       let severity: "success" | "error" | "info" | "warning" = "error";
 

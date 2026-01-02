@@ -39,7 +39,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
   }, [userAnswer, question.previousPractice]);
 
   const handleOptionClick = (optionIndex: number) => {
-    if (!practiceMode) return;
+    // Disable selection if question has been practiced
+    if (!effectivePracticeMode || isPracticed) return;
 
     // Use the option ID from API if available, otherwise fall back to index
     const option = question.content.options?.[optionIndex];
@@ -76,15 +77,20 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
     );
   }
 
-  // Check if we should show previous practice info
-  const hasPreviousPractice = question.previousPractice && !practiceMode;
+  // Check if question has been practiced (has selectedOptionId)
+  const hasPreviousPractice = !!question.previousPractice?.selectedOptionId;
   const previousScore = question.previousPractice?.score;
   const previousIsCorrect = question.previousPractice?.isCorrect;
+  const selectedOptionId = question.previousPractice?.selectedOptionId;
+  
+  // If question has been practiced, disable practice mode (show results instead)
+  const isPracticed = hasPreviousPractice;
+  const effectivePracticeMode = practiceMode && !isPracticed;
 
   return (
     <Box sx={{ mt: 2 }}>
-      {/* Show previous practice score if available and not in practice mode */}
-      {hasPreviousPractice && previousScore !== undefined && (
+      {/* Show previous practice score if question has been practiced */}
+      {isPracticed && previousScore !== undefined && (
         <Box
           sx={{
             mb: 2,
@@ -112,20 +118,46 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
           // Use API option ID if available, otherwise fall back to index
           const optionId = opt.id?.toString() ?? oidx.toString();
           const isSelected = selectedAnswers.includes(optionId);
+          
+          // Handle isCorrect: may be undefined if question not practiced
+          // For practiced questions, isCorrect should be present (true/false)
+          // For unpracticed questions, isCorrect will be undefined
           const isCorrect = opt.isCorrect;
-          const showCorrectAnswer = showAnswers && isCorrect;
-          const showUserAnswer = showAnswers && isSelected;
-          // Show previous selection if not in practice mode and this option was previously selected
-          const isPreviouslySelected = hasPreviousPractice &&
-            question.previousPractice?.selectedOptionId?.toString() === optionId;
+          const hasIsCorrectField = opt.hasOwnProperty('isCorrect');
+          
+          // Check if this is the previously selected option
+          const isPreviouslySelected = isPracticed &&
+            selectedOptionId?.toString() === optionId;
 
           // Determine styling based on mode
           let borderColor: string = COLORS.border.light;
           let backgroundColor: string = COLORS.background.light;
           let textColor: string = COLORS.text.primary;
 
-          if (practiceMode) {
-            // Practice mode styling
+          if (isPracticed) {
+            // Question has been practiced - show results
+            // isCorrect should be present for practiced questions
+            if (isPreviouslySelected) {
+              // This is the selected option
+              if (previousIsCorrect) {
+                // Correct answer - show in green
+                borderColor = "#10B981";
+                backgroundColor = "#ECFDF8";
+                textColor = "#065F46";
+              } else {
+                // Wrong answer - show in red
+                borderColor = "#EF4444";
+                backgroundColor = "#FEF2F2";
+                textColor = "#991B1B";
+              }
+            } else if (hasIsCorrectField && isCorrect === true) {
+              // Show correct answers (even if not selected) - only if isCorrect is explicitly true
+              borderColor = "#10B981";
+              backgroundColor = "#ECFDF8";
+              textColor = "#065F46";
+            }
+          } else if (effectivePracticeMode) {
+            // Practice mode styling (question not yet practiced)
             if (isSelected) {
               borderColor = COLORS.primary;
               backgroundColor = "#ECFDF8";
@@ -135,20 +167,15 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
             }
           } else if (showAnswers) {
             // Review mode styling
-            if (showCorrectAnswer) {
+            if (isCorrect) {
               borderColor = "#10B981";
               backgroundColor = "#ECFDF8";
               textColor = "#065F46";
-            } else if (showUserAnswer && !isCorrect) {
+            } else if (isSelected && !isCorrect) {
               borderColor = "#EF4444";
               backgroundColor = "#FEF2F2";
               textColor = "#991B1B";
             }
-          } else if (hasPreviousPractice && isPreviouslySelected) {
-            // Show previously selected option when viewing completed practice
-            borderColor = previousIsCorrect ? "#10B981" : "#EF4444";
-            backgroundColor = previousIsCorrect ? "#ECFDF8" : "#FEF2F2";
-            textColor = previousIsCorrect ? "#065F46" : "#991B1B";
           }
 
           return (
@@ -165,9 +192,9 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                 alignItems: "center",
                 mb: 1,
                 background: backgroundColor,
-                cursor: practiceMode ? "pointer" : "default",
+                cursor: effectivePracticeMode ? "pointer" : "default",
                 transition: "all 0.2s ease",
-                "&:hover": practiceMode
+                "&:hover": effectivePracticeMode
                   ? {
                     borderColor: COLORS.primary,
                     backgroundColor: isSelected ? "#D1FAE5" : COLORS.background.lighter,
@@ -182,12 +209,12 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                 name={allowMultipleSelection ? undefined : `question-${question.id || 'mcq'}`}
                 value={optionId}
                 checked={!!(isSelected || isPreviouslySelected)}
-                disabled={!practiceMode}
+                disabled={!effectivePracticeMode || isPracticed}
                 onChange={() => handleOptionClick(oidx)}
                 style={{
                   marginRight: 12,
                   accentColor: (isSelected || isPreviouslySelected) ? COLORS.primary : COLORS.border.light,
-                  cursor: practiceMode ? "pointer" : "default",
+                  cursor: effectivePracticeMode ? "pointer" : "default",
                 }}
               />
               <Typography
@@ -200,7 +227,49 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
               >
                 {opt.text}
               </Typography>
-              {showAnswers && showCorrectAnswer && (
+              {/* Show labels for practiced questions */}
+              {isPracticed && (
+                <>
+                  {isPreviouslySelected && previousIsCorrect && (
+                    <Typography
+                      sx={{
+                        fontSize: "12px",
+                        color: "#10B981",
+                        fontWeight: 600,
+                        ml: 1,
+                      }}
+                    >
+                      ✓ Your Answer (Correct)
+                    </Typography>
+                  )}
+                  {isPreviouslySelected && !previousIsCorrect && (
+                    <Typography
+                      sx={{
+                        fontSize: "12px",
+                        color: "#EF4444",
+                        fontWeight: 600,
+                        ml: 1,
+                      }}
+                    >
+                      ✗ Your Answer (Wrong)
+                    </Typography>
+                  )}
+                  {!isPreviouslySelected && hasIsCorrectField && isCorrect === true && (
+                    <Typography
+                      sx={{
+                        fontSize: "12px",
+                        color: "#10B981",
+                        fontWeight: 600,
+                        ml: 1,
+                      }}
+                    >
+                      ✓ Correct Answer
+                    </Typography>
+                  )}
+                </>
+              )}
+              {/* Legacy support for showAnswers mode */}
+              {!isPracticed && showAnswers && hasIsCorrectField && isCorrect === true && (
                 <Typography
                   sx={{
                     fontSize: "12px",
@@ -212,7 +281,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                   ✓ Correct
                 </Typography>
               )}
-              {showAnswers && showUserAnswer && !isCorrect && (
+              {!isPracticed && showAnswers && isSelected && hasIsCorrectField && isCorrect === false && (
                 <Typography
                   sx={{
                     fontSize: "12px",
@@ -222,18 +291,6 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                   }}
                 >
                   ✗ Your Answer
-                </Typography>
-              )}
-              {hasPreviousPractice && isPreviouslySelected && !showAnswers && (
-                <Typography
-                  sx={{
-                    fontSize: "12px",
-                    color: previousIsCorrect ? "#10B981" : "#EF4444",
-                    fontWeight: 600,
-                    ml: 1,
-                  }}
-                >
-                  {previousIsCorrect ? "✓ Previously Selected" : "✗ Previously Selected"}
                 </Typography>
               )}
             </Box>

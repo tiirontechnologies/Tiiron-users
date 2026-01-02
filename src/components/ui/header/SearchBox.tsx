@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   InputAdornment,
@@ -23,7 +23,7 @@ const SearchBox = () => {
   const searchBoxRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Debounce input by 200ms
+  // Debounce input by 200ms to trigger API call when character is entered
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
@@ -32,28 +32,59 @@ const SearchBox = () => {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Fetch all courses (we'll filter client-side)
+  // Fetch courses from search API
   const {
     data: searchData,
     isLoading,
     isFetching,
   } = useSearchCoursesQuery(
-    { page: 1, limit: 100 },
+    { q: debouncedQuery.trim(), page: 1, limit: 10 },
     { skip: !debouncedQuery.trim() }
   );
 
-  // Extract all courses from response
-  const allCourses: ICourse[] =
-    (searchData as { data?: { courses?: ICourse[] } })?.data?.courses || [];
-
-  // Filter courses client-side based on search query and limit to 10 for dropdown
-  const courses: ICourse[] = debouncedQuery.trim()
-    ? allCourses
-      .filter((course) =>
-        course.title.toLowerCase().includes(debouncedQuery.toLowerCase())
-      )
-      .slice(0, 10)
-    : [];
+  // Extract courses from response - handle different possible response structures
+  const courses: ICourse[] = React.useMemo(() => {
+    if (!searchData) return [];
+    
+    // Try different response structures
+    const data = searchData as any;
+    
+    // Debug: Log the response structure
+    console.log("🔍 Search API Response:", data);
+    
+    // Structure 1: { data: { results: [...] } } - Actual API structure
+    if (data?.data?.results && Array.isArray(data.data.results)) {
+      console.log("✅ Found courses in data.data.results:", data.data.results.length);
+      return data.data.results;
+    }
+    
+    // Structure 2: { data: { courses: [...] } }
+    if (data?.data?.courses && Array.isArray(data.data.courses)) {
+      console.log("✅ Found courses in data.data.courses:", data.data.courses.length);
+      return data.data.courses;
+    }
+    
+    // Structure 3: { results: [...] }
+    if (data?.results && Array.isArray(data.results)) {
+      console.log("✅ Found courses in data.results:", data.results.length);
+      return data.results;
+    }
+    
+    // Structure 4: { courses: [...] }
+    if (data?.courses && Array.isArray(data.courses)) {
+      console.log("✅ Found courses in data.courses:", data.courses.length);
+      return data.courses;
+    }
+    
+    // Structure 5: Direct array
+    if (Array.isArray(data)) {
+      console.log("✅ Found courses as direct array:", data.length);
+      return data;
+    }
+    
+    console.log("⚠️ No courses found in response");
+    return [];
+  }, [searchData]);
 
   // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,16 +109,23 @@ const SearchBox = () => {
     [navigate]
   );
 
+  // Handle search icon click or Enter key press
+  const handleSearch = useCallback(() => {
+    if (query.trim()) {
+      setShowSuggestions(false);
+      navigate(`/browse-courses?q=${encodeURIComponent(query.trim())}`);
+    }
+  }, [query, navigate]);
+
   // Handle Enter key press
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (selectedIndex >= 0 && courses[selectedIndex]) {
         // Navigate to selected course
         handleCourseClick(courses[selectedIndex].id);
-      } else if (query.trim()) {
-        // Navigate to search results page
-        setShowSuggestions(false);
-        navigate(`/search?query=${encodeURIComponent(query.trim())}`);
+      } else {
+        // Navigate to browse courses with search query
+        handleSearch();
       }
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -121,11 +159,10 @@ const SearchBox = () => {
     };
   }, []);
 
-  // Show suggestions only when there's a query and results
+  // Show suggestions when user is typing (show immediately when typing starts)
   const shouldShowSuggestions =
     showSuggestions &&
-    debouncedQuery.trim() &&
-    (isLoading || isFetching || courses.length > 0);
+    query.trim().length > 0;
 
   return (
     <Box
@@ -145,7 +182,7 @@ const SearchBox = () => {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onFocus={() => {
-          if (debouncedQuery.trim()) {
+          if (query.trim()) {
             setShowSuggestions(true);
           }
         }}
@@ -153,49 +190,82 @@ const SearchBox = () => {
           width: "100%",
           "& .MuiOutlinedInput-root": {
             background: "#fff",
-            borderRadius: { xs: "8px", sm: "10px" },
+            borderRadius: { xs: "12px", sm: "14px" },
             padding: { xs: "4px", sm: "6px" },
-            height: { xs: "40px", sm: "44px" },
+            height: { xs: "44px", sm: "48px" },
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
+            transition: "all 0.2s ease-in-out",
             "& fieldset": {
-              border: "1px solid rgba(230, 230, 230, 1)",
-              borderRadius: { xs: "8px", sm: "10px" },
+              border: "1.5px solid rgba(230, 230, 230, 1)",
+              borderRadius: { xs: "12px", sm: "14px" },
               overflow: "hidden",
             },
-            "&:hover fieldset": {
-              borderColor: "#bdbdbd",
+            "&:hover": {
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+              "& fieldset": {
+                borderColor: "rgba(79, 57, 246, 0.5)",
+              },
+              "& .MuiInputAdornment-root svg": {
+                color: "rgba(79, 57, 246, 0.8)",
+              },
             },
-            "&.Mui-focused fieldset": {
-              borderColor: "rgba(79, 57, 246, 1)",
+            "&.Mui-focused": {
+              boxShadow: "0 4px 16px rgba(79, 57, 246, 0.15)",
+              "& fieldset": {
+                borderColor: "rgba(79, 57, 246, 1)",
+                borderWidth: "1.5px",
+              },
+              "& .MuiInputAdornment-root svg": {
+                color: "rgba(79, 57, 246, 1)",
+              },
             },
             "& .MuiInputBase-input": {
-              padding: { xs: "6px 10px", sm: "8px 12px" },
-              fontSize: { xs: "13px", sm: "14px" },
+              padding: { xs: "8px 14px 8px 12px", sm: "10px 16px 10px 14px" },
+              fontSize: { xs: "14px", sm: "15px" },
             },
             "& .MuiInputBase-input::placeholder": {
               color: "rgba(158, 158, 158, 1)",
               opacity: 1,
-              fontSize: { xs: "13px", sm: "14px" },
+              fontSize: { xs: "14px", sm: "15px" },
             },
             "& .MuiInputAdornment-root": {
-              padding: { xs: "0 6px", sm: "0 8px" },
+              padding: { xs: "0 8px", sm: "0 10px" },
               "& svg": {
-                color: "rgba(158, 158, 158, 1)",
-                fontSize: { xs: "18px", sm: "20px" },
+                color: "rgba(79, 57, 246, 0.7)",
+                fontSize: { xs: "20px", sm: "22px" },
+                transition: "color 0.2s ease-in-out",
               },
             },
           },
         }}
         InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
+          endAdornment: (
+            <InputAdornment position="end">
+              {(isLoading || isFetching) && debouncedQuery.trim() ? (
+                <CircularProgress size={20} sx={{ color: "rgba(79, 57, 246, 1)", mr: 1 }} />
+              ) : null}
+              <Box
+                component="button"
+                type="button"
+                onClick={handleSearch}
+                sx={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  "&:hover svg": {
+                    color: "rgba(79, 57, 246, 1)",
+                  },
+                }}
+                aria-label="Search"
+              >
+                <SearchIcon />
+              </Box>
             </InputAdornment>
           ),
-          endAdornment: (isLoading || isFetching) && debouncedQuery.trim() ? (
-            <InputAdornment position="end">
-              <CircularProgress size={20} sx={{ color: "rgba(79, 57, 246, 1)" }} />
-            </InputAdornment>
-          ) : null,
         }}
       />
 

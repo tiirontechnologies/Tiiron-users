@@ -140,10 +140,13 @@ export const transformApiQuestion = (apiQuestion: any): Question => {
   if (contentType === 'mcq' || contentType === 'single_choice') {
     // Transform MCQ options
     if (apiQuestion.mcq?.options && Array.isArray(apiQuestion.mcq.options)) {
+      // Handle cases where isCorrect might not be present (if question not practiced)
       content.options = apiQuestion.mcq.options.map((option: any) => ({
         id: option.id,
         text: option.text,
-        isCorrect: option.isCorrect || false,
+        // Only set isCorrect if it exists in the API response (for practiced questions)
+        // If not practiced, isCorrect will be undefined
+        isCorrect: option.hasOwnProperty('isCorrect') ? option.isCorrect : undefined,
       }));
     } else {
       content.options = [];
@@ -183,6 +186,45 @@ export const transformApiQuestion = (apiQuestion: any): Question => {
     }
   }
 
+  // Attach practice data if available
+  let previousPractice = undefined;
+  
+  // Check if there's a practices array and get the most recent one
+  if (apiQuestion.practices && Array.isArray(apiQuestion.practices) && apiQuestion.practices.length > 0) {
+    // Get the most recent practice (assuming they're sorted by date, or take the last one)
+    const latestPractice = apiQuestion.practices[apiQuestion.practices.length - 1];
+    previousPractice = {
+      id: latestPractice.id,
+      questionId: latestPractice.questionId,
+      userId: latestPractice.userId,
+      userAnswer: latestPractice.userAnswer,
+      isCorrect: latestPractice.isCorrect,
+      score: latestPractice.score,
+      timeSpent: latestPractice.timeSpent,
+      createdAt: latestPractice.createdAt,
+      updatedAt: latestPractice.updatedAt,
+      selectedOptionIndex: latestPractice.selectedOptionIndex,
+      selectedOptionId: latestPractice.selectedOptionId,
+    };
+  }
+  // Also check if selectedOptionId is directly on the question (alternative API structure)
+  else if (apiQuestion.selectedOptionId !== undefined) {
+    // Create a practice object from direct fields on the question
+    previousPractice = {
+      id: 0,
+      questionId: apiQuestion.id,
+      userId: 0,
+      userAnswer: null,
+      isCorrect: apiQuestion.isCorrect || false,
+      score: apiQuestion.score || 0,
+      timeSpent: null,
+      createdAt: '',
+      updatedAt: '',
+      selectedOptionIndex: null,
+      selectedOptionId: apiQuestion.selectedOptionId,
+    };
+  }
+
   return {
     id: apiQuestion.id.toString(),
     text: apiQuestion.title || '',
@@ -192,6 +234,7 @@ export const transformApiQuestion = (apiQuestion: any): Question => {
       html: apiQuestion.description || '',
       title: apiQuestion.title || '',
     },
+    previousPractice,
   };
 };
 
