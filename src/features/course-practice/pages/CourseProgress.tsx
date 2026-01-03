@@ -8,6 +8,7 @@ import MainContent from "../components/MainContent/MainContent";
 import CoursePracticeContent from "../components/CoursePracticeContent";
 import EmptyState from "../components/UI/EmptyState";
 import Loader from "@components/ui/Spinner";
+//import CourseSidebar from "../components/Sidebar/CourseSidebar";
 
 const EMPTY_STATS = {
   totalSessions: 0,
@@ -113,6 +114,8 @@ const CourseProgress: React.FC = () => {
         courseId={courseId}
         practiceStats={practiceStats}
       />
+
+      {/* <CourseSidebar/> */}
 
       {/* Header */}
       <Header />
