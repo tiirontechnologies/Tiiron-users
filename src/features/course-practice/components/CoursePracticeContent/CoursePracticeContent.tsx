@@ -1,10 +1,22 @@
 import React, { useMemo, useState, useCallback } from "react";
-import { Box, Typography, Tabs, Tab, Button, Card, CardContent } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Tabs,
+  Tab,
+  Button,
+  Card,
+  CardContent,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
 import CustomTabPanel from "../../../../components/ui/CustomTabPanel";
 import { transformApiQuestion } from "../../utils/transformApiResponse";
-import { CoursePracticeApiResponse, ApiContentType, ApiQuestion } from "../../types";
+import {
+  CoursePracticeApiResponse,
+  ApiContentType,
+  ApiQuestion,
+} from "../../types";
 import { COLORS, SHADOWS, GRADIENTS } from "../../constants";
 import { renderIconFromPath } from "../../utils/iconMapper";
 import McqTemplate from "../QuestionTemplates/McqTemplate";
@@ -95,21 +107,19 @@ const QuestionComponent = ({
 
 // Styled Tab with icon support
 const StyledTab = styled(Tab, {
-  shouldForwardProp: (prop) => prop !== 'selectedtab',
-})<{ selectedtab: boolean }>(
-  ({ selectedtab }) => ({
-    textTransform: "none",
-    fontWeight: selectedtab ? "600" : "500",
-    color: selectedtab ? COLORS.primary : COLORS.text.muted,
-    transition: "all 0.2s ease",
-    "&:hover": {
-      color: COLORS.primary,
-    },
-    "& .MuiTab-iconWrapper": {
-      marginRight: "8px",
-    },
-  })
-);
+  shouldForwardProp: (prop) => prop !== "selectedtab",
+})<{ selectedtab: boolean }>(({ selectedtab }) => ({
+  textTransform: "none",
+  fontWeight: selectedtab ? "600" : "500",
+  color: selectedtab ? COLORS.primary : COLORS.text.muted,
+  transition: "all 0.2s ease",
+  "&:hover": {
+    color: COLORS.primary,
+  },
+  "& .MuiTab-iconWrapper": {
+    marginRight: "8px",
+  },
+}));
 
 interface TabData {
   label: string;
@@ -158,7 +168,10 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
 
   // Get user answer for a question
   const getUserAnswer = useCallback(
-    (contentTypeId: number, questionId: string): string | string[] | undefined => {
+    (
+      contentTypeId: number,
+      questionId: string
+    ): string | string[] | undefined => {
       return userAnswers[contentTypeId]?.[questionId];
     },
     [userAnswers]
@@ -208,7 +221,8 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                 }
               } else {
                 // Fill up or Subjective - answer is text
-                answerText = typeof answer === "string" ? answer : answer.join(", ");
+                answerText =
+                  typeof answer === "string" ? answer : answer.join(", ");
               }
 
               return {
@@ -242,7 +256,9 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
   const tutorialVideos = useMemo(() => {
     if (!data?.contentTypes || !Array.isArray(data.contentTypes)) return [];
 
-    const videoContentType = data.contentTypes.find(ct => ct.name === "Video");
+    const videoContentType = data.contentTypes.find(
+      (ct) => ct.name === "Video"
+    );
     if (!videoContentType?.questions) return [];
 
     // Filter for video questions (questiontypeId === 6 or questiontypecon.name === "Video")
@@ -321,18 +337,23 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
         }
 
         // Find the contentType to get icon and other metadata
-        const contentType = data.contentTypes.find((ct) => ct.id === contentTypeId);
+        const contentType = data.contentTypes.find(
+          (ct) => ct.id === contentTypeId
+        );
 
         // Get icon from icon path - ensure it's a valid React element, not null
         const iconElement = contentType?.icon
           ? renderIconFromPath(contentType.icon, {
-            sx: { fontSize: "20px" },
-          })
+              sx: { fontSize: "20px" },
+            })
           : undefined;
         const icon = iconElement || undefined; // Convert null to undefined
 
         // Calculate total marks for questions
-        const totalMarks = questions.reduce((total, q) => total + (q.score || 0), 0);
+        const totalMarks = questions.reduce(
+          (total, q) => total + (q.score || 0),
+          0
+        );
 
         // Create panel with questions for this contentTypeId
         const questionsPanel = (
@@ -346,12 +367,16 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                   const userAnswer = getUserAnswer(contentTypeId, questionId);
 
                   // Debug: Log question transformation for MCQ
-                  if (apiQuestion.questiontypeId === 1 || apiQuestion.questiontypeId === 2) {
+                  if (
+                    apiQuestion.questiontypeId === 1 ||
+                    apiQuestion.questiontypeId === 2
+                  ) {
                     console.log("MCQ Question:", {
                       original: apiQuestion,
                       transformed: transformedQuestion,
                       hasOptions: !!transformedQuestion.content?.options,
-                      optionsCount: transformedQuestion.content?.options?.length || 0,
+                      optionsCount:
+                        transformedQuestion.content?.options?.length || 0,
                     });
                   }
 
@@ -363,11 +388,14 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                         question={apiQuestion}
                         onSolve={() => {
                           // Navigate to code editor page with question data in state
-                          navigate(`/code-editor/${courseId}/${apiQuestion.id}`, {
-                            state: {
-                              question: apiQuestion,
-                            },
-                          });
+                          navigate(
+                            `/code-editor/${courseId}/${apiQuestion.id}`,
+                            {
+                              state: {
+                                question: apiQuestion,
+                              },
+                            }
+                          );
                         }}
                         onBookmark={() => {
                           // Handle bookmark toggle
@@ -440,7 +468,11 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                           practiceMode={true}
                           userAnswer={userAnswer}
                           onAnswerChange={(answer) =>
-                            handleAnswerChange(contentTypeId, questionId, answer)
+                            handleAnswerChange(
+                              contentTypeId,
+                              questionId,
+                              answer
+                            )
                           }
                         />
                       </CardContent>
@@ -483,7 +515,9 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
         };
 
         tabs.push({
-          label: `${tabLabel} (${questions.length} ${questions.length === 1 ? 'question' : 'questions'})`,
+          label: `${tabLabel} (${questions.length} ${
+            questions.length === 1 ? "question" : "questions"
+          })`,
           icon,
           panel: questionsPanel,
           contentType: contentTypeForTab,
@@ -526,90 +560,110 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
 
   const activeContentType = tabsData[activeTab]?.contentType;
   const activeCompletedCount = activeContentType
-    ? getCompletedCount(activeContentType.id, activeContentType.questions?.length || 0)
+    ? getCompletedCount(
+        activeContentType.id,
+        activeContentType.questions?.length || 0
+      )
     : 0;
   const activeTotalQuestions = activeContentType?.questions?.length || 0;
 
   return (
     <Box sx={{ width: "100%" }}>
       {/* Tutorial Videos Section - Above Tabs */}
-      {tutorialVideos.length > 0 && (
-        <Box sx={{ mb: 3 }}>
-          {tutorialVideos.map((apiQuestion: ApiQuestion, index: number) => {
-            const transformedQuestion = transformApiQuestion(apiQuestion);
-            return (
-              <Card
-                key={`tutorial-video-${apiQuestion.id}-${index}`}
-                sx={{
-                  mb: 2,
-                  borderRadius: "12px",
-                  boxShadow: SHADOWS.sm,
-                  border: `1px solid ${COLORS.border.light}`,
-                }}
-              >
-                <CardContent>
-                  <Typography
-                    variant="h6"
+      <Box
+        sx={{
+          mb: 3,
+          borderRadius: "12px",
+          boxShadow: SHADOWS.sm,
+          border: `1px solid ${COLORS.border.light}`,
+          background: COLORS.background.white,
+        }}
+      >
+        <>
+          {tutorialVideos.length > 0 && (
+            <Box>
+              {tutorialVideos.map((apiQuestion: ApiQuestion, index: number) => {
+                const transformedQuestion = transformApiQuestion(apiQuestion);
+                return (
+                  <Card
+                    key={`tutorial-video-${apiQuestion.id}-${index}`}
                     sx={{
-                      fontWeight: 600,
-                      color: COLORS.text.primary,
-                      mb: 2,
+                      boxShadow: "none",
+                      borderRadius: "12px",
+                      mb: -3,
                     }}
                   >
-                    {apiQuestion.title}
-                  </Typography>
-                  <VideoTemplate question={transformedQuestion} practiceMode={true} />
-                </CardContent>
-              </Card>
-            );
-          })}
-        </Box>
-      )}
+                    <CardContent>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                          color: COLORS.text.primary,
+                          mb: 2,
+                        }}
+                      >
+                        {apiQuestion.title}
+                      </Typography>
+                      <VideoTemplate
+                        question={transformedQuestion}
+                        practiceMode={true}
+                      />
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </Box>
+          )}
+          {/* Tabs  Section - Only show if there are tabs */}
+          {tabsData.length > 0 && (
+            <>
+              <Box
+                sx={{
+                    
+                    boxShadow: "none",
+                    borderRadius: 0,
+                }}
+              >
+                <Tabs
+                  value={activeTab}
+                  onChange={handleTabChange}
+                  centered
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    "& .MuiTabs-flexContainer": {
+                      justifyContent: "center",
+                    },
+                    "& .MuiTabs-indicator": {
+                      height: "3px",
+                      borderRadius: 0,
+                      background: COLORS.primary,
+                    },
+                  }}
+                >
+                  {tabsData.map((tab, index) => (
+                    <StyledTab
+                      key={index}
+                      label={tab.label}
+                      icon={tab.icon}
+                      iconPosition={tab.icon ? "start" : undefined}
+                      selectedtab={activeTab === index}
+                      id={`custom-tab-${index}`}
+                      aria-controls={`custom-tabpanel-${index}`}
+                    />
+                  ))}
+                </Tabs>
+              </Box>
+            </>
+          )}
+        </>
+      </Box>
 
-      {/* Tabs Section - Only show if there are tabs */}
+      {/* Tabs panels Section - Only show if there are tabs */}
+
       {tabsData.length > 0 && (
         <>
-          <Box
-            sx={{
-              position: "sticky",
-              top: 0, // Sticky to the top of the scrollable container
-              zIndex: 100,
-              background: COLORS.background.light,
-              pb: 2,
-              pt: 1,
-            }}
-          >
-            <Tabs
-              value={activeTab}
-              onChange={handleTabChange}
-              sx={{
-                background: COLORS.background.white,
-                borderRadius: "16px",
-                width: "fit-content",
-                p: "0px 20px",
-                boxShadow: SHADOWS.sm,
-                border: `1px solid ${COLORS.border.light}`,
-                "& .MuiTabs-indicator": {
-                  height: "3px",
-                  borderRadius: "24px",
-                  background: COLORS.primary,
-                },
-              }}
-            >
-              {tabsData.map((tab, index) => (
-                <StyledTab
-                  key={index}
-                  label={tab.label}
-                  icon={tab.icon}
-                  iconPosition={tab.icon ? "start" : undefined}
-                  selectedtab={activeTab === index}
-                  id={`custom-tab-${index}`}
-                  aria-controls={`custom-tabpanel-${index}`}
-                />
-              ))}
-            </Tabs>
-          </Box>
-
           {tabsData.map((tab, index) => (
             <CustomTabPanel key={index} value={activeTab} index={index}>
               {tab.panel}
@@ -713,7 +767,9 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                 },
               }}
             >
-              {isSubmitting ? "Submitting..." : `Submit ${activeContentType.name}`}
+              {isSubmitting
+                ? "Submitting..."
+                : `Submit ${activeContentType.name}`}
             </Button>
           </Box>
         </Box>

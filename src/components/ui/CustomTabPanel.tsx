@@ -61,10 +61,9 @@ export function CustomTabs({ tabs, panels }: CustomTabsProps) {
           onChange={handleChange}
           sx={{
             background: COLORS.background.white,
-            borderRadius: "16px",
             width: "fit-content",
             p: "0px 20px",
-            boxShadow: SHADOWS.sm,
+            
             border: `1px solid ${COLORS.border.light}`,
             "& .MuiTabs-indicator": {
               height: "3px",
