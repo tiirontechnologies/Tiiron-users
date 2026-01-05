@@ -10,7 +10,6 @@ import UserLayout from "@layouts/UserLayout";
 import SearchResults from "../pages/SearchResults";
 import CodeTestPage from "../pages/CodeTestPage";
 import PrivateRoute from "@layouts/PrivateRoute";
-import CodeTestPage from "../pages/CodeTestPage";
 
 export const routeConfig = [
   {
