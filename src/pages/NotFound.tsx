@@ -238,7 +238,7 @@ const NotFound = () => {
                     </Typography>
                     <Button
                       component={Link}
-                      to="/learner/browse-courses"
+                      to="/browse-courses"
                       variant="outlined"
                       sx={{
                         mt: 1,

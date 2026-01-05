@@ -7,12 +7,7 @@ export interface Question {
     html: string;
     title: string;
   };
-  previousAnswer?: string | null; // Previously selected answer
-  previousPractice?: {
-    selectedOptionId?: number;
-    score: number;
-    isCorrect: boolean;
-  } | null;
+  previousPractice?: ApiPractice;
 }
 
 export interface QuestionContent {
@@ -70,4 +65,117 @@ export interface ProgressStats {
 export interface TabState {
   activeTab: number;
   setActiveTab: (tab: number) => void;
+}
+
+// API Response Types for Course Practice
+export interface ApiQuestionOption {
+  id: number;
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface ApiMcq {
+  id: number;
+  questionId: number;
+  options: ApiQuestionOption[];
+}
+
+export interface ApiFillUp {
+  id: number;
+  questionId: number;
+  text: string;
+  answer: string;
+}
+
+export interface ApiSubjective {
+  id: number;
+  questionId: number;
+  questionText: string;
+}
+
+export interface ApiPractice {
+  id: number;
+  questionId: number;
+  userId: number;
+  userAnswer: string | null;
+  isCorrect: boolean;
+  score: number;
+  timeSpent: number | null;
+  createdAt: string;
+  updatedAt: string;
+  selectedOptionIndex: number | null;
+  selectedOptionId: number | null;
+}
+
+export interface ApiCodeTestCase {
+  input: Record<string, any>;
+  description: string;
+  expectedOutput: string;
+}
+
+export interface ApiCodeTemplate {
+  template: {
+    [language: string]: string;
+  };
+}
+
+export interface ApiCodeTemplateItem {
+  code: string;
+  languageId: number;
+}
+
+// codeTemplate can be either an array (actual API format) or an object with template property (legacy)
+export type ApiCodeTemplateUnion = ApiCodeTemplateItem[] | ApiCodeTemplate;
+
+export interface ApiCode {
+  id: number;
+  questionId: number;
+  testCases: ApiCodeTestCase[];
+  codeTemplate: ApiCodeTemplateUnion;
+  alllowedLanguage: number[];
+}
+
+export interface ApiQuestion {
+  id: number;
+  title: string;
+  description: string;
+  score: number;
+  questiontypeId: number;
+  contentId: number;
+  questiontypecon: {
+    id: number;
+    name: string;
+    order: number;
+  };
+  mcq: ApiMcq | null;
+  subjective: ApiSubjective | null;
+  fillUp: ApiFillUp | null;
+  code: ApiCode | null;
+  practices: ApiPractice[];
+}
+
+export interface ContentTypeStatus {
+  isCompleted: boolean;
+  totalScore: number;
+}
+
+export interface ApiContentType {
+  id: number;
+  name: string;
+  icon: string;
+  order: number;
+  questions: ApiQuestion[];
+  status: ContentTypeStatus;
+}
+
+export interface UnitStatus {
+  isCompleted: boolean;
+}
+
+export interface CoursePracticeApiResponse {
+  success: boolean;
+  data: {
+    contentTypes: ApiContentType[];
+    unitStatus: UnitStatus;
+  };
 }

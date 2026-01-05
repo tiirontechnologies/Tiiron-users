@@ -26,9 +26,8 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
-import BusinessOutlinedIcon from "@mui/icons-material/BusinessOutlined";
-import PublishOutlinedIcon from "@mui/icons-material/PublishOutlined";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const menuItems = [
   {
@@ -36,7 +35,7 @@ const menuItems = [
     icon: <PersonOutlineOutlinedIcon />,
     color: "#4CAF50",
     onClick: (navigate: NavigateFunction) => {
-      navigate("/learner/profile");
+      navigate("/profile");
     }
   },
   {
@@ -44,7 +43,7 @@ const menuItems = [
     icon: <MenuBookOutlinedIcon />,
     color: "#2196F3",
     onClick: (navigate: NavigateFunction) => {
-      navigate("/learner/my-courses");
+      navigate("/my-courses");
     }
   },
   {
@@ -52,26 +51,18 @@ const menuItems = [
     icon: <ExploreOutlinedIcon />,
     color: "#9C27B0",
     onClick: (navigate: NavigateFunction) => {
-      navigate("/learner/browse-courses");
+      navigate("/browse-courses");
     }
   },
   {
-    text: "Create Course",
-    icon: <AddCircleOutlineIcon />,
-    color: "#00BCD4",
-    onClick: (navigate: NavigateFunction) => {
-      navigate("/courses");
-    }
-  },
-  {
-    text: "Tiiron Business",
-    icon: <BusinessOutlinedIcon />,
+    text: "Tiiron For Creators",
+    icon: <EditNoteIcon />,
     color: "#FF5722",
     onClick: (_navigate: NavigateFunction) => {
-      window.location.href = "https://tiiron-for-busines";
+      window.location.href = "https://creator.tiiron.com/";
     }
   },
-  { text: "Publish The Course", icon: <PublishOutlinedIcon />, color: "#00BCD4" },
+  { text: "Help and Support", icon: <HelpOutlineIcon />, color: "#00BCD4" },
 ];
 
 const ProfileCenterPopup = () => {

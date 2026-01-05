@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
+import { useSearchParams } from "react-router-dom";
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import {
   useGetCourseForFeedQuery,
+  useSearchCoursesQuery,
   useGetCartQuery,
   useAddToCartServerMutation,
 } from "../api/courseApi";
@@ -18,13 +20,28 @@ const PAGE_LAYOUT_SX = {
 };
 
 export default function Courses() {
-  const queryArgs = { limit: 10, page: 1 };
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("q") || "";
+  const hasSearchQuery = !!searchQuery.trim();
+
+  // Use search API if query parameter exists, otherwise use feed API
+  const {
+    data: searchData,
+    isFetching: fetchingSearch,
+    isError: errorSearch,
+  } = useSearchCoursesQuery(
+    { q: searchQuery, page: 1, limit: 10 },
+    { skip: !hasSearchQuery }
+  );
 
   const {
     data: browseData,
     isFetching: fetchingBrowse,
     isError: errorBrowse,
-  } = useGetCourseForFeedQuery(queryArgs);
+  } = useGetCourseForFeedQuery(
+    { limit: 10, page: 1 },
+    { skip: hasSearchQuery }
+  );
 
   // Cart data for checking if course is in cart
   const { data: cartData } = useGetCartQuery(undefined, {
@@ -39,19 +56,76 @@ export default function Courses() {
     await addToCartServer({ courseId }).unwrap();
   };
 
-  const typedBrowseData = browseData as { data: { courses: ICourse[] } };
-  const courses: ICourse[] = typedBrowseData?.data?.courses || [];
+  // Extract courses from the appropriate API response
+  const typedBrowseData = browseData as { data?: { courses?: ICourse[] } };
+  
+  // Handle search API response - check multiple possible structures
+  let searchCourses: ICourse[] = [];
+  if (searchData && hasSearchQuery) {
+    // Log the response structure for debugging
+    console.log("🔍 Search API Response:", searchData);
+    
+    const data = searchData as any;
+    let rawCourses: any[] = [];
+    
+    // Structure 1: { data: { results: [...] } } - Actual API structure
+    if (data?.data?.results && Array.isArray(data.data.results)) {
+      console.log("✅ Found courses in data.data.results:", data.data.results.length);
+      rawCourses = data.data.results;
+    }
+    // Structure 2: { data: { courses: [...] } }
+    else if (data?.data?.courses && Array.isArray(data.data.courses)) {
+      console.log("✅ Found courses in data.data.courses:", data.data.courses.length);
+      rawCourses = data.data.courses;
+    }
+    // Structure 3: { results: [...] }
+    else if (data?.results && Array.isArray(data.results)) {
+      console.log("✅ Found courses in data.results:", data.results.length);
+      rawCourses = data.results;
+    }
+    // Structure 4: { courses: [...] }
+    else if (data?.courses && Array.isArray(data.courses)) {
+      console.log("✅ Found courses in data.courses:", data.courses.length);
+      rawCourses = data.courses;
+    }
+    // Structure 5: Direct array
+    else if (Array.isArray(data)) {
+      console.log("✅ Found courses as direct array:", data.length);
+      rawCourses = data;
+    }
+    
+    // Map courses to ensure totalChapters is set from _count.chapters if needed
+    searchCourses = rawCourses.map((course) => ({
+      ...course,
+      totalChapters: course.totalChapters ?? course._count?.chapters ?? 0,
+    }));
+    
+    console.log("📋 Extracted courses:", searchCourses);
+  }
+  
+  const courses: ICourse[] = hasSearchQuery
+    ? searchCourses
+    : typedBrowseData?.data?.courses || [];
+
+  const isFetching = hasSearchQuery ? fetchingSearch : fetchingBrowse;
+  const isError = hasSearchQuery ? errorSearch : errorBrowse;
+
+  const pageTitle = hasSearchQuery
+    ? `Search Results for "${searchQuery}"`
+    : "Browse Courses";
 
   return (
     <Box sx={PAGE_LAYOUT_SX}>
-      <PageToolbarLayout title="Browse Courses">
-        {fetchingBrowse ? (
+      <PageToolbarLayout title={pageTitle}>
+        {isFetching ? (
           <Loader />
-        ) : errorBrowse ? (
+        ) : isError ? (
           <div>Some error occurred...</div>
         ) : courses.length === 0 ? (
           <Typography sx={{ width: "100%", textAlign: "center", mt: 4 }}>
-            No courses found in the feed.
+            {hasSearchQuery
+              ? `No courses found for "${searchQuery}".`
+              : "No courses found in the feed."}
           </Typography>
         ) : (
           <Box

@@ -47,10 +47,28 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    // Search courses (browsing) - uses /course/all endpoint
+    // Search courses (browsing) - uses /course/search endpoint
     searchCourses: builder.query({
-      query: ({ page = 1, limit = 100 }: { page?: number; limit?: number }) => ({
-        url: "/course/all",
+      query: ({ 
+        q, 
+        page = 1, 
+        limit = 10 
+      }: { 
+        q?: string; 
+        page?: number; 
+        limit?: number;
+      }) => ({
+        url: "/course/search",
+        method: "GET",
+        params: q ? { q, page, limit } : { page, limit },
+      }),
+      providesTags: ["Course"],
+    }),
+
+    // Get free courses
+    getFreeCourses: builder.query({
+      query: ({ page = 1, limit = 10 }: { page?: number; limit?: number }) => ({
+        url: "/course/free",
         method: "GET",
         params: { page, limit },
       }),
@@ -104,6 +122,7 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
 export const {
   useGetCourseForFeedQuery,
   useSearchCoursesQuery,
+  useGetFreeCoursesQuery,
   useInitiateCheckoutMutation,
   useGetCartQuery,
   useAddToCartServerMutation,

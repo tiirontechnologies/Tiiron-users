@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
-import { COLORS, GRADIENTS } from "../../constants";
+import { COLORS, GRADIENTS, SHADOWS } from "../../constants";
 import Scoresvg from "@icons/Score.svg";
 
 interface PracticeFooterProps {
@@ -28,11 +28,11 @@ const PracticeFooter: React.FC<PracticeFooterProps> = ({
         bottom: 0,
         left: "289px",
         right: 0,
-        background: "white",
-        borderTop: "1px solid #E5E7EB",
+        background: COLORS.background.white,
+        borderTop: `1px solid ${COLORS.border.light}`,
         zIndex: 1000,
         p: 3,
-        boxShadow: "0 -4px 20px rgba(0,0,0,0.1)",
+        boxShadow: SHADOWS.xl,
       }}
     >
       <Box
@@ -155,8 +155,10 @@ const PracticeFooter: React.FC<PracticeFooterProps> = ({
               borderRadius: "12px",
               textTransform: "none",
               "&:hover": {
-                color: GRADIENTS.primaryHover,
-                boxShadow: GRADIENTS.primaryHover,
+                borderColor: COLORS.primaryDark,
+                color: COLORS.primaryDark,
+                background: "rgba(79, 57, 246, 0.05)",
+                boxShadow: SHADOWS.purple,
               },
             }}
           >

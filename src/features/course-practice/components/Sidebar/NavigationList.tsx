@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, List, ListItemButton, ListItemText, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore, PlayArrow, CheckCircle } from '@mui/icons-material';
 import { Chapter } from '../../types';
-import { COLORS, GRADIENTS } from '../../constants';
+import { COLORS, GRADIENTS, SHADOWS } from '../../constants';
 
 interface NavigationListProps {
   chapters: any;
@@ -14,20 +14,20 @@ interface NavigationListProps {
   } | null;
 }
 
-const NavigationList: React.FC<NavigationListProps> = ({ 
-  chapters, 
-  onUnitSelect, 
+const NavigationList: React.FC<NavigationListProps> = ({
+  chapters,
+  onUnitSelect,
   selectedUnitId,
-  practiceData 
+  practiceData
 }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  console.log("NavigationList",chapters,onUnitSelect);
+  console.log("NavigationList", chapters, onUnitSelect);
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <List component="nav" sx={{ mt: 1 }}>
+    <List component="nav" sx={{ mt: 1, px: 0.5 }}>
       {chapters?.map((chapter, index) => {
         const hasChildren = chapter?.units && chapter?.units?.length > 0;
         const isOpen = openIndex === index;
@@ -43,59 +43,108 @@ const NavigationList: React.FC<NavigationListProps> = ({
                 }
               }}
               sx={{
-                borderRadius: "12px",
-                mb: 1,
-                background: isOpen 
-                  ? GRADIENTS.primary 
-                  : "transparent",
-                color: isOpen ? "white" : COLORS.text.secondary,
+                borderRadius: "14px",
+                mb: 1.5,
+                py: 1.5,
+                px: 2,
+                background: isOpen
+                  ? "linear-gradient(135deg, rgba(79, 57, 246, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%)"
+                  : COLORS.background.white,
+                color: COLORS.text.primary,
+                border: isOpen
+                  ? `1.5px solid ${COLORS.primary}`
+                  : `1px solid ${COLORS.border.light}`,
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: isOpen
+                  ? "0 2px 8px rgba(79, 57, 246, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08)"
+                  : "0 1px 2px rgba(0, 0, 0, 0.04)",
+                position: "relative",
+                overflow: "hidden",
+                "&::before": isOpen ? {
+                  content: '""',
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: "4px",
+                  background: GRADIENTS.primary,
+                  borderRadius: "0 4px 4px 0",
+                } : {},
                 "&:hover": {
-                  background: isOpen 
-                    ? GRADIENTS.primaryHover 
-                    : "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
-                  transform: "translateX(4px)",
-                  transition: "all 0.2s ease",
+                  background: isOpen
+                    ? "linear-gradient(135deg, rgba(79, 57, 246, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%)"
+                    : "linear-gradient(135deg, #FAFBFC 0%, #F5F7FA 100%)",
+                  borderColor: isOpen ? COLORS.primary : COLORS.primaryLight,
+                  boxShadow: isOpen
+                    ? "0 4px 12px rgba(79, 57, 246, 0.16), 0 2px 4px rgba(0, 0, 0, 0.08)"
+                    : "0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)",
+                  transform: "translateY(-1px)",
                 },
-                transition: "all 0.2s ease",
+                "&:active": {
+                  transform: "translateY(0px)",
+                },
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%", position: "relative", zIndex: 1 }}>
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: 32,
-                    height: 32,
-                    borderRadius: "8px",
-                    background: isOpen 
-                      ? "rgba(255,255,255,0.2)" 
-                      : GRADIENTS.primary,
-                    color: "white",
-                    fontSize: "16px",
-                    fontWeight: 600,
+                    width: 36,
+                    height: 36,
+                    borderRadius: "10px",
+                    background: isOpen
+                      ? GRADIENTS.primary
+                      : "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%)",
+                    color: isOpen ? "white" : COLORS.primary,
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    boxShadow: isOpen
+                      ? "0 2px 8px rgba(79, 57, 246, 0.3)"
+                      : "0 1px 3px rgba(79, 57, 246, 0.15)",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    border: isOpen ? "none" : `1px solid rgba(79, 57, 246, 0.2)`,
                   }}
                 >
                   {index + 1}
                 </Box>
                 <ListItemText
                   primary={chapter?.title}
-                  sx={{ 
-                    color: isOpen ? "white" : COLORS.text.secondary, 
+                  sx={{
+                    color: isOpen ? COLORS.text.primary : COLORS.text.secondary,
                     fontSize: "15px",
                     fontWeight: isOpen ? 600 : 500,
+                    letterSpacing: "-0.01em",
                     "& .MuiListItemText-primary": {
                       fontSize: "15px",
                       fontWeight: isOpen ? 600 : 500,
+                      color: isOpen ? COLORS.text.primary : COLORS.text.secondary,
+                      letterSpacing: "-0.01em",
+                      lineHeight: 1.4,
                     }
                   }}
                 />
                 {hasChildren && (
-                  <Box sx={{ ml: "auto" }}>
+                  <Box
+                    sx={{
+                      ml: "auto",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 28,
+                      height: 28,
+                      borderRadius: "6px",
+                      background: isOpen
+                        ? "rgba(79, 57, 246, 0.1)"
+                        : "transparent",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                  >
                     {isOpen ? (
-                      <ExpandLess sx={{ color: isOpen ? "white" : COLORS.text.muted, fontSize: 20 }} />
+                      <ExpandLess sx={{ color: COLORS.primary, fontSize: 22, fontWeight: 600 }} />
                     ) : (
-                      <ExpandMore sx={{ color: isOpen ? "white" : COLORS.text.muted, fontSize: 20 }} />
+                      <ExpandMore sx={{ color: COLORS.text.muted, fontSize: 22 }} />
                     )}
                   </Box>
                 )}
@@ -103,35 +152,98 @@ const NavigationList: React.FC<NavigationListProps> = ({
             </ListItemButton>
 
             {hasChildren && (
-              <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding sx={{ ml: 2 }}>
+              <Collapse
+                in={isOpen}
+                timeout={300}
+                unmountOnExit
+                sx={{
+                  "& .MuiCollapse-wrapper": {
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }
+                }}
+              >
+                <List
+                  component="div"
+                  disablePadding
+                  sx={{
+                    ml: 3,
+                    mt: 0.5,
+                    mb: 1,
+                    pl: 1,
+                    borderLeft: `2px solid ${COLORS.border.light}`,
+                    position: "relative",
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      left: "-2px",
+                      top: 0,
+                      bottom: 0,
+                      width: "2px",
+                      background: isOpen ? GRADIENTS.primary : "transparent",
+                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    }
+                  }}
+                >
                   {chapter?.units &&
                     chapter?.units?.map((unit, unitIndex) => {
                       const isSelected = selectedUnitId === unit.id.toString();
                       // Show as completed if this is the selected unit and practiceData indicates completion
                       const isCompleted = isSelected && practiceData?.isCompleted === true;
-                      
+
                       return (
                         <ListItemButton
                           key={unit.title}
-                          sx={{ 
-                            pl: 3,
-                            borderRadius: "8px",
-                            mb: 0.5,
-                            background: isCompleted 
-                              ? "linear-gradient(135deg, #ECFDF8 0%, #D1FAE5 100%)"
-                              : "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
-                            border: isCompleted 
-                              ? "2px solid #10B981" 
-                              : "1px solid #e2e8f0",
+                          sx={{
+                            pl: 2.5,
+                            py: 1.25,
+                            borderRadius: "10px",
+                            mb: 0.75,
+                            background: isSelected
+                              ? "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.06) 100%)"
+                              : isCompleted
+                                ? "linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%)"
+                                : COLORS.background.white,
+                            border: isSelected
+                              ? `1.5px solid ${COLORS.primary}`
+                              : isCompleted
+                                ? `1.5px solid rgba(16, 185, 129, 0.4)`
+                                : `1px solid ${COLORS.border.light}`,
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            boxShadow: isSelected || isCompleted
+                              ? "0 2px 6px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)"
+                              : "0 1px 2px rgba(0, 0, 0, 0.03)",
+                            position: "relative",
+                            "&::before": isSelected ? {
+                              content: '""',
+                              position: "absolute",
+                              left: "-13px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              width: "6px",
+                              height: "6px",
+                              borderRadius: "50%",
+                              background: COLORS.primary,
+                              boxShadow: `0 0 0 3px ${COLORS.background.white}, 0 0 0 5px ${COLORS.primary}20`,
+                            } : {},
                             "&:hover": {
-                              background: isCompleted
-                                ? "linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)"
-                                : "linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)",
-                              transform: "translateX(4px)",
-                              transition: "all 0.2s ease",
+                              background: isSelected
+                                ? "linear-gradient(135deg, rgba(79, 57, 246, 0.14) 0%, rgba(139, 92, 246, 0.1) 100%)"
+                                : isCompleted
+                                  ? "linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%)"
+                                  : "linear-gradient(135deg, #FAFBFC 0%, #F5F7FA 100%)",
+                              borderColor: isSelected
+                                ? COLORS.primary
+                                : isCompleted
+                                  ? "rgba(16, 185, 129, 0.5)"
+                                  : COLORS.primaryLight,
+                              boxShadow: isSelected || isCompleted
+                                ? "0 4px 10px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05)"
+                                : "0 2px 6px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)",
+                              transform: "translateX(2px) translateY(-1px)",
                             },
-                            transition: "all 0.2s ease",
+                            "&:active": {
+                              transform: "translateX(2px) translateY(0px)",
+                            },
                           }}
                           onClick={() => onUnitSelect(unit.id)}
                         >
@@ -141,34 +253,71 @@ const NavigationList: React.FC<NavigationListProps> = ({
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: 24,
-                                height: 24,
-                                borderRadius: "6px",
-                                background: isCompleted ? "#10B981" : GRADIENTS.primary,
-                                color: "white",
+                                width: 28,
+                                height: 28,
+                                borderRadius: "8px",
+                                background: isSelected
+                                  ? GRADIENTS.primary
+                                  : isCompleted
+                                    ? "linear-gradient(135deg, #10B981 0%, #059669 100%)"
+                                    : "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%)",
+                                color: isSelected || isCompleted ? "white" : COLORS.primary,
                                 fontSize: "12px",
-                                fontWeight: 600,
+                                fontWeight: 700,
+                                boxShadow: isSelected || isCompleted
+                                  ? "0 2px 6px rgba(79, 57, 246, 0.25)"
+                                  : "0 1px 2px rgba(79, 57, 246, 0.15)",
+                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                border: isSelected || isCompleted ? "none" : `1px solid rgba(79, 57, 246, 0.2)`,
                               }}
                             >
                               {unitIndex + 1}
                             </Box>
                             <ListItemText
-                              sx={{ 
-                                color: isCompleted ? "#065F46" : COLORS.text.secondary, 
+                              sx={{
+                                color: isSelected
+                                  ? COLORS.text.primary
+                                  : isCompleted
+                                    ? "#065F46"
+                                    : COLORS.text.secondary,
                                 fontSize: "14px",
-                                fontWeight: isCompleted ? 600 : 500,
+                                fontWeight: isSelected || isCompleted ? 600 : 500,
+                                letterSpacing: "-0.01em",
                                 "& .MuiListItemText-primary": {
                                   fontSize: "14px",
-                                  fontWeight: isCompleted ? 600 : 500,
+                                  fontWeight: isSelected || isCompleted ? 600 : 500,
+                                  color: isSelected
+                                    ? COLORS.text.primary
+                                    : isCompleted
+                                      ? "#065F46"
+                                      : COLORS.text.secondary,
+                                  letterSpacing: "-0.01em",
+                                  lineHeight: 1.4,
                                 }
                               }}
                               primary={unit.title}
                             />
-                            <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 1 }}>
+                            <Box
+                              sx={{
+                                ml: "auto",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: 28,
+                                height: 28,
+                                borderRadius: "6px",
+                                background: isCompleted
+                                  ? "rgba(16, 185, 129, 0.1)"
+                                  : isSelected
+                                    ? "rgba(79, 57, 246, 0.1)"
+                                    : "transparent",
+                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                              }}
+                            >
                               {isCompleted ? (
-                                <CheckCircle sx={{ color: "#10B981", fontSize: 18 }} />
+                                <CheckCircle sx={{ color: "#10B981", fontSize: 20, fontWeight: 600 }} />
                               ) : (
-                                <PlayArrow sx={{ color: COLORS.primary, fontSize: 16 }} />
+                                <PlayArrow sx={{ color: isSelected ? COLORS.primary : COLORS.text.muted, fontSize: 18 }} />
                               )}
                             </Box>
                           </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Box, Typography } from "@mui/material";
 import { Question } from "../../types";
 
@@ -18,6 +18,8 @@ const SubjectiveTemplate: React.FC<SubjectiveTemplateProps> = ({
   onAnswerChange,
 }) => {
   const [answer, setAnswer] = useState("");
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const DEBOUNCE_DELAY = 300; // 300ms delay
 
   // Update local state when userAnswer prop changes
   useEffect(() => {
@@ -26,15 +28,42 @@ const SubjectiveTemplate: React.FC<SubjectiveTemplateProps> = ({
     }
   }, [userAnswer]);
 
+  // Debounced callback to parent
+  const debouncedOnAnswerChange = useCallback(
+    (value: string) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      debounceTimerRef.current = setTimeout(() => {
+        onAnswerChange?.(value);
+      }, DEBOUNCE_DELAY);
+    },
+    [onAnswerChange]
+  );
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleAnswerChange = (value: string) => {
+    // Update local state immediately for responsive UI
     setAnswer(value);
-    onAnswerChange?.(value);
+    // Debounce the parent callback to reduce re-renders
+    debouncedOnAnswerChange(value);
   };
+
+  // Safely get question text
+  const questionText = question.content?.question || question.text || '';
 
   return (
     <Box sx={{ mt: 2 }}>
       <Typography sx={{ mb: 2, fontWeight: 500, color: "#374151" }}>
-        {question.content.question}
+        {questionText}
       </Typography>
       <Box
         component="textarea"

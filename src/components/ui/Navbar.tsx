@@ -19,7 +19,6 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import SearchBox from "./header/SearchBox";
-import FilterButton from "./header/FilterButton";
 import ProfilePopup from "./header/profilePopup";
 import { CartModal } from "./cart/cartModal";
 import { GenerateQuizModal } from "./quiz/GenerateQuizModal";
@@ -53,7 +52,7 @@ const navigationItems: NavItem[] = [
   //   name: "Explore",
   //   hasDropdown: true,
   //   dropdown: [
-  //     { name: "Browse Courses", desc: "Explore our course catalog", href: "/learner/browse-courses" },
+  //     { name: "Browse Courses", desc: "Explore our course catalog", href: "/browse-courses" },
   //     // external example (keeps external behavior)
   //     { name: "Tiiron Business", desc: "AI-powered learning solutions", href: "https://tiiron-for-business" },
   //   ],
@@ -430,14 +429,9 @@ const Navbar: React.FC = () => {
               </RouterLink>
 
               {!isMobile && (
-                <>
-                  <Box sx={{ flex: 1, minWidth: 0, maxWidth: { lg: 450 } }}>
-                    <SearchBox />
-                  </Box>
-                  <Box sx={{ flexShrink: 0 }}>
-                    <FilterButton />
-                  </Box>
-                </>
+                <Box sx={{ flex: 1, minWidth: 0, maxWidth: { lg: 380, xl: 400 }, ml: 3 }}>
+                  <SearchBox />
+                </Box>
               )}
             </Box>
 
@@ -590,11 +584,6 @@ const Navbar: React.FC = () => {
               <Box sx={{ flex: 1 }}>
                 <SearchBox />
               </Box>
-              {!isSmallMobile && (
-                <Box sx={{ flexShrink: 0 }}>
-                  <FilterButton />
-                </Box>
-              )}
             </Box>
 
             <Box sx={{ flex: 1, overflowY: "auto", px: 2 }}>

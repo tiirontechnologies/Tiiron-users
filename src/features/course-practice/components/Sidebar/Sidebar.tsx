@@ -3,9 +3,10 @@ import { Box, Button, Avatar, Typography, Divider } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { CourseData } from "../../types";
-import NavigationList from "./NavigationList";
+//import NavigationList from "./NavigationList";
 import PracticeProgressStats from "./PracticeProgressStats";
 import { GRADIENTS, COLORS } from "../../constants";
+import CourseSidebar from "./CourseSidebar";
 
 interface PracticeStats {
   totalSessions: number;
@@ -19,11 +20,6 @@ interface SidebarProps {
   onUnitSelect: (unitId: string) => void;
   courseId?: string;
   practiceStats: PracticeStats;
-  selectedUnitId?: string;
-  practiceData?: {
-    isCompleted: boolean;
-    score: number;
-  } | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -31,14 +27,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   onUnitSelect,
   courseId,
   practiceStats,
-  selectedUnitId,
-  practiceData,
 }) => {
   const navigate = useNavigate();
 
-  console.log("Sidebar", data.chapters, onUnitSelect, courseId);
+  console.log("Sidebar", data?.chapters, onUnitSelect, courseId);
   console.log("sidebar Practice stats:", practiceStats);
-  <PracticeProgressStats stats={practiceStats} />;
 
   const progressStats = {
     current: 3,
@@ -59,7 +52,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         background: GRADIENTS.background,
         boxShadow: "4px 0 20px rgba(0,0,0,0.08)",
         borderRight: "1px solid #e2e8f0",
-        p: "24px",
+        
         overflowY: "auto",
         "&::-webkit-scrollbar": {
           width: "4px",
@@ -78,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         variant="text"
         onClick={() => navigate(-1)}
         startIcon={<KeyboardBackspace sx={{ color: COLORS.text.muted }} />}
-        sx={{
+        sx={{mt: 1, mx: 3,
           background: GRADIENTS.background,
           borderRadius: "12px",
           padding: "8px 16px",
@@ -98,7 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </Button>
 
       {/* Course Progress Section */}
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ my: 4, mx: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
           <Avatar
             sx={{
@@ -135,15 +128,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         {practiceStats && <PracticeProgressStats stats={practiceStats} />}
       </Box>
 
-      <Divider sx={{ my: 2, opacity: 0.3 }} />
+      <Divider sx={{ mt: 2, opacity: 0.3 }} />
 
       {/* Navigation List */}
-      <NavigationList 
-        chapters={data?.chapters} 
-        onUnitSelect={onUnitSelect}
-        selectedUnitId={selectedUnitId}
-        practiceData={practiceData}
-      />
+      {/* <NavigationList chapters={data?.chapters || []} onUnitSelect={onUnitSelect} /> */}
+
+      <CourseSidebar/>
     </Box>
   );
 };

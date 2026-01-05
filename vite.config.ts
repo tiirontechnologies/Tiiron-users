@@ -10,9 +10,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
-  base: '',
+  base: "/",
   plugins: [
-    react(),
+    react({
+      jsxImportSource: "@emotion/react",
+      babel: {
+        plugins: ["@emotion/babel-plugin"],
+      },
+    }),
     svgr({
       svgrOptions: {
         icon: true,
@@ -36,6 +41,13 @@ export default defineConfig({
       "@utils": path.resolve(__dirname, "src/utils"),
       "@icons": path.resolve(__dirname, "src/assets/icons"),
       "@images": path.resolve(__dirname, "src/assets/images"),
+    },
+  },
+  optimizeDeps: {
+    include: ["@emotion/styled", "@emotion/react", "@mui/material", "@mui/system"],
+    esbuildOptions: {
+      jsx: "automatic",
+      jsxImportSource: "@emotion/react",
     },
   },
 });

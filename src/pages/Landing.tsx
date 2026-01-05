@@ -100,11 +100,11 @@ const Landing = () => {
   // Handlers
   const onSearch = (query?: string) => {
     if (!query.trim()) return;
-    navigate(`/learner/browse-courses?search=${encodeURIComponent(query)}`);
+    navigate(`/browse-courses?search=${encodeURIComponent(query)}`);
   };
 
   const onPickCategory = (categoryId: string) => {
-    navigate(`/learner/browse-courses?category=${categoryId}`);
+    navigate(`/browse-courses?category=${categoryId}`);
   };
 
   const handleAddToCart = async (courseId: number) => {
@@ -154,11 +154,11 @@ const Landing = () => {
               </Typography>
 
               <Stack direction="row" spacing={2} mt={4}>
-                <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff' }}>
+                <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff' }} onClick={() => navigate('/browse-course/free')}>
                   Start Learning Free
                 </Button>
 
-                <Button variant="outlined" size="large">
+                <Button variant="outlined" size="large" onClick={() => navigate('/browse-courses')}>
                   Explore Courses
                 </Button>
               </Stack>
@@ -429,7 +429,7 @@ const Landing = () => {
                   }}
                 />
               }
-              onClick={() => navigate('/learner/browse-courses')}
+              onClick={() => navigate('/browse-courses')}
               sx={{
                 px: { xs: 3, sm: 4 },
                 py: 1.5,
@@ -1218,6 +1218,7 @@ const Landing = () => {
 
             <Button
               variant="outlined"
+              onClick={() => navigate('/browse-courses')}
               sx={{
                 px: 5,
                 py: 1,

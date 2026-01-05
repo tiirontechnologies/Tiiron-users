@@ -33,7 +33,7 @@ const Login = () => {
         console.log("INSIDE TOKEN OBJECT");
         localStorage.setItem("token", token); // Store access token in localStorage
         if (roleId == "admin") {
-          navigate("/courses");
+          navigate("/browse-courses");
         } else {
           navigate("/");
         }

@@ -26,15 +26,42 @@ export const useCourseProgress = () => {
     isError: isUnitsError,
     refetch: refetchContent,
   } = useGetContentByTopicIdQuery(
-    { unitId: selectedUnitId },
+    { unitId: selectedUnitId, courseId: courseId! },
     { skip: !selectedUnitId }
   );
 
   // Transform API response to extract questions, practice, and unit data
   const transformedData = transformApiResponse(unitsDataRaw);
-  const unitsData = transformedData.questions;
-  const practiceData = transformedData.practice;
-  const unitInfo = transformedData.unit;
+  const unitsData = transformedData;
+  const practiceData = {
+    isCompleted: false,
+    score: 0,
+  };
+
+  const unitInfo = {
+    id: "hardcoded-unit-id",
+    name: "Hardcoded Unit Name",
+    description: "Hardcoded unit description",
+    image: "https://via.placeholder.com/400",
+    progress: 0,
+    totalQuestions: 10,
+    completedQuestions: 0,
+    score: 0,
+    isCompleted: false,
+    isStarted: false,
+    isFinished: false,
+    isSkipped: false,
+    isPending: false,
+    isError: false,
+    isLoading: false,
+    isFetching: false,
+    isSuccess: false,
+    isFailed: false,
+    isCancelled: false,
+    isPaused: false,
+    isResumed: false,
+    isRestarted: false,
+  };
 
   const selectUnit = useCallback((unitId: string) => {
     setSelectedUnitId(unitId);
