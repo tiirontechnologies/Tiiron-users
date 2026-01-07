@@ -15,8 +15,12 @@ export const authApiSlice = authApi.injectEndpoints({
       async onQueryStarted(_arg, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          if (data.success && data?.user?.token) {
-            localStorage.setItem('token', data?.user?.token);
+          if (data.success) {
+            // Token is now stored in cookie by the backend, no need to store in localStorage
+            // Only store roleId if needed for client-side checks
+            if (data?.user?.roleId) {
+              localStorage.setItem('roleId', data.user.roleId);
+            }
           } else {
             throw new Error(data.message || 'Login failed');
           }

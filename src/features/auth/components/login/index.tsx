@@ -27,17 +27,18 @@ const Login = () => {
   const onSubmit: SubmitHandler<TAuth> = async (data) => {
     try {
       const res = await authLogin({ ...data }).unwrap();
-      const { token, roleId } = res?.user;
-      console.log(token);
-      if (res?.success === true && token) {
-        console.log("INSIDE TOKEN OBJECT");
-        localStorage.setItem("token", token); // Store access token in localStorage
+      const { roleId } = res?.user;
+      if (res?.success === true) {
+        // Token is now stored in cookie by the backend, no need to store in localStorage
+        // Only store roleId if needed for client-side checks
+        if (roleId) {
+          localStorage.setItem("roleId", roleId);
+        }
         if (roleId == "admin") {
           navigate("/browse-courses");
         } else {
           navigate("/");
         }
-        localStorage.setItem("roleId", roleId);
         setSnackbarSeverity("success");
         setSnackbarMessage(res?.message || "User registered successfully");
         setSnackbarOpen(true);

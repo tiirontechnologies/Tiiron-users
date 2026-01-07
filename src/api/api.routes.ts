@@ -3,15 +3,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { AUTH_URL, SERVER_URL } from '../constants/constants';
 
 // Base query with authentication and error handling
+// Cookies are automatically sent by the browser, no need to manually set Authorization header
 const baseQuery = fetchBaseQuery({
   baseUrl: SERVER_URL,
-  prepareHeaders: (headers) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-    return headers;
-  },
+  credentials: 'include', // Include cookies in requests
 });
 
 // Enhanced base query with error handling
@@ -37,7 +32,7 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
     // Check if the error response contains the "Invalid token" message
     if (errorData?.message === "Invalid token.") {
       // Handle the invalid token case
-      localStorage.removeItem("token");
+      // Cookies will be cleared by the backend or browser
       
       // Redirect user to the login page
       window.location.href = "/login";
@@ -66,17 +61,12 @@ export const {
 } = baseApi;
 
 // Auth API configuration
+// Cookies are automatically sent by the browser, no need to manually set Authorization header
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
     baseUrl: AUTH_URL,
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
+    credentials: 'include', // Include cookies in requests
   }),
   tagTypes: ['Auth'],
   endpoints: () => ({}),

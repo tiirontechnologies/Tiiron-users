@@ -90,8 +90,11 @@ const ProfileCenterPopup = () => {
       }
       // Clear Firebase auth state in Redux
       dispatch(clearAuth());
-      // Clear localStorage (JWT token, etc.)
+      // Clear localStorage (roleId, etc.)
       localStorage.clear();
+      // Clear cookies by setting them to expire (cookies are managed by backend)
+      // The backend should handle cookie clearing on logout endpoint
+      // For now, we'll redirect and let the backend handle it
       // Redirect to login
       window.location.href = "/login";
     } catch (error) {
