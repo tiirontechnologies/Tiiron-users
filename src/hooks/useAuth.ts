@@ -11,25 +11,36 @@ interface AuthUser {
   orgCode?: string;
 }
 
+// 🔹 Helper function to get the token from cookie 
+const getCookie = (name: string): string | null => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()!.split(";").shift()!;
+  return null;
+};
+
 export const useAuth = () => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
+
   
-  // Get Firebase auth state from Redux
-  const firebaseAuth = useSelector((state: RootState) => state.firebaseAuth);
+  const firebaseAuth = useSelector(
+    (state: RootState) => state.firebaseAuth
+  );
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+  
+    // get token from cookie 
+    const cookieToken = getCookie("token"); // cookie name
 
-    if (storedToken) {
+    if (cookieToken) {
       try {
-        const decodedUser: AuthUser = jwtDecode(storedToken);
+        const decodedUser: AuthUser = jwtDecode(cookieToken);
 
-        setToken(storedToken);
+        setToken(cookieToken);
         setUser(decodedUser);
       } catch (error) {
         console.error("Failed to decode token:", error);
-        localStorage.removeItem("token");
       }
     } else {
       setToken(null);
@@ -43,7 +54,9 @@ export const useAuth = () => {
   return {
     token,
     user,
-    isAdmin: user?.roleId === "admin" || firebaseAuth.backendUser?.roleId === "admin",
+    isAdmin:
+      user?.roleId === "admin" ||
+      firebaseAuth.backendUser?.roleId === "admin",
     isLoggedIn,
     firebaseUser: firebaseAuth.user,
     backendUser: firebaseAuth.backendUser,
