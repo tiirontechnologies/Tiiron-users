@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
 
 interface AuthUser {
   id: number;
@@ -23,13 +21,7 @@ export const useAuth = () => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
 
-  
-  const firebaseAuth = useSelector(
-    (state: RootState) => state.firebaseAuth
-  );
-
   useEffect(() => {
-  
     // get token from cookie 
     const cookieToken = getCookie("token"); // cookie name
 
@@ -48,17 +40,13 @@ export const useAuth = () => {
     }
   }, []);
 
-  // Check if user is logged in via either method
-  const isLoggedIn = !!token || firebaseAuth.isAuthenticated;
+  // Check if user is logged in
+  const isLoggedIn = !!token;
 
   return {
     token,
     user,
-    isAdmin:
-      user?.roleId === "admin" ||
-      firebaseAuth.backendUser?.roleId === "admin",
+    isAdmin: user?.roleId === "admin",
     isLoggedIn,
-    firebaseUser: firebaseAuth.user,
-    backendUser: firebaseAuth.backendUser,
   };
 };

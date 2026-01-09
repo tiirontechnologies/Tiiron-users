@@ -55,20 +55,6 @@ export const authApiSlice = authApi.injectEndpoints({
       invalidatesTags: ['Auth'],
     }),
 
-    // Firebase token verification endpoint
-    verifyFirebaseToken: builder.mutation<
-      { ok: boolean; user: any },
-      { idToken: string }
-    >({
-      query: ({ idToken }) => ({
-        url: '/firebase',
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${idToken}`,
-        },
-      }),
-      invalidatesTags: ['Auth'],
-    }),
   }),
 });
 
@@ -77,5 +63,4 @@ export const {
   useLoginMutation,
   useRegisterOrganizationMutation,
   useRegisterUserMutation,
-  useVerifyFirebaseTokenMutation,
 } = authApiSlice;

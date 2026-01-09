@@ -15,11 +15,6 @@ import {
 } from "@mui/material";
 import { useNavigate, NavigateFunction } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store/store";
-import { clearAuth } from "../../../slices/firebaseAuth.slice";
-import { signOut } from "firebase/auth";
-import { auth } from "../../../features/auth/Firebase";
 
 import CloseIcon from "@mui/icons-material/Close";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -70,8 +65,7 @@ const ProfileCenterPopup = () => {
   const [imageError, setImageError] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const { user, firebaseUser, backendUser } = useAuth();
+  const { user } = useAuth();
 
   const handleOpen = () => {
     setOpen(true);
@@ -84,12 +78,6 @@ const ProfileCenterPopup = () => {
 
   const handleSignOut = async () => {
     try {
-      // Sign out from Firebase if authenticated
-      if (auth.currentUser) {
-        await signOut(auth);
-      }
-      // Clear Firebase auth state in Redux
-      dispatch(clearAuth());
       // Clear localStorage (roleId, etc.)
       localStorage.clear();
       // Clear cookies by setting them to expire (cookies are managed by backend)
@@ -99,40 +87,14 @@ const ProfileCenterPopup = () => {
       window.location.href = "/login";
     } catch (error) {
       console.error("Error signing out:", error);
-      // Still clear localStorage and redirect even if Firebase sign out fails
-      dispatch(clearAuth());
+      // Still clear localStorage and redirect
       localStorage.clear();
       window.location.href = "/login";
     }
   };
 
-  // Get user data - prioritize backend user, then Firebase user, then JWT user
+  // Get user data from JWT user
   const userData = useMemo(() => {
-    if (backendUser) {
-      return {
-        id: backendUser.id,
-        email: backendUser.email,
-        firstName: backendUser.firstName,
-        lastName: backendUser.lastName,
-        displayName: backendUser.displayName ||
-          (backendUser.firstName && backendUser.lastName
-            ? `${backendUser.firstName} ${backendUser.lastName}`
-            : backendUser.firstName || backendUser.lastName || "User"),
-        picture: backendUser.picture,
-        photoURL: null, // Backend user doesn't have photoURL
-      };
-    }
-    if (firebaseUser) {
-      return {
-        id: null,
-        email: firebaseUser.email || "",
-        firstName: null,
-        lastName: null,
-        displayName: firebaseUser.displayName || "User",
-        picture: null,
-        photoURL: firebaseUser.photoURL,
-      };
-    }
     if (user) {
       return {
         id: user.id,
@@ -145,7 +107,7 @@ const ProfileCenterPopup = () => {
       };
     }
     return null;
-  }, [backendUser, firebaseUser, user]);
+  }, [user]);
 
   // Get profile image or initials - check if image failed to load
   const profileImage = useMemo(() => {
