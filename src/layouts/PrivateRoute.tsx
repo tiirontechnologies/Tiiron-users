@@ -1,13 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
-
-// Helper function to get cookie value
-const getCookie = (name: string): string | null => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()!.split(";").shift()!;
-  return null;
-};
+import { useAuth } from "../hooks/useAuth";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -19,13 +12,11 @@ export default function PrivateRoute({
   allowedRoles,
 }: PrivateRouteProps) {
   const location = useLocation();
-
-  // Check for token in cookie instead of localStorage
-  const token = getCookie("token");
+  const { isLoggedIn } = useAuth();
   const role = localStorage.getItem("roleId");
 
   // ❌ Not logged in
-  if (!token) {
+  if (!isLoggedIn) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 

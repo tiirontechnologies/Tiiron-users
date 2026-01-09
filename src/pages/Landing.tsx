@@ -49,7 +49,7 @@ import { useAuth } from '../hooks/useAuth';
 const Landing = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [query, setQuery] = useState('');
 
   // 🔹 Featured courses
@@ -62,7 +62,7 @@ const Landing = () => {
   // 🔹 Cart Data
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,
-    skip: !token,
+    skip: !isLoggedIn,
   });
 
   const [addToCartServer, { isLoading: isAddingToCart }] =
@@ -108,7 +108,7 @@ const Landing = () => {
   };
 
   const handleAddToCart = async (courseId: number) => {
-    if (!token) return navigate('/sign-up');
+    if (!isLoggedIn) return navigate('/sign-up');
     try {
       await addToCartServer({ courseId }).unwrap();
     } catch (error) {

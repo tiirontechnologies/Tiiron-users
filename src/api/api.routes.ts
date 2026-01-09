@@ -53,11 +53,21 @@ export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Course', 'Chapter', 'Question', 'QuestionBank', 'Unit', 'Auth', 'Cart', 'Enrollment','PracticeSession'],
-  endpoints: (builder) => ({}),
+  endpoints: (builder) => ({
+    // Check authentication status
+    checkAuth: builder.query<{ success: boolean }, void>({
+      query: () => ({
+        url: '/profile/me',
+        method: 'GET',
+      }),
+      providesTags: ['Auth'],
+    }),
+  }),
 });
 
 // Export hooks for usage in components
 export const {
+  useCheckAuthQuery,
 } = baseApi;
 
 // Auth API configuration

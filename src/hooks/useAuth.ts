@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useCheckAuthQuery } from "../api/api.routes";
 
 interface AuthUser {
   id: number;
@@ -9,44 +8,19 @@ interface AuthUser {
   orgCode?: string;
 }
 
-// 🔹 Helper function to get the token from cookie 
-const getCookie = (name: string): string | null => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()!.split(";").shift()!;
-  return null;
-};
-
 export const useAuth = () => {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<AuthUser | null>(null);
+  // Call /profile/me API to check authentication status
+  const { data, error, isLoading } = useCheckAuthQuery();
 
-  useEffect(() => {
-    // get token from cookie 
-    const cookieToken = getCookie("token"); // cookie name
-
-    if (cookieToken) {
-      try {
-        const decodedUser: AuthUser = jwtDecode(cookieToken);
-
-        setToken(cookieToken);
-        setUser(decodedUser);
-      } catch (error) {
-        console.error("Failed to decode token:", error);
-      }
-    } else {
-      setToken(null);
-      setUser(null);
-    }
-  }, []);
-
-  // Check if user is logged in
-  const isLoggedIn = !!token;
-
+  // If API returns 200 (no error), user is logged in
+  // If API returns error or non-200, user is not logged in
+  const isLoggedIn = !isLoading && !error && !!data;
+  console.log(isLoggedIn,"isLoggedIn")
+  
   return {
-    token,
-    user,
-    isAdmin: user?.roleId === "admin",
+    token: null, // Token is no longer read from cookie
+    user: null, // User data is no longer decoded from token
+    isAdmin: false, // Admin status would need to come from API response if needed
     isLoggedIn,
   };
 };
