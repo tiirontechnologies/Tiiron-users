@@ -16,7 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 
 import SearchBox from "./header/SearchBox";
 import ProfilePopup from "./header/profilePopup";
@@ -127,6 +127,7 @@ const Navbar: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   const isActive = (href?: string) =>
     href ? location.pathname === href || location.pathname.startsWith(href + "/") : false;
@@ -156,7 +157,8 @@ const Navbar: React.FC = () => {
   };
   const handleCloseCart = () => setIsCartOpen(false);
   const handleOpenQuizModal = () => {
-    setIsQuizModalOpen(true);
+    // setIsQuizModalOpen(true);
+    navigate("/generate-quiz")
   };
   const handleCloseQuizModal = () => {
     setIsQuizModalOpen(false);
