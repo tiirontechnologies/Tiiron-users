@@ -3,10 +3,10 @@ import { Box, Button, Avatar, Typography, Divider } from "@mui/material";
 import { KeyboardBackspace } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { CourseData } from "../../types";
-//import NavigationList from "./NavigationList";
+import NavigationList from "./NavigationList";
 import PracticeProgressStats from "./PracticeProgressStats";
 import { GRADIENTS, COLORS } from "../../constants";
-import CourseSidebar from "./CourseSidebar";
+// import CourseSidebar from "./CourseSidebar";
 
 interface PracticeStats {
   totalSessions: number;
@@ -131,9 +131,9 @@ const Sidebar: React.FC<SidebarProps> = ({
       <Divider sx={{ mt: 2, opacity: 0.3 }} />
 
       {/* Navigation List */}
-      {/* <NavigationList chapters={data?.chapters || []} onUnitSelect={onUnitSelect} /> */}
+      <NavigationList chapters={data?.chapters || []} onUnitSelect={onUnitSelect} />
 
-      <CourseSidebar/>
+      {/* <CourseSidebar/> */}
     </Box>
   );
 };
