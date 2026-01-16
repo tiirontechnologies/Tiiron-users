@@ -15,27 +15,42 @@ import { alpha } from "@mui/material/styles";
 
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // --- Dummy Data ---
 const QUIZ_QUESTIONS = [
   {
-    question: "Which tool introduced by GitHub focuses on providing AI-assisted coding?",
-    options: ["GitHub Actions", "GitHub Copilot", "Microsoft Git Service", "GitHub CI/CD Studio"],
+    question:
+      "Which tool introduced by GitHub focuses on providing AI-assisted coding?",
+    options: [
+      "GitHub Actions",
+      "GitHub Copilot",
+      "Microsoft Git Service",
+      "GitHub CI/CD Studio",
+    ],
     correctAnswer: 1,
-    explanation: "GitHub Copilot is the AI-assisted coding tool designed to help developers.",
+    explanation:
+      "GitHub Copilot is the AI-assisted coding tool designed to help developers.",
   },
   {
     question: "Which React hook is primarily used for handling side effects?",
     options: ["useState", "useContext", "useEffect", "useReducer"],
     correctAnswer: 2,
-    explanation: "useEffect allows you to perform side effects like data fetching.",
+    explanation:
+      "useEffect allows you to perform side effects like data fetching.",
   },
   {
-    question: "What does the 'SSG' acronym stand for in modern web development?",
-    options: ["Server-Side Graphics", "Static Site Generation", "Simple State Generator", "Standard Style Guide"],
+    question:
+      "What does the 'SSG' acronym stand for in modern web development?",
+    options: [
+      "Server-Side Graphics",
+      "Static Site Generation",
+      "Simple State Generator",
+      "Standard Style Guide",
+    ],
     correctAnswer: 1,
-    explanation: "Static Site Generation (SSG) pre-renders pages at build time.",
+    explanation:
+      "Static Site Generation (SSG) pre-renders pages at build time.",
   },
   {
     question: "Which CSS property is used to create a flexible box layout?",
@@ -44,10 +59,12 @@ const QUIZ_QUESTIONS = [
     explanation: "The display: flex property enables the Flexbox layout model.",
   },
   {
-    question: "In TypeScript, which keyword is used to define the shape of an object?",
+    question:
+      "In TypeScript, which keyword is used to define the shape of an object?",
     options: ["interface", "typecast", "structure", "define"],
     correctAnswer: 0,
-    explanation: "The 'interface' keyword is used to describe the shape of an object.",
+    explanation:
+      "The 'interface' keyword is used to describe the shape of an object.",
   },
 ];
 
@@ -60,11 +77,15 @@ export const QuizPreview: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const totalQuestions = QUIZ_QUESTIONS.length;
+
   const currentQuestion = QUIZ_QUESTIONS[currentIndex];
   const userSelection = selectedAnswers[currentIndex];
   const isCorrect = userSelection === currentQuestion.correctAnswer;
 
-  const progressValue = Math.round(((currentIndex + 1) / QUIZ_QUESTIONS.length) * 100);
+  const progressValue = Math.round(
+    ((currentIndex + 1) / QUIZ_QUESTIONS.length) * 100
+  );
 
   const handleSelect = (idx: number) => {
     const newAnswers = [...selectedAnswers];
@@ -85,7 +106,16 @@ export const QuizPreview: React.FC = () => {
   };
 
   return (
-    <Box sx={{ p: 2, borderRadius: "20px", bgcolor: "#FFFFFF", border: "1px solid #E2E8F0", minHeight: "500px", position: "relative",  }}>
+    <Box
+      sx={{
+        p: 2,
+        borderRadius: "20px",
+        bgcolor: "#FFFFFF",
+        border: "1px solid #E2E8F0",
+        minHeight: "500px",
+        position: "relative",
+      }}
+    >
       <Paper
         elevation={0}
         sx={{
@@ -95,25 +125,56 @@ export const QuizPreview: React.FC = () => {
         {/* Header Section */}
         <Box
           display="flex"
-          flexDirection={{  sm: "row" }}
+          flexDirection={{ xs: "column", sm: "row" }}
           justifyContent="space-between"
           alignItems={{ xs: "flex-start", sm: "center" }}
           gap={2}
           mb={4}
         >
-          <Typography variant={isMobile ? "h6" : "h5"} fontWeight={700}>
-            Quiz Preview
-          </Typography>
+          <Box>
+            {/* Main Title */}
+            <Typography
+              variant={isMobile ? "h6" : "h5"}
+              sx={{
+                fontWeight: 800, // Extra bold as seen in the image
+                color: "#0f172a", // Dark slate/navy
+                letterSpacing: "-0.02em",
+                mb: 0.5,
+              }}
+            >
+              Quiz Preview
+            </Typography>
+
+            {/* Subtitle */}
+            <Typography
+              variant="body1"
+              sx={{
+                color: "#64748b", // Muted slate gray
+                fontSize: "1rem",
+                fontWeight: 400,
+              }}
+            >
+              Review and practice the generated questions
+            </Typography>
+          </Box>
 
           <Stack direction="row" alignItems="center" spacing={2}>
             <Box textAlign={{ xs: "left", sm: "right" }}>
               <Typography
                 variant="overline"
-                sx={{ color: "#94a3b8", fontWeight: 800, fontSize: "0.65rem", display: "block" }}
+                sx={{
+                  color: "#94a3b8",
+                  fontWeight: 800,
+                  fontSize: "0.65rem",
+                  display: "block",
+                }}
               >
                 PROGRESS
               </Typography>
-              <Typography variant="body1" sx={{ color: "#1e293b", fontWeight: 700, mt: -0.5 }}>
+              <Typography
+                variant="body1"
+                sx={{ color: "#1e293b", fontWeight: 700, mt: -0.5 }}
+              >
                 {currentIndex + 1} / {QUIZ_QUESTIONS.length}
               </Typography>
             </Box>
@@ -143,7 +204,12 @@ export const QuizPreview: React.FC = () => {
                   justifyContent: "center",
                 }}
               >
-                <Typography sx={{ fontWeight: 800, fontSize: isMobile ? "0.75rem" : "0.85rem" }}>
+                <Typography
+                  sx={{
+                    fontWeight: 800,
+                    fontSize: isMobile ? "0.75rem" : "0.85rem",
+                  }}
+                >
                   {progressValue}%
                 </Typography>
               </Box>
@@ -183,27 +249,44 @@ export const QuizPreview: React.FC = () => {
                   p: { xs: 1.5, sm: 2 },
                   borderRadius: "12px",
                   border: "1px solid",
-                  borderColor: isSelected ? (isCorrect ? "#10B981" : "#4F39F6") : "#E2E8F0",
-                  bgcolor: isSelected ? alpha(isCorrect ? "#10B981" : "#4F39F6", 0.06) : "transparent",
+                  borderColor: isSelected
+                    ? isCorrect
+                      ? "#10B981"
+                      : "#4F39F6"
+                    : "#E2E8F0",
+                  bgcolor: isSelected
+                    ? alpha(isCorrect ? "#10B981" : "#4F39F6", 0.06)
+                    : "transparent",
                   display: "flex",
                   alignItems: "center",
                   cursor: "pointer",
                   transition: "all 0.2s ease-in-out",
-                  "&:hover": { borderColor: "#4F39F6", bgcolor: alpha("#4F39F6", 0.02) },
+                  "&:hover": {
+                    borderColor: "#4F39F6",
+                    bgcolor: alpha("#4F39F6", 0.02),
+                  },
                 }}
               >
-                <Radio checked={isSelected} size={isMobile ? "small" : "medium"} />
-                <Typography variant="body2" sx={{ flexGrow: 1, fontSize: { xs: "0.9rem", sm: "1rem" } }}>
+                <Radio
+                  checked={isSelected}
+                  size={isMobile ? "small" : "medium"}
+                />
+                <Typography
+                  variant="body2"
+                  sx={{ flexGrow: 1, fontSize: { xs: "0.9rem", sm: "1rem" } }}
+                >
                   {option}
                 </Typography>
-                {isSelected && isCorrect && <CheckCircleIcon sx={{ color: "#10B981", fontSize: 20 }} />}
+                {isSelected && isCorrect && (
+                  <CheckCircleIcon sx={{ color: "#10B981", fontSize: 20 }} />
+                )}
               </Box>
             );
           })}
         </Stack>
 
         {/* Navigation Buttons */}
-        <Box display="flex" justifyContent="space-between" mt="auto">
+        {/* <Box display="flex" justifyContent="space-between" mt="auto">
           <Button
             onClick={handlePrevious}
             disabled={currentIndex === 0}
@@ -229,6 +312,99 @@ export const QuizPreview: React.FC = () => {
           >
             {isMobile ? "Next" : "Next Question"}
           </Button>
+        </Box> */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            padding: { xs: 2, md: 3 },
+          }}
+        >
+          {/* Left Side: Previous Button */}
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={handlePrevious}
+            disabled={currentIndex === 0}
+            sx={{
+              color: "#FFFFFF",
+              textTransform: "none",
+              fontWeight: 500,
+              minWidth: { xs: "40px", md: "auto" },
+              borderRadius: { xs: "50%", md: "8px" },
+              padding: { xs: "8px", md: "8px 16px" },
+              "&:hover": {
+                backgroundColor: "rgba(112, 126, 148, 0.1)",
+                color: "#4A5568",
+              },
+              // Style saat disabled
+              "&.Mui-disabled": {
+                color: "#CBD5E1",
+                opacity: 0.6,
+              },
+            }}
+          >
+            <Box
+              component="span"
+              sx={{ display: { xs: "none", sm: "inline" } }}
+            >
+              Previous
+            </Box>
+          </Button>
+
+          {/* Right Side: Skip and Next */}
+          <Stack direction="row" spacing={{ xs: 1, sm: 3 }} alignItems="center">
+            <Button
+              variant="text"
+              sx={{
+                color: "#6366F1",
+                textTransform: "none",
+                fontWeight: 500,
+                fontSize: { xs: "14px", md: "16px" },
+                "&:hover": {
+                  backgroundColor: "transparent",
+                  textDecoration: "underline",
+                  color: "#6366F1",
+                },
+              }}
+            >
+              Skip
+            </Button>
+
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={currentIndex === totalQuestions - 1}
+              endIcon={<ArrowForwardIcon />}
+              sx={{
+                backgroundColor: "#0F172A",
+                color: "#FFFFFF",
+                borderRadius: "12px",
+                padding: { xs: "10px", md: "10px 24px" },
+                minWidth: { xs: "48px", md: "auto" },
+                textTransform: "none",
+                fontWeight: 600,
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                "&:hover": {
+                  backgroundColor: "#1E293B",
+                },
+                // Style saat disabled agar background menjadi lebih terang
+                "&.Mui-disabled": {
+                  backgroundColor: "#94A3B8", // Abu-abu kebiruan terang
+                  color: "#F1F5F9",
+                  opacity: 0.8,
+                },
+              }}
+            >
+              <Box
+                component="span"
+                sx={{ display: { xs: "none", sm: "inline" } }}
+              >
+                Next Question
+              </Box>
+            </Button>
+          </Stack>
         </Box>
       </Paper>
     </Box>

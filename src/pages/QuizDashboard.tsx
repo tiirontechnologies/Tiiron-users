@@ -8,7 +8,7 @@ import { QuizPreview } from "@components/QuizPreview";
 
 const QuizDashboard: React.FC = () => {
   return (
-    <Box sx={{ bgcolor: "#F8FAFC", minHeight: "100vh", py: { xs: 1, md: 4 } }}>
+    <Box sx={{ bgcolor: "#F8FAFC", minHeight: "100vh", pt: 6 }}>
       <Container maxWidth="xl">
         <Grid container spacing={4} alignItems="flex-start">
           {/* Left Column - Configuration */}
