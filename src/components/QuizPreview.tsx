@@ -5,180 +5,102 @@ import {
   Typography,
   Chip,
   Stack,
-  Radio,
   Button,
   CircularProgress,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { alpha } from "@mui/material/styles";
-
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+// Import your new template
+import McqTemplate from "../features/course-practice/components/QuestionTemplates/McqTemplate"; 
 
 // --- Dummy Data ---
 const QUIZ_QUESTIONS = [
   {
-    question:
-      "Which tool introduced by GitHub focuses on providing AI-assisted coding?",
-    options: [
-      "GitHub Actions",
-      "GitHub Copilot",
-      "Microsoft Git Service",
-      "GitHub CI/CD Studio",
-    ],
+    id: "q1",
+    question: "Which tool introduced by GitHub focuses on providing AI-assisted coding?",
+    options: ["GitHub Actions", "GitHub Copilot", "Microsoft Git Service", "GitHub CI/CD Studio"],
     correctAnswer: 1,
-    explanation:
-      "GitHub Copilot is the AI-assisted coding tool designed to help developers.",
+    explanation: "GitHub Copilot is the AI-assisted coding tool designed to help developers.",
   },
   {
+    id: "q2",
     question: "Which React hook is primarily used for handling side effects?",
     options: ["useState", "useContext", "useEffect", "useReducer"],
     correctAnswer: 2,
-    explanation:
-      "useEffect allows you to perform side effects like data fetching.",
+    explanation: "useEffect allows you to perform side effects like data fetching.",
   },
-  {
-    question:
-      "What does the 'SSG' acronym stand for in modern web development?",
-    options: [
-      "Server-Side Graphics",
-      "Static Site Generation",
-      "Simple State Generator",
-      "Standard Style Guide",
-    ],
-    correctAnswer: 1,
-    explanation:
-      "Static Site Generation (SSG) pre-renders pages at build time.",
-  },
-  {
-    question: "Which CSS property is used to create a flexible box layout?",
-    options: ["float", "position", "display: flex", "align-content"],
-    correctAnswer: 2,
-    explanation: "The display: flex property enables the Flexbox layout model.",
-  },
-  {
-    question:
-      "In TypeScript, which keyword is used to define the shape of an object?",
-    options: ["interface", "typecast", "structure", "define"],
-    correctAnswer: 0,
-    explanation:
-      "The 'interface' keyword is used to describe the shape of an object.",
-  },
+  // ... rest of your questions
 ];
 
 export const QuizPreview: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(
-    new Array(QUIZ_QUESTIONS.length).fill(null)
+  const [selectedAnswers, setSelectedAnswers] = useState<(string | string[])[]>(
+    new Array(QUIZ_QUESTIONS.length).fill("")
   );
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const totalQuestions = QUIZ_QUESTIONS.length;
+  const currentData = QUIZ_QUESTIONS[currentIndex];
 
-  const currentQuestion = QUIZ_QUESTIONS[currentIndex];
-  const userSelection = selectedAnswers[currentIndex];
-  const isCorrect = userSelection === currentQuestion.correctAnswer;
+  // --- Adapter: Convert Dummy Data to the "Question" type used by McqTemplate ---
+  const formattedQuestion = {
+    id: currentData.id,
+    content: {
+      question: currentData.question,
+      allowMultipleSelection: false,
+      options: currentData.options.map((opt, index) => ({
+        id: index.toString(),
+        text: opt,
+        isCorrect: index === currentData.correctAnswer,
+      })),
+    },
+    // You can pass previousPractice data here if you want to show results immediately
+    previousPractice: undefined 
+  };
 
-  const progressValue = Math.round(
-    ((currentIndex + 1) / QUIZ_QUESTIONS.length) * 100
-  );
-
-  const handleSelect = (idx: number) => {
+  const handleAnswerChange = (answer: string | string[]) => {
     const newAnswers = [...selectedAnswers];
-    newAnswers[currentIndex] = idx;
+    newAnswers[currentIndex] = answer;
     setSelectedAnswers(newAnswers);
   };
 
+  const totalQuestions = QUIZ_QUESTIONS.length;
+
   const handleNext = () => {
-    if (currentIndex < QUIZ_QUESTIONS.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    }
+    if (currentIndex < QUIZ_QUESTIONS.length - 1) setCurrentIndex((prev) => prev + 1);
   };
 
   const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
+    if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
 
+  const progressValue = Math.round(((currentIndex + 1) / QUIZ_QUESTIONS.length) * 100);
+
   return (
-    <Box
-      sx={{
-        p: 2,
-        borderRadius: "20px",
-        bgcolor: "#FFFFFF",
-        border: "1px solid #E2E8F0",
-        minHeight: "500px",
-        position: "relative",
-      }}
-    >
-      <Paper
-        elevation={0}
-        sx={{
-          p: { xs: 2, sm: 4 },
-        }}
-      >
+    <Box sx={{ p: 2, borderRadius: "20px", bgcolor: "#FFFFFF", border: "1px solid #E2E8F0", minHeight: "500px" }}>
+      <Paper elevation={0} sx={{ p: { xs: 2, sm: 4 } }}>
         {/* Header Section */}
-        <Box
-          display="flex"
-          flexDirection={{ xs: "column", sm: "row" }}
-          justifyContent="space-between"
-          alignItems={{ xs: "flex-start", sm: "center" }}
-          gap={2}
-          mb={4}
-        >
+        <Box display="flex" flexDirection={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems="center" mb={4}>
           <Box>
-            {/* Main Title */}
-            <Typography
-              variant={isMobile ? "h6" : "h5"}
-              sx={{
-                fontWeight: 800, // Extra bold as seen in the image
-                color: "#0f172a", // Dark slate/navy
-                letterSpacing: "-0.02em",
-                mb: 0.5,
-              }}
-            >
+            <Typography variant={isMobile ? "h6" : "h5"} sx={{ fontWeight: 800, color: "#0f172a" }}>
               Quiz Preview
             </Typography>
-
-            {/* Subtitle */}
-            <Typography
-              variant="body1"
-              sx={{
-                color: "#64748b", // Muted slate gray
-                fontSize: "1rem",
-                fontWeight: 400,
-              }}
-            >
+            <Typography variant="body2" sx={{ color: "#64748b" }}>
               Review and practice the generated questions
             </Typography>
           </Box>
 
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Box textAlign={{ xs: "left", sm: "right" }}>
-              <Typography
-                variant="overline"
-                sx={{
-                  color: "#94a3b8",
-                  fontWeight: 800,
-                  fontSize: "0.65rem",
-                  display: "block",
-                }}
-              >
-                PROGRESS
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ color: "#1e293b", fontWeight: 700, mt: -0.5 }}
-              >
+            <Box textAlign="right">
+              <Typography variant="overline" sx={{ color: "#94a3b8", fontWeight: 800, fontSize: "0.65rem" }}>PROGRESS</Typography>
+              <Typography variant="body1" sx={{ color: "#1e293b", fontWeight: 700 }}>
                 {currentIndex + 1} / {QUIZ_QUESTIONS.length}
               </Typography>
             </Box>
-
             {/* Circular Progress */}
             <Box sx={{ position: "relative", display: "inline-flex" }}>
               <CircularProgress
@@ -217,102 +139,23 @@ export const QuizPreview: React.FC = () => {
           </Stack>
         </Box>
 
-        <Chip
-          label={`QUESTION ${currentIndex + 1}`}
-          size="small"
-          sx={{ bgcolor: "#F0EFFF", color: "#4F39F6", fontWeight: 700, mb: 2 }}
-        />
+        <Chip label={`QUESTION ${currentIndex + 1}`} size="small" sx={{ bgcolor: "#F0EFFF", color: "#4F39F6", fontWeight: 700, mb: 2 }} />
 
-        {/* Question Text - Responsive Size */}
-        <Typography
-          variant="h5"
-          fontWeight={600}
-          mb={4}
-          sx={{
-            fontSize: { xs: "1.15rem", sm: "1.5rem" },
-            lineHeight: 1.4,
-            minHeight: { sm: "80px" },
-          }}
-        >
-          {currentQuestion.question}
+        <Typography variant="h5" fontWeight={600} mb={2} sx={{ fontSize: { xs: "1.15rem", sm: "1.5rem" } }}>
+          {currentData.question}
         </Typography>
 
-        {/* Options Stack */}
-        <Stack spacing={1.5} mb={5}>
-          {currentQuestion.options.map((option, idx) => {
-            const isSelected = userSelection === idx;
-            return (
-              <Box
-                key={idx}
-                onClick={() => handleSelect(idx)}
-                sx={{
-                  p: { xs: 1.5, sm: 2 },
-                  borderRadius: "12px",
-                  border: "1px solid",
-                  borderColor: isSelected
-                    ? isCorrect
-                      ? "#10B981"
-                      : "#4F39F6"
-                    : "#E2E8F0",
-                  bgcolor: isSelected
-                    ? alpha(isCorrect ? "#10B981" : "#4F39F6", 0.06)
-                    : "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease-in-out",
-                  "&:hover": {
-                    borderColor: "#4F39F6",
-                    bgcolor: alpha("#4F39F6", 0.02),
-                  },
-                }}
-              >
-                <Radio
-                  checked={isSelected}
-                  size={isMobile ? "small" : "medium"}
-                />
-                <Typography
-                  variant="body2"
-                  sx={{ flexGrow: 1, fontSize: { xs: "0.9rem", sm: "1rem" } }}
-                >
-                  {option}
-                </Typography>
-                {isSelected && isCorrect && (
-                  <CheckCircleIcon sx={{ color: "#10B981", fontSize: 20 }} />
-                )}
-              </Box>
-            );
-          })}
-        </Stack>
+        {/* --- Integrated McqTemplate --- */}
+        <Box sx={{ mb: 4 }}>
+          <McqTemplate
+            question={formattedQuestion as any}
+            practiceMode={true}
+            userAnswer={selectedAnswers[currentIndex]}
+            onAnswerChange={handleAnswerChange}
+          />
+        </Box>
 
         {/* Navigation Buttons */}
-        {/* <Box display="flex" justifyContent="space-between" mt="auto">
-          <Button
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
-            startIcon={<ChevronLeftIcon />}
-            sx={{ fontWeight: 600, textTransform: "none" }}
-          >
-            Previous
-          </Button>
-
-          <Button
-            variant="contained"
-            onClick={handleNext}
-            disabled={currentIndex === QUIZ_QUESTIONS.length - 1}
-            endIcon={<ArrowForwardIcon />}
-            sx={{
-              fontWeight: 700,
-              textTransform: "none",
-              px: { xs: 2, sm: 4 },
-              borderRadius: "10px",
-              boxShadow: "none",
-              "&:hover": { boxShadow: "0px 4px 12px rgba(80, 70, 229, 0.2)" },
-            }}
-          >
-            {isMobile ? "Next" : "Next Question"}
-          </Button>
-        </Box> */}
         <Box
           sx={{
             display: "flex",
