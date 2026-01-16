@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Chip, Avatar } from '@mui/material';
-import { School, Star } from '@mui/icons-material';
+//import { School, Star } from '@mui/icons-material';
+import { School } from '@mui/icons-material';
 import { COLORS, GRADIENTS, SHADOWS } from '../../constants';
 
 interface HeaderProps {
@@ -11,10 +12,10 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
-  courseName = "Advanced React Development",
+  courseName = "",
   chapterInfo = "Chapter 1 - Lesson 1",
-  score = "25/30",
-  progress = "83% Complete"
+  // score = "25/30",
+  // progress = "83% Complete"
 }) => {
   return (
     <Box
@@ -87,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({
       </Box>
 
       {/* Right Section - Score */}
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           alignItems: "center",
@@ -143,7 +144,7 @@ const Header: React.FC<HeaderProps> = ({
             {progress}
           </Typography>
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 };
