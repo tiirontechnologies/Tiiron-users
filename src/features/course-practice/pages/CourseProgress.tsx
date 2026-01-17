@@ -8,7 +8,6 @@ import MainContent from "../components/MainContent/MainContent";
 import CoursePracticeContent from "../components/CoursePracticeContent";
 import EmptyState from "../components/UI/EmptyState";
 import Loader from "@components/ui/Spinner";
-//import CourseSidebar from "../components/Sidebar/CourseSidebar";
 
 const EMPTY_STATS = {
   totalSessions: 0,
@@ -86,8 +85,11 @@ const CourseProgress: React.FC = () => {
   
   // Extract course data - handle both { data: ... } and direct data structures
   const course = (courseData as any)?.data ?? courseData;
+  const courseName = course?.title;
+  const lessonName = course?.chapters[0]?.title;
+  const lesson = course?.chapters[0]?.id;
+  const chapterInfo = `${lessonName}-${lesson}`
   const courseDataForSidebar = course?.chapters ? course : { chapters: [] };
-  
   // Extract unitsData - handle both wrapped and direct structures
   let practiceData = unitsData;
   if (unitsData && typeof unitsData === 'object' && 'success' in unitsData && 'data' in unitsData) {
@@ -115,10 +117,9 @@ const CourseProgress: React.FC = () => {
         practiceStats={practiceStats}
       />
 
-      {/* <CourseSidebar/> */}
-
       {/* Header */}
-      <Header />
+      {/* <Header /> */}
+      <Header courseName={courseName} chapterInfo={chapterInfo} />
 
       {/* Render appropriate component based on data structure */}
       {isUnitsLoading ? (
