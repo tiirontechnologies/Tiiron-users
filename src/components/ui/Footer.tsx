@@ -63,25 +63,25 @@ const Footer: React.FC = () => {
   ];
 
   const socialLinks = [
-    { icon: <Twitter />, href: "https://x.com/HrInacademic", label: "Twitter" },
+    { icon: <Twitter />, href: "https://x.com/HrTiiron", label: "Twitter" },
     {
       icon: <LinkedIn />,
-      href: "https://www.linkedin.com/company/inacademic",
+      href: "https://www.linkedin.com/company/tiiron/",
       label: "LinkedIn",
     },
     {
       icon: <Instagram />,
-      href: "https://www.instagram.com/inacademic_official/",
+      href: "https://www.instagram.com/hrtiiron/",
       label: "Instagram",
     },
     {
       icon: <Facebook />,
-      href: "https://www.facebook.com/inacademic_official",
+      href: "https://www.facebook.com/people/Tiiron/61584136520782/",
       label: "Facebook",
     },
     {
       icon: <YouTube />,
-      href: "https://www.youtube.com/@inacademic",
+      href: "https://www.youtube.com/@hrtiiron",
       label: "YouTube",
     },
     { icon: <LocationOn />, href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", label: "Location" },
