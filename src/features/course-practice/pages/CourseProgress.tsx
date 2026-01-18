@@ -86,9 +86,8 @@ const CourseProgress: React.FC = () => {
   // Extract course data - handle both { data: ... } and direct data structures
   const course = (courseData as any)?.data ?? courseData;
   const courseName = course?.title;
-  const lessonName = course?.chapters[0]?.title;
-  const lesson = course?.chapters[0]?.id;
-  const chapterInfo = `${lessonName}-${lesson}`
+  const lessonName = course?.chapters[0]?.units[0]?.title;
+  const chapterInfo = lessonName;
   const courseDataForSidebar = course?.chapters ? course : { chapters: [] };
   // Extract unitsData - handle both wrapped and direct structures
   let practiceData = unitsData;
@@ -96,7 +95,7 @@ const CourseProgress: React.FC = () => {
     // API returned { success: true, data: {...} }
     practiceData = (unitsData as any).data;
   }
-  
+  console.log("PracticeUnit", courseDataForSidebar);
   // Check if the API response has the new structure with contentTypes
   const hasNewStructure = practiceData && 
     typeof practiceData === 'object' && 
