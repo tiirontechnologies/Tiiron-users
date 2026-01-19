@@ -30,8 +30,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  console.log("Sidebar", data?.chapters, onUnitSelect, courseId);
-  console.log("sidebar Practice stats:", practiceStats);
+  // console.log("Sidebar", data?.chapters, onUnitSelect, courseId);
+  // console.log("sidebar Practice stats:", practiceStats);
 
   const progressStats = {
     current: 3,
@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     percentage: 25,
   };
 
-  console.log("Rendering PracticeProgressStats with courseId:", courseId);
+  // console.log("Rendering PracticeProgressStats with courseId:", courseId);
 
   return (
     <Box

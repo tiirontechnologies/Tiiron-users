@@ -315,14 +315,14 @@ const CodeEditorPage: React.FC = () => {
   // Debug logging
   useEffect(() => {
     if (questionFromState) {
-      console.log("Question from navigation state:", questionFromState);
+      // console.log("Question from navigation state:", questionFromState);
     }
     if (questionData) {
-      console.log("Question API Response:", questionData);
-      console.log("Parsed Question from API:", questionFromApi);
+      // console.log("Question API Response:", questionData);
+      // console.log("Parsed Question from API:", questionFromApi);
     }
     if (isQuestionError) {
-      console.error("Question API Error:", isQuestionError);
+      // console.error("Question API Error:", isQuestionError);
     }
   }, [questionFromState, questionData, questionFromApi, isQuestionError]);
   
@@ -347,9 +347,9 @@ const CodeEditorPage: React.FC = () => {
   
   // Debug available languages (after they're declared)
   useEffect(() => {
-    console.log("Available Languages:", availableLanguages);
-    console.log("Code Template Array:", actualCodeTemplateArray);
-    console.log("Allowed Language IDs:", allowedLanguageIds);
+    // console.log("Available Languages:", availableLanguages);
+    // console.log("Code Template Array:", actualCodeTemplateArray);
+    // console.log("Allowed Language IDs:", allowedLanguageIds);
   }, [availableLanguages, actualCodeTemplateArray, allowedLanguageIds]);
   
   // Get initial language - prefer URL language if valid, otherwise first available from codeTemplate
@@ -430,7 +430,7 @@ const CodeEditorPage: React.FC = () => {
   
   // Debug selected language
   useEffect(() => {
-    console.log("Selected Language:", selectedLanguage);
+    // console.log("Selected Language:", selectedLanguage);
   }, [selectedLanguage]);
 
   const getDifficultyColor = (difficulty?: string) => {
@@ -452,7 +452,7 @@ const CodeEditorPage: React.FC = () => {
   };
 
   const handleRun = () => {
-    console.log("Running code:", code);
+    // console.log("Running code:", code);
     // TODO: Implement code execution
   };
 
@@ -581,7 +581,7 @@ const CodeEditorPage: React.FC = () => {
   }, [isDragging, isResizing, dragStart, resizeStart, testPanelPosition, testPanelSize]);
 
   const handleTestRun = () => {
-    console.log("Running test with input:", customInput);
+    // console.log("Running test with input:", customInput);
     // TODO: Execute code with custom input
     // For now, just show a placeholder output
     setCustomOutput("// Output will appear here after running the test");
