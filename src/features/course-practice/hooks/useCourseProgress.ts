@@ -43,13 +43,11 @@ export const useCourseProgress = () => {
     { courseId: courseId!}, 
     { skip: !courseId }
   );
-  console.log("practiceProgressData", practiceProgressData)
   const unitsData = useMemo(() => transformApiResponse(unitsDataRaw), [unitsDataRaw]);
 
   // 4. Practice Data Logic (Handling API structure)
   const practiceData = useMemo(() => {
     const rawData = practiceProgressData?.data || practiceProgressData;
-    console.log("practiceProgressData2", rawData)
     // Agar API array bhej raha hai to selected unit filter karein
     if (Array.isArray(rawData)) {
       return rawData.find((item: any) => item.unitId === selectedUnitId) || {};
@@ -58,7 +56,7 @@ export const useCourseProgress = () => {
     return rawData || { isCompleted: false, score: 0 };
   }, [practiceProgressData, selectedUnitId]);
 
-  console.log("practiceData2",practiceData)
+  // console.log("practiceData2",practiceData)
 
   const unitInfo = {
     id: selectedUnitId,
