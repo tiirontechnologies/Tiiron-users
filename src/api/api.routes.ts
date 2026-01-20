@@ -11,19 +11,19 @@ const baseQuery = fetchBaseQuery({
 
 // Enhanced base query with error handling
 const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
-  console.log("🌐 Base API Request:", {
-    url: args.url,
-    method: args.method,
-    body: args.body
-  });
+  // console.log("🌐 Base API Request:", {
+  //   url: args.url,
+  //   method: args.method,
+  //   body: args.body
+  // });
   
   const result = await baseQuery(args, api, extraOptions);
   
-  console.log("🌐 Base API Response:", {
-    status: result.meta?.response?.status,
-    data: result.data,
-    error: result.error
-  });
+  // console.log("🌐 Base API Response:", {
+  //   status: result.meta?.response?.status,
+  //   data: result.data,
+  //   error: result.error
+  // });
   
   // Handle invalid token (401 response)
   if (result.error?.status === 401) {

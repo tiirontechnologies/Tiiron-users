@@ -21,7 +21,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
   practiceData
 }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
-  console.log("NavigationList", chapters, onUnitSelect);
+  // console.log("NavigationList", chapters, onUnitSelect);
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };

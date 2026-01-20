@@ -25,7 +25,8 @@ export const authApiSlice = authApi.injectEndpoints({
             throw new Error(data.message || 'Login failed');
           }
         } catch (error) {
-          console.error('Login error:', error);
+          // console.error('Login error:', error);
+          return error;
         }
       },
       invalidatesTags: ['Auth'],

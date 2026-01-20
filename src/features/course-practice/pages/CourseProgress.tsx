@@ -80,8 +80,8 @@ const CourseProgress: React.FC = () => {
   //   );
   // }
   
-  console.log("Units Data:", unitsData);
-  console.log("Course Data:", courseData);
+  // console.log("Units Data:", unitsData);
+  // console.log("Course Data:", courseData);
   
   // Extract course data - handle both { data: ... } and direct data structures
   const course = (courseData as any)?.data ?? courseData;
@@ -104,8 +104,8 @@ const CourseProgress: React.FC = () => {
     practiceData.contentTypes && 
     Array.isArray(practiceData.contentTypes);
   
-  console.log("Has New Structure:", hasNewStructure);
-  console.log("Practice Data:", practiceData);
+  // console.log("Has New Structure:", hasNewStructure);
+  // console.log("Practice Data:", practiceData);
   
   return (
     <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>
