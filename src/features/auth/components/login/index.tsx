@@ -28,13 +28,14 @@ const Login = () => {
     try {
       const res = await authLogin({ ...data }).unwrap();
       const { roleId } = res?.user;
+      console.log("Res",res);
       if (res?.success === true) {
         // Token is now stored in cookie by the backend, no need to store in localStorage
         // Only store roleId if needed for client-side checks
         if (roleId) {
           localStorage.setItem("roleId", roleId);
         }
-        if (roleId == "admin") {
+        if (roleId === "admin") {
           navigate("/browse-courses");
         } else {
           navigate("/");
