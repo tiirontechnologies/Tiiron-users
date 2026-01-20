@@ -80,9 +80,6 @@ const CourseProgress: React.FC = () => {
   //   );
   // }
   
-  // console.log("Units Data:", unitsData);
-  // console.log("Course Data:", courseData);
-  
   // Extract course data - handle both { data: ... } and direct data structures
   const course = (courseData as any)?.data ?? courseData;
   const courseName = course?.title;
@@ -95,16 +92,12 @@ const CourseProgress: React.FC = () => {
     // API returned { success: true, data: {...} }
     practiceData = (unitsData as any).data;
   }
-  console.log("PracticeUnit", courseDataForSidebar);
   // Check if the API response has the new structure with contentTypes
   const hasNewStructure = practiceData && 
     typeof practiceData === 'object' && 
     !Array.isArray(practiceData) && 
     practiceData.contentTypes && 
     Array.isArray(practiceData.contentTypes);
-  
-  // console.log("Has New Structure:", hasNewStructure);
-  // console.log("Practice Data:", practiceData);
   
   return (
     <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>

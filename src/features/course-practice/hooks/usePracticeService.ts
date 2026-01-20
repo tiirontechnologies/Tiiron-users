@@ -69,7 +69,6 @@ export const usePracticeService = ({
         sessionId: mockSessionId,
         hasUnsavedChanges: false,
       }));
-      console.log("🧪 Mock: Practice session started:", mockSessionId);
       return mockSessionId;
     }
 
@@ -85,7 +84,6 @@ export const usePracticeService = ({
         hasUnsavedChanges: false,
       }));
 
-      console.log("✅ Practice session started:", result.sessionId);
       return result.sessionId;
     } catch (error) {
       console.error("❌ Failed to start practice session:", error);
@@ -96,7 +94,6 @@ export const usePracticeService = ({
         sessionId: mockSessionId,
         hasUnsavedChanges: false,
       }));
-      console.log("⚠️ Using fallback session ID:", mockSessionId);
       return mockSessionId;
     }
   }, [courseId, unitId, startPracticeSession]);
@@ -112,7 +109,6 @@ export const usePracticeService = ({
 
       if (USE_DEV_MODE) {
         // Mock implementation
-        console.log("🧪 Mock: Practice progress saved", data);
         setServiceState((prev) => ({
           ...prev,
           lastSavedAt: new Date(),
@@ -137,8 +133,6 @@ export const usePracticeService = ({
           hasUnsavedChanges: false,
           isAutoSaving: false,
         }));
-
-        console.log("💾 Practice progress saved");
       } catch (error) {
         console.error("❌ Failed to save practice progress:", error);
         setServiceState((prev) => ({ ...prev, isAutoSaving: false }));
@@ -152,10 +146,6 @@ export const usePracticeService = ({
     async (sessionData: PracticeSessionData, score: number) => {
       if (USE_DEV_MODE) {
         // Mock implementation
-        console.log("🧪 Mock: Practice session submitted", {
-          sessionData,
-          score,
-        });
         setServiceState((prev) => ({
           ...prev,
           hasUnsavedChanges: false,
@@ -166,7 +156,6 @@ export const usePracticeService = ({
 
       try {
         // Use onsubmitbulk endpoint to post practice data
-        console.log("📤 Submitting practice data to onsubmitbulk API:", sessionData);
         const result = await submitPracticeBulk(sessionData).unwrap();
 
         // Clear auto-save interval
@@ -185,17 +174,9 @@ export const usePracticeService = ({
           lastSavedAt: new Date(),
         }));
 
-        console.log("🎉 Practice session submitted successfully");
-        console.log("📊 Practice Data:", JSON.stringify(sessionData, null, 2));
-
         return result;
       } catch (error) {
         console.error("❌ Failed to submit practice session:", error);
-        // Still log the data for debugging
-        console.log(
-          "📊 Practice Data (failed to submit):",
-          JSON.stringify(sessionData, null, 2)
-        );
         throw error;
       }
     },
@@ -221,8 +202,6 @@ export const usePracticeService = ({
         const currentData = getCurrentData();
         saveProgress(currentData);
       }, 30000);
-
-      console.log("🔄 Auto-save started (every 30 seconds)");
     },
     [saveProgress]
   );
@@ -232,7 +211,6 @@ export const usePracticeService = ({
     if (autoSaveIntervalRef.current) {
       clearInterval(autoSaveIntervalRef.current);
       autoSaveIntervalRef.current = null;
-      console.log("⏹️ Auto-save stopped");
     }
   }, []);
 

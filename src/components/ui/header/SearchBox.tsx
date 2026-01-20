@@ -49,40 +49,31 @@ const SearchBox = () => {
     // Try different response structures
     const data = searchData as any;
     
-    // Debug: Log the response structure
-    console.log("🔍 Search API Response:", data);
-    
     // Structure 1: { data: { results: [...] } } - Actual API structure
     if (data?.data?.results && Array.isArray(data.data.results)) {
-      console.log("✅ Found courses in data.data.results:", data.data.results.length);
       return data.data.results;
     }
     
     // Structure 2: { data: { courses: [...] } }
     if (data?.data?.courses && Array.isArray(data.data.courses)) {
-      console.log("✅ Found courses in data.data.courses:", data.data.courses.length);
       return data.data.courses;
     }
     
     // Structure 3: { results: [...] }
     if (data?.results && Array.isArray(data.results)) {
-      console.log("✅ Found courses in data.results:", data.results.length);
       return data.results;
     }
     
     // Structure 4: { courses: [...] }
     if (data?.courses && Array.isArray(data.courses)) {
-      console.log("✅ Found courses in data.courses:", data.courses.length);
       return data.courses;
     }
     
     // Structure 5: Direct array
     if (Array.isArray(data)) {
-      console.log("✅ Found courses as direct array:", data.length);
       return data;
     }
     
-    console.log("⚠️ No courses found in response");
     return [];
   }, [searchData]);
 

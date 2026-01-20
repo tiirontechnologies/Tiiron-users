@@ -15,7 +15,6 @@ export const useAuth = () => {
   // If API returns 200 (no error), user is logged in
   // If API returns error or non-200, user is not logged in
   const isLoggedIn = !isLoading && !error && !!data;
-  // console.log(isLoggedIn,"isLoggedIn")
   
   return {
     token: null, // Token is no longer read from cookie

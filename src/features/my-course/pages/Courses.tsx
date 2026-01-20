@@ -58,7 +58,6 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   // Handler for share
   const handleShare = async (courseId: number) => {
     // TODO: Implement share functionality
-    console.log("Share course:", courseId);
     const url = `${window.location.origin}/course-glossary/${courseId}`;
     if (navigator.share) {
       try {
@@ -114,7 +113,6 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   // Handler for archive
   const handleArchive = (courseId: number) => {
     // TODO: Implement archive functionality
-    console.log("Archive course:", courseId);
   };
 
   return (

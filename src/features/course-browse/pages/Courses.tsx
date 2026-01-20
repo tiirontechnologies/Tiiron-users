@@ -62,35 +62,27 @@ export default function Courses() {
   // Handle search API response - check multiple possible structures
   let searchCourses: ICourse[] = [];
   if (searchData && hasSearchQuery) {
-    // Log the response structure for debugging
-    console.log("🔍 Search API Response:", searchData);
-    
     const data = searchData as any;
     let rawCourses: any[] = [];
     
     // Structure 1: { data: { results: [...] } } - Actual API structure
     if (data?.data?.results && Array.isArray(data.data.results)) {
-      console.log("✅ Found courses in data.data.results:", data.data.results.length);
       rawCourses = data.data.results;
     }
     // Structure 2: { data: { courses: [...] } }
     else if (data?.data?.courses && Array.isArray(data.data.courses)) {
-      console.log("✅ Found courses in data.data.courses:", data.data.courses.length);
       rawCourses = data.data.courses;
     }
     // Structure 3: { results: [...] }
     else if (data?.results && Array.isArray(data.results)) {
-      console.log("✅ Found courses in data.results:", data.results.length);
       rawCourses = data.results;
     }
     // Structure 4: { courses: [...] }
     else if (data?.courses && Array.isArray(data.courses)) {
-      console.log("✅ Found courses in data.courses:", data.courses.length);
       rawCourses = data.courses;
     }
     // Structure 5: Direct array
     else if (Array.isArray(data)) {
-      console.log("✅ Found courses as direct array:", data.length);
       rawCourses = data;
     }
     
@@ -99,8 +91,6 @@ export default function Courses() {
       ...course,
       totalChapters: course.totalChapters ?? course._count?.chapters ?? 0,
     }));
-    
-    console.log("📋 Extracted courses:", searchCourses);
   }
   
   const courses: ICourse[] = hasSearchQuery

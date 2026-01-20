@@ -32,7 +32,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   userAnswer,
   onAnswerChange,
 }) => {
-  console.log("hello hello", question);
   return (
     <Box>
       {/* Question Header */}

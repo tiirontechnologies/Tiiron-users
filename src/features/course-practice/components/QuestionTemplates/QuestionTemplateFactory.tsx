@@ -24,7 +24,6 @@ const QuestionTemplateFactory: React.FC<QuestionTemplateFactoryProps> = ({
   userAnswer,
   onAnswerChange,
 }) => {
-  console.log("Question in QuestionTemplateFactory:", question);
   const commonProps = {
     question,
     practiceMode,

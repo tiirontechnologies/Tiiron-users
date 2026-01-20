@@ -65,7 +65,6 @@ export function AddNewCourseModal({
       showSnackbar({ message: response?.message, severity: "success" });
       // ✅ Success handler
       onClose();
-      console.log("Course created successfully:", response);
     } catch (error: any) {
       // ❌ Error handler
       console.error("Error creating course:", error);

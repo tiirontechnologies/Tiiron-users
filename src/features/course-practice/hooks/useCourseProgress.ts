@@ -56,8 +56,6 @@ export const useCourseProgress = () => {
     return rawData || { isCompleted: false, score: 0 };
   }, [practiceProgressData, selectedUnitId]);
 
-  // console.log("practiceData2",practiceData)
-
   const unitInfo = {
     id: selectedUnitId,
     name: "Unit Details",
