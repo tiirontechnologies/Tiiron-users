@@ -34,7 +34,7 @@ const Login = () => {
         if (roleId) {
           localStorage.setItem("roleId", roleId);
         }
-        if (roleId == "admin") {
+        if (roleId === "admin") {
           navigate("/browse-courses");
         } else {
           navigate("/");
