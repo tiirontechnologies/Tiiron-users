@@ -23,12 +23,6 @@ const Index = () => {
 
   const [registerUser, { isLoading }] = useRegisterUserMutation();
 
-  // ✅ GOOGLE OAUTH HANDLER (NEW)
-  const handleGoogleAuth = () => {
-    window.location.href =
-      import.meta.env.VITE_API_BASE_URL + "/auth/google";
-  };
-
   const onSubmit = async (data: IOrganisationRegister) => {
     try {
       const res = await registerUser({ ...data }).unwrap();
@@ -57,15 +51,10 @@ const Index = () => {
       imageOnLeft={true}
       titleText="Create your account"
       submitButtonText="Create Account →"
-      dividerText="Sign up with"
       isLoading={isLoading}
       isOrgSignUp={true}
       isLogin={true}
       onSubmit={handleSubmit(onSubmit)}
-
-      /* ✅ GOOGLE BUTTON CLICK */
-      onGoogleAuth={handleGoogleAuth}
-
       renderFormFields={
         <Box display={"grid"} gap={2}>
           <Box display={"flex"} gap={2} width="100%">

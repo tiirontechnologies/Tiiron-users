@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { TAuth } from "types/auth.types";
 import { useNavigate } from "react-router-dom";
+import { AUTH_URL } from "../../../../constants/constants"; // Google Auth URL
 
 const Login = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -24,28 +25,21 @@ const Login = () => {
     formState: { errors },
   } = useForm<TAuth>();
   const navigate = useNavigate();
+
+  // ✅ Normal login
   const onSubmit: SubmitHandler<TAuth> = async (data) => {
     try {
       const res = await authLogin({ ...data }).unwrap();
       const { roleId } = res?.user;
       if (res?.success === true) {
-        // Token is now stored in cookie by the backend, no need to store in localStorage
-        // Only store roleId if needed for client-side checks
-        if (roleId) {
-          localStorage.setItem("roleId", roleId);
-        }
-        if (roleId === "admin") {
-          navigate("/browse-courses");
-        } else {
-          navigate("/");
-        }
+        if (roleId) localStorage.setItem("roleId", roleId);
+        if (roleId === "admin") navigate("/browse-courses");
+        else navigate("/");
         setSnackbarSeverity("success");
-        setSnackbarMessage(res?.message || "User registered successfully");
+        setSnackbarMessage(res?.message || "Login successful");
         setSnackbarOpen(true);
-        // Optionally redirect or do something after successful login
       }
     } catch (err: any) {
-      // On failure
       const errorMessage =
         err?.data?.errors?.map((e: any) => e.message).join(", ") ||
         "Something went wrong!";
@@ -54,9 +48,17 @@ const Login = () => {
       setSnackbarOpen(true);
     }
   };
+
+  // ✅ Google login handler
+  const handleGoogleAuth = () => {
+    // Redirect user to backend Google OAuth endpoint
+    window.location.href = `${AUTH_URL}/google`;
+  };
+
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
+
   return (
     <AuthLayout
       imageSrc={LoginPng}
@@ -64,10 +66,11 @@ const Login = () => {
       isLoading={isLoading}
       isUserSignUp={true}
       signUpBtnText="Sign Up"
-      titleText="Sign in your account"
+      titleText="Sign in to your account"
       submitButtonText="Sign In →"
       dividerText="Sign in with"
       onSubmit={handleSubmit(onSubmit)}
+      onGoogleAuth={handleGoogleAuth} // ✅ Pass Google handler
       renderFormFields={
         <Box display={"grid"} gap={2}>
           <Box>
