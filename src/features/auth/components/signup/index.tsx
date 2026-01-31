@@ -20,25 +20,27 @@ const Index = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+
   const [registerUser, { isLoading }] = useRegisterUserMutation();
+
   const onSubmit = async (data: IOrganisationRegister) => {
     try {
       const res = await registerUser({ ...data }).unwrap();
 
-      // On success
       setSnackbarSeverity("success");
       setSnackbarMessage(res?.message || "User registered successfully");
       setSnackbarOpen(true);
     } catch (err: any) {
-      // On failure
       const errorMessage =
         err?.data?.errors?.map((e: any) => e.message).join(", ") ||
         "Something went wrong!";
+
       setSnackbarSeverity("error");
       setSnackbarMessage(errorMessage);
       setSnackbarOpen(true);
     }
   };
+
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
@@ -49,11 +51,10 @@ const Index = () => {
       imageOnLeft={true}
       titleText="Create your account"
       submitButtonText="Create Account →"
-      dividerText="Sign up with"
       isLoading={isLoading}
       isOrgSignUp={true}
       isLogin={true}
-      onSubmit={handleSubmit(onSubmit)} // Trigger RHF handleSubmit
+      onSubmit={handleSubmit(onSubmit)}
       renderFormFields={
         <Box display={"grid"} gap={2}>
           <Box display={"flex"} gap={2} width="100%">
@@ -75,6 +76,7 @@ const Index = () => {
                 {errors.firstName?.message}
               </span>
             </Box>
+
             <Box flex={1}>
               <Controller
                 name="lastName"
@@ -89,7 +91,9 @@ const Index = () => {
                   />
                 )}
               />
-              <span style={{ color: "red" }}>{errors.lastName?.message}</span>
+              <span style={{ color: "red" }}>
+                {errors.lastName?.message}
+              </span>
             </Box>
           </Box>
 
@@ -109,6 +113,7 @@ const Index = () => {
             />
             <span style={{ color: "red" }}>{errors.username?.message}</span>
           </Box>
+
           <Box>
             <Controller
               name="email"
@@ -131,6 +136,7 @@ const Index = () => {
             />
             <span style={{ color: "red" }}>{errors.email?.message}</span>
           </Box>
+
           <Box display={"flex"} gap={2} width="100%">
             <Box flex={1}>
               <Controller
@@ -146,8 +152,11 @@ const Index = () => {
                   />
                 )}
               />
-              <span style={{ color: "red" }}>{errors.password?.message}</span>
+              <span style={{ color: "red" }}>
+                {errors.password?.message}
+              </span>
             </Box>
+
             <Box flex={1}>
               <Controller
                 name="confirmPassword"
@@ -155,7 +164,8 @@ const Index = () => {
                 rules={{
                   required: "Please confirm your password",
                   validate: (value) =>
-                    value === getValues("password") || "Passwords do not match",
+                    value === getValues("password") ||
+                    "Passwords do not match",
                 }}
                 render={({ field }) => (
                   <CustomTextField
@@ -171,6 +181,7 @@ const Index = () => {
               </span>
             </Box>
           </Box>
+
           <Snackbar
             open={snackbarOpen}
             autoHideDuration={6000}

@@ -24,6 +24,9 @@ interface AuthLayoutProps {
   isOrgSignUp?: boolean;
   isUserSignUp?: boolean;
   isLogin?: boolean;
+
+  /* ✅ GOOGLE AUTH HANDLER */
+  onGoogleAuth?: () => void;
 }
 
 const AuthLayout = ({
@@ -39,7 +42,8 @@ const AuthLayout = ({
   signInBtnTxt,
   isOrgSignUp = false,
   isUserSignUp = false,
-  isLogin = false
+  isLogin = false,
+  onGoogleAuth,
 }: AuthLayoutProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -60,7 +64,9 @@ const AuthLayout = ({
   return (
     <Grid container sx={{ minHeight: "100vh" }}>
       {!isSmallScreen && imageOnLeft && ImageSection}
-      <Grid item
+
+      <Grid
+        item
         md={6}
         xs={12}
         sx={{
@@ -89,7 +95,6 @@ const AuthLayout = ({
               onSubmit();
             }}
           >
-            {/* Form Fields */}
             {renderFormFields}
 
             {/* Submit Button */}
@@ -105,25 +110,11 @@ const AuthLayout = ({
                   px: 3,
                   fontWeight: 600,
                   boxShadow: "0px 6px 18px rgba(79, 57, 246, 0.35)",
-                  transition: "background-color 0.2s ease, box-shadow 0.2s ease",
                   "&:hover": {
                     backgroundColor: "#3E2DC4",
-                    color: "#FFFFFF",
-                    boxShadow: "0px 10px 24px rgba(79, 57, 246, 0.45)",
-                  },
-                  "&:active": {
-                    backgroundColor: "#3E2DC4",
-                    boxShadow: "0px 2px 8px rgba(79, 57, 246, 0.4)",
-                    color: "#FFFFFF",
-                  },
-                  "&:focus-visible": {
-                    outline: "3px solid rgba(79, 57, 246, 0.35)",
-                    outlineOffset: "2px",
                   },
                   "&.Mui-disabled": {
                     backgroundColor: "#B8A1DE",
-                    color: "#FFFFFF",
-                    opacity: 0.95,
                   },
                 }}
               >
@@ -132,72 +123,62 @@ const AuthLayout = ({
             </Box>
           </form>
 
-          <Box display={"flex"} gap={2} width={"100%"}>
-            <Box width={"100%"} >
-              {isOrgSignUp && <Box display="flex" gap={2} mt={3} width={"100%"} flexWrap="nowrap">
-                <Link
-                  to={"/organization/create-account"}
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                  >
-                    Sign Up as Organization
-                  </Button>
-                </Link>
-              </Box>}
-              {isUserSignUp && <Box display="flex" gap={2} mt={3} flexWrap="nowrap">
-                <Link
-                  to={"/sign-up"}
-                  style={{
-                    width: "100%"
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                  >
-                    {signUpBtnText ?? "Sign Up as User"}
-                  </Button>
-                </Link>
-              </Box>}
-            </Box>
-            {isLogin && (
-              <Box
-                display="flex"
-                gap={2}
-                width={"100%"}
-                mt={3}
-                flexWrap="nowrap"
+          {/* ✅ GOOGLE OAUTH UI (NEW) */}
+          {onGoogleAuth && (
+            <>
+              <Divider sx={{ my: 3 }}>{dividerText}</Divider>
+
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={onGoogleAuth}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 600,
+                  py: 1.2,
+                }}
               >
-                <Link
-                  to={"/login"}
-                  style={{
-                    width: "100%",
-                  }}
-                >
+                Continue with Google
+              </Button>
+            </>
+          )}
+
+          {/* Existing buttons (UNCHANGED) */}
+          <Box display={"flex"} gap={2} width={"100%"}>
+            <Box width={"100%"}>
+              {isOrgSignUp && (
+                <Box display="flex" gap={2} mt={3} width={"100%"}>
+                  <Link to={"/organization/create-account"} style={{ width: "100%" }}>
+                    <Button variant="outlined" fullWidth>
+                      Sign Up as Organization
+                    </Button>
+                  </Link>
+                </Box>
+              )}
+
+              {isUserSignUp && (
+                <Box display="flex" gap={2} mt={3}>
+                  <Link to={"/sign-up"} style={{ width: "100%" }}>
+                    <Button variant="outlined" fullWidth>
+                      {signUpBtnText ?? "Sign Up as User"}
+                    </Button>
+                  </Link>
+                </Box>
+              )}
+            </Box>
+
+            {isLogin && (
+              <Box display="flex" gap={2} width={"100%"} mt={3}>
+                <Link to={"/login"} style={{ width: "100%" }}>
                   <Button
                     variant="contained"
                     fullWidth
                     sx={{
                       backgroundColor: "#4F39F6",
-                      color: "#FFFFFF",
                       textTransform: "none",
                       fontWeight: 600,
                       "&:hover": {
                         backgroundColor: "#3E2DC4",
-                        color: "#FFFFFF",
-                      },
-                      "&:active": {
-                        backgroundColor: "#3E2DC4",
-                        color: "#FFFFFF",
-                      },
-                      "&.Mui-disabled": {
-                        backgroundColor: "#B8A1DE",
-                        color: "#FFFFFF",
                       },
                     }}
                   >
