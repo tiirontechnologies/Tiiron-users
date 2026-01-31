@@ -32,9 +32,16 @@ const Login = () => {
       const res = await authLogin({ ...data }).unwrap();
       const { roleId } = res?.user;
       if (res?.success === true) {
-        if (roleId) localStorage.setItem("roleId", roleId);
-        if (roleId === "admin") navigate("/browse-courses");
-        else navigate("/");
+        // Token is now stored in cookie by the backend, no need to store in localStorage
+        // Only store roleId if needed for client-side checks
+        if (roleId) {
+          localStorage.setItem("roleId", roleId);
+        }
+        if (roleId === "admin") {
+          navigate("/browse-courses");
+        } else {
+          navigate("/");
+        }
         setSnackbarSeverity("success");
         setSnackbarMessage(res?.message || "Login successful");
         setSnackbarOpen(true);

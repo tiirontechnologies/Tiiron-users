@@ -22,6 +22,14 @@ export const courseProgressApiSlice = baseApi.injectEndpoints({
       providesTags: ['Unit'],
     }),
 
+    getPracticeProgress: builder.query<{data?: any} | any, {courseId : string}>({
+      query: ({courseId}) => ({
+        url: `/practice/course/${courseId}/progress`,
+        method: 'GET',
+      }),
+      providesTags: ['Progress'],
+    }),
+
     getQuestionById: builder.query<{ data?: any } | any, { questionId: string, courseId: string }>({
       query: ({ courseId, questionId }) => ({
         url: `/practice/course/${courseId}/question/${questionId}`,
@@ -91,6 +99,7 @@ export const {
   useGetQuestionByIdQuery,
   useTestCodeSubmissionMutation,
   useGetCodeLanguagesQuery,
+  useGetPracticeProgressQuery,
 } = courseProgressApiSlice;
 
 

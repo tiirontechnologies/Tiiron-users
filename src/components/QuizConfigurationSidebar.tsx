@@ -96,7 +96,6 @@ export const QuizConfigurationSidebar: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<IQuizFormData> = async (data) => {
-    console.log("🚀 Generate Quiz Submitted:", data);
     setIsLoading(true);
 
     try {
@@ -104,7 +103,6 @@ export const QuizConfigurationSidebar: React.FC = () => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      console.log("✅ Quiz generated successfully");
       // Handle success (e.g., show notification, redirect, etc.)
 
       reset();

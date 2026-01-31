@@ -72,7 +72,6 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
   const { courseId } = useParams<{ courseId: string }>();
   const unitId = "current-unit";
 
-  console.log("Questions in MainContent:", questions);
   const {
     isAutoSaving,
     hasUnsavedChanges,
@@ -93,7 +92,6 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
 
     if (questions?.[0]?.contents) {
       questions[0].contents.forEach((content: any) => {
-        console.log("Content:", content);
         tabs.push(content.contentTypeCon.name);
         
         // Create one panel per content that contains all questions for that content
@@ -114,9 +112,6 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
         );
       });
     }
-
-    console.log("Content Tabs:", tabs);
-    console.log("Content Panel:", panels);
     
     return { contentTabs: tabs, contentPanel: panels };
   }, [questions]);

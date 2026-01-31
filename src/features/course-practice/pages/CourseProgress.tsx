@@ -80,15 +80,11 @@ const CourseProgress: React.FC = () => {
   //   );
   // }
   
-  console.log("Units Data:", unitsData);
-  console.log("Course Data:", courseData);
-  
   // Extract course data - handle both { data: ... } and direct data structures
   const course = (courseData as any)?.data ?? courseData;
   const courseName = course?.title;
-  const lessonName = course?.chapters[0]?.title;
-  const lesson = course?.chapters[0]?.id;
-  const chapterInfo = `${lessonName}-${lesson}`
+  const lessonName = course?.chapters[0]?.units[0]?.title;
+  const chapterInfo = lessonName;
   const courseDataForSidebar = course?.chapters ? course : { chapters: [] };
   // Extract unitsData - handle both wrapped and direct structures
   let practiceData = unitsData;
@@ -96,16 +92,12 @@ const CourseProgress: React.FC = () => {
     // API returned { success: true, data: {...} }
     practiceData = (unitsData as any).data;
   }
-  
   // Check if the API response has the new structure with contentTypes
   const hasNewStructure = practiceData && 
     typeof practiceData === 'object' && 
     !Array.isArray(practiceData) && 
     practiceData.contentTypes && 
     Array.isArray(practiceData.contentTypes);
-  
-  console.log("Has New Structure:", hasNewStructure);
-  console.log("Practice Data:", practiceData);
   
   return (
     <Box sx={{ minHeight: "100vh", background: GRADIENTS.background }}>

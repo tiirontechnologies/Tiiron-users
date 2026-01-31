@@ -191,7 +191,6 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
   const handleSubmitContentType = useCallback(
     async (contentType: ApiContentType) => {
       if (!courseId || !unitId) {
-        console.error("Course ID or Unit ID is missing");
         return;
       }
 
@@ -242,7 +241,6 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
           refetchContent();
         }
       } catch (error) {
-        console.error("Failed to submit answers:", error);
         alert("Failed to submit answers. Please try again.");
       } finally {
         setIsSubmitting(false);
@@ -371,13 +369,7 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                     apiQuestion.questiontypeId === 1 ||
                     apiQuestion.questiontypeId === 2
                   ) {
-                    console.log("MCQ Question:", {
-                      original: apiQuestion,
-                      transformed: transformedQuestion,
-                      hasOptions: !!transformedQuestion.content?.options,
-                      optionsCount:
-                        transformedQuestion.content?.options?.length || 0,
-                    });
+                    // Removed debug console.log statements
                   }
 
                   // Render Code Challenge Card for questiontypeId 7
@@ -399,7 +391,6 @@ const CoursePracticeContent: React.FC<CoursePracticeContentProps> = ({
                         }}
                         onBookmark={() => {
                           // Handle bookmark toggle
-                          console.log("Toggle bookmark:", apiQuestion.id);
                         }}
                         isBookmarked={false}
                       />

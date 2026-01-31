@@ -66,18 +66,18 @@ const PracticeProgressStats: React.FC<PracticeProgressStatsProps> = ({
 
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
         <Typography sx={{ fontSize: "12px", color: COLORS.text.secondary }}>
-          Avg. Score:
+         Total Score:
         </Typography>
         <Typography
           sx={{ fontSize: "12px", fontWeight: 700, color: COLORS.primary }}
         >
-          {averageScore.toFixed(0)}%
+          {averageScore.toFixed(0)}
         </Typography>
       </Box>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
         <Typography sx={{ fontSize: "12px", color: COLORS.text.secondary }}>
-          Sessions Completed:
+          Completed Units:
         </Typography>
         <Typography
           sx={{ fontSize: "12px", fontWeight: 700, color: COLORS.text.primary }}
