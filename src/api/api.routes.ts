@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { AUTH_URL, SERVER_URL } from '../constants/constants';
+import { ENV } from '../config/env';
 
 // Base query with authentication and error handling
 // Cookies are automatically sent by the browser, no need to manually set Authorization header
 const baseQuery = fetchBaseQuery({
-  baseUrl: SERVER_URL,
+  baseUrl: ENV.SERVER_URL,
   credentials: 'include', // Include cookies in requests
 });
 
@@ -63,7 +63,7 @@ export const {
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: AUTH_URL,
+    baseUrl: ENV.AUTH_URL,
     credentials: 'include', // Include cookies in requests
   }),
   tagTypes: ['Auth'],

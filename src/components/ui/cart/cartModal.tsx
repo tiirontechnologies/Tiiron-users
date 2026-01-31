@@ -23,7 +23,7 @@ import {
   SingleEnrollmentRequest,
 } from "../../../features/course-browse/api/courseApi";
 import { useNavigate } from "react-router-dom";
-import { UPLOADS } from "../../../constants/constants";
+import { ENV } from "../../../config/env";
 
 interface CartModalProps {
   isOpen: boolean;
@@ -70,7 +70,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
     }
   };
 
-  const thumbnailUrl = thumbnail ? `${UPLOADS}${thumbnail}` : undefined;
+  const thumbnailUrl = thumbnail ? `${ENV.UPLOADS}${thumbnail}` : undefined;
 
   return (
     <Box

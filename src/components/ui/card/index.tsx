@@ -14,7 +14,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArchiveIcon from "@mui/icons-material/Archive";
-import { UPLOADS } from "../../../constants/constants";
+import { ENV } from "../../../config/env";
 import { ICourseCardProps } from "types/course.types";
 
 interface ReusableCourseCardProps extends ICourseCardProps {
@@ -139,7 +139,7 @@ export default function CourseCard({
         >
           {thumbnailSrc ? (
             <img
-              src={UPLOADS + thumbnailSrc}
+              src={ENV.UPLOADS + thumbnailSrc}
               alt={title}
               style={{
                 width: "100%",

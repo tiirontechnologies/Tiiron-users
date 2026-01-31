@@ -1,6 +1,6 @@
 import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { UPLOADS } from "../../../constants/constants";
+import { ENV } from "../../../config/env";
 import ShareIcon from "@mui/icons-material/Share";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -202,7 +202,7 @@ export default function ProductCard({ course }: ProductCardProps) {
       {course?.image && (
         <Box
           component="img"
-          src={UPLOADS + course.image}
+          src={ENV.UPLOADS + course.image}
           alt={course.title || "Course image"}
           sx={{
             width: "100%",
