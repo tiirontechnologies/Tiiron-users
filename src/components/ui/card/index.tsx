@@ -428,7 +428,7 @@ export default function CourseCard({
       >
         {thumbnailSrc ? (
           <img
-            src={UPLOADS + thumbnailSrc}
+            src={ENV.UPLOADS + thumbnailSrc}
             alt={title}
             style={{
               width: "100%",

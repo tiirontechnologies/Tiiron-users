@@ -51,6 +51,7 @@ const Index = () => {
       imageOnLeft={true}
       titleText="Create your account"
       submitButtonText="Create Account →"
+      dividerText="Or sign up with"
       isLoading={isLoading}
       isOrgSignUp={true}
       isLogin={true}

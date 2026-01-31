@@ -66,6 +66,10 @@ export const useCourseProgress = () => {
     isCompleted: !!practiceData?.isCompleted,
   };
 
+  const course = (courseData as any)?.data ?? courseData;
+  const hasData = !!courseData;
+  const hasUnits = !!(course?.chapters?.length);
+
   const selectUnit = useCallback((unitId: string) => {
     setSelectedUnitId(unitId);
   }, []);
@@ -105,6 +109,12 @@ export const useCourseProgress = () => {
     selectUnit,
     isLoading: isCourseLoading || isUnitsLoading || isPracticeLoading,
     hasError: isCourseError || isUnitsError || isPracticeError,
+    hasData,
+    hasUnits,
+    isCourseLoading,
+    isUnitsLoading,
+    isCourseError,
+    isUnitsError,
     practiceStats,
     refetchContent,
     refetchPractice,
