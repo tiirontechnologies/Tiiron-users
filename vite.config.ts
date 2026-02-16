@@ -11,6 +11,7 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   base: "/",
+  envDir: "src",
   plugins: [
     react({
       jsxImportSource: "@emotion/react",

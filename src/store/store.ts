@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { baseApi, authApi } from "../api/api.routes";
 import globalIdReducer from "../slices/globalid.slice";
 import loginFormReducer from "../slices/login.slice";
+import practiceReducer from "../features/course-practice/slice/practiceSlice";
 
 export const store = configureStore({
   reducer: {
     globalIdSlice: globalIdReducer,
     loginFormSlice: loginFormReducer,
+    practice: practiceReducer,
     [authApi.reducerPath]: authApi.reducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },

@@ -1,4 +1,5 @@
 import { baseApi } from '../../../api/api.routes';
+import { ApiQuestion } from '../../coding-question/types';
 
 // Old codebase endpoints used by Course Progress
 // - GET /org/student/chapter/course/:id -> course with chapters/units for student
@@ -15,26 +16,32 @@ export const courseProgressApiSlice = baseApi.injectEndpoints({
     }),
 
     getContentByTopicId: builder.query<{ data?: any } | any, { unitId: string, courseId: string }>({
-      query: ({courseId, unitId }) => ({
+      query: ({ courseId, unitId }) => ({
         url: `/practice/course/${courseId}/unit/${unitId}`,
         method: 'GET',
       }),
       providesTags: ['Unit'],
     }),
 
-    getPracticeProgress: builder.query<{data?: any} | any, {courseId : string}>({
-      query: ({courseId}) => ({
+    getPracticeProgress: builder.query<{ data?: any } | any, { courseId: string }>({
+      query: ({ courseId }) => ({
         url: `/practice/course/${courseId}/progress`,
         method: 'GET',
       }),
       providesTags: ['Progress'],
     }),
 
-    getQuestionById: builder.query<{ data?: any } | any, { questionId: string, courseId: string }>({
+    getQuestionById: builder.query<ApiQuestion, { questionId: string, courseId: string }>({
       query: ({ courseId, questionId }) => ({
         url: `/practice/course/${courseId}/question/${questionId}`,
         method: 'GET',
       }),
+      transformResponse: (response: { data: ApiQuestion } | ApiQuestion) => {
+        if ('data' in response && response.data) {
+          return response.data;
+        }
+        return response as ApiQuestion;
+      },
       providesTags: ['Question'],
     }),
 

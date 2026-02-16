@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { TAuth } from "types/auth.types";
 import { useNavigate } from "react-router-dom";
-import { AUTH_URL } from "../../../../constants/constants"; // Google Auth URL
+import { ENV } from "../../../../config/env";
 
 const Login = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -59,7 +59,7 @@ const Login = () => {
   // ✅ Google login handler
   const handleGoogleAuth = () => {
     // Redirect user to backend Google OAuth endpoint
-    window.location.href = `${AUTH_URL}/google`;
+    window.location.href = `${ENV.AUTH_URL}/google`;
   };
 
   const handleCloseSnackbar = () => {

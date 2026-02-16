@@ -86,65 +86,6 @@ const Header: React.FC<HeaderProps> = ({
           </Box>
         </Box>
       </Box>
-
-      {/* Right Section - Score */}
-      {/* <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 2,
-          background: COLORS.background.light,
-          padding: "12px 20px",
-          borderRadius: "16px",
-          border: `1px solid ${COLORS.border.light}`,
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            background: GRADIENTS.primary,
-            padding: "8px 16px",
-            borderRadius: "12px",
-            color: "white",
-          }}
-        >
-          <Star sx={{ fontSize: 20 }} />
-          <Typography
-            sx={{
-              fontSize: "18px",
-              fontWeight: "700",
-              lineHeight: 1,
-              color: "white !important",
-            }}
-          >
-            {score}
-          </Typography>
-        </Box>
-        <Box>
-          <Typography
-            sx={{
-              fontSize: "14px",
-              fontWeight: "600",
-              color: COLORS.text.muted,
-              textAlign: "right",
-            }}
-          >
-            Points Earned
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "12px",
-              fontWeight: "500",
-              color: COLORS.text.light,
-              textAlign: "right",
-            }}
-          >
-            {progress}
-          </Typography>
-        </Box>
-      </Box> */}
     </Box>
   );
 };

@@ -192,6 +192,19 @@ export const practiceApiSlice = baseApi.injectEndpoints({
       }),
       providesTags: ["PracticeSession"],
     }),
+
+    //run against custom testcase
+    codeRun: builder.mutation<any, { questionId: number | string; code: string; testcases: any[] }>({
+      query: ({ questionId, code, testcases }) => ({
+        url: "/practice/code/run",
+        method: "POST",
+        body: {
+          questionId,
+          code,
+          testCases: testcases,
+        },
+      }),
+    })
   }),
 });
 
@@ -207,4 +220,5 @@ export const {
   useResumePracticeSessionMutation,
   useDeletePracticeSessionMutation,
   useGetPracticeLeaderboardQuery,
+  useCodeRunMutation
 } = practiceApiSlice;

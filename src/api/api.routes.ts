@@ -14,6 +14,7 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
   const result = await baseQuery(args, api, extraOptions);
   
   // Handle invalid token (401 response)
+  // Return serializable error objects (not Error instances) so Redux doesn't warn about non-serializable payloads
   if (result.error?.status === 401) {
     const errorData = result.error.data as { message: string };
     
@@ -25,12 +26,24 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
       // Redirect user to the login page
       window.location.href = "/login";
       
-      // Return a custom error message
-      return { error: new Error("Session expired. Please log in again.") };
+      // Return a serializable error (matches FetchBaseQueryError shape)
+      return {
+        error: {
+          status: 401,
+          data: { message: "Session expired. Please log in again." },
+          error: "Session expired",
+        },
+      };
     }
     
     // Optionally handle other 401 scenarios here
-    return { error: new Error("Unauthorized access. Please log in again.") };
+    return {
+      error: {
+        status: 401,
+        data: { message: "Unauthorized access. Please log in again." },
+        error: "Unauthorized",
+      },
+    };
   }
   
   return result;

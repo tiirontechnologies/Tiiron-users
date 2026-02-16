@@ -3,6 +3,8 @@ import { Box, List, ListItemButton, ListItemText, Collapse } from '@mui/material
 import { ExpandLess, ExpandMore, PlayArrow, CheckCircle } from '@mui/icons-material';
 import { Chapter } from '../../types';
 import { COLORS, GRADIENTS, SHADOWS } from '../../constants';
+import {handleUnit} from '../../slice/practiceSlice';
+import {useDispatch} from 'react-redux';
 
 interface NavigationListProps {
   chapters: any;
@@ -24,6 +26,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+  const dispatch= useDispatch();
 
   return (
     <List component="nav" sx={{ mt: 1, px: 0.5 }}>
@@ -244,7 +247,10 @@ const NavigationList: React.FC<NavigationListProps> = ({
                               transform: "translateX(2px) translateY(0px)",
                             },
                           }}
-                          onClick={() => onUnitSelect(unit.id)}
+                          onClick={() =>{
+                            dispatch(handleUnit(unit.id))
+                            onUnitSelect(unit.id)
+                          }}
                         >
                           <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%" }}>
                             <Box

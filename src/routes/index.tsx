@@ -3,13 +3,14 @@ import { appRoutes } from "./appRoutess";
 import { globalRoutes } from "./globalRoutes";
 import { authRoutes } from "./authRoutes";
 import { homeRoutes } from "./homeRoutes";
-import { CourseProgress, CodeEditorPage } from "../features";
+import { CourseProgress } from "../features";
 import NotFound from "../pages/NotFound";
 import { userRoutes } from "./learnerRoute";
 import UserLayout from "@layouts/UserLayout";
 import SearchResults from "../pages/SearchResults";
 import CodeTestPage from "../pages/CodeTestPage";
-import PrivateRoute from "@layouts/PrivateRoute";
+// import CodingQuestion from "../features/course-practice/pages/coding-question/CodingQuestion";
+import CodingQuestion from '../features/coding-question/CodingQuestion';
 
 export const routeConfig = [
   {
@@ -33,15 +34,7 @@ export const routeConfig = [
   },
   {
     path: "/code-editor/:courseId/:questionId",
-    element: <CodeEditorPage />,
-  },
-  {
-    path: "/code-test",
-    element: <CodeTestPage />,
-  },
-  {
-    path: "/code-editor/:courseId/:questionId",
-    element: <CodeEditorPage />,
+    element: <CodingQuestion />,
   },
   {
     path: "/code-test",

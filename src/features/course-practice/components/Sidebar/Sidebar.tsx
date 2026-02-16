@@ -121,13 +121,13 @@ const Sidebar: React.FC<SidebarProps> = ({
         </Box>
         {/* <ProgressCard stats={progressStats} /> */}
         {practiceStats && <PracticeProgressStats stats={practiceStats} />}
+        
       </Box>
 
       <Divider sx={{ mt: 2, opacity: 0.3 }} />
-
+   
       {/* Navigation List */}
       <NavigationList chapters={data?.chapters || []} onUnitSelect={onUnitSelect} />
-
       {/* <CourseSidebar/> */}
     </Box>
   );
