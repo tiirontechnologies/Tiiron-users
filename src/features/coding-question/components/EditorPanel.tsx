@@ -45,25 +45,11 @@ export const EditorPanel: React.FC<EditorPanelProps> = () => {
     setCustomTestCases(mapApiTestCasesToCustom(apiTestCases));
   }, [question?.id]);
 
-  useEffect(() => {
-    // Logic from useCodingQuestion: triggers codeRun when customTestCases change?
-    // Wait, the original code had:
-    // useEffect(()=>{ codeRun({code,testcases:customTestCases}); },[customTestCases])
-    // This seems potentially buggy (runs on mount/every change), but I should preserve it if that's the desired behavior
-    // or maybe it was intended to run "My Tests"
-    // actually, looking at the original file:
-    /*
-      useEffect(()=>{
-         codeRun({code,testcases:customTestCases});
-      },[customTestCases])
-     */
-    // I will keep it for now but maybe wrap it in a check or separate handler
-    if (code && customTestCases.length > 0) {
-      // This might auto-run too often. I'll comment it out or keep it if it was critical.
-      // usage says "onRun" calls handleRun.
-      // The original had a separate useEffect reacting to customTestCases.
-    }
-  }, [customTestCases, code]); // simplified or corrected
+  // useEffect(() => {
+  //   codeRun({ code, testcases: customTestCases });
+  //   if (code && customTestCases.length > 0) {
+  //   }
+  // }, [customTestCases, code]);
 
   const handleRun = () => {
     if (!question?.id) return;

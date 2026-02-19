@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState, memo } from "react";
 import {
   Box,
   Typography,
@@ -10,9 +10,8 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import type { CustomTestCase } from "../types";
 import { CustomTextField } from "@components/ui";
-const HEADER_HEIGHT = 44;
-const TAB_HEIGHT = 40;
 
+const TAB_HEIGHT = 40;
 
 const styles = {
   root: (height: number) => ({
@@ -37,6 +36,8 @@ const styles = {
   editor: {
     border: "1px solid #27272a",
     backgroundColor: "#0f0f12",
+    flex: 1,
+    overflow: "auto",
   },
 
   editorHeader: {
@@ -45,6 +46,12 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     borderBottom: "1px solid #27272a",
+  },
+
+  resizeHandle: {
+    height: 6,
+    cursor: "row-resize",
+    backgroundColor: "#27272a",
   },
 };
 
@@ -57,56 +64,86 @@ interface Props {
   onResizeStart: (e: React.MouseEvent) => void;
 }
 
+/* =====================================================
+   TEST CASE EDITOR (Memoized)
+===================================================== */
 
-const TestCaseEditor = ({
-  testCase,
-  onChange,
-  onDelete,
-}: {
+interface EditorProps {
   testCase: CustomTestCase | null;
-  onChange: any;
+  onChange: (
+    id: string,
+    value: string,
+    key: string
+  ) => void;
   onDelete: (id: string) => void;
-}) => {
-  if (!testCase)
-    return <Typography sx={{ color: "#71717a" }}>Select a testcase</Typography>;
+}
 
-  return (
-    <Box sx={styles.editor}>
-      <Box sx={styles.editorHeader}>
-        <Typography variant="caption">Testcases</Typography>
+const TestCaseEditor = memo(
+  ({ testCase, onChange, onDelete }: EditorProps) => {
+    if (!testCase) {
+      return (
+        <Typography sx={{ color: "#71717a", p: 2 }}>
+          Select a testcase
+        </Typography>
+      );
+    }
 
-        <IconButton size="small" onClick={() => onDelete(testCase.id)}>
-          <DeleteOutlineIcon fontSize="small" />
-        </IconButton>
+    const inputObject = testCase.input?.input ?? {};
+
+    return (
+      <Box sx={styles.editor}>
+        <Box sx={styles.editorHeader}>
+          <Typography variant="caption">Testcase</Typography>
+          <IconButton
+            size="small"
+            onClick={() => onDelete(testCase.id)}
+          >
+            <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
+        </Box>
+
+        <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+          {Object.entries(inputObject).map(([key, val]) => {
+            const displayValue =
+              typeof val === "object"
+                ? JSON.stringify(val)
+                : String(val ?? "");
+
+            return (
+              <CustomTextField
+                key={key}
+                label={key}
+                value={displayValue}
+                onChange={(e) =>
+                  onChange(
+                    testCase.id,
+                    e.target.value,
+                    key
+                  )
+                }
+              />
+            );
+          })}
+        </Box>
       </Box>
-
-      {Object.keys(testCase.input?.input ?? {}).map(key => {
-        const val = testCase.input.input[key];
-        const displayValue = typeof val === 'object' ? JSON.stringify(val) : val;
-        return (
-          <CustomTextField
-            key={key}
-            label={key}
-            value={displayValue}
-            onChange={v => onChange(testCase.id, "input", v, key)}
-          />
-        );
-      })}
-    </Box>
-  );
-};
-
-
-const ResultView = () => (
-  <Typography sx={{ color: "#a1a1aa" }}>
-    Result view (backend se connect hoga)
-  </Typography>
+    );
+  }
 );
 
+/* =====================================================
+   RESULT VIEW
+===================================================== */
 
+const ResultView = () => (
+  <Box sx={{ p: 2 }}>
+    <Typography sx={{ color: "#a1a1aa" }}>
+      Result view (will connect to backend)
+    </Typography>
+  </Box>
+);
 
 /* =====================================================
-   MAIN CONTAINER (ONLY STATE + LAYOUT)
+   MAIN PANEL
 ===================================================== */
 
 export const CustomTestCasesPanel: React.FC<Props> = ({
@@ -115,129 +152,140 @@ export const CustomTestCasesPanel: React.FC<Props> = ({
   height,
   onResizeStart,
 }) => {
-  console.log(testCases);
-  const [tab, setTab] = React.useState<"testcase" | "result">("testcase");
-  const [activeId, setActiveId] = React.useState<string | null>(
+  const [tab, setTab] = useState<"testcase" | "result">("testcase");
+  const [activeId, setActiveId] = useState<string | null>(
     testCases[0]?.id ?? null
   );
 
-  /* ---------- sync active testcase ---------- */
+  /* ---------- Sync Active TestCase ---------- */
 
-  React.useEffect(() => {
-    if (!testCases.length) return setActiveId(null);
+  useEffect(() => {
+    if (!testCases.length) {
+      setActiveId(null);
+      return;
+    }
 
     if (!activeId || !testCases.some(t => t.id === activeId)) {
       setActiveId(testCases[0].id);
     }
   }, [testCases, activeId]);
 
-  /* ---------- actions ---------- */
+  const activeTestCase = useMemo(
+    () => testCases.find(t => t.id === activeId) ?? null,
+    [testCases, activeId]
+  );
 
-
+  /* ---------- Actions ---------- */
 
   const addTestCase = () => {
     const id = generateId();
-    // Get keys from first test case to maintain structure
-    const templateInput = testCases.length > 0 ? testCases[0].input?.input || {} : {};
-    const inputStructure = Object.keys(templateInput).reduce((acc, key) => {
-      acc[key] = ""; // Initialize with empty string
-      return acc;
-    }, {} as Record<string, string>);
 
-    onTestCasesChange([...testCases, { id, input: { input: inputStructure }, expectedOutput: "" }]);
+    const template =
+      testCases.length > 0
+        ? testCases[0].input?.input ?? {}
+        : {};
+
+    const newInput = Object.keys(template).reduce(
+      (acc, key) => {
+        acc[key] = "";
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
+    const newTestCase: CustomTestCase = {
+      id,
+      input: { input: newInput },
+    };
+
+    onTestCasesChange([...testCases, newTestCase]);
     setActiveId(id);
   };
 
   const removeTestCase = (id: string) => {
     if (!window.confirm("Delete this testcase?")) return;
-    onTestCasesChange(testCases.filter(t => t.id !== id));
+
+    const updated = testCases.filter(t => t.id !== id);
+    onTestCasesChange(updated);
   };
 
   const updateTestCase = (
     id: string,
-    field: "input" | "expectedOutput",
     value: string,
-    key?: string
+    key: string
   ) => {
-    onTestCasesChange(
-      testCases.map(tc => {
-        if (tc.id !== id) return tc;
+    const updated = testCases.map(tc => {
+      if (tc.id !== id) return tc;
 
-        if (field === "input" && key) {
-          return {
-            ...tc,
-            input: {
-              ...(tc.input ?? {}),
-              input: {
-                ...(tc.input?.input ?? {}),
-                [key]: value,
-              },
-            },
-          };
-        }
+      return {
+        ...tc,
+        input: {
+          ...(tc.input ?? {}),
+          input: {
+            ...(tc.input?.input ?? {}),
+            [key]: value,
+          },
+        },
+      };
+    });
 
-        return { ...tc, [field]: value };
-      })
-    );
+    onTestCasesChange(updated);
   };
-
-  const contentHeight = height - HEADER_HEIGHT - TAB_HEIGHT * 2;
-
-  const active = testCases.find(t => t.id === activeId) ?? null;
 
   /* ===================================================== */
 
   return (
-    <Box
-      sx={styles.root(height)}
-      onMouseDown={onResizeStart}
-    >
-      {/* Top Tabs */}
-      {/* <TopTabs value={tab} onChange={setTab} /> */}
+    <Box sx={styles.root(height)}>
+      {/* Resize Handle */}
+      <Box
+        sx={styles.resizeHandle}
+        onMouseDown={onResizeStart}
+      />
 
-      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={styles.tabs}>
+      {/* Top Tabs */}
+      <Tabs
+        value={tab}
+        onChange={(_, v) => setTab(v)}
+        sx={styles.tabs}
+      >
         <Tab value="testcase" label="Testcase" />
         <Tab value="result" label="Result" />
       </Tabs>
 
-      {/* TestCases Tabs */}
+      {/* TestCase Tabs */}
       <Tabs
-        value={activeId}
+        value={activeId ?? false}
         onChange={(_, v) => setActiveId(v)}
         variant="scrollable"
         scrollButtons="auto"
         sx={styles.subTabs}
       >
         {testCases.map((tc, i) => (
-          <Tab key={tc.id} value={tc.id} label={`TC${i + 1}`} />
+          <Tab
+            key={tc.id}
+            value={tc.id}
+            label={`TC ${i + 1}`}
+          />
         ))}
-        <Tab icon={<AddIcon />} onClick={addTestCase} />
+
+        <Tab
+          icon={<AddIcon />}
+          onClick={(e) => {
+            e.stopPropagation();
+            addTestCase();
+          }}
+        />
       </Tabs>
 
       {tab === "testcase" && (
         <TestCaseEditor
-          testCase={active}
+          testCase={activeTestCase}
           onChange={updateTestCase}
           onDelete={removeTestCase}
         />
-      )
-      }
-      {
-        tab == "result" && (
-          <ResultView />
-        )
-      }
+      )}
+
+      {tab === "result" && <ResultView />}
     </Box>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
