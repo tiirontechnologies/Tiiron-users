@@ -1,8 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { Box, Paper } from "@mui/material";
 import Editor from "@monaco-editor/react";
 import { EditorToolbar } from "./EditorToolbar";
 import { CustomTestCasesPanel } from "./CustomTestCasesPanel";
+import type { TestCaseResult } from "./CustomTestCasesPanel";
 import { TestResultsModal } from "./TestResultsModal";
 import { PAGE } from "../constants";
 import { useQuestionData } from "../hooks/useQuestionData";
@@ -19,6 +20,30 @@ function mapApiTestCasesToCustom(apiTestCases: ApiCodeTestCase[]): any[] {
   }));
 }
 
+/**
+ * Normalize the backend response into TestCaseResult[].
+ * Adjust this if your API response shape differs.
+ */
+function normalizeRunResults(data: any): TestCaseResult[] | null {
+  if (!data) return null;
+
+  // If the response has a `results` array
+  const results = data.results ?? data.data?.results ?? data.testResults ?? data.data ?? [];
+
+  if (Array.isArray(results)) {
+    return results.map((r: any) => ({
+      input: r.input ?? r.testCase?.input ?? undefined,
+      expectedOutput: r.expectedOutput ?? r.expected ?? r.testCase?.expectedOutput ?? undefined,
+      actualOutput: r.actualOutput ?? r.output ?? r.actual ?? r.stdout ?? undefined,
+      passed: r.passed ?? r.isCorrect ?? r.correct ?? r.status === "accepted",
+      error: r.error ?? r.stderr ?? r.errorMessage ?? undefined,
+      description: r.description ?? r.testCase?.description ?? undefined,
+    }));
+  }
+
+  return null;
+}
+
 interface EditorPanelProps { }
 
 export const EditorPanel: React.FC<EditorPanelProps> = () => {
@@ -32,7 +57,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = () => {
     getLanguageId,
   } = useCodeAndLanguage({ question });
 
-  const [codeRun, { data: runData }] = useCodeRunMutation();
+  const [codeRun, { data: runData, isLoading: isRunning }] = useCodeRunMutation();
   const { testCasePanelHeight, handleSplitResizeStart } = useSplitPanelResize();
 
   const [showTestResults, setShowTestResults] = useState(false);
@@ -45,15 +70,14 @@ export const EditorPanel: React.FC<EditorPanelProps> = () => {
     setCustomTestCases(mapApiTestCasesToCustom(apiTestCases));
   }, [question?.id]);
 
-  // useEffect(() => {
-  //   codeRun({ code, testcases: customTestCases });
-  //   if (code && customTestCases.length > 0) {
-  //   }
-  // }, [customTestCases, code]);
+  const normalizedResults = useMemo(
+    () => normalizeRunResults(runData),
+    [runData]
+  );
 
   const handleRun = () => {
     if (!question?.id) return;
-    codeRun({ questionId: question.id, code, testcases: customTestCases });
+    codeRun({ questionId: question.id, code, testcases: customTestCases, languageId: getLanguageId() });
   };
 
   const handleSubmit = () => {
@@ -74,8 +98,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = () => {
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#18181b",
+        borderRadius: "6px",
         border: "1px solid #27272a",
-        borderRadius: PAGE.radiusLg,
         overflow: "hidden",
         minHeight: 0,
         position: "relative",
@@ -127,6 +151,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = () => {
           onTestCasesChange={setCustomTestCases}
           height={testCasePanelHeight}
           onResizeStart={handleSplitResizeStart}
+          runResults={normalizedResults}
+          isRunning={isRunning}
         />
       </Box>
 

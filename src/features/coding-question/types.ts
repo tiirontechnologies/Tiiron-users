@@ -1,3 +1,11 @@
+export interface CustomTestCase {
+  id: string;
+  input: {
+    input: Record<string, any>;
+  };
+  expectedOutput?: string;
+}
+
 export interface Question {
   id: string;
   text: string;

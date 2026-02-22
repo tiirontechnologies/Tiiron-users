@@ -21,6 +21,7 @@ export { SnackbarProvider, useSnackbar } from "./Snackbar/SnackBarProvider";
 
 // Sub-components
 export { default as CustomTextField } from "./textfields/CustomTextField";
+export { default as CustomAccordion } from "./accordion/CustomAccordion";
 export { default as ReusablePopper } from "./popper/ReusablePopper";
 export { default as IOSSwitch } from "./popper/IOSSwitch";
 export { default as UploadBox } from "./uploadbox/UploadBox";

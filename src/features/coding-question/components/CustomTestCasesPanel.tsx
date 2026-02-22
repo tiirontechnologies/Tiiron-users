@@ -5,9 +5,13 @@ import {
   IconButton,
   Tabs,
   Tab,
+  Chip,
+  CircularProgress,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 import type { CustomTestCase } from "../types";
 import { CustomTextField } from "@components/ui";
 
@@ -18,18 +22,19 @@ const styles = {
     height,
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#18181b",
+    backgroundColor: "#18181b !important",
     borderBottom: "1px solid #27272a",
   }),
 
   tabs: {
     minHeight: TAB_HEIGHT,
     borderBottom: "1px solid #27272a",
+    backgroundColor: "#0f0f12 !important",
   },
 
   subTabs: {
     minHeight: TAB_HEIGHT,
-    backgroundColor: "#0f0f12",
+    backgroundColor: "#0f0f12 !important",
     borderBottom: "1px solid #27272a",
   },
 
@@ -57,11 +62,26 @@ const styles = {
 
 const generateId = () => crypto.randomUUID();
 
+/* =====================================================
+   TYPES
+===================================================== */
+
+export interface TestCaseResult {
+  input?: any;
+  expectedOutput?: string;
+  actualOutput?: string;
+  passed?: boolean;
+  error?: string;
+  description?: string;
+}
+
 interface Props {
   testCases: CustomTestCase[];
   onTestCasesChange: (t: CustomTestCase[]) => void;
   height: number;
   onResizeStart: (e: React.MouseEvent) => void;
+  runResults?: TestCaseResult[] | null;
+  isRunning?: boolean;
 }
 
 /* =====================================================
@@ -114,6 +134,10 @@ const TestCaseEditor = memo(
                 key={key}
                 label={key}
                 value={displayValue}
+                inputSx={{
+                  color: "white !important",
+                  backgroundColor: "#0f0f12 !important"
+                }}
                 onChange={(e) =>
                   onChange(
                     testCase.id,
@@ -131,16 +155,291 @@ const TestCaseEditor = memo(
 );
 
 /* =====================================================
+   SINGLE RESULT CARD
+===================================================== */
+
+const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }) => {
+  const passed = result.passed === true;
+  const hasError = !!result.error;
+
+  const borderColor = hasError
+    ? "#ef4444"
+    : passed
+      ? "#22c55e"
+      : "#ef4444";
+
+  const bgColor = hasError
+    ? "rgba(239, 68, 68, 0.06)"
+    : passed
+      ? "rgba(34, 197, 94, 0.06)"
+      : "rgba(239, 68, 68, 0.06)";
+
+  return (
+    <Box
+      sx={{
+        border: `1px solid ${borderColor}`,
+        borderRadius: "8px",
+        backgroundColor: bgColor,
+        overflow: "hidden",
+      }}
+    >
+      {/* Header */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderBottom: `1px solid ${borderColor}`,
+          backgroundColor: hasError
+            ? "rgba(239, 68, 68, 0.1)"
+            : passed
+              ? "rgba(34, 197, 94, 0.1)"
+              : "rgba(239, 68, 68, 0.1)",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          {hasError ? (
+            <CancelIcon sx={{ color: "#ef4444", fontSize: 20 }} />
+          ) : passed ? (
+            <CheckCircleIcon sx={{ color: "#22c55e", fontSize: 20 }} />
+          ) : (
+            <CancelIcon sx={{ color: "#ef4444", fontSize: 20 }} />
+          )}
+          <Typography
+            variant="subtitle2"
+            sx={{ color: "#e4e4e7", fontWeight: 600 }}
+          >
+            Test Case {index + 1}
+          </Typography>
+        </Box>
+
+        <Chip
+          label={hasError ? "Error" : passed ? "Accepted" : "Wrong Answer"}
+          size="small"
+          sx={{
+            fontWeight: 600,
+            fontSize: "0.7rem",
+            color: "#fff",
+            backgroundColor: hasError
+              ? "#ef4444"
+              : passed
+                ? "#22c55e"
+                : "#ef4444",
+          }}
+        />
+      </Box>
+
+      {/* Body */}
+      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 1.5 }}>
+        {/* Input */}
+        {result.input && (
+          <Box>
+            <Typography
+              variant="caption"
+              sx={{ color: "#a1a1aa", fontWeight: 600, mb: 0.5, display: "block" }}
+            >
+              Input
+            </Typography>
+            <Box
+              sx={{
+                p: 1.5,
+                borderRadius: "6px",
+                backgroundColor: "#18181b",
+                border: "1px solid #27272a",
+                fontFamily: "monospace",
+                fontSize: "0.8rem",
+                color: "#e4e4e7",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-all",
+              }}
+            >
+              {typeof result.input === "object"
+                ? JSON.stringify(result.input, null, 2)
+                : String(result.input)}
+            </Box>
+          </Box>
+        )}
+
+        {/* Expected Output */}
+        {result.expectedOutput !== undefined && (
+          <Box>
+            <Typography
+              variant="caption"
+              sx={{ color: "#a1a1aa", fontWeight: 600, mb: 0.5, display: "block" }}
+            >
+              Expected Output
+            </Typography>
+            <Box
+              sx={{
+                p: 1.5,
+                borderRadius: "6px",
+                backgroundColor: "#18181b",
+                border: "1px solid #27272a",
+                fontFamily: "monospace",
+                fontSize: "0.8rem",
+                color: "#e4e4e7",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-all",
+              }}
+            >
+              {String(result.expectedOutput)}
+            </Box>
+          </Box>
+        )}
+
+        {/* Actual Output */}
+        {result.actualOutput !== undefined && (
+          <Box>
+            <Typography
+              variant="caption"
+              sx={{
+                color: passed ? "#4ade80" : "#f87171",
+                fontWeight: 600,
+                mb: 0.5,
+                display: "block",
+              }}
+            >
+              Your Output
+            </Typography>
+            <Box
+              sx={{
+                p: 1.5,
+                borderRadius: "6px",
+                backgroundColor: "#18181b",
+                border: `1px solid ${passed ? "#22c55e44" : "#ef444444"}`,
+                fontFamily: "monospace",
+                fontSize: "0.8rem",
+                color: passed ? "#4ade80" : "#f87171",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-all",
+              }}
+            >
+              {String(result.actualOutput)}
+            </Box>
+          </Box>
+        )}
+
+        {/* Error */}
+        {hasError && (
+          <Box>
+            <Typography
+              variant="caption"
+              sx={{ color: "#f87171", fontWeight: 600, mb: 0.5, display: "block" }}
+            >
+              Error
+            </Typography>
+            <Box
+              sx={{
+                p: 1.5,
+                borderRadius: "6px",
+                backgroundColor: "rgba(239, 68, 68, 0.08)",
+                border: "1px solid #ef444444",
+                fontFamily: "monospace",
+                fontSize: "0.8rem",
+                color: "#f87171",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-all",
+              }}
+            >
+              {result.error}
+            </Box>
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+/* =====================================================
    RESULT VIEW
 ===================================================== */
 
-const ResultView = () => (
-  <Box sx={{ p: 2 }}>
-    <Typography sx={{ color: "#a1a1aa" }}>
-      Result view (will connect to backend)
-    </Typography>
-  </Box>
-);
+const ResultView = ({
+  results,
+  isRunning,
+}: {
+  results?: TestCaseResult[] | null;
+  isRunning?: boolean;
+}) => {
+  if (isRunning) {
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+          p: 3,
+        }}
+      >
+        <CircularProgress size={28} sx={{ color: "#a78bfa" }} />
+        <Typography sx={{ color: "#a1a1aa", fontSize: "0.85rem" }}>
+          Running test cases...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!results || results.length === 0) {
+    return (
+      <Box sx={{ p: 3, flex: 1 }}>
+        <Typography sx={{ color: "#71717a" }}>
+          Click Run to see results
+        </Typography>
+      </Box>
+    );
+  }
+
+  const totalPassed = results.filter(r => r.passed).length;
+  const allPassed = totalPassed === results.length;
+
+  return (
+    <Box sx={{ flex: 1, overflow: "auto" }}>
+      {/* Summary Bar */}
+      <Box
+        sx={{
+          px: 2,
+          py: 1.5,
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          borderBottom: "1px solid #27272a",
+          backgroundColor: allPassed
+            ? "rgba(34, 197, 94, 0.08)"
+            : "rgba(239, 68, 68, 0.08)",
+        }}
+      >
+        {allPassed ? (
+          <CheckCircleIcon sx={{ color: "#22c55e", fontSize: 22 }} />
+        ) : (
+          <CancelIcon sx={{ color: "#ef4444", fontSize: 22 }} />
+        )}
+        <Typography
+          sx={{
+            color: allPassed ? "#4ade80" : "#f87171",
+            fontWeight: 700,
+            fontSize: "0.9rem",
+          }}
+        >
+          {allPassed
+            ? "All test cases passed!"
+            : `${totalPassed} / ${results.length} test cases passed`}
+        </Typography>
+      </Box>
+
+      {/* Individual Results */}
+      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        {results.map((result, i) => (
+          <ResultCard key={i} result={result} index={i} />
+        ))}
+      </Box>
+    </Box>
+  );
+};
 
 /* =====================================================
    MAIN PANEL
@@ -151,6 +450,8 @@ export const CustomTestCasesPanel: React.FC<Props> = ({
   onTestCasesChange,
   height,
   onResizeStart,
+  runResults,
+  isRunning,
 }) => {
   const [tab, setTab] = useState<"testcase" | "result">("testcase");
   const [activeId, setActiveId] = useState<string | null>(
@@ -169,6 +470,20 @@ export const CustomTestCasesPanel: React.FC<Props> = ({
       setActiveId(testCases[0].id);
     }
   }, [testCases, activeId]);
+
+  /* ---------- Auto-switch to Result tab when results arrive ---------- */
+
+  useEffect(() => {
+    if (isRunning) {
+      setTab("result");
+    }
+  }, [isRunning]);
+
+  useEffect(() => {
+    if (runResults && runResults.length > 0) {
+      setTab("result");
+    }
+  }, [runResults]);
 
   const activeTestCase = useMemo(
     () => testCases.find(t => t.id === activeId) ?? null,
@@ -249,43 +564,57 @@ export const CustomTestCasesPanel: React.FC<Props> = ({
         sx={styles.tabs}
       >
         <Tab value="testcase" label="Testcase" />
-        <Tab value="result" label="Result" />
-      </Tabs>
-
-      {/* TestCase Tabs */}
-      <Tabs
-        value={activeId ?? false}
-        onChange={(_, v) => setActiveId(v)}
-        variant="scrollable"
-        scrollButtons="auto"
-        sx={styles.subTabs}
-      >
-        {testCases.map((tc, i) => (
-          <Tab
-            key={tc.id}
-            value={tc.id}
-            label={`TC ${i + 1}`}
-          />
-        ))}
-
         <Tab
-          icon={<AddIcon />}
-          onClick={(e) => {
-            e.stopPropagation();
-            addTestCase();
-          }}
+          value="result"
+          label={
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              Result
+              {isRunning && (
+                <CircularProgress size={14} sx={{ color: "#a78bfa" }} />
+              )}
+            </Box>
+          }
         />
       </Tabs>
 
       {tab === "testcase" && (
-        <TestCaseEditor
-          testCase={activeTestCase}
-          onChange={updateTestCase}
-          onDelete={removeTestCase}
-        />
+        <>
+          {/* TestCase Tabs */}
+          <Tabs
+            value={activeId ?? false}
+            onChange={(_, v) => setActiveId(v)}
+            variant="scrollable"
+            scrollButtons="auto"
+            sx={styles.subTabs}
+          >
+            {testCases.map((tc, i) => (
+              <Tab
+                key={tc.id}
+                value={tc.id}
+                label={`TC ${i + 1}`}
+              />
+            ))}
+
+            <Tab
+              icon={<AddIcon />}
+              onClick={(e) => {
+                e.stopPropagation();
+                addTestCase();
+              }}
+            />
+          </Tabs>
+
+          <TestCaseEditor
+            testCase={activeTestCase}
+            onChange={updateTestCase}
+            onDelete={removeTestCase}
+          />
+        </>
       )}
 
-      {tab === "result" && <ResultView />}
+      {tab === "result" && (
+        <ResultView results={runResults} isRunning={isRunning} />
+      )}
     </Box>
   );
 };

@@ -25,12 +25,19 @@ const CodingQuestionPage: React.FC = () => {
           backgroundColor: "#0f0f12",
         }}
       >
-        <Grid container sx={{ flex: 1, overflow: "hidden", minHeight: 0 }} spacing={1.5}>
+        <Grid container sx={{ flex: 1, overflow: "hidden", minHeight: 0, }} spacing={1.5}>
           <Grid
             item
             xs={12}
             md={6}
-            sx={{ display: "flex", overflow: "hidden", minHeight: 0, order: { xs: 1, md: 1 } }}
+            sx={{
+              display: "flex",
+              overflow: "hidden",
+              minHeight: 0,
+              order: { xs: 1, md: 1 },
+              height: "100vh",
+              overflowY: "scroll"
+            }}
           >
             <ProblemPanel />
           </Grid>

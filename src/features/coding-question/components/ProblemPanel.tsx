@@ -6,8 +6,6 @@ import ScienceIcon from "@mui/icons-material/Science";
 import Description from "../section/Description";
 import { useQuestionData } from "../hooks/useQuestionData";
 
-import { PAGE } from "../constants";
-
 interface ProblemPanelProps { }
 
 export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
@@ -28,9 +26,9 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
         background: "#18181b",
         color: "#fff",
         overflow: "hidden",
-        border: "1px solid #27272a",
-        borderRadius: PAGE.radiusLg,
         width: "100%",
+        border: "1px solid white",
+        borderRadius: '9px'
       }}
     >
       <Box
@@ -61,7 +59,7 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
               zIndex: 10,
               flexShrink: 0,
               borderBottom: "1px solid #27272a",
-              background: "#000",
+              background: "#0f0f12 !important",
               width: "100%",
               overflow: "visible",
             }}
@@ -72,15 +70,18 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
               variant="scrollable"
               scrollButtons="auto"
               allowScrollButtonsMobile
+              className="pareshani"
               sx={{
+                width: "100%",
                 minHeight: 48,
                 px: 1,
-                width: "100%",
+                backgroundColor: "#0f0f12 !important",
                 "& .MuiTab-root": {
                   color: "#fff",
                   textTransform: "none",
                   minHeight: 48,
                   fontWeight: 500,
+                  backgroundColor: "#0f0f12",
                 },
                 "& .Mui-selected": { color: "#fff" },
                 "& .MuiTab-iconWrapper": { color: "#fff" },

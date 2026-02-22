@@ -64,7 +64,7 @@ export function CustomTabs({ tabs, panels }: CustomTabsProps) {
             background: COLORS.background.white,
             width: "fit-content",
             p: "0px 20px",
-            
+
             border: `1px solid ${COLORS.border.light}`,
             "& .MuiTabs-indicator": {
               height: "3px",

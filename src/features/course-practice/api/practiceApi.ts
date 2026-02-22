@@ -194,14 +194,15 @@ export const practiceApiSlice = baseApi.injectEndpoints({
     }),
 
     //run against custom testcase
-    codeRun: builder.mutation<any, { questionId: number | string; code: string; testcases: any[] }>({
-      query: ({ questionId, code, testcases }) => ({
+    codeRun: builder.mutation<any, { questionId: number | string; code: string; testcases: any[]; languageId: number }>({
+      query: ({ questionId, code, testcases, languageId }) => ({
         url: "/practice/code/run",
         method: "POST",
         body: {
           questionId,
           code,
           testCases: testcases,
+          languageId,
         },
       }),
     })
