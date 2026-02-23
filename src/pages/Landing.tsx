@@ -70,10 +70,10 @@ const Landing = () => {
 
   // 🔹 Categories
   const CATEGORIES = [
-    { id: 'data-science', title: 'Data Science', count: 450 },
-    { id: 'web-dev', title: 'Web Development', count: 380 },
-    { id: 'ai', title: 'AI & Machine Learning', count: 320 },
-    { id: 'design', title: 'Design', count: 140 },
+    { id: 'data-science', title: 'Data Science', count: 3 },
+    { id: 'web-dev', title: 'Web Development', count: 5 },
+    { id: 'ai', title: 'AI & Machine Learning', count: 2 },
+    { id: 'design', title: 'Design', count: 1 },
   ];
 
   // 🔹 Learning Paths
@@ -91,9 +91,9 @@ const Landing = () => {
   ];
 
   const stats = [
-    { value: '50K+', label: 'Active Learners' },
-    { value: '1,200+', label: 'Expert Courses' },
-    { value: '98%', label: 'Success Rate' },
+    { value: '5K+', label: 'Active Learners' },
+    { value: '12+', label: 'Expert Courses' },
+    // { value: '98%', label: 'Success Rate' },
     { value: '24/7', label: 'AI Support' },
   ];
 
