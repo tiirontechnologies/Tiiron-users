@@ -30,12 +30,34 @@ const styles = {
     minHeight: TAB_HEIGHT,
     borderBottom: "1px solid #27272a",
     backgroundColor: "#0f0f12 !important",
+    "& .MuiTab-root": {
+      color: "#a1a1aa",
+      textTransform: "none",
+      minHeight: TAB_HEIGHT,
+      "&.Mui-selected": {
+        color: "#ffffff",
+      },
+    },
+    "& .MuiTabs-indicator": {
+      backgroundColor: "#ffffff",
+    },
   },
 
   subTabs: {
     minHeight: TAB_HEIGHT,
     backgroundColor: "#0f0f12 !important",
     borderBottom: "1px solid #27272a",
+    "& .MuiTab-root": {
+      color: "#a1a1aa",
+      textTransform: "none",
+      minHeight: TAB_HEIGHT,
+      "&.Mui-selected": {
+        color: "#ffffff",
+      },
+    },
+    "& .MuiTabs-indicator": {
+      backgroundColor: "#ffffff",
+    },
   },
 
   editor: {
@@ -43,6 +65,7 @@ const styles = {
     backgroundColor: "#0f0f12",
     flex: 1,
     overflow: "auto",
+    color: "white"
   },
 
   editorHeader: {
@@ -134,9 +157,16 @@ const TestCaseEditor = memo(
                 key={key}
                 label={key}
                 value={displayValue}
+                sx={{
+                  "& .MuiInputLabel-root": { color: "white !important" },
+                  "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
+                }}
                 inputSx={{
-                  color: "white !important",
-                  backgroundColor: "#0f0f12 !important"
+                  backgroundColor: "#0f0f12 !important",
+                  "& .MuiInputBase-input, & input": {
+                    color: "white !important",
+                    "-webkit-text-fill-color": "white !important",
+                  },
                 }}
                 onChange={(e) =>
                   onChange(
@@ -173,6 +203,10 @@ const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }
     : passed
       ? "rgba(34, 197, 94, 0.06)"
       : "rgba(239, 68, 68, 0.06)";
+
+  // Safely extract input fields
+  const inputData = result.input?.input ?? (typeof result.input === "object" ? result.input : null);
+  const inputEntries = inputData && typeof inputData === "object" ? Object.entries(inputData) : null;
 
   return (
     <Box
@@ -232,93 +266,118 @@ const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }
       </Box>
 
       {/* Body */}
-      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 1.5 }}>
-        {/* Input */}
-        {result.input && (
-          <Box>
-            <Typography
-              variant="caption"
-              sx={{ color: "#a1a1aa", fontWeight: 600, mb: 0.5, display: "block" }}
-            >
-              Input
-            </Typography>
-            <Box
+      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+        {/* Input(s) */}
+        {inputEntries ? (
+          inputEntries.map(([key, val]) => (
+            <CustomTextField
+              key={key}
+              label={key}
+              value={typeof val === "object" ? JSON.stringify(val) : String(val ?? "")}
               sx={{
-                p: 1.5,
-                borderRadius: "6px",
-                backgroundColor: "#18181b",
-                border: "1px solid #27272a",
-                fontFamily: "monospace",
-                fontSize: "0.8rem",
-                color: "#e4e4e7",
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-all",
+                "& .MuiInputLabel-root": { color: "white !important" },
+                "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
               }}
-            >
-              {typeof result.input === "object"
-                ? JSON.stringify(result.input, null, 2)
-                : String(result.input)}
-            </Box>
-          </Box>
-        )}
+              inputSx={{
+                backgroundColor: "#0f0f12 !important",
+                fontFamily: "monospace",
+                "& .MuiInputBase-input, & input": {
+                  color: "white !important",
+                  "-webkit-text-fill-color": "white !important",
+                },
+                "&.Mui-disabled": {
+                  backgroundColor: "#0f0f12 !important",
+                },
+                "&.Mui-disabled .MuiInputBase-input, &.Mui-disabled input": {
+                  color: "white !important",
+                  "-webkit-text-fill-color": "white !important",
+                },
+              }}
+              disabled
+            />
+          ))
+        ) : result.input ? (
+          <CustomTextField
+            label="Input"
+            value={typeof result.input === "object" ? JSON.stringify(result.input) : String(result.input)}
+            sx={{
+              "& .MuiInputLabel-root": { color: "white !important" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
+            }}
+            inputSx={{
+              backgroundColor: "#0f0f12 !important",
+              fontFamily: "monospace",
+              "& .MuiInputBase-input, & input": {
+                color: "white !important",
+                "-webkit-text-fill-color": "white !important",
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#0f0f12 !important",
+              },
+              "&.Mui-disabled .MuiInputBase-input, &.Mui-disabled input": {
+                color: "white !important",
+                "-webkit-text-fill-color": "white !important",
+              },
+            }}
+            disabled
+          />
+        ) : null}
 
         {/* Expected Output */}
         {result.expectedOutput !== undefined && (
-          <Box>
-            <Typography
-              variant="caption"
-              sx={{ color: "#a1a1aa", fontWeight: 600, mb: 0.5, display: "block" }}
-            >
-              Expected Output
-            </Typography>
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: "6px",
-                backgroundColor: "#18181b",
-                border: "1px solid #27272a",
-                fontFamily: "monospace",
-                fontSize: "0.8rem",
-                color: "#e4e4e7",
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-all",
-              }}
-            >
-              {String(result.expectedOutput)}
-            </Box>
-          </Box>
+          <CustomTextField
+            label="Expected Output"
+            value={String(result.expectedOutput)}
+            sx={{
+              "& .MuiInputLabel-root": { color: "white !important" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
+            }}
+            inputSx={{
+              backgroundColor: "#18181b !important",
+              fontFamily: "monospace",
+              "& .MuiInputBase-input, & input": {
+                color: "#e4e4e7 !important",
+                "-webkit-text-fill-color": "#e4e4e7 !important",
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#18181b !important",
+              },
+              "&.Mui-disabled .MuiInputBase-input, &.Mui-disabled input": {
+                color: "#e4e4e7 !important",
+                "-webkit-text-fill-color": "#e4e4e7 !important",
+              },
+            }}
+            disabled
+          />
         )}
 
         {/* Actual Output */}
         {result.actualOutput !== undefined && (
-          <Box>
-            <Typography
-              variant="caption"
-              sx={{
-                color: passed ? "#4ade80" : "#f87171",
-                fontWeight: 600,
-                mb: 0.5,
-                display: "block",
-              }}
-            >
-              Your Output
-            </Typography>
-            <Box
-              sx={{
-                p: 1.5,
-                borderRadius: "6px",
-                backgroundColor: "#18181b",
-                border: `1px solid ${passed ? "#22c55e44" : "#ef444444"}`,
-                fontFamily: "monospace",
-                fontSize: "0.8rem",
-                color: passed ? "#4ade80" : "#f87171",
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-all",
-              }}
-            >
-              {String(result.actualOutput)}
-            </Box>
-          </Box>
+          <CustomTextField
+            label="Your Output"
+            value={String(result.actualOutput)}
+            sx={{
+              "& .MuiInputLabel-root": { color: "white !important" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
+            }}
+            inputSx={{
+              backgroundColor: "#18181b !important",
+              border: `1px solid ${passed ? "#22c55e44" : "#ef444444"}`,
+              fontFamily: "monospace",
+              "& .MuiInputBase-input, & input": {
+                color: passed ? "#4ade80 !important" : "#f87171 !important",
+                "-webkit-text-fill-color": passed ? "#4ade80 !important" : "#f87171 !important",
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#18181b !important",
+              },
+              "&.Mui-disabled .MuiInputBase-input, &.Mui-disabled input": {
+                color: passed ? "#4ade80 !important" : "#f87171 !important",
+                "-webkit-text-fill-color": passed ? "#4ade80 !important" : "#f87171 !important",
+              },
+            }}
+            disabled
+          />
         )}
 
         {/* Error */}
@@ -363,6 +422,13 @@ const ResultView = ({
   results?: TestCaseResult[] | null;
   isRunning?: boolean;
 }) => {
+  const [activeResultIndex, setActiveResultIndex] = useState(0);
+
+  // Reset active index when results change (e.g., new run)
+  useEffect(() => {
+    setActiveResultIndex(0);
+  }, [results]);
+
   if (isRunning) {
     return (
       <Box
@@ -394,11 +460,11 @@ const ResultView = ({
     );
   }
 
-  const totalPassed = results.filter(r => r.passed).length;
+  const totalPassed = results.filter((r) => r.passed).length;
   const allPassed = totalPassed === results.length;
 
   return (
-    <Box sx={{ flex: 1, overflow: "auto" }}>
+    <Box sx={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* Summary Bar */}
       <Box
         sx={{
@@ -431,13 +497,44 @@ const ResultView = ({
         </Typography>
       </Box>
 
-      {/* Individual Results */}
-      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-        {results.map((result, i) => (
-          <ResultCard key={i} result={result} index={i} />
+      {/* Horizontal Result Tabs */}
+      <Tabs
+        value={activeResultIndex}
+        onChange={(_, v) => setActiveResultIndex(v)}
+        variant="scrollable"
+        scrollButtons="auto"
+        sx={styles.subTabs}
+      >
+        {results.map((res, i) => (
+          <Tab
+            key={i}
+            value={i}
+            label={
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {res.passed ? (
+                  <CheckCircleIcon sx={{ color: "#22c55e", fontSize: 16 }} />
+                ) : (
+                  <CancelIcon sx={{ color: "#ef4444", fontSize: 16 }} />
+                )}
+                <Typography variant="caption" color="inherit" sx={{ fontWeight: activeResultIndex === i ? 700 : 400 }}>
+                  Case {i + 1}
+                </Typography>
+              </Box>
+            }
+          />
         ))}
+      </Tabs>
+
+      {/* Individual Result (Scrollable content) */}
+      <Box sx={{ p: 2, flex: 1, overflow: "auto" }}>
+        {results[activeResultIndex] && (
+          <ResultCard
+            result={results[activeResultIndex]}
+            index={activeResultIndex}
+          />
+        )}
       </Box>
-    </Box>
+    </Box >
   );
 };
 

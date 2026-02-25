@@ -47,7 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         background: GRADIENTS.background,
         boxShadow: "4px 0 20px rgba(0,0,0,0.08)",
         borderRight: "1px solid #e2e8f0",
-        
+
         overflowY: "auto",
         "&::-webkit-scrollbar": {
           width: "4px",
@@ -66,7 +66,8 @@ const Sidebar: React.FC<SidebarProps> = ({
         variant="text"
         onClick={() => navigate(-1)}
         startIcon={<KeyboardBackspace sx={{ color: COLORS.text.muted }} />}
-        sx={{mt: 1, mx: 3,
+        sx={{
+          mt: 1, mx: 3,
           background: GRADIENTS.background,
           borderRadius: "12px",
           padding: "8px 16px",
@@ -106,7 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 lineHeight: 1.2,
               }}
             >
-              Learning Trail
+              Practice
             </Typography>
             <Typography
               sx={{
@@ -121,11 +122,11 @@ const Sidebar: React.FC<SidebarProps> = ({
         </Box>
         {/* <ProgressCard stats={progressStats} /> */}
         {practiceStats && <PracticeProgressStats stats={practiceStats} />}
-        
+
       </Box>
 
       <Divider sx={{ mt: 2, opacity: 0.3 }} />
-   
+
       {/* Navigation List */}
       <NavigationList chapters={data?.chapters || []} onUnitSelect={onUnitSelect} />
       {/* <CourseSidebar/> */}

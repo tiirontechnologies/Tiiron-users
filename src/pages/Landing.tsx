@@ -7,8 +7,6 @@ import {
   Grid,
   Typography,
   Button,
-  TextField,
-  InputAdornment,
   InputBase,
   IconButton,
   Card,
@@ -78,9 +76,9 @@ const Landing = () => {
 
   // 🔹 Learning Paths
   const paths = [
-    { title: 'Become a Data Scientist', courses: 12, time: '8 months', level: 'Beginner → Advanced' },
-    { title: 'Master Full-Stack Development', courses: 15, time: '9 months', level: 'Intermediate' },
-    { title: 'AI Engineering Track', courses: 18, time: '10 months', level: 'Advanced' },
+    { title: 'Become a Data Scientist', courses: 2, time: '8 months', level: 'Beginner → Advanced' },
+    { title: 'Master Full-Stack Development', courses: 5, time: '9 months', level: 'Intermediate' },
+    { title: 'AI Engineering Track', courses: 2, time: '8 months', level: 'Advanced' },
   ];
 
   // 🔹 Testimonials

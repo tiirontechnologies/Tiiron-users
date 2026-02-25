@@ -25,7 +25,10 @@ import BlogTemplate from "../QuestionTemplates/BlogTemplate";
 import VideoTemplate from "../QuestionTemplates/VideoTemplate";
 import CodeChallengeCard from "../QuestionTemplates/CodeChallengeCard";
 
-import { useSubmitPracticeBulkMutation } from "../../api/practiceApi";
+import {
+  useSubmitPracticeBulkMutation,
+  PracticeSessionData
+} from "../../api/practiceApi";
 import Footer from "../../components/Footer";
 
 /* =====================================================
@@ -300,7 +303,31 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
 
     setIsSubmitting(true);
     try {
-      await submitPracticeBulk({}).unwrap();
+      const answersForType = userAnswers[activeContentType.id] || {};
+
+      const sessionQuestions = activeContentType.questions?.map((q) => {
+        const answer = answersForType[q.id.toString()];
+        const isMcq = q.questiontypeId === 1 || q.questiontypeId === 2;
+
+        return {
+          questionId: q.id,
+          questionTypeId: q.questiontypeId,
+          selectedOptionId: isMcq
+            ? (Array.isArray(answer) ? answer.map(Number) : (answer ? Number(answer) : undefined))
+            : undefined,
+          answer: !isMcq ? String(answer || "") : undefined,
+          timeSpent: 0,
+        };
+      }) || [];
+
+      const submissionData: PracticeSessionData = {
+        questions: sessionQuestions,
+        totalTimeSpent: 0,
+      };
+
+      await submitPracticeBulk(submissionData).unwrap();
+    } catch (error) {
+      console.error("Submission failed:", error);
     } finally {
       setIsSubmitting(false);
     }
