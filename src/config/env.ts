@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://backend.tiiron.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
 
 if(!BASE_URL){
     throw new Error("VITE_API_BASE_URL is missing")
