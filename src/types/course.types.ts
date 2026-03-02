@@ -23,6 +23,7 @@ interface ICourse {
   };
   createdBy: string;
   totalChapters: number;
+  language?: string | string[];
 }
 
 interface ICourseCardProps {
