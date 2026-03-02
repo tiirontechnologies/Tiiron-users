@@ -314,7 +314,9 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
                 color: "#64748B",
               }}
             >
-              English, Spanish, Italian, German
+              {Array.isArray(course?.language)
+                ? course?.language.join(", ")
+                : course?.language || "Language not available"}
             </Typography>
           </Box>
         </Box>

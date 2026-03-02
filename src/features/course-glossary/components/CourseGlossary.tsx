@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useGetChaptersQuery ,useGetCourseByIdQuery} from "../api/courseApi";
+import { useGetChaptersQuery, useGetCourseByIdQuery } from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
 import { useState } from "react";
@@ -159,7 +159,7 @@ export default function CourseGlossary() {
           </Box>
         ) : (
           <>
-            {/* Header Section with Product Card */}
+            {/* Header Section */}
             <Box
               sx={{
                 display: "flex",
@@ -172,6 +172,7 @@ export default function CourseGlossary() {
               <Box sx={{ flex: 1, width: "100%", minWidth: 0 }}>
                 <CourseGlossaryHeader course={course} chapters={chapters} />
               </Box>
+
               <Box
                 sx={{
                   width: { xs: "100%", lg: "400px" },
@@ -182,7 +183,7 @@ export default function CourseGlossary() {
               </Box>
             </Box>
 
-            {/* Main Content Area - Full Width */}
+            {/* Main Content */}
             <Box
               sx={{
                 width: "100%",
@@ -193,7 +194,6 @@ export default function CourseGlossary() {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
               }}
             >
-              {/* Tabs */}
               <Box sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
                 <CourseGlossaryTabs
                   activeTab={activeTab}
@@ -201,10 +201,18 @@ export default function CourseGlossary() {
                 />
               </Box>
 
-              {/* Tab Content - Full Width with proper spacing */}
-              <Box sx={{ px: { xs: 3, sm: 4, md: 5, lg: 6 }, pb: { xs: 4, md: 5 } }}>
+              <Box
+                sx={{
+                  px: { xs: 3, sm: 4, md: 5, lg: 6 },
+                  pb: { xs: 4, md: 5 },
+                }}
+              >
                 {activeTab === 0 && <CourseOverview course={course} />}
-                {activeTab === 1 && <CourseLessons chapters={chapters} />}
+
+                {activeTab === 1 && (
+                  <CourseLessons chapters={chapters} />
+                )}
+
                 {activeTab === 2 && <CourseReviews />}
               </Box>
             </Box>
