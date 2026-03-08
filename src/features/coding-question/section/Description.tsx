@@ -114,43 +114,6 @@ const Description: React.FC<DescriptionProps> = ({ question }) => {
         </Typography>
       </CustomAccordion>
 
-      <CustomAccordion title="Similar Questions" icon={<DescriptionIcon />}>
-        <Stack spacing={1}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: 0.5, borderBottom: "1px solid #3f3f46" }}>
-            <Typography component="span" sx={{ color: "#fff", fontSize: "0.875rem", "&:hover": { color: COLORS.primary }, cursor: "pointer" }}>Two Sum</Typography>
-            <Chip label="Easy" size="small" sx={{ color: "#fff", background: "#22c55e" }} />
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: 0.5, borderBottom: "1px solid #3f3f46" }}>
-            <Typography component="span" sx={{ color: "#fff", fontSize: "0.875rem", "&:hover": { color: COLORS.primary }, cursor: "pointer" }}>Valid Anagram</Typography>
-            <Chip label="Easy" size="small" sx={{ color: "#fff", background: "#22c55e" }} />
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: 0.5, borderBottom: "1px solid #3f3f46" }}>
-            <Typography component="span" sx={{ color: "#fff", fontSize: "0.875rem", "&:hover": { color: COLORS.primary }, cursor: "pointer" }}>Group Anagrams</Typography>
-            <Chip label="Medium" size="small" sx={{ color: "#fff", background: "#eab308" }} />
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: 0.5 }}>
-            <Typography component="span" sx={{ color: "#fff", fontSize: "0.875rem", "&:hover": { color: COLORS.primary }, cursor: "pointer" }}>Longest Substring Without Repeating Characters</Typography>
-            <Chip label="Medium" size="small" sx={{ color: "#fff", background: "#eab308" }} />
-          </Box>
-        </Stack>
-      </CustomAccordion>
-
-      <CustomAccordion title="Discussions (24)" icon={<ChatIcon />}>
-        <Stack spacing={1.5}>
-          <Box sx={{ p: 1.5, backgroundColor: "#1f1f23", borderRadius: 1, borderLeft: "3px solid #3f3f46" }}>
-            <Typography sx={{ color: "#fff", fontSize: "0.8125rem", fontWeight: 600, mb: 0.5 }}>O(n) solution with single pass</Typography>
-            <Typography sx={{ color: "#a1a1aa", fontSize: "0.8125rem" }}>You can solve this in one pass by maintaining a running count. No need for nested loops.</Typography>
-          </Box>
-          <Box sx={{ p: 1.5, backgroundColor: "#1f1f23", borderRadius: 1, borderLeft: "3px solid #3f3f46" }}>
-            <Typography sx={{ color: "#fff", fontSize: "0.8125rem", fontWeight: 600, mb: 0.5 }}>Edge case: empty input</Typography>
-            <Typography sx={{ color: "#a1a1aa", fontSize: "0.8125rem" }}>Don&apos;t forget to handle the case when the input array or string is empty. Return early with the appropriate value.</Typography>
-          </Box>
-          <Box sx={{ p: 1.5, backgroundColor: "#1f1f23", borderRadius: 1, borderLeft: "3px solid #3f3f46" }}>
-            <Typography sx={{ color: "#fff", fontSize: "0.8125rem", fontWeight: 600, mb: 0.5 }}>Alternative approach using sorting</Typography>
-            <Typography sx={{ color: "#a1a1aa", fontSize: "0.8125rem" }}>Sorting the input first might simplify the logic. Consider time complexity: O(n log n) for sort vs O(n) for single pass.</Typography>
-          </Box>
-        </Stack>
-      </CustomAccordion>
     </>
   )
 }

@@ -15,7 +15,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useTestCodeSubmissionMutation } from '../features/course-practice/api/courseProgressApi';
+import { useTestCodeSubmissionMutation } from '../features/course-practice/api/practiceApi';
 
 interface CodeTestSubmissionProps {
   questionId: number;
@@ -148,9 +148,8 @@ const CodeTestSubmission: React.FC<CodeTestSubmissionProps> = ({
                   '&:before': {
                     display: 'none',
                   },
-                  border: `1px solid ${
-                    testCase.passed ? '#4caf50' : '#f44336'
-                  }`,
+                  border: `1px solid ${testCase.passed ? '#4caf50' : '#f44336'
+                    }`,
                 }}
               >
                 <AccordionSummary

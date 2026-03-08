@@ -3,7 +3,11 @@ import { Box, Paper, Tabs, Tab } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import ScienceIcon from "@mui/icons-material/Science";
+import RestoreIcon from "@mui/icons-material/Restore";
 import Description from "../section/Description";
+import Editorial from "../section/Editorial";
+import Solution from "../section/Solution";
+import Submission from "../section/Submission";
 import { useQuestionData } from "../hooks/useQuestionData";
 
 interface ProblemPanelProps { }
@@ -98,10 +102,14 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
               <Tab icon={<DescriptionIcon />} iconPosition="start" label="Description" value="1" />
               <Tab icon={<AutoStoriesIcon />} iconPosition="start" label="Editorial" value="2" />
               <Tab icon={<ScienceIcon />} iconPosition="start" label="Solutions" value="3" />
+              <Tab icon={<RestoreIcon />} iconPosition="start" label="Submissions" value="4" />
             </Tabs>
           </Box>
-          <Box sx={{ flex: 1, minWidth: 0, p: activeTab === "1" ? 2 : 0 }}>
+          <Box sx={{ flex: 1, minWidth: 0, p: activeTab === "1" ? 2 : 2 }}>
             {activeTab === "1" && <Description question={question} />}
+            {activeTab === "2" && <Editorial question={question} />}
+            {activeTab === "3" && <Solution question={question} />}
+            {activeTab === "4" && <Submission question={question} />}
           </Box>
         </Box>
       </Box>

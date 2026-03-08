@@ -45,38 +45,6 @@ export const courseProgressApiSlice = baseApi.injectEndpoints({
       providesTags: ['Question'],
     }),
 
-    // Test code submission endpoint
-    testCodeSubmission: builder.mutation<
-      {
-        success: boolean;
-        data?: {
-          passed: number;
-          failed: number;
-          total: number;
-          testCases: Array<{
-            testCaseId: number;
-            passed: boolean;
-            input?: any;
-            expectedOutput?: string;
-            actualOutput?: string;
-            error?: string;
-            executionTime?: number;
-          }>;
-        };
-        message?: string;
-      },
-      {
-        questionId: number;
-        sourceCode: string;
-        languageId: number;
-      }
-    >({
-      query: (payload) => ({
-        url: '/question/code/test-all',
-        method: 'POST',
-        body: payload,
-      }),
-    }),
 
     // Get available programming languages
     getCodeLanguages: builder.query<
@@ -104,7 +72,6 @@ export const {
   useGetLessonAndTopicByCourseIdQuery,
   useGetContentByTopicIdQuery,
   useGetQuestionByIdQuery,
-  useTestCodeSubmissionMutation,
   useGetCodeLanguagesQuery,
   useGetPracticeProgressQuery,
 } = courseProgressApiSlice;
