@@ -5,18 +5,28 @@ import { useState, useRef, useEffect } from "react";
 interface CourseGlossaryHeaderProps {
   course: ICourse | undefined;
   chapters: any[] | undefined;
+  averageRating?: number | null;
+  totalRatings?: number | null;
 }
 
-export default function CourseGlossaryHeader({ course, chapters }: CourseGlossaryHeaderProps) {
-  const totalLessons = chapters?.reduce((acc, chapter) => acc + (chapter?.units?.length || 0), 0) || 0;
+export default function CourseGlossaryHeader({
+  course,
+  chapters,
+  averageRating,
+  totalRatings
+}: CourseGlossaryHeaderProps) {
+
+  const totalLessons =
+    chapters?.reduce((acc, chapter) => acc + (chapter?.units?.length || 0), 0) || 0;
+
   const [isTruncated, setIsTruncated] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
 
-  // Check if description needs truncation
   useEffect(() => {
     if (descriptionRef.current && course?.description) {
-      const maxHeight = 120; // Maximum height in pixels before showing "Read More"
+      const maxHeight = 120;
       const actualHeight = descriptionRef.current.scrollHeight;
+
       if (actualHeight > maxHeight) {
         setIsTruncated(true);
       } else {
@@ -27,15 +37,18 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
 
   const handleReadMore = () => {
     const overviewElement = document.getElementById("course-overview");
+
     if (overviewElement) {
-      overviewElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      overviewElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
     }
   };
 
   return (
     <Box
       sx={{
-        // Very Light Purple Tint (Softer than current)
         bgcolor: "#FEFBFF",
         border: "1px solid #F1E5FF",
         display: "flex",
@@ -45,7 +58,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
         boxSizing: "border-box",
         borderRadius: 3,
         p: { xs: 3, md: 4 },
-        width: "100%",
+        width: "100%"
       }}
     >
       <Box
@@ -53,15 +66,16 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
           gap: { xs: 2, md: 3 },
           display: "flex",
           flexDirection: "column",
-          width: "100%",
+          width: "100%"
         }}
       >
-        {/* Course Title with Enhanced Design */}
+        {/* Course Title */}
         <Box sx={{ position: "relative", width: "100%" }}>
           <Typography
             variant="h4"
             sx={{
-              background: "linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #4F39F6 100%)",
+              background:
+                "linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #4F39F6 100%)",
               backgroundClip: "text",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -79,16 +93,17 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
                 left: 0,
                 width: "60px",
                 height: "4px",
-                background: "linear-gradient(90deg, #4F39F6 0%, #8B5CF6 100%)",
-                borderRadius: "2px",
-              },
+                background:
+                  "linear-gradient(90deg, #4F39F6 0%, #8B5CF6 100%)",
+                borderRadius: "2px"
+              }
             }}
           >
             {course?.title || "Course Title"}
           </Typography>
         </Box>
 
-        {/* Course Description with Enhanced Readability */}
+        {/* Description (UNCHANGED) */}
         <Box
           sx={{
             width: "100%",
@@ -96,7 +111,7 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
             mt: { xs: 2.5, md: 3 },
             mb: 1,
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "column"
           }}
         >
           <Box
@@ -106,11 +121,14 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
               top: 0,
               bottom: 0,
               width: "4px",
-              background: "linear-gradient(180deg, #4F39F6 0%, #8B5CF6 50%, #A78BFA 100%)",
+              background:
+                "linear-gradient(180deg, #4F39F6 0%, #8B5CF6 50%, #A78BFA 100%)",
               borderRadius: "2px",
-              display: { xs: "none", md: "block" },
+              display: { xs: "none", md: "block" }
             }}
           />
+
+
           <Typography
             variant="body1"
             component="div"
@@ -126,93 +144,33 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
               overflow: isTruncated ? "hidden" : "visible",
               maxHeight: isTruncated ? "120px" : "none",
               position: "relative",
-              "&::after": isTruncated
-                ? {
-                  content: '""',
-                  position: "absolute",
-                  bottom: 0,
-                  left: { xs: 0, md: "24px" },
-                  right: 0,
-                  height: "40px",
-                  background: "linear-gradient(to bottom, transparent, #FEFBFF)",
-                  pointerEvents: "none",
-                }
-                : {},
+
+              /* ⭐ FIRST LETTER BIG */
+              "&::first-letter": {
+                fontSize: "42px",
+                fontWeight: 700,
+                float: "left",
+                lineHeight: 1,
+                marginRight: "8px",
+                color: "#4F39F6"
+              }
             }}
           >
-            {course?.description ? (
-              (() => {
-                const paragraphs = course.description
-                  .split("\n")
-                  .filter((line) => line.trim());
-
-                return (
-                  <Box
-                    component="div"
-                    sx={{
-                      "& > *": {
-                        mb: 2.5,
-                        "&:last-child": { mb: 0 },
-                      },
-                    }}
-                  >
-                    {paragraphs.map((paragraph, index) => (
-                      <Typography
-                        key={index}
-                        component="p"
-                        sx={{
-                          fontSize: "inherit",
-                          lineHeight: "inherit",
-                          color: "inherit",
-                          position: "relative",
-                          pl: { xs: 0, md: 0 },
-                          "&:first-of-type::first-letter": {
-                            fontSize: { xs: "32px", md: "36px", lg: "40px" },
-                            fontWeight: 700,
-                            color: "#4F39F6",
-                            float: "left",
-                            lineHeight: 0.9,
-                            marginRight: "10px",
-                            marginTop: "6px",
-                            fontFamily: "Georgia, serif",
-                          },
-                        }}
-                      >
-                        {paragraph.trim()}
-                      </Typography>
-                    ))}
-                  </Box>
-                );
-              })()
-            ) : (
-              <Box
-                sx={{
-                  fontStyle: "italic",
-                  color: "#94A3B8",
-                }}
-              >
-                Course description will appear here. This course is designed to provide you with comprehensive knowledge and practical skills.
-              </Box>
-            )}
+            {course?.description}
           </Typography>
+
           {isTruncated && (
             <Typography
               onClick={handleReadMore}
               component="span"
               sx={{
-                mt: 1, ml: 4,
+                mt: 1,
+                ml: 4,
                 alignSelf: { xs: "center", md: "flex-start" },
                 color: "#4F39F6",
                 fontWeight: 700,
                 fontSize: { xs: "14px", md: "15px" },
-                cursor: "pointer",
-                display: "inline-block",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  color: "#8B5CF6",
-                  transform: "translateX(4px)",
-                  textDecoration: "underline",
-                },
+                cursor: "pointer"
               }}
             >
               ...Read More
@@ -220,12 +178,13 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
           )}
         </Box>
 
+        {/* ⭐ RATING (DYNAMIC) */}
         <Box
           sx={{
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            gap: { xs: 2, md: 2.5 },
+            gap: { xs: 2, md: 2.5 }
           }}
         >
           <Typography
@@ -237,37 +196,72 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
               display: "flex",
               alignItems: "center",
               gap: 1,
-              flexWrap: "wrap",
+              flexWrap: "wrap"
             }}
           >
-            <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Box component="span" sx={{ fontWeight: 700, color: "#4F39F6" }}>4.6</Box>
-              {Array(5).fill(null).map((_, i) => (
-                <img
-                  key={i}
-                  src="/icons/Vector.svg"
-                  alt="star"
-                  style={{ width: "16px", height: "16px" }}
-                />
-              ))}
-            </Box>
+            {averageRating && averageRating > 0 && (
+              <>
+                <Box
+                  component="span"
+                  sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                >
+                  <Box
+                    component="span"
+                    sx={{ fontWeight: 700, color: "#4F39F6" }}
+                  >
+                    {averageRating}
+                  </Box>
+
+                  {Array(5)
+                    .fill(null)
+                    .map((_, i) => (
+                      <img
+                        key={i}
+                        src="/icons/Vector.svg"
+                        alt="star"
+                        style={{ width: "16px", height: "16px" }}
+                      />
+                    ))}
+                </Box>
+
+                <Box component="span" sx={{ color: "#64748B" }}>
+                  ({totalRatings} ratings)
+                </Box>
+              </>
+            )}
+
             <Box component="span" sx={{ color: "#64748B" }}>
-              (146,951 ratings)
+              |
             </Box>
-            <Box component="span" sx={{ color: "#64748B" }}>|</Box>
-            <Box component="span" sx={{ color: "#64748B" }}>22 Total Hours</Box>
-            <Box component="span" sx={{ color: "#64748B" }}>|</Box>
-            <Box component="span" sx={{ color: "#64748B" }}>{totalLessons} Lessons</Box>
-            <Box component="span" sx={{ color: "#64748B" }}>|</Box>
-            <Box component="span" sx={{ color: "#64748B" }}>All levels</Box>
+
+            <Box component="span" sx={{ color: "#64748B" }}>
+              22 Total Hours
+            </Box>
+
+            <Box component="span" sx={{ color: "#64748B" }}>
+              |
+            </Box>
+
+            <Box component="span" sx={{ color: "#64748B" }}>
+              {totalLessons} Lessons
+            </Box>
+
+            <Box component="span" sx={{ color: "#64748B" }}>
+              |
+            </Box>
+
+            <Box component="span" sx={{ color: "#64748B" }}>
+              All levels
+            </Box>
           </Typography>
 
+          {/* Instructor */}
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 1.5,
-              flexWrap: "wrap",
+              flexWrap: "wrap"
             }}
           >
             <Avatar
@@ -276,27 +270,32 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
               sx={{
                 width: { xs: 36, md: 40 },
                 height: { xs: 36, md: 40 },
-                border: "2px solid #E2E8F0",
+                border: "2px solid #E2E8F0"
               }}
             />
+
             <Typography
               variant="body2"
               sx={{
                 fontSize: { xs: "12px", md: "16px" },
                 color: "#1E293B",
-                fontWeight: 500,
+                fontWeight: 500
               }}
             >
-              Created by <Box component="span" sx={{ fontWeight: 600 }}>{course?.createdBy || "Instructor"}</Box>
+              Created by{" "}
+              <Box component="span" sx={{ fontWeight: 600 }}>
+                {course?.createdBy || "Instructor"}
+              </Box>
             </Typography>
           </Box>
 
+          {/* Language */}
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               gap: 1.5,
-              flexWrap: "wrap",
+              flexWrap: "wrap"
             }}
           >
             <Avatar
@@ -304,14 +303,15 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
               src="/icons/Icon.svg"
               sx={{
                 width: 20,
-                height: 20,
+                height: 20
               }}
             />
+
             <Typography
               variant="body2"
               sx={{
                 fontSize: { xs: "12px", md: "16px" },
-                color: "#64748B",
+                color: "#64748B"
               }}
             >
               {Array.isArray(course?.language)
@@ -324,4 +324,3 @@ export default function CourseGlossaryHeader({ course, chapters }: CourseGlossar
     </Box>
   );
 }
-

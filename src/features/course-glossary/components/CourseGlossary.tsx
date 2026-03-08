@@ -1,6 +1,10 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useGetChaptersQuery, useGetCourseByIdQuery } from "../api/courseApi";
+import {
+  useGetChaptersQuery,
+  useGetCourseByIdQuery,
+  useGetCourseRatingQuery
+} from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
 import { useState } from "react";
@@ -12,6 +16,7 @@ import CourseLessons from "./CourseLessons";
 import CourseReviews from "./CourseReviews";
 
 export default function CourseGlossary() {
+
   const { courseId } = useParams<{ courseId: string }>();
   const [activeTab, setActiveTab] = useState(0);
 
@@ -28,7 +33,6 @@ export default function CourseGlossary() {
     );
   }
 
-  // Validate that courseId is a valid number
   const numericCourseId = Number(courseId);
 
   if (isNaN(numericCourseId) || numericCourseId <= 0) {
@@ -44,6 +48,7 @@ export default function CourseGlossary() {
     );
   }
 
+  // Course API
   const {
     data: courseData,
     isLoading: courseLoading,
@@ -54,6 +59,7 @@ export default function CourseGlossary() {
     { skip: !courseId || isNaN(numericCourseId) }
   );
 
+  // Chapters API
   const {
     data: chaptersData,
     isLoading: chaptersLoading,
@@ -68,8 +74,18 @@ export default function CourseGlossary() {
     { skip: !courseId || isNaN(numericCourseId) }
   );
 
+  // ⭐ Rating API
+  const { data: ratingData } = useGetCourseRatingQuery(
+    { courseId: numericCourseId },
+    { skip: !courseId || isNaN(numericCourseId) }
+  );
+
   const course = courseData?.data;
   const chapters = chaptersData?.data?.chapters;
+
+  // ⭐ Correct rating values
+  const averageRating = ratingData?.data?.averageRating;
+  const totalRatings = ratingData?.data?.totalRatings;
 
   const isLoading = courseLoading || chaptersLoading;
   const isError = courseError || chaptersError;
@@ -77,6 +93,7 @@ export default function CourseGlossary() {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#F7F7F7", pt: "1px" }}>
       <Navbar />
+
       <Container
         maxWidth="xl"
         sx={{
@@ -88,6 +105,7 @@ export default function CourseGlossary() {
           boxSizing: "border-box",
         }}
       >
+
         {isLoading ? (
           <Box
             sx={{
@@ -99,6 +117,7 @@ export default function CourseGlossary() {
           >
             <Loader />
           </Box>
+
         ) : isError ? (
           <Box
             sx={{
@@ -112,12 +131,15 @@ export default function CourseGlossary() {
             <Typography variant="h6" color="error" sx={{ mb: 2 }}>
               Error Loading Course
             </Typography>
+
             <Typography variant="body2" color="text.secondary">
+
               {courseError && (
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
                     Course API Error:
                   </Typography>
+
                   <Typography
                     variant="body2"
                     component="pre"
@@ -134,11 +156,13 @@ export default function CourseGlossary() {
                   </Typography>
                 </Box>
               )}
+
               {chaptersError && (
                 <Box>
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
                     Chapters API Error:
                   </Typography>
+
                   <Typography
                     variant="body2"
                     component="pre"
@@ -155,9 +179,12 @@ export default function CourseGlossary() {
                   </Typography>
                 </Box>
               )}
+
             </Typography>
           </Box>
+
         ) : (
+
           <>
             {/* Header Section */}
             <Box
@@ -169,8 +196,14 @@ export default function CourseGlossary() {
                 alignItems: { xs: "center", lg: "flex-start" },
               }}
             >
+
               <Box sx={{ flex: 1, width: "100%", minWidth: 0 }}>
-                <CourseGlossaryHeader course={course} chapters={chapters} />
+                <CourseGlossaryHeader
+                  course={course}
+                  chapters={chapters}
+                  averageRating={averageRating}
+                  totalRatings={totalRatings}
+                />
               </Box>
 
               <Box
@@ -179,8 +212,13 @@ export default function CourseGlossary() {
                   flexShrink: 0,
                 }}
               >
-                <ProductCard course={course} />
+                <ProductCard
+                  course={course}
+                  averageRating={averageRating}
+                  totalRatings={totalRatings}
+                />
               </Box>
+
             </Box>
 
             {/* Main Content */}
@@ -194,6 +232,7 @@ export default function CourseGlossary() {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
               }}
             >
+
               <Box sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
                 <CourseGlossaryTabs
                   activeTab={activeTab}
@@ -207,6 +246,7 @@ export default function CourseGlossary() {
                   pb: { xs: 4, md: 5 },
                 }}
               >
+
                 {activeTab === 0 && <CourseOverview course={course} />}
 
                 {activeTab === 1 && (
@@ -214,7 +254,9 @@ export default function CourseGlossary() {
                 )}
 
                 {activeTab === 2 && <CourseReviews />}
+
               </Box>
+
             </Box>
           </>
         )}
