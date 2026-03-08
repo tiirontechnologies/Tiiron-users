@@ -3,6 +3,7 @@ import { baseApi } from "../../../api/api.routes";
 // Course API endpoints
 export const courseApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+
     // Get courses with pagination
     getCourses: builder.query({
       query: ({ page = 1, limit = 10 }: { page?: number; limit?: number }) => ({
@@ -20,6 +21,15 @@ export const courseApiSlice = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["Course"],
+    }),
+
+    // ⭐ Get course rating
+    getCourseRating: builder.query({
+      query: ({ courseId }: { courseId: number }) => ({
+        url: `/course/${courseId}/rate`,
+        method: "GET",
+      }),
+      providesTags: ["Rating"],
     }),
 
     // Create course
@@ -52,19 +62,21 @@ export const courseApiSlice = baseApi.injectEndpoints({
         limit?: number;
         id: number;
       }) => ({
-        url: `course/chapter/${id}`,
+        url: `/course/chapter/${id}`,
         method: "GET",
         params: { page, limit },
       }),
       providesTags: ["Chapter"],
     }),
+
   }),
 });
 
-// Export hooks for usage in functional components
+// Export hooks
 export const {
   useGetCoursesQuery,
   useGetCourseByIdQuery,
+  useGetCourseRatingQuery,
   useCreateCourseMutation,
   useDeleteCourseMutation,
   useGetChaptersQuery,
