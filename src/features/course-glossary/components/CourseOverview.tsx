@@ -9,21 +9,21 @@ interface CourseOverviewProps {
 }
 
 export default function CourseOverview({ course }: CourseOverviewProps) {
-  const description =
-    course?.description || "No description available for this course.";
-
-  const paragraphs = description
-    .split("\n")
-    .filter((p) => p.trim().length > 0);
+  const description = course?.description || "No description available for this course.";
+  const paragraphs = description.split("\n").filter((p) => p.trim().length > 0);
 
   // ✅ Dynamic from API
   const duration = course?.duration ?? "N/A";
-  const language = course?.language ?? "N/A";
+  const language = course?.language ?? "N/A"; // string or string[]
   const level = course?.level ?? "N/A";
 
   // ✅ API field name = objective
-  const learnItems =
-    Array.isArray(course?.objective) ? course.objective : [];
+  const learnItems = Array.isArray(course?.objective) ? course.objective : [];
+
+  // Helper for language display
+  const displayLanguage = Array.isArray(language)
+    ? language.map((lang) => lang.toUpperCase()).join(", ")
+    : language?.toUpperCase() || "N/A";
 
   return (
     <Box sx={{ width: "100%", pt: { xs: 3, md: 4 } }}>
@@ -157,9 +157,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
               <Typography sx={smallLabel}>Duration</Typography>
             </Box>
             <Typography sx={valueStyle}>
-              {typeof duration === "number"
-                ? `${duration} Hours`
-                : duration}
+              {typeof duration === "number" ? `${duration} Hours` : duration}
             </Typography>
           </Box>
 
@@ -178,7 +176,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
               <LanguageIcon sx={{ fontSize: 20, color: "#4F39F6" }} />
               <Typography sx={smallLabel}>Language</Typography>
             </Box>
-            <Typography sx={valueStyle}>{language}</Typography>
+            <Typography sx={valueStyle}>{displayLanguage}</Typography>
           </Box>
         </Box>
       </Box>

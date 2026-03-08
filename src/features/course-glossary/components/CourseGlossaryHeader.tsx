@@ -315,8 +315,8 @@ export default function CourseGlossaryHeader({
               }}
             >
               {Array.isArray(course?.language)
-                ? course?.language.join(", ")
-                : course?.language || "Language not available"}
+                ? course.language.map((lang) => lang.toUpperCase()).join(", ")
+                : course?.language?.toUpperCase() || "Language not available"}
             </Typography>
           </Box>
         </Box>
