@@ -1,7 +1,7 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://backend.tiiron.com";
 
-if(!BASE_URL){
-    throw new Error("VITE_API_BASE_URL is missing")
+if (!BASE_URL) {
+  throw new Error("VITE_API_BASE_URL is missing")
 }
 
 const API_PREFIX = import.meta.env.VITE_MODE == "Dev" ? "/v1" : "/v1";
@@ -45,4 +45,3 @@ export const SHADOWS = {
   purpleHover: '0 6px 16px rgba(79, 57, 246, 0.4)',
 } as const;
 
-  
