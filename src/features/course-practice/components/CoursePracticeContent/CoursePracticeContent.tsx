@@ -169,9 +169,6 @@ const QuestionsPanel = ({
             sx={{ mb: 3, boxShadow: SHADOWS.sm }}
           >
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 1 }}>
-                {apiQuestion.title}
-              </Typography>
 
               <QuestionComponent
                 apiQuestion={apiQuestion}

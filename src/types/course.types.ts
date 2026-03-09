@@ -24,6 +24,8 @@ interface ICourse {
   createdBy: string;
   totalChapters: number;
   language?: string | string[];
+  level?: string;
+  objective?: string[];
 }
 
 interface ICourseCardProps {

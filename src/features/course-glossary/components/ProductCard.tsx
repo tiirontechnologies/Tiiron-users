@@ -13,9 +13,11 @@ import { useState, useEffect, useMemo } from "react";
 
 interface ProductCardProps {
   course: ICourse | undefined;
+  averageRating?: number;
+  totalRatings?: number;
 }
 
-export default function ProductCard({ course }: ProductCardProps) {
+export default function ProductCard({ course, averageRating, totalRatings }: ProductCardProps) {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const [isEnrolled, setIsEnrolled] = useState(false);
