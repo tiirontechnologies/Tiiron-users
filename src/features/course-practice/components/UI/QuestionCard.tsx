@@ -101,13 +101,26 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           sx={{
             fontWeight: 600,
             fontSize: "16px",
-            mb: 3,
+            mb: 1,
             color: COLORS.text.secondary,
             lineHeight: 1.6,
           }}
         >
           <span dangerouslySetInnerHTML={{ __html: question.text }} />
         </Typography>
+
+        {question.description?.html && (
+          <Box
+            sx={{
+              mb: 3,
+              fontSize: "15px",
+              color: COLORS.text.muted,
+              lineHeight: 1.6,
+              '& p': { mb: 1 }
+            }}
+            dangerouslySetInnerHTML={{ __html: question.description.html }}
+          />
+        )}
 
         {!isLast && <Divider sx={{ mb: 3, borderColor: COLORS.border.light }} />}
 

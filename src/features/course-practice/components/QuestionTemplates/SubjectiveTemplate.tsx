@@ -62,9 +62,6 @@ const SubjectiveTemplate: React.FC<SubjectiveTemplateProps> = ({
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography sx={{ mb: 2, fontWeight: 500, color: "#374151" }}>
-        {questionText}
-      </Typography>
       <Box
         component="textarea"
         value={answer}

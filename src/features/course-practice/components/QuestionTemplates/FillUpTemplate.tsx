@@ -91,9 +91,6 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
       }}
     >
       {/* Question */}
-      <Typography sx={{ fontSize: "15px", color: COLORS.text.primary, fontWeight: 600 }}>
-        {questionText}
-      </Typography>
 
       {/* Label */}
       <Typography

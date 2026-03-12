@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Box, Snackbar, Alert } from "@mui/material";
+import { Box, Snackbar, Alert, Typography } from "@mui/material";
 // NOTE: Retaining all original imports for types and hooks
 import { Question } from "../../types";
 import { GRADIENTS, COLORS } from "../../constants";
@@ -93,7 +93,7 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
     if (questions?.[0]?.contents) {
       questions[0].contents.forEach((content: any) => {
         tabs.push(content.contentTypeCon.name);
-        
+
         // Create one panel per content that contains all questions for that content
         panels.push(
           <Box key={content.id}>
@@ -101,18 +101,30 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
               // Transform API question to Question format
               const transformedQuestion = transformApiQuestion(apiQuestion);
               return (
-                <CustomComponent
-                  key={`${content.id}-${apiQuestion.id}-${qIndex}`}
-                  questiontypeId={apiQuestion.questiontypeId}
-                  question={transformedQuestion}
-                />
+                <Box key={`${content.id}-${apiQuestion.id}-${qIndex}`} sx={{ mb: 4 }}>
+                  {apiQuestion.title && (
+                    <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>
+                      {apiQuestion.title}
+                    </Typography>
+                  )}
+                  {apiQuestion.description && (
+                    <Box
+                      sx={{ mb: 2, color: 'text.secondary' }}
+                      dangerouslySetInnerHTML={{ __html: apiQuestion.description }}
+                    />
+                  )}
+                  <CustomComponent
+                    questiontypeId={apiQuestion.questiontypeId}
+                    question={transformedQuestion}
+                  />
+                </Box>
               );
             })}
           </Box>
         );
       });
     }
-    
+
     return { contentTabs: tabs, contentPanel: panels };
   }, [questions]);
 

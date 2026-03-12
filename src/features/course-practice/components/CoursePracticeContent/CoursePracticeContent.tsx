@@ -169,6 +169,23 @@ const QuestionsPanel = ({
             sx={{ mb: 3, boxShadow: SHADOWS.sm }}
           >
             <CardContent>
+              {apiQuestion.title && (
+                <Typography variant="h6" sx={{ mb: 1, fontWeight: 700, color: '#1F2937' }}>
+                  {apiQuestion.title}
+                </Typography>
+              )}
+              {apiQuestion.description && (
+                <Box
+                  sx={{
+                    mb: 3,
+                    color: '#4B5563',
+                    fontSize: '15px',
+                    lineHeight: 1.6,
+                    '& p': { mb: 1.5 },
+                  }}
+                  dangerouslySetInnerHTML={{ __html: apiQuestion.description }}
+                />
+              )}
 
               <QuestionComponent
                 apiQuestion={apiQuestion}

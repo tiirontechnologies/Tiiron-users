@@ -30,7 +30,7 @@ const BlogTemplate: React.FC<BlogTemplateProps> = ({
     >
       <Box
         dangerouslySetInnerHTML={{
-          __html: question.content?.html || question.content?.text || question.description?.html || question.text || ''
+          __html: question.content?.html || question.content?.text || ''
         }}
         sx={{
           '& h1, & h2, & h3, & h4, & h5, & h6': {
