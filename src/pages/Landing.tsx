@@ -34,10 +34,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import CourseCardWrapper from '@components/ui/card/CourseCardWrapper';
 
+
 import {
   useGetCourseForFeedQuery,
   useGetCartQuery,
   useAddToCartServerMutation,
+  useGetCourseRatingQuery
 } from '../features/course-browse/api/courseApi';
 
 import { ICourse } from 'types/course.types';
@@ -468,34 +470,40 @@ const Landing = () => {
               Failed to load courses.
             </Typography>
           ) : (
-            <Grid container spacing={2}>
-              {featuredCoursesData?.map((course) => {
-                const isCourseInCart =
-                  cartData?.data?.items?.some(
-                    (item) => item.courseId === Number(course.id)
-                  ) || false;
+           <Grid container spacing={2}>
+  {featuredCoursesData?.map((course) => {
+    
+    const { data: ratingData } = useGetCourseRatingQuery(course.id);
 
-                return (
-                  <Grid item xs={12} sm={6} md={3} key={course.id}>
-                    <CourseCardWrapper
-                      id={course.id}
-                      thumbnailSrc={course.image}
-                      tags={course.tags}
-                      title={course.title}
-                      chapters={course.totalChapters}
-                      rating={4.7}
-                      reviewCount={1200}
-                      instructor={course.createdBy}
-                      price={course.price}
-                      navigatePath={(id) => `/course-glossary/${id}`}
-                      isCourseInCart={isCourseInCart}
-                      onAddToCart={handleAddToCart}
-                      isLoadingCart={isAddingToCart}
-                    />
-                  </Grid>
-                );
-              })}
-            </Grid>
+    const rating = ratingData?.data?.averageRating || 0;
+    const reviewCount = ratingData?.data?.totalRatings || 0;
+
+    const isCourseInCart =
+      cartData?.data?.items?.some(
+        (item) => item.courseId === Number(course.id)
+      ) || false;
+
+    return (
+      <Grid item xs={12} sm={6} md={3} key={course.id}>
+        <CourseCardWrapper
+          id={course.id}
+          thumbnailSrc={course.image}
+          tags={course.tags}
+          title={course.title}
+          chapters={course.totalChapters}
+          rating={rating}
+          reviewCount={reviewCount}
+          instructor={course.createdBy}
+          price={course.price}
+          navigatePath={(id) => `/course-glossary/${id}`}
+          isCourseInCart={isCourseInCart}
+          onAddToCart={handleAddToCart}
+          isLoadingCart={isAddingToCart}
+        />
+      </Grid>
+    );
+  })}
+</Grid>
           )}
         </Container>
       </Box>
