@@ -46,6 +46,7 @@ import { ICourse } from 'types/course.types';
 import Loader from '@components/ui/Spinner';
 import { useAuth } from '../hooks/useAuth';
 
+
 const Landing = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -59,6 +60,20 @@ const Landing = () => {
   const featuredCoursesData: ICourse[] =
     (browseData as any)?.data?.courses || [];
 
+    
+const courseIds = featuredCoursesData.map((c) => c.id);
+
+const rating1 = useGetCourseRatingQuery(courseIds[0], { skip: !courseIds[0] });
+const rating2 = useGetCourseRatingQuery(courseIds[1], { skip: !courseIds[1] });
+const rating3 = useGetCourseRatingQuery(courseIds[2], { skip: !courseIds[2] });
+const rating4 = useGetCourseRatingQuery(courseIds[3], { skip: !courseIds[3] });
+
+const ratings = [
+  rating1?.data?.data,
+  rating2?.data?.data,
+  rating3?.data?.data,
+  rating4?.data?.data,
+];
   // 🔹 Cart Data
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,
@@ -470,13 +485,11 @@ const Landing = () => {
               Failed to load courses.
             </Typography>
           ) : (
-           <Grid container spacing={2}>
-  {featuredCoursesData?.map((course) => {
-    
-    const { data: ratingData } = useGetCourseRatingQuery(course.id);
+          <Grid container spacing={2}>
+  {featuredCoursesData?.map((course, index) => {
 
-    const rating = ratingData?.data?.averageRating || 0;
-    const reviewCount = ratingData?.data?.totalRatings || 0;
+    const rating = ratings[index]?.averageRating || 0;
+    const reviewCount = ratings[index]?.totalRatings || 0;
 
     const isCourseInCart =
       cartData?.data?.items?.some(
