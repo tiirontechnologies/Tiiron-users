@@ -45,7 +45,7 @@ export default function CourseGlossaryHeader({
       });
     }
   };
-
+const level = course?.level || course?.difficulty || course?.courseLevel || "All Levels";
   return (
     <Box
       sx={{
