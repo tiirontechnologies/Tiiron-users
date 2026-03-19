@@ -42,6 +42,7 @@ export default defineConfig({
       "@utils": path.resolve(__dirname, "src/utils"),
       "@icons": path.resolve(__dirname, "src/assets/icons"),
       "@images": path.resolve(__dirname, "src/assets/images"),
+      "@features": path.resolve(__dirname, "src/features"),
     },
   },
   optimizeDeps: {

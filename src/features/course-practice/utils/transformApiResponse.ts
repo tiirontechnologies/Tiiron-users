@@ -24,6 +24,9 @@ const mapQuestionType = (typeName: string): QuestionType => {
   if (normalized.includes('video')) {
     return 'video';
   }
+  if (normalized.includes('coding') || normalized.includes('code')) {
+    return 'coding';
+  }
   
   return 'mcq'; // default fallback
 };
@@ -47,6 +50,8 @@ export const transformApiQuestion = (apiQuestion: any): Question => {
     contentType = 'blog';
   } else if (questionTypeId === 6) {
     contentType = 'video';
+  } else if (questionTypeId === 7) {
+    contentType = 'coding';
   } else {
     // Fallback to name-based mapping
     contentType = mapQuestionType(questionTypeName);

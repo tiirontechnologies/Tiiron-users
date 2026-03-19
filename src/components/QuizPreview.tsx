@@ -12,54 +12,69 @@ import {
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 // Import your new template
 import McqTemplate from "../features/course-practice/components/QuestionTemplates/McqTemplate"; 
 
-// --- Dummy Data ---
-const QUIZ_QUESTIONS = [
-  {
-    id: "q1",
-    question: "Which tool introduced by GitHub focuses on providing AI-assisted coding?",
-    options: ["GitHub Actions", "GitHub Copilot", "Microsoft Git Service", "GitHub CI/CD Studio"],
-    correctAnswer: 1,
-    explanation: "GitHub Copilot is the AI-assisted coding tool designed to help developers.",
-  },
-  {
-    id: "q2",
-    question: "Which React hook is primarily used for handling side effects?",
-    options: ["useState", "useContext", "useEffect", "useReducer"],
-    correctAnswer: 2,
-    explanation: "useEffect allows you to perform side effects like data fetching.",
-  },
-  // ... rest of your questions
-];
+import { QuizQuestion } from "@features/quiz-generation/types";
+import { useSubmitQuizQuestionMutation } from "@features/quiz-generation/api/quizApi";
 
-export const QuizPreview: React.FC = () => {
+interface QuizPreviewProps {
+  questions: QuizQuestion[];
+}
+
+export const QuizPreview: React.FC<QuizPreviewProps> = ({ questions }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<(string | string[])[]>(
-    new Array(QUIZ_QUESTIONS.length).fill("")
-  );
+  const [selectedAnswers, setSelectedAnswers] = useState<(string | string[])[]>([]);
+  const [submissionResults, setSubmissionResults] = useState<Record<number, { isCorrect: boolean; correctOptionId: number }>>({});
+
+  const [submitQuizQuestion, { isLoading }] = useSubmitQuizQuestionMutation();
+
+  // Update selectedAnswers when questions changes
+  React.useEffect(() => {
+    setSelectedAnswers(new Array(questions.length).fill(""));
+    setSubmissionResults({});
+    setCurrentIndex(0);
+  }, [questions]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const currentData = QUIZ_QUESTIONS[currentIndex];
+  if (questions.length === 0) {
+    return (
+      <Box sx={{ p: 4, textAlign: "center", bgcolor: "#FFFFFF", borderRadius: "20px", border: "1px solid #E2E8F0", minHeight: "500px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, color: "#0f172a", mb: 2 }}>
+          No Quiz Generated Yet
+        </Typography>
+        <Typography variant="body1" sx={{ color: "#64748b" }}>
+          Configure the AI parameters on the left and click "Generate Quiz" to see a preview.
+        </Typography>
+      </Box>
+    );
+  }
 
-  // --- Adapter: Convert Dummy Data to the "Question" type used by McqTemplate ---
+  const currentData = questions[currentIndex];
+  const currentResult = submissionResults[currentData.id];
+
+  // --- Adapter: Convert generated questions to the "Question" type used by McqTemplate ---
   const formattedQuestion = {
-    id: currentData.id,
+    id: currentData.id.toString(),
     content: {
       question: currentData.question,
       allowMultipleSelection: false,
-      options: currentData.options.map((opt, index) => ({
-        id: index.toString(),
-        text: opt,
-        isCorrect: index === currentData.correctAnswer,
+      options: currentData.options.map((opt) => ({
+        id: opt.id,
+        text: opt.text,
+        isCorrect: currentResult ? opt.id === currentResult.correctOptionId : false,
       })),
     },
-    // You can pass previousPractice data here if you want to show results immediately
-    previousPractice: undefined 
+    // Mock previousPractice if we have a result from the single-question submission
+    previousPractice: currentResult ? {
+      selectedOptionId: Number(selectedAnswers[currentIndex]),
+      isCorrect: currentResult.isCorrect,
+      score: currentResult.isCorrect ? 1 : 0,
+    } : undefined
   };
 
   const handleAnswerChange = (answer: string | string[]) => {
@@ -68,17 +83,43 @@ export const QuizPreview: React.FC = () => {
     setSelectedAnswers(newAnswers);
   };
 
-  const totalQuestions = QUIZ_QUESTIONS.length;
+  const handleSubmit = async () => {
+    const answer = selectedAnswers[currentIndex];
+    
+    // If it's a single choice (MCQ) and not already submitted, submit it
+    if (typeof answer === "string" && !submissionResults[currentData.id]) {
+      try {
+        const response = await submitQuizQuestion({
+          questionId: currentData.id,
+          selectedOptionId: Number(answer)
+        }).unwrap();
+
+        if (response.success && response.data) {
+          setSubmissionResults(prev => ({
+            ...prev,
+            [currentData.id]: {
+              isCorrect: response.data.isCorrect,
+              correctOptionId: response.data.correctOptionId
+            }
+          }));
+        }
+      } catch (error) {
+        console.error("❌ Error submitting answer:", error);
+      }
+    }
+  };
+
+  const totalQuestions = questions.length;
 
   const handleNext = () => {
-    if (currentIndex < QUIZ_QUESTIONS.length - 1) setCurrentIndex((prev) => prev + 1);
+    if (currentIndex < questions.length - 1) setCurrentIndex((prev) => prev + 1);
   };
 
   const handlePrevious = () => {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
 
-  const progressValue = Math.round(((currentIndex + 1) / QUIZ_QUESTIONS.length) * 100);
+  const progressValue = Math.round(((currentIndex + 1) / questions.length) * 100);
 
   return (
     <Box sx={{ p: 2, borderRadius: "20px", bgcolor: "#FFFFFF", border: "1px solid #E2E8F0", minHeight: "500px" }}>
@@ -98,7 +139,7 @@ export const QuizPreview: React.FC = () => {
             <Box textAlign="right">
               <Typography variant="overline" sx={{ color: "#94a3b8", fontWeight: 800, fontSize: "0.65rem" }}>PROGRESS</Typography>
               <Typography variant="body1" sx={{ color: "#1e293b", fontWeight: 700 }}>
-                {currentIndex + 1} / {QUIZ_QUESTIONS.length}
+                {currentIndex + 1} / {totalQuestions}
               </Typography>
             </Box>
             {/* Circular Progress */}
@@ -217,9 +258,9 @@ export const QuizPreview: React.FC = () => {
 
             <Button
               variant="contained"
-              onClick={handleNext}
-              disabled={currentIndex === totalQuestions - 1}
-              endIcon={<ArrowForwardIcon />}
+              onClick={currentResult ? handleNext : handleSubmit}
+              disabled={(!currentResult && !selectedAnswers[currentIndex]) || (currentResult && currentIndex === totalQuestions - 1)}
+              endIcon={currentResult ? <ArrowForwardIcon /> : (isLoading ? <CircularProgress size={20} color="inherit" /> : <AutoAwesomeIcon />)}
               sx={{
                 backgroundColor: "#0F172A",
                 color: "#FFFFFF",
@@ -244,7 +285,7 @@ export const QuizPreview: React.FC = () => {
                 component="span"
                 sx={{ display: { xs: "none", sm: "inline" } }}
               >
-                Next Question
+                {currentResult ? "Next Question" : (isLoading ? "Submitting..." : "Submit Answer")}
               </Box>
             </Button>
           </Stack>

@@ -17,6 +17,9 @@ import {
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
+import { useGenerateQuizMutation } from "@features/quiz-generation/api/quizApi";
+import { QuizQuestion } from "@features/quiz-generation/types";
+
 interface IQuizFormData {
   sourceText?: string;
   sourceFile?: string;
@@ -30,6 +33,10 @@ interface IQuizFormData {
   difficultyLevel?: string;
   optionsCount?: number;
   contentType?: string;
+}
+
+interface QuizConfigurationSidebarProps {
+  onQuizGenerated: (questions: QuizQuestion[]) => void;
 }
 
 const tabContainerStyle = {
@@ -66,12 +73,12 @@ const initialSourceText = `GitHub has transformed software development into a gl
 
 Following its acquisition by Microsoft, GitHub has expanded its services significantly, moving beyond simple Git hosting to offer advanced DevOps tools like GitHub Actions for continuous integration/continuous delivery (CI/CD) and GitHub Copilot for AI-assisted coding. This focus solidifies its role as the central hub for the entire software development lifecycle, from planning and coding to deployment and security.`;
 
-export const QuizConfigurationSidebar: React.FC = () => {
+export const QuizConfigurationSidebar: React.FC<QuizConfigurationSidebarProps> = ({ onQuizGenerated }) => {
   const [activeTab, setActiveTab] = useState<"text" | "file" | "video">("text");
   const [videoSourceType, setVideoSourceType] = useState<"upload" | "url">(
     "upload"
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [generateQuiz, { isLoading }] = useGenerateQuizMutation();
 
   const {
     control,
@@ -88,7 +95,7 @@ export const QuizConfigurationSidebar: React.FC = () => {
       generateTranscript: false,
       focusKeyword: "",
       questionCount: 3,
-      difficultyLevel: "Medium",
+      difficultyLevel: "Easy",
       optionsCount: 4,
       contentType: "MCQ",
     },
@@ -96,20 +103,19 @@ export const QuizConfigurationSidebar: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<IQuizFormData> = async (data) => {
-    setIsLoading(true);
-
     try {
-      // TODO: Replace with actual API call
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await generateQuiz({
+        topic: data.focusKeyword || "General",
+        text: data.sourceText || "",
+        numQuestions: data.questionCount || 3,
+        difficulty: (data.difficultyLevel?.toLowerCase() as any) || "easy",
+      }).unwrap();
 
-      // Handle success (e.g., show notification, redirect, etc.)
-
-      reset();
+      if (response.success && response.data) {
+        onQuizGenerated(response.data);
+      }
     } catch (error) {
       console.error("❌ Error generating quiz:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -231,8 +237,8 @@ export const QuizConfigurationSidebar: React.FC = () => {
             </Box>
 
             <Box
-              onClick={() => setActiveTab("file")}
-              sx={getTabButtonStyle(activeTab === "file")}
+              onClick={() => {}}
+              sx={{ ...getTabButtonStyle(activeTab === "file"), opacity: 0.5, cursor: "not-allowed" }}
             >
               <svg
                 width="18"
@@ -248,13 +254,13 @@ export const QuizConfigurationSidebar: React.FC = () => {
                 <polyline points="13 2 13 9 20 9" />
               </svg>
               <Typography sx={{ fontWeight: 600, fontSize: "14px" }}>
-                File
+                File (Upcoming)
               </Typography>
             </Box>
 
             <Box
-              onClick={() => setActiveTab("video")}
-              sx={getTabButtonStyle(activeTab === "video")}
+              onClick={() => {}}
+              sx={{ ...getTabButtonStyle(activeTab === "video"), opacity: 0.5, cursor: "not-allowed" }}
             >
               <svg
                 width="18"
@@ -270,7 +276,7 @@ export const QuizConfigurationSidebar: React.FC = () => {
                 <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
               </svg>
               <Typography sx={{ fontWeight: 600, fontSize: "14px" }}>
-                Video
+                Video (Upcoming)
               </Typography>
             </Box>
           </Box>
@@ -305,8 +311,8 @@ export const QuizConfigurationSidebar: React.FC = () => {
             </Box>
           )}
 
-          {/* FILE TAB */}
-          {activeTab === "file" && (
+          {/* FILE TAB (Upcoming) */}
+          {/* {activeTab === "file" && (
             <Box>
               <Typography
                 variant="body2"
@@ -333,10 +339,10 @@ export const QuizConfigurationSidebar: React.FC = () => {
                 )}
               />
             </Box>
-          )}
+          )} */}
 
-          {/* VIDEO TAB */}
-          {activeTab === "video" && (
+          {/* VIDEO TAB (Upcoming) */}
+          {/* {activeTab === "video" && (
             <Box>
               <Typography
                 variant="body2"
@@ -439,7 +445,7 @@ export const QuizConfigurationSidebar: React.FC = () => {
                 />
               </Box>
             </Box>
-          )}
+          )} */}
 
           {/* FOCUS KEYWORD */}
           <Typography

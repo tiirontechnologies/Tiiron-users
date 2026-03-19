@@ -174,7 +174,7 @@ const QuestionsPanel = ({
                   {apiQuestion.title}
                 </Typography>
               )}
-              {apiQuestion.description && (
+              {apiQuestion.description && apiQuestion.questiontypeId !== 7 && (
                 <Box
                   sx={{
                     mb: 3,

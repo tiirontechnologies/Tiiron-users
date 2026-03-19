@@ -53,7 +53,7 @@ const Index = () => {
       submitButtonText="Create Account →"
       dividerText="Or sign up with"
       isLoading={isLoading}
-      isOrgSignUp={true}
+      isOrgSignUp={false}
       isLogin={true}
       onSubmit={handleSubmit(onSubmit)}
       renderFormFields={

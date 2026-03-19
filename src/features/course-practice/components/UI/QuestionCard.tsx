@@ -109,7 +109,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           <span dangerouslySetInnerHTML={{ __html: question.text }} />
         </Typography>
 
-        {question.description?.html && (
+        {question.description?.html && question.contentType !== "coding" && (
           <Box
             sx={{
               mb: 3,

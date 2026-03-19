@@ -14,8 +14,8 @@ export const authRoutes: Route[] = [
     path: "/sign-up",
     element: <Signup />,
   },
-  {
-    path: "/organization/create-account",
-    element: <OrganizationSignup />,
-  },
+  // {
+  //   path: "/organization/create-account",
+  //   element: <OrganizationSignup />,
+  // },
 ];
