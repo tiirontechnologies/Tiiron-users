@@ -251,7 +251,8 @@ export default function CourseGlossaryHeader({
             </Box>
 
             <Box component="span" sx={{ color: "#64748B" }}>
-              All levels
+              {/* All levels */}
+              {level}
             </Box>
           </Typography>
 
