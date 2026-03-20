@@ -1,45 +1,15 @@
 import { Box, Button, Typography } from "@mui/material";
 import StarRatings from "./StarRatings";
 import UserTestimonial from "./UserTestimonial";
+import { useGetCourseRatingQuery } from "../api/courseApi";
 
-export default function CourseReviews() {
-  const testimonials = [
-    {
-      name: "Mark Doe",
-      rating: 5,
-      date: "22nd March, 2024",
-      review:
-        "I was initially apprehensive, having no prior design experience. But the instructor, John Doe, did an amazing job of breaking down complex concepts into easily digestible modules. The video lectures were engaging, and the real-world examples really helped solidify my understanding.",
-    },
-    {
-      name: "Sarah Johnson",
-      rating: 5,
-      date: "15th March, 2024",
-      review:
-        "This course exceeded my expectations! The content is well-structured and the instructor explains everything clearly. I've learned so much and feel confident applying these skills in my work.",
-    },
-    {
-      name: "Michael Chen",
-      rating: 4,
-      date: "10th March, 2024",
-      review:
-        "Great course overall. The practical exercises are very helpful. The only thing I'd improve is adding more advanced examples, but for beginners this is perfect.",
-    },
-    {
-      name: "Emily Rodriguez",
-      rating: 5,
-      date: "5th March, 2024",
-      review:
-        "Excellent course! The instructor is knowledgeable and the material is up-to-date. I've already recommended this to several colleagues.",
-    },
-    {
-      name: "David Kim",
-      rating: 5,
-      date: "1st March, 2024",
-      review:
-        "One of the best courses I've taken. The step-by-step approach makes complex topics easy to understand. The community support is also fantastic.",
-    },
-  ];
+export default function CourseReviews({ courseId }) {
+  const { data, isLoading, isError } = useGetCourseRatingQuery({ courseId });
+
+  if (isLoading) return <Typography>Loading reviews...</Typography>;
+  if (isError) return <Typography>Error loading reviews</Typography>;
+
+  const ratingsData = data?.data;
 
   return (
     <Box
@@ -51,7 +21,6 @@ export default function CourseReviews() {
         gap: { xs: 3, md: 4 },
       }}
     >
-
       <Box
         sx={{
           display: "flex",
@@ -60,7 +29,12 @@ export default function CourseReviews() {
           width: "100%",
         }}
       >
-        <StarRatings />
+        {/* ⭐ Pass dynamic data */}
+        <StarRatings
+          averageRating={ratingsData?.averageRating}
+          totalRatings={ratingsData?.totalRatings}
+          ratings={ratingsData?.ratings}
+        />
 
         <Box
           sx={{
@@ -70,13 +44,14 @@ export default function CourseReviews() {
             flex: 1,
           }}
         >
-          {testimonials.map((testimonial, index) => (
+          {/* ✅ Dynamic Reviews */}
+          {ratingsData?.ratings?.map((item) => (
             <UserTestimonial
-              key={index}
-              name={testimonial.name}
-              rating={testimonial.rating}
-              date={testimonial.date}
-              review={testimonial.review}
+              key={item.id}
+              name={`${item.user.firstName} ${item.user.lastName}`}
+              rating={item.value}
+              date={new Date(item.createdAt).toDateString()}
+              review={item.review}
             />
           ))}
 
@@ -111,4 +86,3 @@ export default function CourseReviews() {
     </Box>
   );
 }
-
