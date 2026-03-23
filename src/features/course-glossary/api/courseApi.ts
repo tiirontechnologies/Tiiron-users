@@ -26,12 +26,11 @@ export const courseApiSlice = baseApi.injectEndpoints({
     // ⭐ Get course rating
     getCourseRating: builder.query({
       query: ({ courseId }: { courseId: number }) => ({
-        url: `/course/${courseId}/rate`,
+        url: `/course/${courseId}/ratings`, // ✅ correct endpoint
         method: "GET",
       }),
       providesTags: ["Rating"],
     }),
-
     // Create course
     createCourse: builder.mutation({
       query: ({ body }: { body: FormData }) => ({

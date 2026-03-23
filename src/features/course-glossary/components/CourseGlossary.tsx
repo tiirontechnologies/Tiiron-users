@@ -253,7 +253,9 @@ export default function CourseGlossary() {
                   <CourseLessons chapters={chapters} />
                 )}
 
-                {activeTab === 2 && <CourseReviews />}
+                {activeTab === 2 && (
+                  <CourseReviews courseId={numericCourseId} />
+                )}
 
               </Box>
 
