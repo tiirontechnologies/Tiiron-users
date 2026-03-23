@@ -34,7 +34,8 @@ export type QuestionType =
   | "subjective"
   | "blog"
   | "video"
-  | "video_blog";
+  | "video_blog"
+  | "coding";
 
 export interface Chapter {
   id: string;

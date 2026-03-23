@@ -27,7 +27,8 @@
       "@icons/*": ["assets/icons/*"],
       "@utils/*": ["utils/*"],
       "@images": ["assets/images/*"],
-      "@hooks/*": ["hooks/*"]
+      "@hooks/*": ["hooks/*"],
+      "@features/*": ["features/*"]
     }
   },
   "include": [

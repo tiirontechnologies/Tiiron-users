@@ -11,35 +11,54 @@ interface ICourse {
   title: string;
   description: string;
   permaLink: string;
+
   tags?: string[];
   image: string;
+
   duration: number;
   price: number;
-  createdAt: string; // or Date if you're parsing it
-  updatedAt: string; // or Date
+
+  createdAt: string;
+  updatedAt: string;
+
   orgCode: string;
+  createdBy: string;
+
   _count: {
     chapters: number;
   };
-  createdBy: string;
+
   totalChapters: number;
+
   language?: string | string[];
   level?: string;
   objective?: string[];
+
+  // ⭐ Rating fields from backend
+  averageRating?: number;
+  totalRatings?: number;
 }
 
 interface ICourseCardProps {
+  id: number;
+  title: string;
+
   thumbnailSrc?: string;
   tags?: string[];
-  title: string;
+
   chapters?: number;
-  rating?: number;
-  id: number;
-  price?: number;
   instructor?: string;
+
+  price?: number;
+
+  // ⭐ Rating fields
+  rating?: number;
   reviewCount?: number;
+
   progress?: number; // 0-100 percentage
   learnerRating?: number; // Rating given by learner
+
   variant?: "browse" | "my-course"; // Card variant
 }
+
 export type { ICreateCourse, ICourse, ICourseCardProps };

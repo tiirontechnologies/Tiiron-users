@@ -34,6 +34,16 @@ export interface CartResponse {
   };
 }
 
+
+export interface CourseRatingResponse {
+  success: boolean;
+  message: string;
+  data: {
+    averageRating: number;
+    totalRatings: number;
+  };
+}
+
 // Course Browse API - Only for browsing, cart, and enrollment
 export const courseBrowseApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -47,15 +57,15 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    // Search courses (browsing) - uses /course/search endpoint
+    // Search courses
     searchCourses: builder.query({
-      query: ({ 
-        q, 
-        page = 1, 
-        limit = 10 
-      }: { 
-        q?: string; 
-        page?: number; 
+      query: ({
+        q,
+        page = 1,
+        limit = 10,
+      }: {
+        q?: string;
+        page?: number;
         limit?: number;
       }) => ({
         url: "/course/search",
@@ -75,7 +85,15 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Course"],
     }),
 
-    // 1. GET USER CART (Query)
+    
+    getCourseRating: builder.query<CourseRatingResponse, number>({
+      query: (courseId) => ({
+        url: `/course/${courseId}/ratings`,
+        method: "GET",
+      }),
+    }),
+
+    // 1. GET USER CART
     getCart: builder.query<CartResponse, void>({
       query: () => ({
         url: "cart",
@@ -84,7 +102,7 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Cart"],
     }),
 
-    // 2. ADD TO CART (Mutation)
+    // 2. ADD TO CART
     addToCartServer: builder.mutation<void, { courseId: number }>({
       query: ({ courseId }) => ({
         url: "cart/add",
@@ -94,7 +112,7 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
 
-    // 3. REMOVE FROM CART (Mutation)
+    // 3. REMOVE FROM CART
     removeFromCartServer: builder.mutation<void, { cartItemId: number }>({
       query: ({ cartItemId }) => ({
         url: `cart/item/${cartItemId}`,
@@ -103,7 +121,7 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
 
-    // 4. INITIATE CHECKOUT/ENROLLMENT (Mutation)
+    // 4. INITIATE CHECKOUT
     initiateCheckout: builder.mutation<
       CheckoutResponse,
       SingleEnrollmentRequest
@@ -118,7 +136,7 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
   }),
 });
 
-// Export hooks for usage in functional components
+// Export hooks
 export const {
   useGetCourseForFeedQuery,
   useSearchCoursesQuery,
@@ -127,4 +145,5 @@ export const {
   useGetCartQuery,
   useAddToCartServerMutation,
   useRemoveFromCartServerMutation,
+  useGetCourseRatingQuery, 
 } = courseBrowseApiSlice;

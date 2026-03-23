@@ -68,11 +68,11 @@ const navigationItems: NavItem[] = [
   // },
   // Example of a plain clickable nav item (no dropdown)
 
-  {
-    name: "Learning Path",
-    href: "/paths",
-    hasDropdown: false,
-  },
+  // {
+  //   name: "Learning Path",
+  //   href: "/paths",
+  //   hasDropdown: false,
+  // },
   {
     name: "Creator",
     href: "https://creator.tiiron.com",

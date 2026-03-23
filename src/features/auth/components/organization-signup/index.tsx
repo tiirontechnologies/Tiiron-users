@@ -254,7 +254,7 @@ const index = () => {
     <AuthLayout
       imageSrc={LoginPng}
       imageOnLeft={true}
-      isUserSignUp={true}
+      isUserSignUp={false}
       isLogin={true}
       titleText="Create your account"
       submitButtonText={`${!stepChange ? "Continue" : "Create Account"} ->`}

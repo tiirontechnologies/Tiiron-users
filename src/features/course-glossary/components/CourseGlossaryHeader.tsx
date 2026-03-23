@@ -45,7 +45,7 @@ export default function CourseGlossaryHeader({
       });
     }
   };
-
+const level = course?.level || course?.difficulty || course?.courseLevel || "All Levels";
   return (
     <Box
       sx={{
@@ -251,7 +251,8 @@ export default function CourseGlossaryHeader({
             </Box>
 
             <Box component="span" sx={{ color: "#64748B" }}>
-              All levels
+              {/* All levels */}
+              {level}
             </Box>
           </Typography>
 
@@ -313,7 +314,7 @@ export default function CourseGlossaryHeader({
                 fontSize: { xs: "12px", md: "16px" },
                 color: "#64748B"
               }}
-            >
+            >   
               {Array.isArray(course?.language)
                 ? course.language.map((lang) => lang.toUpperCase()).join(", ")
                 : course?.language?.toUpperCase() || "Language not available"}

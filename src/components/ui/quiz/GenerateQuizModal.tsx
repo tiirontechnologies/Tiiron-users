@@ -239,8 +239,8 @@ export const GenerateQuizModal: React.FC<GenerateQuizModalProps> = ({
               sx={{ mb: 3 }}
             >
               <Tab label="Text" value="text" />
-              <Tab label="File" value="file" />
-              <Tab label="Video" value="video" />
+              <Tab label="File (Upcoming)" value="file" disabled />
+              <Tab label="Video (Upcoming)" value="video" disabled />
             </Tabs>
 
             {/* TEXT TAB */}
@@ -273,8 +273,8 @@ export const GenerateQuizModal: React.FC<GenerateQuizModalProps> = ({
               </Box>
             )}
 
-            {/* FILE TAB */}
-            {activeTab === "file" && (
+            {/* FILE TAB (Upcoming) */}
+            {/* {activeTab === "file" && (
               <Box>
                 <Typography
                   variant="body2"
@@ -299,10 +299,10 @@ export const GenerateQuizModal: React.FC<GenerateQuizModalProps> = ({
                   )}
                 />
               </Box>
-            )}
+            )} */}
 
-            {/* VIDEO TAB */}
-            {activeTab === "video" && (
+            {/* VIDEO TAB (Upcoming) */}
+            {/* {activeTab === "video" && (
               <Box>
                 <Typography
                   variant="body2"
@@ -405,7 +405,7 @@ export const GenerateQuizModal: React.FC<GenerateQuizModalProps> = ({
                   />
                 </Box>
               </Box>
-            )}
+            )} */}
 
             {/* FOCUS KEYWORD */}
             <Typography
