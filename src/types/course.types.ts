@@ -37,6 +37,10 @@ interface ICourse {
   // ⭐ Rating fields from backend
   averageRating?: number;
   totalRatings?: number;
+
+  difficulty?: string;
+  courseLevel?: string;
+  rating?: number;
 }
 
 interface ICourseCardProps {

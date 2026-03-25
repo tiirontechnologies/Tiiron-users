@@ -39,7 +39,7 @@ const Description: React.FC<DescriptionProps> = ({ question }) => {
           label={question.questiontypecon?.name || "Medium"}
           sx={{ color: "#ffffff", background: "#363636" }}
         />
-        <Chip
+        {/* <Chip
           icon={<LabelImportantIcon sx={{ color: "#fff !important" }} />}
           label="Topics"
           sx={{ color: "#ffffff", background: "#363636" }}
@@ -53,7 +53,7 @@ const Description: React.FC<DescriptionProps> = ({ question }) => {
           icon={<EmojiObjectsIcon sx={{ color: "#fff !important" }} />}
           label="Hints"
           sx={{ color: "#ffffff", background: "#363636" }}
-        />
+        /> */}
       </Stack>
       {
         question.description && question.description.trim() ? (
@@ -81,7 +81,7 @@ const Description: React.FC<DescriptionProps> = ({ question }) => {
         )
       }
 
-      <CustomAccordion title="Topics" icon={<LabelImportantIcon />}>
+      {/* <CustomAccordion title="Topics" icon={<LabelImportantIcon />}>
         <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
           <Chip label="Array" sx={{ color: "#ffffff", background: "#363636", mb: 0.5 }} />
           <Chip label="String" sx={{ color: "#ffffff", background: "#363636", mb: 0.5 }} />
@@ -112,7 +112,7 @@ const Description: React.FC<DescriptionProps> = ({ question }) => {
         <Typography sx={{ color: "#b0b0b0", fontSize: "0.875rem" }}>
           Think about using extra space to store intermediate results. A hash map or array could help you avoid redundant computations.
         </Typography>
-      </CustomAccordion>
+      </CustomAccordion> */}
 
     </>
   )
