@@ -31,21 +31,11 @@ const Login = () => {
     try {
       const res = await authLogin({ ...data }).unwrap();
       const { roleId } = res?.user;
-      if (res?.success === true) {
-        // Token is now stored in cookie by the backend, no need to store in localStorage
-        // Only store roleId if needed for client-side checks
-        if (roleId) {
-          localStorage.setItem("roleId", roleId);
-        }
-        if (roleId === "admin") {
-          navigate("/browse-courses");
-        } else {
-          navigate("/");
-        }
-        setSnackbarSeverity("success");
-        setSnackbarMessage(res?.message || "Login successful");
-        setSnackbarOpen(true);
-      }
+      console.log(res);
+      navigate("/");
+      setSnackbarSeverity("success");
+      setSnackbarMessage(res?.message || "Login successful");
+      setSnackbarOpen(true);
     } catch (err: any) {
       const errorMessage =
         err?.data?.errors?.map((e: any) => e.message).join(", ") ||
