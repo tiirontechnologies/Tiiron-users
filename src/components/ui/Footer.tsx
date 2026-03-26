@@ -33,8 +33,8 @@ const Footer: React.FC = () => {
     {
       title: "Product",
       links: [
-        { name: "Features", href: "/features" },
-        { name: "Pricing", href: "/pricing" },
+        { name: "Features", href: "https://creator.tiiron.com/features" },
+        { name: "Pricing", href: "https://creator.tiiron.com/pricing" },
         { name: "Analytics", href: "#" },
         { name: "Integrations", href: "#" },
         { name: "API", href: "#", external: true },
@@ -53,9 +53,9 @@ const Footer: React.FC = () => {
     {
       title: "Company",
       links: [
-        { name: "About Us", href: "/about" },
-        { name: "Contact", href: "/contact" },
-        { name: "Careers", href: "mailto:hr@inacademic.com" },
+        { name: "About Us", href: "https://creator.tiiron.com/about" },
+        { name: "Contact", href: "https://creator.tiiron.com/contact" },
+        { name: "Careers", href: "mailto:hr@tiiron.com" },
         { name: "Partners", href: "#" },
         { name: "Press Kit", href: "#" },
       ],

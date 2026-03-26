@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { useNavigate, NavigateFunction } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
+import { useLogoutMutation } from "../../../features/auth/api/authApi";
 
 import CloseIcon from "@mui/icons-material/Close";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -66,6 +67,7 @@ const ProfileCenterPopup = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [logout] = useLogoutMutation();
 
   const handleOpen = () => {
     setOpen(true);
@@ -78,18 +80,18 @@ const ProfileCenterPopup = () => {
 
   const handleSignOut = async () => {
     try {
+      // Call the logout API to clear httpOnly cookies on the backend
+      await logout().unwrap();
       // Clear localStorage (roleId, etc.)
       localStorage.clear();
-      // Clear cookies by setting them to expire (cookies are managed by backend)
-      // The backend should handle cookie clearing on logout endpoint
-      // For now, we'll redirect and let the backend handle it
+
       // Redirect to login
-      window.location.href = "/login";
+      window.location.reload();
     } catch (error) {
       console.error("Error signing out:", error);
-      // Still clear localStorage and redirect
+      // Still clear localStorage and redirect even if API fails
       localStorage.clear();
-      window.location.href = "/login";
+      window.location.reload();
     }
   };
 
