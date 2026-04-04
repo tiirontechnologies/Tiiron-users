@@ -109,7 +109,7 @@ export interface ApiPractice {
 }
 
 export interface ApiCodeTestCase {
-  input: Record<string, any>;
+  input: string; // stdin format
   description: string;
   expectedOutput: string;
 }

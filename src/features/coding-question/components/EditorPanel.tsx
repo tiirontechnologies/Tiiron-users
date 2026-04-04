@@ -15,7 +15,7 @@ import type { ApiCodeTestCase } from "../types";
 function mapApiTestCasesToCustom(apiTestCases: ApiCodeTestCase[]): any[] {
   return apiTestCases.map((tc, index) => ({
     id: `tc-${index}-${tc.description ?? "test"}`,
-    input: tc.input,
+    input: tc.input, // Now a string (stdin)
     expectedOutput: tc.expectedOutput ?? ""
   }));
 }
@@ -66,8 +66,16 @@ export const EditorPanel: React.FC<EditorPanelProps> = () => {
   const codeEditorContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const apiTestCases = question?.code?.testCases ?? [];
-    setCustomTestCases(mapApiTestCasesToCustom(apiTestCases));
+    let apiTestCases = question?.code?.testCases ?? [];
+    if (typeof apiTestCases === "string") {
+      try {
+        apiTestCases = JSON.parse(apiTestCases);
+      } catch (e) {
+        console.error("Failed to parse testCases:", e);
+        apiTestCases = [];
+      }
+    }
+    setCustomTestCases(mapApiTestCasesToCustom(apiTestCases as ApiCodeTestCase[]));
   }, [question?.id]);
 
   const normalizedResults = useMemo(

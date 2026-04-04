@@ -213,12 +213,13 @@ const QuestionsPanel = ({
    STYLED TAB
 ===================================================== */
 
-const StyledTab = styled(Tab)<{ selectedtab: boolean }>(
-  ({ selectedtab }) => ({
-    textTransform: "none",
-    fontWeight: selectedtab ? 600 : 500,
-  })
-);
+const StyledTab = styled(Tab)(() => ({
+  textTransform: "none",
+  fontWeight: 500,
+  "&.Mui-selected": {
+    fontWeight: 600,
+  },
+}));
 
 /* =====================================================
    MAIN COMPONENT
@@ -363,7 +364,6 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
           <StyledTab
             key={index}
             label={tab.label}
-            selectedtab={activeTab === index}
           />
         ))}
       </Tabs>

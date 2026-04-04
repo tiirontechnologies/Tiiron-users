@@ -206,7 +206,7 @@ const CodeTestSubmission: React.FC<CodeTestSubmissionProps> = ({
                           variant="subtitle2"
                           sx={{ fontWeight: 600, mb: 1 }}
                         >
-                          Input:
+                          Stdin:
                         </Typography>
                         <Paper
                           sx={{

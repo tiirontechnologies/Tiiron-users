@@ -131,8 +131,6 @@ const TestCaseEditor = memo(
       );
     }
 
-    const inputObject = testCase.input?.input ?? {};
-
     return (
       <Box sx={styles.editor}>
         <Box sx={styles.editorHeader}>
@@ -146,38 +144,31 @@ const TestCaseEditor = memo(
         </Box>
 
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-          {Object.entries(inputObject).map(([key, val]) => {
-            const displayValue =
-              typeof val === "object"
-                ? JSON.stringify(val)
-                : String(val ?? "");
-
-            return (
-              <CustomTextField
-                key={key}
-                label={key}
-                value={displayValue}
-                sx={{
-                  "& .MuiInputLabel-root": { color: "white !important" },
-                  "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
-                }}
-                inputSx={{
-                  backgroundColor: "#0f0f12 !important",
-                  "& .MuiInputBase-input, & input": {
-                    color: "white !important",
-                    "-webkit-text-fill-color": "white !important",
-                  },
-                }}
-                onChange={(e) =>
-                  onChange(
-                    testCase.id,
-                    e.target.value,
-                    key
-                  )
-                }
-              />
-            );
-          })}
+          <CustomTextField
+            label="Input (stdin)"
+            value={testCase.input ?? ""}
+            multiline
+            rows={4}
+            sx={{
+              "& .MuiInputLabel-root": { color: "white !important" },
+              "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
+            }}
+            inputSx={{
+              backgroundColor: "#0f0f12 !important",
+              fontFamily: "monospace",
+              "& .MuiInputBase-input, & input": {
+                color: "white !important",
+                "-webkit-text-fill-color": "white !important",
+              },
+            }}
+            onChange={(e) =>
+              onChange(
+                testCase.id,
+                e.target.value,
+                "stdin"
+              )
+            }
+          />
         </Box>
       </Box>
     );
@@ -268,38 +259,12 @@ const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }
       {/* Body */}
       <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
         {/* Input(s) */}
-        {inputEntries ? (
-          inputEntries.map(([key, val]) => (
-            <CustomTextField
-              key={key}
-              label={key}
-              value={typeof val === "object" ? JSON.stringify(val) : String(val ?? "")}
-              sx={{
-                "& .MuiInputLabel-root": { color: "white !important" },
-                "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
-              }}
-              inputSx={{
-                backgroundColor: "#0f0f12 !important",
-                fontFamily: "monospace",
-                "& .MuiInputBase-input, & input": {
-                  color: "white !important",
-                  "-webkit-text-fill-color": "white !important",
-                },
-                "&.Mui-disabled": {
-                  backgroundColor: "#0f0f12 !important",
-                },
-                "&.Mui-disabled .MuiInputBase-input, &.Mui-disabled input": {
-                  color: "white !important",
-                  "-webkit-text-fill-color": "white !important",
-                },
-              }}
-              disabled
-            />
-          ))
-        ) : result.input ? (
+        {result.input !== undefined && (
           <CustomTextField
-            label="Input"
+            label="Input (stdin)"
             value={typeof result.input === "object" ? JSON.stringify(result.input) : String(result.input)}
+            multiline
+            rows={2}
             sx={{
               "& .MuiInputLabel-root": { color: "white !important" },
               "& .MuiInputLabel-root.Mui-focused": { color: "white !important" },
@@ -321,7 +286,7 @@ const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }
             }}
             disabled
           />
-        ) : null}
+        )}
 
         {/* Expected Output */}
         {result.expectedOutput !== undefined && (
@@ -592,22 +557,9 @@ export const CustomTestCasesPanel: React.FC<Props> = ({
   const addTestCase = () => {
     const id = generateId();
 
-    const template =
-      testCases.length > 0
-        ? testCases[0].input?.input ?? {}
-        : {};
-
-    const newInput = Object.keys(template).reduce(
-      (acc, key) => {
-        acc[key] = "";
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-
     const newTestCase: CustomTestCase = {
       id,
-      input: { input: newInput },
+      input: "", // Initialize as empty stdin
     };
 
     onTestCasesChange([...testCases, newTestCase]);
@@ -623,21 +575,14 @@ export const CustomTestCasesPanel: React.FC<Props> = ({
 
   const updateTestCase = (
     id: string,
-    value: string,
-    key: string
+    value: string
   ) => {
     const updated = testCases.map(tc => {
       if (tc.id !== id) return tc;
 
       return {
         ...tc,
-        input: {
-          ...(tc.input ?? {}),
-          input: {
-            ...(tc.input?.input ?? {}),
-            [key]: value,
-          },
-        },
+        input: value,
       };
     });
 

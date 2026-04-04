@@ -1,8 +1,6 @@
 export interface CustomTestCase {
   id: string;
-  input: {
-    input: Record<string, any>;
-  };
+  input: string; // stdin format
   expectedOutput?: string;
 }
 
@@ -116,7 +114,7 @@ export interface ApiPractice {
 }
 
 export interface ApiCodeTestCase {
-  input: Record<string, any>;
+  input: string; // stdin format
   description: string;
   expectedOutput: string;
 }
@@ -138,7 +136,7 @@ export type ApiCodeTemplateUnion = ApiCodeTemplateItem[] | ApiCodeTemplate;
 export interface ApiCode {
   id: number;
   questionId: number;
-  testCases: ApiCodeTestCase[];
+  testCases: ApiCodeTestCase[] | string;
   codeTemplate: ApiCodeTemplateUnion;
   alllowedLanguage: number[];
 }
