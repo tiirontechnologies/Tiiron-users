@@ -88,16 +88,16 @@ const CodeTestSubmission: React.FC<CodeTestSubmissionProps> = ({
             backgroundColor: failed === 0 ? '#e8f5e9' : '#fff3e0',
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Test Results Summary
             </Typography>
-            <Chip
+             <Chip
               label={`${passRate}% Passed`}
               color={failed === 0 ? 'success' : 'warning'}
               sx={{ fontWeight: 600 }}
-            />
-          </Box>
+            /> 
+      </Box> */}
 
           <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             <Box>
@@ -131,212 +131,218 @@ const CodeTestSubmission: React.FC<CodeTestSubmissionProps> = ({
               </Typography>
             </Box>
           </Box>
-        </Paper>
+        </Paper >
 
         {/* Test Cases Details */}
-        {testCases && testCases.length > 0 && (
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-              Test Case Details
-            </Typography>
+        {
+          testCases && testCases.length > 0 && (
+            <Box>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Test Case Details
+              </Typography>
 
-            {testCases.map((testCase: any, index: number) => (
-              <Accordion
-                key={testCase.testCaseId || index}
-                sx={{
-                  mb: 1,
-                  '&:before': {
-                    display: 'none',
-                  },
-                  border: `1px solid ${testCase.passed ? '#4caf50' : '#f44336'
-                    }`,
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+              {testCases.map((testCase: any, index: number) => (
+                <Accordion
+                  key={testCase.testCaseId || index}
                   sx={{
-                    backgroundColor: testCase.passed
-                      ? '#e8f5e9'
-                      : '#ffebee',
-                    '&:hover': {
-                      backgroundColor: testCase.passed
-                        ? '#c8e6c9'
-                        : '#ffcdd2',
+                    mb: 1,
+                    '&:before': {
+                      display: 'none',
                     },
+                    border: `1px solid ${testCase.passed ? '#4caf50' : '#f44336'
+                      }`,
                   }}
                 >
-                  <Box
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      width: '100%',
+                      backgroundColor: testCase.passed
+                        ? '#e8f5e9'
+                        : '#ffebee',
+                      '&:hover': {
+                        backgroundColor: testCase.passed
+                          ? '#c8e6c9'
+                          : '#ffcdd2',
+                      },
                     }}
                   >
-                    {testCase.passed ? (
-                      <CheckCircleIcon sx={{ color: 'success.main' }} />
-                    ) : (
-                      <CancelIcon sx={{ color: 'error.main' }} />
-                    )}
-                    <Typography
-                      variant="subtitle1"
-                      sx={{ fontWeight: 600, flex: 1 }}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        width: '100%',
+                      }}
                     >
-                      Test Case {index + 1}
-                    </Typography>
-                    <Chip
-                      label={testCase.passed ? 'PASSED' : 'FAILED'}
-                      color={testCase.passed ? 'success' : 'error'}
-                      size="small"
-                      sx={{ fontWeight: 600 }}
-                    />
-                    {testCase.executionTime && (
-                      <Typography variant="caption" color="text.secondary">
-                        {testCase.executionTime}ms
+                      {testCase.passed ? (
+                        <CheckCircleIcon sx={{ color: 'success.main' }} />
+                      ) : (
+                        <CancelIcon sx={{ color: 'error.main' }} />
+                      )}
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: 600, flex: 1 }}
+                      >
+                        Test Case {index + 1}
                       </Typography>
-                    )}
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {/* Input */}
-                    {testCase.input !== undefined && (
-                      <Box>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontWeight: 600, mb: 1 }}
-                        >
-                          Stdin:
+                      <Chip
+                        label={testCase.passed ? 'PASSED' : 'FAILED'}
+                        color={testCase.passed ? 'success' : 'error'}
+                        size="small"
+                        sx={{ fontWeight: 600 }}
+                      />
+                      {testCase.executionTime && (
+                        <Typography variant="caption" color="text.secondary">
+                          {testCase.executionTime}ms
                         </Typography>
-                        <Paper
-                          sx={{
-                            p: 2,
-                            backgroundColor: '#f5f5f5',
-                            fontFamily: 'monospace',
-                            fontSize: '0.875rem',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                          }}
-                        >
-                          {typeof testCase.input === 'object'
-                            ? JSON.stringify(testCase.input, null, 2)
-                            : String(testCase.input)}
-                        </Paper>
-                      </Box>
-                    )}
+                      )}
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      {/* Input */}
+                      {testCase.input !== undefined && (
+                        <Box>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontWeight: 600, mb: 1 }}
+                          >
+                            Stdin:
+                          </Typography>
+                          <Paper
+                            sx={{
+                              p: 2,
+                              backgroundColor: '#f5f5f5',
+                              fontFamily: 'monospace',
+                              fontSize: '0.875rem',
+                              whiteSpace: 'pre-wrap',
+                              wordBreak: 'break-word',
+                            }}
+                          >
+                            {typeof testCase.input === 'object'
+                              ? JSON.stringify(testCase.input, null, 2)
+                              : String(testCase.input)}
+                          </Paper>
+                        </Box>
+                      )}
 
-                    {/* Expected Output */}
-                    {testCase.expectedOutput !== undefined && (
-                      <Box>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontWeight: 600, mb: 1 }}
-                        >
-                          Expected Output:
-                        </Typography>
-                        <Paper
-                          sx={{
-                            p: 2,
-                            backgroundColor: '#e3f2fd',
-                            fontFamily: 'monospace',
-                            fontSize: '0.875rem',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                          }}
-                        >
-                          {String(testCase.expectedOutput)}
-                        </Paper>
-                      </Box>
-                    )}
+                      {/* Expected Output */}
+                      {testCase.expectedOutput !== undefined && (
+                        <Box>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontWeight: 600, mb: 1 }}
+                          >
+                            Expected Output:
+                          </Typography>
+                          <Paper
+                            sx={{
+                              p: 2,
+                              backgroundColor: '#e3f2fd',
+                              fontFamily: 'monospace',
+                              fontSize: '0.875rem',
+                              whiteSpace: 'pre-wrap',
+                              wordBreak: 'break-word',
+                            }}
+                          >
+                            {String(testCase.expectedOutput)}
+                          </Paper>
+                        </Box>
+                      )}
 
-                    {/* Actual Output */}
-                    {testCase.actualOutput !== undefined && (
-                      <Box>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontWeight: 600, mb: 1 }}
-                        >
-                          Actual Output:
-                        </Typography>
-                        <Paper
-                          sx={{
-                            p: 2,
-                            backgroundColor: testCase.passed
-                              ? '#e8f5e9'
-                              : '#ffebee',
-                            fontFamily: 'monospace',
-                            fontSize: '0.875rem',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                          }}
-                        >
-                          {String(testCase.actualOutput)}
-                        </Paper>
-                      </Box>
-                    )}
+                      {/* Actual Output */}
+                      {testCase.actualOutput !== undefined && (
+                        <Box>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontWeight: 600, mb: 1 }}
+                          >
+                            Actual Output:
+                          </Typography>
+                          <Paper
+                            sx={{
+                              p: 2,
+                              backgroundColor: testCase.passed
+                                ? '#e8f5e9'
+                                : '#ffebee',
+                              fontFamily: 'monospace',
+                              fontSize: '0.875rem',
+                              whiteSpace: 'pre-wrap',
+                              wordBreak: 'break-word',
+                            }}
+                          >
+                            {String(testCase.actualOutput)}
+                          </Paper>
+                        </Box>
+                      )}
 
-                    {/* Error Message */}
-                    {testCase.error && (
-                      <Box>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontWeight: 600, mb: 1, color: 'error.main' }}
-                        >
-                          Error:
-                        </Typography>
-                        <Alert severity="error" sx={{ fontFamily: 'monospace' }}>
-                          {testCase.error}
-                        </Alert>
-                      </Box>
-                    )}
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Box>
-        )}
+                      {/* Error Message */}
+                      {testCase.error && (
+                        <Box>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontWeight: 600, mb: 1, color: 'error.main' }}
+                          >
+                            Error:
+                          </Typography>
+                          <Alert severity="error" sx={{ fontFamily: 'monospace' }}>
+                            {testCase.error}
+                          </Alert>
+                        </Box>
+                      )}
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </Box>
+          )
+        }
 
         {/* Failed Test Cases Summary */}
-        {failed > 0 && (
-          <Paper
-            elevation={1}
-            sx={{
-              p: 2,
-              mt: 3,
-              backgroundColor: '#fff3e0',
-              borderLeft: '4px solid #ff9800',
-            }}
-          >
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-              Failed Test Cases Summary
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {failed} out of {total} test cases failed. Please review the
-              details above and fix your code.
-            </Typography>
-          </Paper>
-        )}
+        {
+          failed > 0 && (
+            <Paper
+              elevation={1}
+              sx={{
+                p: 2,
+                mt: 3,
+                backgroundColor: '#fff3e0',
+                borderLeft: '4px solid #ff9800',
+              }}
+            >
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                Failed Test Cases Summary
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {failed} out of {total} test cases failed. Please review the
+                details above and fix your code.
+              </Typography>
+            </Paper>
+          )
+        }
 
         {/* All Passed Message */}
-        {failed === 0 && total > 0 && (
-          <Paper
-            elevation={1}
-            sx={{
-              p: 2,
-              mt: 3,
-              backgroundColor: '#e8f5e9',
-              borderLeft: '4px solid #4caf50',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CheckCircleIcon sx={{ color: 'success.main' }} />
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                All test cases passed! 🎉
-              </Typography>
-            </Box>
-          </Paper>
-        )}
-      </Box>
+        {
+          failed === 0 && total > 0 && (
+            <Paper
+              elevation={1}
+              sx={{
+                p: 2,
+                mt: 3,
+                backgroundColor: '#e8f5e9',
+                borderLeft: '4px solid #4caf50',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CheckCircleIcon sx={{ color: 'success.main' }} />
+                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  All test cases passed! 🎉
+                </Typography>
+              </Box>
+            </Paper>
+          )
+        }
+      </Box >
     );
   };
 
