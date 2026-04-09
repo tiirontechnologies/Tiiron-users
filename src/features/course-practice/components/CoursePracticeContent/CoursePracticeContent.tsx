@@ -6,6 +6,7 @@ import {
   Tab,
   Card,
   CardContent,
+  Dialog,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
@@ -30,6 +31,8 @@ import {
   PracticeSessionData
 } from "../../api/practiceApi";
 import Footer from "../../components/Footer";
+import { CodeEditorContext } from "../../../coding-question/context/CodeEditorContext";
+import CodingQuestionPage from "../../../coding-question/CodingQuestion";
 
 /* =====================================================
    TYPES
@@ -49,7 +52,7 @@ interface UserAnswers {
    QUESTION RENDERER (Single Responsibility)
 ===================================================== */
 
-const QuestionComponent = ({
+export const QuestionComponent = ({
   apiQuestion,
   transformed,
   practiceMode,
@@ -113,25 +116,38 @@ const QuestionComponent = ({
    TUTORIAL VIDEO SECTION
 ===================================================== */
 
-const TutorialVideosSection = ({ videos }: { videos: ApiQuestion[] }) => {
-  if (!videos.length) return null;
+import InteractiveVideoPlayer from "../InteractiveVideoPlayer/InteractiveVideoPlayer";
+
+const TutorialVideosSection = ({ 
+  videoContentType, 
+  getUserAnswer, 
+  handleAnswerChange,
+  courseId,
+  navigate
+}: any) => {
+  if (!videoContentType?.video) return null;
 
   return (
     <Box sx={{ mb: 3 }}>
-      {videos.map((video, index) => {
-        const transformed = transformApiQuestion(video);
-
-        return (
-          <Card key={index} sx={{ mb: 2 }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                {video.title}
-              </Typography>
-              <VideoTemplate question={transformed} practiceMode />
-            </CardContent>
-          </Card>
-        );
-      })}
+      <InteractiveVideoPlayer
+        videoContentType={videoContentType}
+        getUserAnswer={getUserAnswer}
+        handleAnswerChange={handleAnswerChange}
+        renderQuestion={(apiQ: any, transformed: any, userAnswer: any, onAnswerChange: any) => (
+            <QuestionComponent
+                apiQuestion={apiQ}
+                transformed={transformed}
+                practiceMode
+                userAnswer={userAnswer}
+                onAnswerChange={onAnswerChange}
+                onSolve={() =>
+                  navigate(`/code-editor/${courseId}/${apiQ.id}`, {
+                    state: { question: apiQ },
+                  })
+                }
+            />
+        )}
+      />
     </Box>
   );
 };
@@ -232,6 +248,7 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [userAnswers, setUserAnswers] = useState<UserAnswers>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [overlayCodingQuestion, setOverlayCodingQuestion] = useState<ApiQuestion | null>(null);
 
   const [submitPracticeBulk] = useSubmitPracticeBulkMutation();
 
@@ -270,37 +287,31 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
      TUTORIAL VIDEOS
   ======================== */
 
-  const tutorialVideos = useMemo(() => {
-    const videoContentType = data?.contentTypes?.find(
-      (ct) => ct.name === "Video"
-    );
-
-    return (
-      videoContentType?.questions?.filter(
-        (q) => q.questiontypeId === 6
-      ) || []
-    );
+  // contentTypeId === 1 → Video → always shown at top, never in tabs
+  const videoContentType = useMemo(() => {
+    return data?.contentTypes?.find((ct) => ct.id === 1);
   }, [data]);
 
   /* ========================
-     TABS DATA
+     TABS DATA  (exclude Video content type, id === 1)
   ======================== */
 
   const tabsData = useMemo(() => {
     if (!data?.contentTypes) return [];
 
-    return data.contentTypes.map((ct) => {
-      const questions = ct.questions ?? [];
-
-      return {
-        label: `${ct.name} (${questions.length})`,
-        contentType: ct,
-        totalMarks: questions.reduce(
-          (sum, q) => sum + (q.score ?? 0),
-          0
-        ),
-      };
-    });
+    return data.contentTypes
+      .filter((ct) => ct.id !== 1) // exclude Video — shown at top
+      .map((ct) => {
+        const questions = ct.questions ?? [];
+        return {
+          label: `${ct.name} (${questions.length})`,
+          contentType: ct,
+          totalMarks: questions.reduce(
+            (sum, q) => sum + (q.score ?? 0),
+            0
+          ),
+        };
+      });
   }, [data]);
 
   const activeContentType = tabsData[activeTab]?.contentType;
@@ -354,7 +365,19 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <TutorialVideosSection videos={tutorialVideos} />
+      <TutorialVideosSection 
+        videoContentType={videoContentType} 
+        getUserAnswer={getUserAnswer}
+        handleAnswerChange={handleAnswerChange}
+        courseId={courseId}
+        navigate={(path: string, stateObj: any) => {
+           if (stateObj?.state?.question) {
+              setOverlayCodingQuestion(stateObj.state.question);
+           } else {
+              navigate(path, stateObj);
+           }
+        }}
+      />
 
       <Tabs
         value={activeTab}
@@ -374,7 +397,13 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
             questions={tab.contentType.questions}
             contentTypeId={tab.contentType.id}
             courseId={courseId}
-            navigate={navigate}
+            navigate={(path: string, stateObj: any) => {
+               if (stateObj?.state?.question) {
+                  setOverlayCodingQuestion(stateObj.state.question);
+               } else {
+                  navigate(path, stateObj);
+               }
+            }}
             getUserAnswer={getUserAnswer}
             handleAnswerChange={handleAnswerChange}
           />
@@ -389,6 +418,20 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
         isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
       />
+
+      {/* Full-screen Overlay for Coding Questions */}
+      <Dialog
+         fullScreen
+         open={!!overlayCodingQuestion}
+         onClose={() => setOverlayCodingQuestion(null)}
+         sx={{ zIndex: 9999 }}
+      >
+         {overlayCodingQuestion && (
+            <CodeEditorContext.Provider value={{ questionOverride: overlayCodingQuestion, onClose: () => setOverlayCodingQuestion(null) }}>
+               <CodingQuestionPage />
+            </CodeEditorContext.Provider>
+         )}
+      </Dialog>
     </Box>
   );
 };

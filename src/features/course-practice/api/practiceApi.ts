@@ -54,6 +54,28 @@ export const practiceApiSlice = baseApi.injectEndpoints({
       invalidatesTags: ["PracticeSession", "Unit"], // Invalidate Unit to refetch content with updated practice data
     }),
 
+    submitPracticeSingle: builder.mutation<
+      { 
+         success: boolean;
+         score: number;
+         isCorrect: boolean;
+         correctAnswer?: string | number | number[]; 
+         message?: string;
+      },
+      {
+        questionId: number;
+        selectedOptionId?: number | number[];
+        userAnswer?: string;
+        timeSpent?: number;
+      }
+    >({
+      query: (data) => ({
+        url: "practice/submit",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
     // Save practice session data
     savePracticeSession: builder.mutation<
       { success: boolean; sessionId: string },
@@ -246,6 +268,7 @@ export const practiceApiSlice = baseApi.injectEndpoints({
 // Export hooks for use in components
 export const {
   useSubmitPracticeBulkMutation, // ✨ NEW
+  useSubmitPracticeSingleMutation, // ✨ NEW
   useSavePracticeSessionMutation,
   useSavePracticeProgressMutation,
   useGetPracticeHistoryQuery,

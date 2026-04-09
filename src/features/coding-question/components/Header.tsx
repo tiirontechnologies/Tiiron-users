@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Typography, Button, Divider, Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -21,11 +21,13 @@ const getDifficultyColor = (difficulty?: string) => {
 };
 
 import { useQuestionData } from "../hooks/useQuestionData";
+import { CodeEditorContext } from "../context/CodeEditorContext";
 
 interface HeaderProps { }
 
 export const Header: React.FC<HeaderProps> = () => {
   const { question, isLoadingQuestion: isLoading } = useQuestionData();
+  const { onClose } = useContext(CodeEditorContext);
   const navigate = useNavigate();
 
   return (
@@ -43,7 +45,13 @@ export const Header: React.FC<HeaderProps> = () => {
     >
       <Button
         startIcon={<ArrowBackIcon />}
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          if (onClose) {
+            onClose();
+          } else {
+            navigate(-1);
+          }
+        }}
         sx={{
           color: "#a1a1aa",
           textTransform: "none",
