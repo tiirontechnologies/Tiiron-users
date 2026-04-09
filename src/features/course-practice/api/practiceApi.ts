@@ -51,7 +51,7 @@ export const practiceApiSlice = baseApi.injectEndpoints({
         method: "POST",
         body: practiceData,
       }),
-      invalidatesTags: ["PracticeSession", "Unit"], // Invalidate Unit to refetch content with updated practice data
+      invalidatesTags: ["PracticeSession", "Unit", "Progress"], // Invalidate Unit to refetch content with updated practice data
     }),
 
     submitPracticeSingle: builder.mutation<
@@ -74,6 +74,7 @@ export const practiceApiSlice = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["PracticeSession", "Unit", "Progress"],
     }),
 
     // Save practice session data
@@ -260,7 +261,7 @@ export const practiceApiSlice = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["Question"],
+      invalidatesTags: ["Question", "Progress", "PracticeSession"],
     }),
   }),
 });
