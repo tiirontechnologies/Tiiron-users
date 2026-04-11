@@ -4,7 +4,7 @@ if (!BASE_URL) {
   throw new Error("VITE_API_BASE_URL is missing")
 }
 
-const API_PREFIX = import.meta.env.VITE_MODE == "Dev" ? "/v1" : "/api/v1";
+const API_PREFIX = import.meta.env.VITE_MODE == "Dev" ? "/v1" : "/v1";
 
 
 export const ENV = {
