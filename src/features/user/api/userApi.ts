@@ -39,7 +39,7 @@ export const userApiSlice = baseApi.injectEndpoints({
     // Get user profile
     getProfile: builder.query<{ success: boolean; user: UserProfile }, void>({
       query: () => ({
-        url: '/user/profile',
+        url: 'profile/user',
         method: 'GET',
       }),
       providesTags: ['Auth'],
@@ -48,7 +48,7 @@ export const userApiSlice = baseApi.injectEndpoints({
     // Update user profile
     updateProfile: builder.mutation<{ success: boolean; message: string; user: UserProfile }, UpdateProfileRequest>({
       query: (body) => ({
-        url: '/user/profile',
+        url: 'profile/update/profile',
         method: 'PUT',
         body,
       }),

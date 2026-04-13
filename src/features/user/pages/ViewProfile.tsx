@@ -93,25 +93,26 @@ const ViewProfile: React.FC = () => {
       setHeadlineCount(0);
     }
   }, [headlineValue]);
+useEffect(() => {
+  if (profileData?.data) {
+    console.log(profileData);
+    const user = profileData.data;
 
-  useEffect(() => {
-    if (profileData?.user) {
-      const user = profileData.user;
-      reset({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        headline: user.headline || "",
-        biography: user.biography || "",
-        website: user.website || "",
-        facebook: user.facebook || "",
-        instagram: user.instagram || "",
-        linkedin: user.linkedin || "",
-        twitter: user.twitter || "",
-        youtube: user.youtube || "",
-        language: user.language || "en-US",
-      });
-    }
-  }, [profileData, reset]);
+    reset({
+      firstName: user.firstName ?? "",
+      lastName: user.lastName ?? "",
+      headline: user.headline ?? "",
+      biography: user.biography ?? "",
+      website: user.website ?? "",
+      facebook: user.facebook ?? "",
+      instagram: user.instagram ?? "",
+      linkedin: user.linkedin ?? "",
+      twitter: user.twitter ?? "",
+      youtube: user.youtube ?? "",
+      language: user.language ?? "en-US",
+    });
+  }
+}, [profileData, reset]);
 
   const onSubmit = async (data: UpdateProfileRequest) => {
     try {
@@ -675,4 +676,3 @@ const ViewProfile: React.FC = () => {
 };
 
 export default ViewProfile;
-
