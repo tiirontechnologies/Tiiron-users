@@ -7,7 +7,7 @@ import { useTheme } from "@mui/material/styles";
 import ProfilePopup from "./profilePopup";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationPanel from "./NotificationPanel";
 import { useState } from "react";
 import { CartModal } from "../cart/cartModal";
 import { useGetCartQuery } from "../../../features/course-browse/api/courseApi";
@@ -99,24 +99,7 @@ const Header = ({
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <IconButton
-          sx={{
-            color: "#000000",
-            padding: "8px",
-            flexShrink: 0,
-            transition: "all 0.2s ease",
-            "&:hover": {
-              backgroundColor: "#f3f4f6",
-              transform: "scale(1.1)",
-              "& svg": {
-                color: "#fbbf24",
-              },
-            },
-          }}
-          aria-label="Notifications"
-        >
-          <NotificationsIcon />
-        </IconButton>
+        {/* <NotificationPanel /> */}
 
         <ProfilePopup></ProfilePopup>
       </Box>

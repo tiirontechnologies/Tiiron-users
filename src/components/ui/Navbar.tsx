@@ -24,6 +24,7 @@ import { CartModal } from "./cart/cartModal";
 import { GenerateQuizModal } from "./quiz/GenerateQuizModal";
 import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
 import { useAuth } from "../../hooks/useAuth";
+import NotificationPanel from "./header/NotificationPanel";
 
 type DropdownItem = {
   name: string;
@@ -506,7 +507,7 @@ const Navbar: React.FC = () => {
                         }
                       }}
                     >
-                      <NotificationsIcon />
+                      <NotificationPanel />
                     </IconButton>
                   </Box>
 
