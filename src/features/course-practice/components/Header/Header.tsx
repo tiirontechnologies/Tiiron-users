@@ -3,6 +3,8 @@ import { Box, Typography, Chip, Avatar } from '@mui/material';
 //import { School, Star } from '@mui/icons-material';
 import { School } from '@mui/icons-material';
 import { COLORS, GRADIENTS, SHADOWS } from '../../constants';
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, Rating } from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
 
 interface HeaderProps {
   courseName?: string;
@@ -17,6 +19,9 @@ const Header: React.FC<HeaderProps> = ({
   // score = "25/30",
   // progress = "83% Complete"
 }) => {
+  
+    const [openRating, setOpenRating] = React.useState(false);
+  const [value, setValue] = React.useState<number | null>(0);
   return (
     <Box
       sx={{
@@ -86,6 +91,12 @@ const Header: React.FC<HeaderProps> = ({
           </Box>
         </Box>
       </Box>
+      {/* right side rating icon  */}
+      <Box>
+  <IconButton onClick={() => setOpenRating(true)}>
+    <StarIcon sx={{ color: "#F59E0B" }} />
+  </IconButton>
+</Box>
     </Box>
   );
 };
