@@ -13,7 +13,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import { useGetProfileQuery, useUpdateProfileMutation, UpdateProfileRequest, useUploadProfileImageMutation } from "../api/userApi";
+import { useGetProfileQuery, useUpdateProfileMutation, UpdateProfileRequest, useUploadProfileImageMutation ,useRemoveProfileImageMutation} from "../api/userApi";
 import RichTextEditor from "@components/ui/RichTextEditor";
 import CustomTextField from "@components/ui/textfields/CustomTextField";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
@@ -115,10 +115,25 @@ const ViewProfile: React.FC = () => {
 };
   // upload api call 
   const [uploadImage] = useUploadProfileImageMutation();
+  const [removeImage] = useRemoveProfileImageMutation();
 
-const handleRemoveImage = () => {
-  setProfileImage(DEFAULT_IMAGE); 
-  setImageFile(null);
+const handleRemoveImage = async () => {
+  try {
+    await removeImage().unwrap(); 
+
+    // UI update
+    setProfileImage(DEFAULT_IMAGE);
+    setImageFile(null);
+
+    setSnackbarMessage("Image removed successfully!");
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+
+  } catch (err) {
+    setSnackbarMessage("Failed to remove image");
+    setSnackbarSeverity("error");
+    setSnackbarOpen(true);
+  }
 };
 
   useEffect(() => {
