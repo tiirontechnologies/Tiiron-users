@@ -74,11 +74,10 @@ export default function CourseGlossary() {
     { skip: !courseId || isNaN(numericCourseId) }
   );
 
-  // ⭐ Rating API
-  const { data: ratingData } = useGetCourseRatingQuery(
-    { courseId: numericCourseId },
-    { skip: !courseId || isNaN(numericCourseId) }
-  );
+  //  Rating API
+const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
+  skip: !numericCourseId,
+});
 
   const course = courseData?.data;
   const chapters = chaptersData?.data?.chapters;

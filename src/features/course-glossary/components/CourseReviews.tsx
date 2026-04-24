@@ -4,11 +4,13 @@ import UserTestimonial from "./UserTestimonial";
 import { useGetCourseRatingQuery } from "../api/courseApi";
 
 export default function CourseReviews({ courseId }) {
-  const { data, isLoading, isError } = useGetCourseRatingQuery({ courseId });
+
+  const { data, isLoading, isError } =
+    useGetCourseRatingQuery(courseId);
 
   if (isLoading) return <Typography>Loading reviews...</Typography>;
   if (isError) return <Typography>Error loading reviews</Typography>;
-
+  
   const ratingsData = data?.data;
 
   return (

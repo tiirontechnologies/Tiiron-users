@@ -24,13 +24,12 @@ export const courseApiSlice = baseApi.injectEndpoints({
     }),
 
     // ⭐ Get course rating
-    getCourseRating: builder.query({
-      query: ({ courseId }: { courseId: number }) => ({
-        url: `/course/${courseId}/ratings`, // ✅ correct endpoint
-        method: "GET",
-      }),
-      providesTags: ["Rating"],
-    }),
+  getCourseRating: builder.query({
+  query: (courseId: number) => ({
+    url: `/course/${courseId}/ratings`,
+    method: "GET",
+  }),
+}),
     // Create course
     createCourse: builder.mutation({
       query: ({ body }: { body: FormData }) => ({
