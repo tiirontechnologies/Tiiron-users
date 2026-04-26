@@ -54,6 +54,25 @@ export const userApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Auth'],
     }),
+
+    // UPLOAD 
+    uploadProfileImage: builder.mutation<{ success: boolean; message: string; imageUrl: string },FormData>({
+      query: (formData) => ({
+        url: "profile/upload/image",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    // CLOSE 
+    removeProfileImage: builder.mutation<{ success: boolean; message: string },void>({
+      query: () => ({
+        url: "profile/upload/deleteImage",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+
   }),
 });
 
@@ -61,5 +80,7 @@ export const userApiSlice = baseApi.injectEndpoints({
 export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
+  useUploadProfileImageMutation,
+  useRemoveProfileImageMutation
 } = userApiSlice;
 

@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
   ];
 
   const socialLinks = [
-    { icon: <Twitter />, href: "https://x.com/HrTiiron", label: "Twitter" },
+    { icon: <Twitter />, href: "", label: "Twitter" },
     {
       icon: <LinkedIn />,
       href: "https://www.linkedin.com/company/tiiron/",
@@ -71,17 +71,17 @@ const Footer: React.FC = () => {
     },
     {
       icon: <Instagram />,
-      href: "https://www.instagram.com/hrtiiron/",
+      href: "https://www.instagram.com/tiirontechnologies",
       label: "Instagram",
     },
     {
       icon: <Facebook />,
-      href: "https://www.facebook.com/people/Tiiron/61584136520782/",
+      href: "https://www.facebook.com/tiirontechnologies/",
       label: "Facebook",
     },
     {
       icon: <YouTube />,
-      href: "https://www.youtube.com/@hrtiiron",
+      href: "https://www.youtube.com/@tiironlms",
       label: "YouTube",
     },
     { icon: <LocationOn />, href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", label: "Location" },
