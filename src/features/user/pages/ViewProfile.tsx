@@ -137,21 +137,21 @@ const handleRemoveImage = async () => {
 };
 
   useEffect(() => {
-  if (profileData?.data) {
-    const data = profileData.data;
+  if (profileData?.user) {
+    const data = profileData.user;
 
     reset({
       firstName: data.firstName || "",
       lastName: data.lastName || "",
-      headline: data.profile?.headline || "",
-      biography: data.profile?.biography || "",
-      website: data.profile?.website || "",
-      facebook: data.profile?.facebook || "",
-      instagram: data.profile?.instagram || "",
-      linkedin: data.profile?.linkedin || "",
-      twitter: data.profile?.twitter || "",
-      youtube: data.profile?.youtube || "",
-      language: data.profile?.language || "en-US",
+      headline: data.headline || "",
+      biography: data.biography || "",
+      website: data.website || "",
+      facebook: data.facebook || "",
+      instagram: data.instagram || "",
+      linkedin: data.linkedin || "",
+      twitter: data.twitter || "",
+      youtube: data.youtube || "",
+      language: data.language || "en-US",
     });
   }
 }, [profileData, reset]);
@@ -168,7 +168,7 @@ const handleRemoveImage = async () => {
   }, [headlineValue]);
 
   useEffect(() => {
-    const imageFromApi = profileData?.data?.profile?.picture;
+    const imageFromApi = profileData?.user?.picture;
 
     if (imageFromApi && imageFromApi.trim() !== "") {
       setProfileImage(imageFromApi);
