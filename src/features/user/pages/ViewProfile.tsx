@@ -13,7 +13,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import { useGetProfileQuery, useUpdateProfileMutation, UpdateProfileRequest, useUploadProfileImageMutation ,useRemoveProfileImageMutation} from "../api/userApi";
+import { useGetProfilesQuery, useUpdateProfileMutation, UpdateProfileRequest, useUploadProfileImageMutation ,useRemoveProfileImageMutation} from "../api/userApi";
 import RichTextEditor from "@components/ui/RichTextEditor";
 import CustomTextField from "@components/ui/textfields/CustomTextField";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
@@ -61,7 +61,8 @@ const ViewProfile: React.FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
   const [headlineCount, setHeadlineCount] = useState(0);
 
-  const { data: profileData, isLoading, refetch } = useGetProfileQuery();
+  const { data: profileData, isLoading, refetch } = useGetProfilesQuery();
+  console.log("Profile Data:", profileData);
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
   const {
@@ -70,6 +71,7 @@ const ViewProfile: React.FC = () => {
     formState: { errors },
     reset,
     watch,
+    register,
   } = useForm<UpdateProfileRequest>({
     defaultValues: {
       firstName: "",
@@ -137,21 +139,21 @@ const handleRemoveImage = async () => {
 };
 
   useEffect(() => {
-  if (profileData?.user) {
-    const data = profileData.user;
+  if (profileData?.data) {
+    const data = profileData.data;
 
     reset({
       firstName: data.firstName || "",
       lastName: data.lastName || "",
-      headline: data.headline || "",
-      biography: data.biography || "",
-      website: data.website || "",
-      facebook: data.facebook || "",
-      instagram: data.instagram || "",
-      linkedin: data.linkedin || "",
-      twitter: data.twitter || "",
-      youtube: data.youtube || "",
-      language: data.language || "en-US",
+      headline: data.profile?.headline || "",
+      biography: data.profile?.biography || "",
+      website: data.profile?.website || "",
+      facebook: data.profile?.facebook || "",
+      instagram: data.profile?.instagram || "",
+      linkedin: data.profile?.linkedin || "",
+      twitter: data.profile?.twitter || "",
+      youtube: data.profile?.youtube || "",
+      language: data.profile?.language || "en-US",
     });
   }
 }, [profileData, reset]);
@@ -168,7 +170,7 @@ const handleRemoveImage = async () => {
   }, [headlineValue]);
 
   useEffect(() => {
-    const imageFromApi = profileData?.user?.picture;
+    const imageFromApi = profileData?.data?.profile?.picture;
 
     if (imageFromApi && imageFromApi.trim() !== "") {
       setProfileImage(imageFromApi);
@@ -504,7 +506,7 @@ const handleRemoveImage = async () => {
                       size="small"
                       variant="outlined"
                       placeholder="Username"
-                      {...control.register("facebook")}
+                      {...register("facebook")}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -544,7 +546,7 @@ const handleRemoveImage = async () => {
                       size="small"
                       variant="outlined"
                       placeholder="Username"
-                      {...control.register("instagram")}
+                      {...register("instagram")}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -584,7 +586,7 @@ const handleRemoveImage = async () => {
                       size="small"
                       variant="outlined"
                       placeholder="Public profile URL"
-                      {...control.register("linkedin")}
+                      {...register("linkedin")}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -624,7 +626,7 @@ const handleRemoveImage = async () => {
                       size="small"
                       variant="outlined"
                       placeholder="Username"
-                      {...control.register("twitter")}
+                      {...register("twitter")}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -664,7 +666,7 @@ const handleRemoveImage = async () => {
                       size="small"
                       variant="outlined"
                       placeholder="Username"
-                      {...control.register("youtube")}
+                      {...register("youtube")}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -1110,10 +1112,9 @@ const handleRemoveImage = async () => {
                 <Button
                   variant="contained"
                   sx={{
-                    backgroundColor: "#F97316",
                     textTransform: "none",
                     px: 3,
-                    "&:hover": { backgroundColor: "#EA580C" },
+                    "&:hover": { backgroundColor: "#350cea" },
                   }}
                 >
                   Save Preferences
