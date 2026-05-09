@@ -19,6 +19,33 @@ export interface UserProfile {
   displayName: string | null;
 }
 
+export interface ProfileDetails {
+  id: number;
+  userId: number;
+  headline: string | null;
+  biography: string | null;
+  language: string | null;
+  website: string | null;
+  facebook: string | null;
+  instagram: string | null;
+  linkedin: string | null;
+  twitter: string | null;
+  youtube: string | null;
+  picture?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface GetProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    firstName: string | null;
+    lastName: string | null;
+    profile: ProfileDetails;
+  };
+}
+
 export interface UpdateProfileRequest {
   firstName?: string;
   lastName?: string;
@@ -37,7 +64,7 @@ export interface UpdateProfileRequest {
 export const userApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get user profile
-    getProfile: builder.query<{ success: boolean; user: UserProfile }, void>({
+ getProfiles: builder.query<GetProfileResponse, void>({
       query: () => ({
         url: 'profile/user',
         method: 'GET',
@@ -46,41 +73,44 @@ export const userApiSlice = baseApi.injectEndpoints({
     }),
 
     // Update user profile
-    updateProfile: builder.mutation<{ success: boolean; message: string; user: UserProfile }, UpdateProfileRequest>({
-      query: (body) => ({
-        url: 'profile/update/profile',
-        method: 'PUT',
-        body,
-      }),
-      invalidatesTags: ['Auth'],
-    }),
+   updateProfile: builder.mutation<GetProfileResponse, UpdateProfileRequest>({
+  query: (body) => ({
+    url: 'profile/update/profile',
+    method: 'PUT',
+    body,
+  }),
+  invalidatesTags: ['Auth'],
+}),
 
     // UPLOAD 
-    uploadProfileImage: builder.mutation<{ success: boolean; message: string; imageUrl: string },FormData>({
-      query: (formData) => ({
-        url: "profile/upload/image",
-        method: "POST",
-        body: formData,
-      }),
-      invalidatesTags: ["Auth"],
-    }),
+uploadProfileImage: builder.mutation<
+  { success: boolean; message: string; imageUrl: string },
+  FormData
+>({
+  query: (formData) => ({
+    url: "profile/upload/image",
+    method: "POST",
+    body: formData,
+  }),
+  invalidatesTags: ["Auth"],
+}),
     // CLOSE 
-    removeProfileImage: builder.mutation<{ success: boolean; message: string },void>({
+     removeProfileImage: builder.mutation<{ success: boolean; message: string },void>({
       query: () => ({
         url: "profile/upload/deleteImage",
         method: "DELETE",
       }),
       invalidatesTags: ["Auth"],
     }),
-
   }),
 });
 
 // Export hooks for usage in functional components
 export const {
-  useGetProfileQuery,
+  useGetProfilesQuery,
   useUpdateProfileMutation,
   useUploadProfileImageMutation,
   useRemoveProfileImageMutation
 } = userApiSlice;
+
 
