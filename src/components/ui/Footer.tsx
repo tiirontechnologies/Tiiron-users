@@ -26,17 +26,29 @@ import {
   OpenInNew,
 } from "@mui/icons-material";
 
+type FooterLink = {
+  name: string;
+  href: string;
+  external?: boolean;
+};
+
+type FooterSection = {
+  title: string;
+  links: FooterLink[];
+};
+
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
-  const footerSections = [
+  // const footerSections = [
+  const footerSections: FooterSection[] = [
     {
       title: "Quick Links",
       links: [
-        { name: "Generate Quizzes", href: "https://tiiron.com/generate-quiz" },
-        { name: "Free Courses ", href: "https://tiiron.com/browse-course/free" },
+        { name: "Generate Quizzes", href: "https://tiiron.com/generate-quiz",  external: true, },
+        { name: "Free Courses ", href: "https://tiiron.com/browse-course/free",  external: true, },
         { name: "Practice Questions", href: "#" },
-        { name: "Became a Ceator", href: "https://creator.tiiron.com/" },
+        { name: "Became a Ceator", href: "https://creator.tiiron.com/",  external: true, },
         // { name: "API", href: "#", external: true },
       ],
     },
@@ -44,18 +56,18 @@ const Footer: React.FC = () => {
       title: "Our Solutions",
       links: [
         { name: "Tiiron ERP", href: "#" },
-        { name: "Inacademics", href: "https://inacademic.com/" },
+        { name: "Inacademics", href: "https://inacademic.com/" , external: true},
         { name: "Tiiron Academy", href: "#" },
-        { name: "Tiiron Technologies", href: "https://tiirontechnologies.com/" },
+        { name: "Tiiron Technologies", href: "https://tiirontechnologies.com/" , external: true},
         // { name: "Case Studies", href: "#" },
       ],
     },
     {
       title: "Company",
       links: [
-        { name: "About Us", href: "https://creator.tiiron.com/about" },
-        { name: "Contact", href: "https://creator.tiiron.com/contact" },
-        { name: "Careers", href: "mailto:hr@tiiron.com" },
+        { name: "About Us", href: "https://creator.tiiron.com/about", external: true },
+        { name: "Contact", href: "https://creator.tiiron.com/contact", external: true },
+        { name: "Careers", href: "mailto:hr@tiiron.com", external: true },
         { name: "Partners", href: "#" },
         // { name: "Press Kit", href: "#" },
       ],
