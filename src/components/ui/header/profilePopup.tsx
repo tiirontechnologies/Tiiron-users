@@ -58,7 +58,9 @@ const menuItems = [
       window.location.href = "https://creator.tiiron.com/";
     }
   },
-  { text: "Help and Support", icon: <HelpOutlineIcon />, color: "#00BCD4" },
+  { text: "Help and Support", icon: <HelpOutlineIcon />, color: "#00BCD4",  onClick: (navigate: NavigateFunction) => {
+      navigate("/help-support");
+    } },
 ];
 
 const ProfileCenterPopup = () => {
