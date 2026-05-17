@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://lms-backend-d1p1.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://lms-backend-d1p1.onrender.com";
 
 if (!BASE_URL) {
   throw new Error("VITE_API_BASE_URL is missing")

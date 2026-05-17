@@ -31,23 +31,23 @@ const Footer: React.FC = () => {
 
   const footerSections = [
     {
-      title: "Product",
+      title: "Quick Links",
       links: [
-        { name: "Features", href: "https://creator.tiiron.com/features" },
-        { name: "Pricing", href: "https://creator.tiiron.com/pricing" },
-        { name: "Analytics", href: "#" },
-        { name: "Integrations", href: "#" },
-        { name: "API", href: "#", external: true },
+        { name: "Generate Quizzes", href: "https://tiiron.com/generate-quiz" },
+        { name: "Free Courses ", href: "https://tiiron.com/browse-course/free" },
+        { name: "Practice Questions", href: "#" },
+        { name: "Became a Ceator", href: "https://creator.tiiron.com/" },
+        // { name: "API", href: "#", external: true },
       ],
     },
     {
-      title: "Resources",
+      title: "Our Solutions",
       links: [
-        { name: "Documentation", href: "#" },
-        { name: "Help Center", href: "#" },
-        { name: "Blog", href: "#" },
-        { name: "Webinars", href: "#" },
-        { name: "Case Studies", href: "#" },
+        { name: "Tiiron ERP", href: "#" },
+        { name: "Inacademics", href: "https://inacademic.com/" },
+        { name: "Tiiron Academy", href: "#" },
+        { name: "Tiiron Technologies", href: "https://tiirontechnologies.com/" },
+        // { name: "Case Studies", href: "#" },
       ],
     },
     {
@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
         { name: "Contact", href: "https://creator.tiiron.com/contact" },
         { name: "Careers", href: "mailto:hr@tiiron.com" },
         { name: "Partners", href: "#" },
-        { name: "Press Kit", href: "#" },
+        // { name: "Press Kit", href: "#" },
       ],
     },
   ];
@@ -88,7 +88,7 @@ const Footer: React.FC = () => {
   ];
 
   const contactInfo = [
-    { icon: <Email />, text: "admin@tiiron.com", href: "mailto:admin@tiiron.com" },
+    { icon: <Email />, text: "contact@tiiron.com", href: "mailto:contact@tiiron.com" },
     { icon: <Phone />, text: "+91 9161218740", href: "tel:+919161218740" },
   ];
 
@@ -419,7 +419,7 @@ const Footer: React.FC = () => {
               lineHeight: 1.6,
             }}
           >
-            © {currentYear} Tiiron. All rights reserved.{" "}
+            {/* © {currentYear} Tiiron. All rights reserved.{" "} */}
             <Box
               component="span"
               sx={{
@@ -429,11 +429,20 @@ const Footer: React.FC = () => {
                 ml: { xs: 0, md: 0.5 },
               }}
             >
-              Made with{" "}
+              {/* Made with{" "}
               <Favorite
                 sx={{ fontSize: { xs: 12, md: 14 }, color: "#dc2626", mx: 0.3 }}
               />{" "}
+              in India */}
+                <span>© {currentYear} Tiiron Technologies Pvt Ltd. All rights reserved.</span>
+            <span className="flex items-center gap-1">
+              Made with 
+              {/* <Heart className="w-4 h-4 text-red-500" />  */}
+                <Favorite
+                sx={{ fontSize: { xs: 12, md: 14 }, color: "#dc2626", mx: 0.3 }}
+              />{" "}
               in India
+            </span>
             </Box>
           </Typography>
 

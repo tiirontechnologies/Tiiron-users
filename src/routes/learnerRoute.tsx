@@ -5,6 +5,7 @@ import Courses from "../features/course-browse/pages/Courses";
 import MyCourses from "../features/my-course/pages/Courses";
 import ViewProfile from "../features/user/pages/ViewProfile";
 import PrivateRoute from "@layouts/PrivateRoute";
+import ContactForm from "@pages/Contact";
 
 export const userRoutes: Route[] = [
     {
@@ -33,6 +34,15 @@ export const userRoutes: Route[] = [
         element: (
           <PrivateRoute>
             <ViewProfile />
+          </PrivateRoute>
+        )
+    },
+    {
+        label: "Help and Support",
+        path: "/help-support",
+        element: (
+          <PrivateRoute>
+            <ContactForm/>
           </PrivateRoute>
         )
     }
