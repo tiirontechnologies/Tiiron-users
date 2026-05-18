@@ -41,45 +41,63 @@ type NavItem = {
 
 const navigationItems: NavItem[] = [
   // {
-  //   name: "Why Tiiron",
-  //   hasDropdown: true,
-  //   dropdown: [
-  //     { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
-  //     { name: "Who It's For", desc: "See who benefits from us", href: "/whomfor" },
-  //     { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
-  //   ],
-  // },
-  // {
-  //   name: "Explore",
-  //   hasDropdown: true,
-  //   dropdown: [
-  //     { name: "Browse Courses", desc: "Explore our course catalog", href: "/browse-courses" },
-  //     // external example (keeps external behavior)
-  //     { name: "Tiiron Business", desc: "AI-powered learning solutions", href: "https://tiiron-for-business" },
-  //   ],
-  // },
-  // {
-  //   name: "Resources",
-  //   hasDropdown: true,
-  //   dropdown: [
-  //     { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
-  //     { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
-  //     { name: "Community", desc: "Join our community space", href: "/community" },
-  //   ],
-  // },
-  // Example of a plain clickable nav item (no dropdown)
-
-  // {
-  //   name: "Learning Path",
-  //   href: "/paths",
-  //   hasDropdown: false,
-  // },
-  {
-    name: "Creator",
-    href: "https://creator.tiiron.com",
-    hasDropdown: false,
-  },
-];
+    //   name: "Why Tiiron",
+    //   hasDropdown: true,
+    //   dropdown: [
+      //     { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
+      //     { name: "Who It's For", desc: "See who benefits from us", href: "/whomfor" },
+      //     { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
+      //   ],
+      // },
+      // {
+        //   name: "Resources",
+        //   hasDropdown: true,
+        //   dropdown: [
+          //     { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
+          //     { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
+          //     { name: "Community", desc: "Join our community space", href: "/community" },
+          //   ],
+          // },
+          // Example of a plain clickable nav item (no dropdown)
+          
+          // {
+            //   name: "Learning Path",
+            //   href: "/paths",
+            //   hasDropdown: false,
+            // },
+            {
+              name: "Creator",
+              href: "https://creator.tiiron.com",
+              hasDropdown: false,
+            },
+            {
+              name: "Explore",
+              hasDropdown: true,
+              dropdown: [
+                { 
+                  name: "Tiiron ERP",
+                  //  desc: "Explore our course catalog",
+                    href: "https://erp.tiiron.com/"
+                   },
+                // external example (keeps external behavior)
+                { 
+                  name: "Inacademics",
+                  //  desc: "AI-powered learning solutions",
+                    href: "https://inacademics.com/"
+                   },
+                { 
+                  name: "Tiiron Academy ",
+                  //  desc: "AI-powered learning solutions",
+                    href: "https://academy.tiiron.com/"
+                   },
+                { 
+                  name: "Tiiron Technologies ",
+                  //  desc: "AI-powered learning solutions",
+                    href: "https://tiirontechnologies.com/"
+                   },
+              ],
+            },
+          ];
 
 const isExternal = (href?: string) => !!href && (href.startsWith("http://") || href.startsWith("https://"));
 
