@@ -341,22 +341,61 @@ const Navbar: React.FC = () => {
           to={item.href ?? "/"}
           external={isExternal(item.href)}
           onClick={() => setOpenDropdown(null)}
+          // sx={{
+          //   padding: "0.5rem 0.75rem",
+          //   borderRadius: 1,
+          //   display: "inline-block",
+          //   fontWeight: 700,
+          //   fontSize: 15,
+          //   textDecoration: "none",
+          //   color: isActive(item.href) ? "#ef4444" : "#111827",
+          //   transition: "color 0.2s ease",
+          //   "&:hover": {
+          //     color: "transparent",
+          //     background: "linear-gradient(to right,#ef4444,#a855f7)",
+          //     WebkitBackgroundClip: "text",
+          //     WebkitTextFillColor: "transparent",
+          //   },
+          // }}
+
           sx={{
-            padding: "0.5rem 0.75rem",
-            borderRadius: 1,
-            display: "inline-block",
-            fontWeight: 700,
-            fontSize: 15,
-            textDecoration: "none",
-            color: isActive(item.href) ? "#ef4444" : "#111827",
-            transition: "color 0.2s ease",
-            "&:hover": {
-              color: "transparent",
-              background: "linear-gradient(to right,#ef4444,#a855f7)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            },
-          }}
+  padding: item.name === "Creator" ? "0.5rem 2rem" : "0.5rem 0.75rem",
+  borderRadius: "10px",
+  display: "inline-block",
+  fontWeight: 700,
+  fontSize: 15,
+  textDecoration: "none",
+
+  border:
+    item.name === "Creator"
+      ? "1.5px solid #5b3cff"
+      : "none",
+
+  color:
+    item.name === "Creator"
+      ? "#5b3cff"
+      : isActive(item.href)
+      ? "#ef4444"
+      : "#111827",
+
+  transition: "all 0.25s ease",
+
+  "&:hover": {
+    ...(item.name === "Creator"
+      ? {
+          backgroundColor: "#2a07d6",
+          color: "#fff",
+          transform: "translateY(-1px)",
+          boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+        }
+      : {
+          color: "transparent",
+          background: "linear-gradient(to right,#ef4444,#a855f7)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }),
+  },
+}}
         >
           {item.name}
         </NavLink>
