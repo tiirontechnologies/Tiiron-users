@@ -83,7 +83,7 @@ const navigationItems: NavItem[] = [
                 { 
                   name: "Inacademics",
                   //  desc: "AI-powered learning solutions",
-                    href: "https://inacademics.com/"
+                    href: "https://inacademic.com/"
                    },
                 { 
                   name: "Tiiron Academy ",
@@ -114,13 +114,27 @@ const NavLink = ({
   sx?: any;
   external?: boolean;
 }) => {
+  // if (external) {
+  //   return (
+  //     <a href={to} onClick={onClick} style={{ textDecoration: "none", color: "inherit" }}>
+  //       <Box sx={sx}>{children}</Box>
+  //     </a>
+  //   );
+  // }
+
   if (external) {
-    return (
-      <a href={to} onClick={onClick} style={{ textDecoration: "none", color: "inherit" }}>
-        <Box sx={sx}>{children}</Box>
-      </a>
-    );
-  }
+  return (
+    <a
+      href={to}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onClick}
+      style={{ textDecoration: "none", color: "inherit" }}
+    >
+      <Box sx={sx}>{children}</Box>
+    </a>
+  );
+}
   return (
     <RouterLink to={to} onClick={onClick} style={{ textDecoration: "none", color: "inherit" }}>
       <Box sx={sx}>{children}</Box>
