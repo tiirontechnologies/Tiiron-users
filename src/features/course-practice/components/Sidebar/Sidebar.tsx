@@ -62,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       }}
     >
       {/* Back Button */}
-      <Button
+      {/* <Button
         variant="text"
         onClick={() => navigate(-1)}
         startIcon={<KeyboardBackspace sx={{ color: COLORS.text.muted }} />}
@@ -77,14 +77,65 @@ const Sidebar: React.FC<SidebarProps> = ({
           textTransform: "none",
           border: "1px solid #e2e8f0",
           "&:hover": {
-            background: "linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)",
+            background: "linear-gradient(135deg, #0b08b2 0%, #cbd5e1 100%)",
             transform: "translateY(-1px)",
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           },
         }}
       >
         Back to Course
-      </Button>
+      </Button> */}
+      <Button
+  variant="outlined"
+  onClick={() => navigate(-1)}
+  startIcon={<KeyboardBackspace />}
+  sx={{
+    mt: 2,
+    mx: 3,
+
+    height: 42,
+    px: 2.2,
+
+    borderRadius: "10px",
+    border: "1px solid #0539a8",
+
+    backgroundColor: "#ffffff",
+    color: "#073087",
+
+    fontWeight: 600,
+    fontSize: "15.5px",
+    letterSpacing: "0.2px",
+    textTransform: "none",
+
+    boxShadow: "0 1px 2px rgba(15,23,42,0.04)",
+
+    transition: "all 0.2s ease-in-out",
+
+    "& .MuiSvgIcon-root": {
+      fontSize: 18,
+      transition: "all 0.2s ease-in-out",
+    },
+
+    "&:hover": {
+      backgroundColor: "#0c3fad",
+      borderColor: "#2563eb",
+      color: "#ffffff",
+
+      boxShadow: "0 6px 14px rgba(37,99,235,0.22)",
+
+      "& .MuiSvgIcon-root": {
+        color: "#ffffff",
+        transform: "translateX(-2px)",
+      },
+    },
+
+    "&:active": {
+      transform: "scale(0.98)",
+    },
+  }}
+>
+  Back to Course
+</Button>
 
       {/* Course Progress Section */}
       <Box sx={{ my: 4, mx: 3 }}>

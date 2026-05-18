@@ -41,45 +41,63 @@ type NavItem = {
 
 const navigationItems: NavItem[] = [
   // {
-  //   name: "Why Tiiron",
-  //   hasDropdown: true,
-  //   dropdown: [
-  //     { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
-  //     { name: "Who It's For", desc: "See who benefits from us", href: "/whomfor" },
-  //     { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
-  //   ],
-  // },
-  // {
-  //   name: "Explore",
-  //   hasDropdown: true,
-  //   dropdown: [
-  //     { name: "Browse Courses", desc: "Explore our course catalog", href: "/browse-courses" },
-  //     // external example (keeps external behavior)
-  //     { name: "Tiiron Business", desc: "AI-powered learning solutions", href: "https://tiiron-for-business" },
-  //   ],
-  // },
-  // {
-  //   name: "Resources",
-  //   hasDropdown: true,
-  //   dropdown: [
-  //     { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
-  //     { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
-  //     { name: "Community", desc: "Join our community space", href: "/community" },
-  //   ],
-  // },
-  // Example of a plain clickable nav item (no dropdown)
-
-  // {
-  //   name: "Learning Path",
-  //   href: "/paths",
-  //   hasDropdown: false,
-  // },
-  {
-    name: "Creator",
-    href: "https://creator.tiiron.com",
-    hasDropdown: false,
-  },
-];
+    //   name: "Why Tiiron",
+    //   hasDropdown: true,
+    //   dropdown: [
+      //     { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
+      //     { name: "Who It's For", desc: "See who benefits from us", href: "/whomfor" },
+      //     { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
+      //   ],
+      // },
+      // {
+        //   name: "Resources",
+        //   hasDropdown: true,
+        //   dropdown: [
+          //     { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
+          //     { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
+          //     { name: "Community", desc: "Join our community space", href: "/community" },
+          //   ],
+          // },
+          // Example of a plain clickable nav item (no dropdown)
+          
+          // {
+            //   name: "Learning Path",
+            //   href: "/paths",
+            //   hasDropdown: false,
+            // },
+            {
+              name: "Creator",
+              href: "https://creator.tiiron.com",
+              hasDropdown: false,
+            },
+            {
+              name: "Explore",
+              hasDropdown: true,
+              dropdown: [
+                { 
+                  name: "Tiiron ERP",
+                  //  desc: "Explore our course catalog",
+                    href: "https://erp.tiiron.com/"
+                   },
+                // external example (keeps external behavior)
+                { 
+                  name: "Inacademics",
+                  //  desc: "AI-powered learning solutions",
+                    href: "https://inacademics.com/"
+                   },
+                { 
+                  name: "Tiiron Academy ",
+                  //  desc: "AI-powered learning solutions",
+                    href: "https://academy.tiiron.com/"
+                   },
+                { 
+                  name: "Tiiron Technologies ",
+                  //  desc: "AI-powered learning solutions",
+                    href: "https://tiirontechnologies.com/"
+                   },
+              ],
+            },
+          ];
 
 const isExternal = (href?: string) => !!href && (href.startsWith("http://") || href.startsWith("https://"));
 
@@ -323,22 +341,61 @@ const Navbar: React.FC = () => {
           to={item.href ?? "/"}
           external={isExternal(item.href)}
           onClick={() => setOpenDropdown(null)}
+          // sx={{
+          //   padding: "0.5rem 0.75rem",
+          //   borderRadius: 1,
+          //   display: "inline-block",
+          //   fontWeight: 700,
+          //   fontSize: 15,
+          //   textDecoration: "none",
+          //   color: isActive(item.href) ? "#ef4444" : "#111827",
+          //   transition: "color 0.2s ease",
+          //   "&:hover": {
+          //     color: "transparent",
+          //     background: "linear-gradient(to right,#ef4444,#a855f7)",
+          //     WebkitBackgroundClip: "text",
+          //     WebkitTextFillColor: "transparent",
+          //   },
+          // }}
+
           sx={{
-            padding: "0.5rem 0.75rem",
-            borderRadius: 1,
-            display: "inline-block",
-            fontWeight: 700,
-            fontSize: 15,
-            textDecoration: "none",
-            color: isActive(item.href) ? "#ef4444" : "#111827",
-            transition: "color 0.2s ease",
-            "&:hover": {
-              color: "transparent",
-              background: "linear-gradient(to right,#ef4444,#a855f7)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            },
-          }}
+  padding: item.name === "Creator" ? "0.5rem 2rem" : "0.5rem 0.75rem",
+  borderRadius: "10px",
+  display: "inline-block",
+  fontWeight: 700,
+  fontSize: 15,
+  textDecoration: "none",
+
+  border:
+    item.name === "Creator"
+      ? "1.5px solid #5b3cff"
+      : "none",
+
+  color:
+    item.name === "Creator"
+      ? "#5b3cff"
+      : isActive(item.href)
+      ? "#ef4444"
+      : "#111827",
+
+  transition: "all 0.25s ease",
+
+  "&:hover": {
+    ...(item.name === "Creator"
+      ? {
+          backgroundColor: "#2a07d6",
+          color: "#fff",
+          transform: "translateY(-1px)",
+          boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+        }
+      : {
+          color: "transparent",
+          background: "linear-gradient(to right,#ef4444,#a855f7)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }),
+  },
+}}
         >
           {item.name}
         </NavLink>

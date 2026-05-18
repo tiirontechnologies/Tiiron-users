@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -9,6 +9,8 @@ import {
   Button,
   Link,
   Fab,
+
+  
 } from "@mui/material";
 import {
   Email,
@@ -24,7 +26,9 @@ import {
   LocationOn,
   Chat,
   OpenInNew,
+  Close,
 } from "@mui/icons-material";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 
 type FooterLink = {
   name: string;
@@ -37,17 +41,222 @@ type FooterSection = {
   links: FooterLink[];
 };
 
+function PartnerModal({ onClose }: { onClose: () => void }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    phone: "",
+    message: "",
+  });
+
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    try {
+      const res = await fetch("https://formspree.io/f/xgoqeyky", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md p-8"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 transition"
+        >
+          <Close className="text-gray-500" />
+        </button>
+
+        {/* Header */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Become a Partner
+          </h2>
+
+          <p className="text-sm text-gray-500 mt-1">
+            Fill your details and our partnership team will contact you.
+          </p>
+        </div>
+
+        {status === "success" ? (
+          <div className="text-center py-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">
+              Request Sent 🚀
+            </h3>
+
+            <p className="text-sm text-gray-500">
+              Thank you for your interest. We'll connect with you shortly.
+            </p>
+
+            <button
+              onClick={onClose}
+              className="mt-6 px-6 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full font-semibold"
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name *
+              </label>
+
+              <input
+                type="text"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Work Email *
+              </label>
+
+              <input
+                type="email"
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="john@company.com"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Company Name
+              </label>
+
+              <input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                placeholder="Company Name"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+91 9876543210"
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Message
+              </label>
+
+              <textarea
+                name="message"
+                rows={3}
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Tell us about your partnership interest..."
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
+              />
+            </div>
+
+            {status === "error" && (
+              <p className="text-sm text-red-500">
+                Something went wrong. Please try again.
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="w-full py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-full hover:from-red-600 hover:to-pink-600 transition-all"
+            >
+              {status === "loading"
+                ? "Sending..."
+                : "Submit Partnership Request →"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+const [partnerOpen, setPartnerOpen] = useState(false);
+
+
+useEffect(() => {
+  document.body.style.overflow = partnerOpen ? "hidden" : "";
+
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [partnerOpen]);
+
+
 
   // const footerSections = [
   const footerSections: FooterSection[] = [
     {
       title: "Quick Links",
       links: [
-        { name: "Generate Quizzes", href: "https://tiiron.com/generate-quiz",  external: true, },
-        { name: "Free Courses ", href: "https://tiiron.com/browse-course/free",  external: true, },
-        { name: "Practice Questions", href: "#" },
+        { name: "Generate Quizzes", href: "/generate-quiz",},
+        { name: "Free Courses ", href: "/browse-course/free",},
+        { name: "Practice Questions", href: "https://www.tiiron.com/" },
         { name: "Became a Ceator", href: "https://creator.tiiron.com/",  external: true, },
         // { name: "API", href: "#", external: true },
       ],
@@ -55,9 +264,9 @@ const Footer: React.FC = () => {
     {
       title: "Our Solutions",
       links: [
-        { name: "Tiiron ERP", href: "#" },
+        { name: "Tiiron ERP", href: "#",external:true },
         { name: "Inacademics", href: "https://inacademic.com/" , external: true},
-        { name: "Tiiron Academy", href: "#" },
+        { name: "Tiiron Academy", href: "https://academy.tiiron.com/",external:true },
         { name: "Tiiron Technologies", href: "https://tiirontechnologies.com/" , external: true},
         // { name: "Case Studies", href: "#" },
       ],
@@ -65,17 +274,18 @@ const Footer: React.FC = () => {
     {
       title: "Company",
       links: [
-        { name: "About Us", href: "https://creator.tiiron.com/about", external: true },
-        { name: "Contact", href: "https://creator.tiiron.com/contact", external: true },
+        { name: "About Us", href: "https://www.tiiron.com/about" },
+        { name: "Contact", href: "https://www.tiiron.com/contact",},
         { name: "Careers", href: "mailto:hr@tiiron.com", external: true },
-        { name: "Partners", href: "#" },
+        // { name: "Partners", href: "#" },
+        { name: "Partners", href: "#", external: false },
         // { name: "Press Kit", href: "#" },
       ],
     },
   ];
 
   const socialLinks = [
-    { icon: <Twitter />, href: "", label: "Twitter" },
+    { icon: <Twitter />, href: "https://x.com/tiironlms", label: "Twitter" },
     {
       icon: <LinkedIn />,
       href: "https://www.linkedin.com/company/tiiron/",
@@ -96,7 +306,11 @@ const Footer: React.FC = () => {
       href: "https://www.youtube.com/@tiironlms",
       label: "YouTube",
     },
-    { icon: <LocationOn />, href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", label: "Location" },
+    { icon: <LocationOn />,
+      //  href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", 
+        // href: "https://www.google.com/maps/place/Varanasi,+Uttar+Pradesh",
+        href:"https://maps.app.goo.gl/t2urofbHoNakbAGe6?g_st=ac",
+       label: "Location" },
   ];
 
   const contactInfo = [
@@ -105,7 +319,12 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <Box
+    <>
+  {partnerOpen && (
+    <PartnerModal onClose={() => setPartnerOpen(false)} />
+  )}
+
+  <Box
       component="footer"
       sx={{
         width: "100%",
@@ -294,6 +513,7 @@ const Footer: React.FC = () => {
                       {item.text}
                     </Typography>
                   </Link>
+                  
                 ))}
               </Box>
 
@@ -309,9 +529,11 @@ const Footer: React.FC = () => {
               >
                 {section.title}
               </Typography>
-              {section.links.map((link, i) => (
+              {/* {section.links.map((link, i) => (
                 <Link
                   key={i}
+                  target={link.external ? "_blank" : "_self"}
+                  rel={link.external ? "noopener noreferrer" : undefined}
                   href={link.href}
                   sx={{
                     display: "block",
@@ -325,7 +547,48 @@ const Footer: React.FC = () => {
                 >
                   {link.name} {link.external && <OpenInNew sx={{ fontSize: 12, ml: 0.5, verticalAlign: "middle" }} />}
                 </Link>
-              ))}
+              ))} */}
+
+{section.links.map((link, i) => {
+  const isPartner = link.name === "Partners";
+
+  return (
+    <Link
+      key={i}
+      target={!isPartner && link.external ? "_blank" : "_self"}
+      rel={!isPartner && link.external ? "noopener noreferrer" : undefined}
+      href={isPartner ? undefined : link.href}
+      onClick={(e) => {
+        if (isPartner) {
+          e.preventDefault();
+          setPartnerOpen(true);
+        }
+      }}
+      sx={{
+        display: "block",
+        color: "#9ca3af",
+        mb: 1.2,
+        fontSize: { xs: "0.8125rem", md: "14px" },
+        textDecoration: "none",
+        transition: "color 0.2s",
+        cursor: "pointer",
+        "&:hover": { color: "white" },
+      }}
+    >
+      {link.name}
+
+      {!isPartner && link.external && (
+        <OpenInNew
+          sx={{
+            fontSize: 12,
+            ml: 0.5,
+            verticalAlign: "middle",
+          }}
+        />
+      )}
+    </Link>
+  );
+})}
             </Grid>
           ))}
 
@@ -399,101 +662,115 @@ const Footer: React.FC = () => {
       </Container>
 
       {/* Bottom Section */}
-      <Box
+     
+{/* Bottom Section */}
+<Box
+  sx={{
+    borderTop: "1px solid #334155",
+    py: { xs: 2.5, md: 3 },
+    backgroundColor: "#fff",
+  }}
+>
+  <Container
+    maxWidth="lg"
+    sx={{
+      display: "flex",
+      flexDirection: { xs: "column", md: "row" },
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: { xs: 1.5, md: 2 },
+      textAlign: { xs: "center", md: "left" },
+    }}
+  >
+    {/* Left */}
+    <Typography
+      variant="body2"
+      sx={{
+        color: "#6b7280",
+        fontSize: { xs: "12px", md: "14px" },
+        lineHeight: 1.6,
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+        gap: 0.5,
+      }}
+    >
+      <span>©{currentYear}</span>
+
+      <Link
+        href="https://tiirontechnologies.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        underline="none"
         sx={{
-          borderTop: "1px solid #334155",
-          py: { xs: 2.5, md: 3 },
-          backgroundColor: "#fff",
+          color: "#111827",
+          fontWeight: 500,
+          transition: "all 0.2s ease",
+          "&:hover": {
+            color: "#dc2626",
+            textDecoration: "underline",
+          },
         }}
       >
-        <Container
-          maxWidth="lg"
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "center", md: "center" },
-            justifyContent: { xs: "center", md: "space-between" },
-            gap: { xs: 1.5, md: 2 },
-            textAlign: { xs: "center", md: "left" },
-          }}
-        >
-          {/* Left Section */}
-          <Typography
-            variant="body2"
-            sx={{
-              color: "#6b7280",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: { xs: "center", md: "flex-start" },
-              flexWrap: "wrap",
-              gap: 0.5,
-              fontSize: { xs: "12px", md: "14px" },
-              lineHeight: 1.6,
-            }}
-          >
-            {/* © {currentYear} Tiiron. All rights reserved.{" "} */}
-            <Box
-              component="span"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 0.3,
-                ml: { xs: 0, md: 0.5 },
-              }}
-            >
-              {/* Made with{" "}
-              <Favorite
-                sx={{ fontSize: { xs: 12, md: 14 }, color: "#dc2626", mx: 0.3 }}
-              />{" "}
-              in India */}
-                <span>© {currentYear} Tiiron Technologies Pvt Ltd. All rights reserved.</span>
-            <span className="flex items-center gap-1">
-              Made with 
-              {/* <Heart className="w-4 h-4 text-red-500" />  */}
-                <Favorite
-                sx={{ fontSize: { xs: 12, md: 14 }, color: "#dc2626", mx: 0.3 }}
-              />{" "}
-              in India
-            </span>
-            </Box>
-          </Typography>
+        Tiiron Technologies Pvt Ltd
+      </Link>
 
-          {/* Right Section - Hidden on Mobile */}
-          <Box
-            sx={{
-              display: { xs: "none", sm: "flex" }, // 👈 Hidden on mobile, visible on tablet+
-              flexWrap: "wrap",
-              gap: { sm: 1.5, md: 2 },
-              alignItems: "center",
-              justifyContent: { sm: "center", md: "flex-end" },
-              width: { sm: "100%", md: "auto" },
-            }}
-          >
-            {[
-              { name: "Languages", href: "/languages" },
-              { name: "Legal", href: "/legal" },
-              { name: "Privacy", href: "/privacy" },
-              { name: "Sitemap", href: "/sitemap" },
-              { name: "Status", href: "/status" },
-            ].map((link, i) => (
-              <Link
-                key={i}
-                href={link.href}
-                sx={{
-                  color: "#6b7280",
-                  fontSize: { sm: "12px", md: "14px" },
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                  "&:hover": { color: "#111827" },
-                }}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </Box>
-        </Container>
-      </Box>
+      <span>. All rights reserved.</span>
+    </Typography>
 
+    {/* Right */}
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        flexWrap: "wrap",
+      }}
+    >
+      <Link
+        href="/terms-and-conditions"
+        underline="none"
+        sx={{
+          color: "#6b7280",
+          fontSize: { xs: "12px", md: "14px" },
+          transition: "0.2s",
+          "&:hover": {
+            color: "#111827",
+            textDecoration: "underline",
+          },
+        }}
+      >
+        Terms & Conditions
+      </Link>
+
+      <Typography
+        component="span"
+        sx={{
+          color: "#9ca3af",
+          fontSize: { xs: "12px", md: "14px" },
+        }}
+      >
+        •
+      </Typography>
+
+      <Link
+        href="/privacy-policy"
+        underline="none"
+        sx={{
+          color: "#6b7280",
+          fontSize: { xs: "12px", md: "14px" },
+          transition: "0.2s",
+          "&:hover": {
+            color: "#111827",
+            textDecoration: "underline",
+          },
+        }}
+      >
+        Privacy Policy
+      </Link>
+    </Box>
+  </Container>
+</Box>
 
       {/* Floating Action Buttons */}
       <Box
@@ -508,7 +785,7 @@ const Footer: React.FC = () => {
         }}
       >
         {/* Chat Button */}
-        <Fab
+        {/* <Fab
           size="medium"
           sx={{
             backgroundColor: "#22c55e",
@@ -528,7 +805,33 @@ const Footer: React.FC = () => {
           }}
         >
           <Chat sx={{ fontSize: { xs: 20, md: 24 } }} />
-        </Fab>
+        </Fab> */}
+
+        {/* whats app icon btn  */}
+
+        {/* WhatsApp Button */}
+<Fab
+  component="a"
+  href="https://wa.me/919161218740"
+  target="_blank"
+  rel="noopener noreferrer"
+  size="medium"
+  sx={{
+    backgroundColor: "#25D366",
+    color: "white",
+    width: { xs: 48, md: 56 },
+    height: { xs: 48, md: 56 },
+    "&:hover": {
+      backgroundColor: "#1ebe5d",
+      transform: "scale(1.1)",
+    },
+    boxShadow: "0 4px 12px rgba(37, 211, 102, 0.4)",
+    transition: "all 0.2s",
+  }}
+  aria-label="WhatsApp"
+>
+  <WhatsAppIcon sx={{ fontSize: { xs: 22, md: 28 } }} />
+</Fab>
 
         {/* Scroll to Top Button */}
         <Fab
@@ -552,6 +855,7 @@ const Footer: React.FC = () => {
         </Fab>
       </Box>
     </Box>
+    </>
   );
 };
 
