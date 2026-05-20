@@ -25,6 +25,9 @@ import { GenerateQuizModal } from "./quiz/GenerateQuizModal";
 import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
 import { useAuth } from "../../hooks/useAuth";
 import NotificationPanel from "./header/NotificationPanel";
+// generate quiz 
+
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 type DropdownItem = {
   name: string;
@@ -564,8 +567,9 @@ const Navbar: React.FC = () => {
                   size="large"
                   onClick={handleOpenQuizModal}
                   sx={{ bgcolor: '#5b3cff', fontWeight: 600 }}
+                  startIcon={<AutoAwesomeIcon /> }
                 >
-                  ⚡ Generate Quiz
+                   Generate Quiz
                 </Button>
               </Box>
             )}
@@ -732,8 +736,9 @@ const Navbar: React.FC = () => {
                       transform: 'translateY(-1px)',
                     }
                   }}
+                  startIcon={<AutoAwesomeIcon /> }  
                 >
-                  ⚡ Generate Quiz
+                   Generate Quiz
                 </Box>
               </Box>
             </Box>
