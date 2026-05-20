@@ -274,11 +274,11 @@ useEffect(() => {
     {
       title: "Company",
       links: [
-        { name: "About Us", href: "https://www.tiiron.com/about" },
+        { name: "About Us", href: "/about" },
         { name: "Contact", href: "https://www.tiiron.com/contact",},
-        { name: "Careers", href: "mailto:hr@tiiron.com", external: true },
         // { name: "Partners", href: "#" },
         { name: "Partners", href: "#", external: false },
+        { name: "Careers", href: "mailto:hr@tiiron.com", external: true },
         // { name: "Press Kit", href: "#" },
       ],
     },
@@ -703,7 +703,7 @@ useEffect(() => {
         rel="noopener noreferrer"
         underline="none"
         sx={{
-          color: "#111827",
+          color: "#818387",
           fontWeight: 500,
           transition: "all 0.2s ease",
           "&:hover": {
