@@ -173,7 +173,7 @@ useEffect(() => {
           </Typography>
 
           <Typography sx={{ mt: 4, fontSize: 11, color: "#9ca3af" }}>
-            Powered by Tiiron AI Powered LMS
+            Powered by Tiiron Technologies Pvt Ltd. | Version 1.2.0
           </Typography>
         </Dialog>
       )}

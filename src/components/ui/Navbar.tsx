@@ -25,6 +25,9 @@ import { GenerateQuizModal } from "./quiz/GenerateQuizModal";
 import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
 import { useAuth } from "../../hooks/useAuth";
 import NotificationPanel from "./header/NotificationPanel";
+// generate quiz 
+
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 type DropdownItem = {
   name: string;
@@ -319,24 +322,70 @@ const Navbar: React.FC = () => {
           <Button
             variant="text"
             onClick={() => setOpenDropdown((prev) => (prev === item.name ? null : item.name))}
+            // sx={{
+            //   display: "flex",
+            //   alignItems: "center",
+            //   gap: 0.5,
+            //   fontWeight: 700,
+            //   fontSize: 15,
+            //   textTransform: "none",
+            //   padding: "0.625rem 1rem",
+            //   borderRadius: 2,
+            //   color: "#111827",
+            //   backgroundColor: "transparent",
+            //   "&:hover": {
+            //     color: "transparent",
+            //     background: "linear-gradient(to right,#ef4444,#a855f7)",
+            //     WebkitBackgroundClip: "text",
+            //     WebkitTextFillColor: "transparent",
+            //   },
+            // }}
+
             sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 0.5,
-              fontWeight: 700,
-              fontSize: 15,
-              textTransform: "none",
-              padding: "0.625rem 1rem",
-              borderRadius: 2,
-              color: "#111827",
-              backgroundColor: "transparent",
-              "&:hover": {
-                color: "transparent",
-                background: "linear-gradient(to right,#ef4444,#a855f7)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              },
-            }}
+  display: "flex",
+  alignItems: "center",
+  gap: 0.5,
+  fontWeight: 700,
+  fontSize: 15,
+  textTransform: "none",
+
+  padding:
+    item.name === "Explore"
+      ? "0.5rem 2rem"
+      : "0.625rem 1rem",
+
+  borderRadius: "10px",
+
+  border:
+    item.name === "Explore"
+      ? "1.5px solid #5b3cff"
+      : "none",
+
+  color:
+    item.name === "Explore"
+      ? "#5b3cff"
+      : "#111827",
+
+  backgroundColor: "transparent",
+
+  transition: "all 0.25s ease",
+
+  "&:hover": {
+    ...(item.name === "Explore"
+      ? {
+          backgroundColor: "#2a07d6",
+          color: "#fff",
+          transform: "translateY(-1px)",
+          boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+        }
+      : {
+          color: "transparent",
+          background: "linear-gradient(to right,#ef4444,#a855f7)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }),
+  },
+}}
           >
             <Box component="span">{item.name}</Box>
             <Box component="span" sx={{ fontSize: 11, ml: 0.5, transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
@@ -381,7 +430,7 @@ const Navbar: React.FC = () => {
   textDecoration: "none",
 
   border:
-    item.name === "Creator"
+    item.name === "Creator" 
       ? "1.5px solid #5b3cff"
       : "none",
 
@@ -518,8 +567,9 @@ const Navbar: React.FC = () => {
                   size="large"
                   onClick={handleOpenQuizModal}
                   sx={{ bgcolor: '#5b3cff', fontWeight: 600 }}
+                  startIcon={<AutoAwesomeIcon /> }
                 >
-                  ⚡ Generate Quiz
+                   Generate Quiz
                 </Button>
               </Box>
             )}
@@ -686,8 +736,9 @@ const Navbar: React.FC = () => {
                       transform: 'translateY(-1px)',
                     }
                   }}
+                  startIcon={<AutoAwesomeIcon /> }  
                 >
-                  ⚡ Generate Quiz
+                   Generate Quiz
                 </Box>
               </Box>
             </Box>
