@@ -567,8 +567,8 @@ const Navbar: React.FC = () => {
                   size="large"
                   onClick={handleOpenQuizModal}
                   sx={{ bgcolor: '#5b3cff', fontWeight: 600 }}
-                  startIcon={<AutoAwesomeIcon /> }
-                >
+                  >
+                  <AutoAwesomeIcon /> 
                    Generate Quiz
                 </Button>
               </Box>
@@ -736,8 +736,8 @@ const Navbar: React.FC = () => {
                       transform: 'translateY(-1px)',
                     }
                   }}
-                  startIcon={<AutoAwesomeIcon /> }  
-                >
+                  >
+                  <AutoAwesomeIcon />   
                    Generate Quiz
                 </Box>
               </Box>
