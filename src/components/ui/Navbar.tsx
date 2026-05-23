@@ -25,7 +25,7 @@ import { GenerateQuizModal } from "./quiz/GenerateQuizModal";
 import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
 import { useAuth } from "../../hooks/useAuth";
 import NotificationPanel from "./header/NotificationPanel";
-// generate quiz 
+// generate quiz
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
@@ -44,65 +44,66 @@ type NavItem = {
 
 const navigationItems: NavItem[] = [
   // {
-    //   name: "Why Tiiron",
-    //   hasDropdown: true,
-    //   dropdown: [
-      //     { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
-      //     { name: "Who It's For", desc: "See who benefits from us", href: "/whomfor" },
-      //     { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
-      //   ],
-      // },
-      // {
-        //   name: "Resources",
-        //   hasDropdown: true,
-        //   dropdown: [
-          //     { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
-          //     { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
-          //     { name: "Community", desc: "Join our community space", href: "/community" },
-          //   ],
-          // },
-          // Example of a plain clickable nav item (no dropdown)
-          
-          // {
-            //   name: "Learning Path",
-            //   href: "/paths",
-            //   hasDropdown: false,
-            // },
-            {
-              name: "Creator",
-              href: "https://creator.tiiron.com",
-              hasDropdown: false,
-            },
-            {
-              name: "Explore",
-              hasDropdown: true,
-              dropdown: [
-                { 
-                  name: "Tiiron ERP",
-                  //  desc: "Explore our course catalog",
-                    href: "https://erp.tiiron.com/"
-                   },
-                // external example (keeps external behavior)
-                { 
-                  name: "Inacademics",
-                  //  desc: "AI-powered learning solutions",
-                    href: "https://inacademic.com/"
-                   },
-                { 
-                  name: "Tiiron Academy ",
-                  //  desc: "AI-powered learning solutions",
-                    href: "https://academy.tiiron.com/"
-                   },
-                { 
-                  name: "Tiiron Technologies ",
-                  //  desc: "AI-powered learning solutions",
-                    href: "https://tiirontechnologies.com/"
-                   },
-              ],
-            },
-          ];
+  //   name: "Why Tiiron",
+  //   hasDropdown: true,
+  //   dropdown: [
+  //     { name: "Why Tiiron", desc: "Learn from success stories", href: "/whytiiron" },
+  //     { name: "Who It's For", desc: "See who benefits from us", href: "/whomfor" },
+  //     { name: "How It Works", desc: "Understand our platform workflow", href: "/ourplatform" },
+  //   ],
+  // },
+  // {
+  //   name: "Resources",
+  //   hasDropdown: true,
+  //   dropdown: [
+  //     { name: "Blog", desc: "Insights, tips & updates", href: "/blog" },
+  //     { name: "Docs", desc: "Developer & API documentation", href: "/docs" },
+  //     { name: "Community", desc: "Join our community space", href: "/community" },
+  //   ],
+  // },
+  // Example of a plain clickable nav item (no dropdown)
 
-const isExternal = (href?: string) => !!href && (href.startsWith("http://") || href.startsWith("https://"));
+  // {
+  //   name: "Learning Path",
+  //   href: "/paths",
+  //   hasDropdown: false,
+  // },
+  {
+    name: "Creator",
+    href: "https://creator.tiiron.com",
+    hasDropdown: false,
+  },
+  {
+    name: "Explore",
+    hasDropdown: true,
+    dropdown: [
+      {
+        name: "Tiiron ERP",
+        //  desc: "Explore our course catalog",
+        href: "https://erp.tiiron.com/",
+      },
+      // external example (keeps external behavior)
+      {
+        name: "Inacademics",
+        //  desc: "AI-powered learning solutions",
+        href: "https://inacademic.com/",
+      },
+      {
+        name: "Tiiron Academy ",
+        //  desc: "AI-powered learning solutions",
+        href: "https://academy.tiiron.com/",
+      },
+      {
+        name: "Tiiron Technologies ",
+        //  desc: "AI-powered learning solutions",
+        href: "https://tiirontechnologies.com/",
+      },
+    ],
+  },
+];
+
+const isExternal = (href?: string) =>
+  !!href && (href.startsWith("http://") || href.startsWith("https://"));
 
 const NavLink = ({
   to,
@@ -126,20 +127,24 @@ const NavLink = ({
   // }
 
   if (external) {
+    return (
+      <a
+        href={to}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <Box sx={sx}>{children}</Box>
+      </a>
+    );
+  }
   return (
-    <a
-      href={to}
-      target="_blank"
-      rel="noopener noreferrer"
+    <RouterLink
+      to={to}
       onClick={onClick}
       style={{ textDecoration: "none", color: "inherit" }}
     >
-      <Box sx={sx}>{children}</Box>
-    </a>
-  );
-}
-  return (
-    <RouterLink to={to} onClick={onClick} style={{ textDecoration: "none", color: "inherit" }}>
       <Box sx={sx}>{children}</Box>
     </RouterLink>
   );
@@ -166,7 +171,9 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const isActive = (href?: string) =>
-    href ? location.pathname === href || location.pathname.startsWith(href + "/") : false;
+    href
+      ? location.pathname === href || location.pathname.startsWith(href + "/")
+      : false;
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 10);
@@ -194,7 +201,7 @@ const Navbar: React.FC = () => {
   const handleCloseCart = () => setIsCartOpen(false);
   const handleOpenQuizModal = () => {
     // setIsQuizModalOpen(true);
-    navigate("/generate-quiz")
+    navigate("/generate-quiz");
   };
   const handleCloseQuizModal = () => {
     setIsQuizModalOpen(false);
@@ -226,7 +233,8 @@ const Navbar: React.FC = () => {
           border: "1px solid #e5e7eb",
           opacity: openDropdown === item.name ? 1 : 0,
           visibility: openDropdown === item.name ? "visible" : "hidden",
-          transform: openDropdown === item.name ? "translateY(0)" : "translateY(-8px)",
+          transform:
+            openDropdown === item.name ? "translateY(0)" : "translateY(-8px)",
           transition: "all 0.26s cubic-bezier(0.4,0,0.2,1)",
           display: "flex",
           flexDirection: "column",
@@ -247,7 +255,9 @@ const Navbar: React.FC = () => {
                 display: "block",
                 padding: "0.75rem 1rem",
                 borderRadius: "8px",
-                background: active ? "linear-gradient(to right,#fef2f2,#fdf2f8)" : "transparent",
+                background: active
+                  ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+                  : "transparent",
                 textDecoration: "none",
               }}
             >
@@ -299,7 +309,10 @@ const Navbar: React.FC = () => {
                     </Box>
                   )}
               </Typography>
-              <Typography variant="caption" sx={{ color: active ? "#374151" : "#6b7280" }}>
+              <Typography
+                variant="caption"
+                sx={{ color: active ? "#374151" : "#6b7280" }}
+              >
                 {drop.desc}
               </Typography>
             </NavLink>
@@ -316,12 +329,16 @@ const Navbar: React.FC = () => {
         <Box
           key={item.name}
           onMouseEnter={() => setOpenDropdown(item.name)}
-          onMouseLeave={() => setOpenDropdown((prev) => (prev === item.name ? null : prev))}
+          onMouseLeave={() =>
+            setOpenDropdown((prev) => (prev === item.name ? null : prev))
+          }
           sx={{ position: "relative" }}
         >
           <Button
             variant="text"
-            onClick={() => setOpenDropdown((prev) => (prev === item.name ? null : item.name))}
+            onClick={() =>
+              setOpenDropdown((prev) => (prev === item.name ? null : item.name))
+            }
             // sx={{
             //   display: "flex",
             //   alignItems: "center",
@@ -342,53 +359,56 @@ const Navbar: React.FC = () => {
             // }}
 
             sx={{
-  display: "flex",
-  alignItems: "center",
-  gap: 0.5,
-  fontWeight: 700,
-  fontSize: 15,
-  textTransform: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              fontWeight: 700,
+              fontSize: 15,
+              textTransform: "none",
 
-  padding:
-    item.name === "Explore"
-      ? "0.5rem 2rem"
-      : "0.625rem 1rem",
+              padding:
+                item.name === "Explore" ? "0.5rem 2rem" : "0.625rem 1rem",
 
-  borderRadius: "10px",
+              borderRadius: "10px",
 
-  border:
-    item.name === "Explore"
-      ? "1.5px solid #5b3cff"
-      : "none",
+              border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
 
-  color:
-    item.name === "Explore"
-      ? "#5b3cff"
-      : "#111827",
+              color: item.name === "Explore" ? "#5b3cff" : "#111827",
 
-  backgroundColor: "transparent",
+              backgroundColor: "transparent",
 
-  transition: "all 0.25s ease",
+              transition: "all 0.25s ease",
 
-  "&:hover": {
-    ...(item.name === "Explore"
-      ? {
-          backgroundColor: "#2a07d6",
-          color: "#fff",
-          transform: "translateY(-1px)",
-          boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
-        }
-      : {
-          color: "transparent",
-          background: "linear-gradient(to right,#ef4444,#a855f7)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        }),
-  },
-}}
+              "&:hover": {
+                ...(item.name === "Explore"
+                  ? {
+                      backgroundColor: "#2a07d6",
+                      color: "#fff",
+                      transform: "translateY(-1px)",
+                      boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+                    }
+                  : {
+                      color: "transparent",
+                      background: "linear-gradient(to right,#ef4444,#a855f7)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }),
+              },
+            }}
           >
             <Box component="span">{item.name}</Box>
-            <Box component="span" sx={{ fontSize: 11, ml: 0.5, transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s" }}>
+            <Box
+              component="span"
+              sx={{
+                fontSize: 11,
+                ml: 0.5,
+                transform:
+                  openDropdown === item.name
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                transition: "transform .2s",
+              }}
+            >
               ▼
             </Box>
           </Button>
@@ -422,43 +442,40 @@ const Navbar: React.FC = () => {
           // }}
 
           sx={{
-  padding: item.name === "Creator" ? "0.5rem 2rem" : "0.5rem 0.75rem",
-  borderRadius: "10px",
-  display: "inline-block",
-  fontWeight: 700,
-  fontSize: 15,
-  textDecoration: "none",
+            padding: item.name === "Creator" ? "0.5rem 2rem" : "0.5rem 0.75rem",
+            borderRadius: "10px",
+            display: "inline-block",
+            fontWeight: 700,
+            fontSize: 15,
+            textDecoration: "none",
 
-  border:
-    item.name === "Creator" 
-      ? "1.5px solid #5b3cff"
-      : "none",
+            border: item.name === "Creator" ? "1.5px solid #5b3cff" : "none",
 
-  color:
-    item.name === "Creator"
-      ? "#5b3cff"
-      : isActive(item.href)
-      ? "#ef4444"
-      : "#111827",
+            color:
+              item.name === "Creator"
+                ? "#5b3cff"
+                : isActive(item.href)
+                  ? "#ef4444"
+                  : "#111827",
 
-  transition: "all 0.25s ease",
+            transition: "all 0.25s ease",
 
-  "&:hover": {
-    ...(item.name === "Creator"
-      ? {
-          backgroundColor: "#2a07d6",
-          color: "#fff",
-          transform: "translateY(-1px)",
-          boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
-        }
-      : {
-          color: "transparent",
-          background: "linear-gradient(to right,#ef4444,#a855f7)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        }),
-  },
-}}
+            "&:hover": {
+              ...(item.name === "Creator"
+                ? {
+                    backgroundColor: "#2a07d6",
+                    color: "#fff",
+                    transform: "translateY(-1px)",
+                    boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+                  }
+                : {
+                    color: "transparent",
+                    background: "linear-gradient(to right,#ef4444,#a855f7)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }),
+            },
+          }}
         >
           {item.name}
         </NavLink>
@@ -473,18 +490,55 @@ const Navbar: React.FC = () => {
           <Button
             variant="text"
             fullWidth
-            onClick={() => setOpenDropdown((prev) => (prev === item.name ? null : item.name))}
+            onClick={() =>
+              setOpenDropdown((prev) => (prev === item.name ? null : item.name))
+            }
+            // sx={{
+            //   justifyContent: "space-between",
+            //   textTransform: "none",
+            //   fontWeight: 700,
+            //   p: "0.75rem 1rem",
+            //   borderRadius: 2,
+            //   color: "#0f172a",
+            // }}
             sx={{
               justifyContent: "space-between",
               textTransform: "none",
               fontWeight: 700,
-              p: "0.75rem 1rem",
-              borderRadius: 2,
-              color: "#0f172a",
+
+              p: item.name === "Explore" ? "0.75rem 1.2rem" : "0.75rem 1rem",
+
+              borderRadius: "10px",
+
+              border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
+
+              color: item.name === "Explore" ? "#5b3cff" : "#0f172a",
+
+              transition: "all 0.25s ease",
+
+              "&:hover": {
+                ...(item.name === "Explore"
+                  ? {
+                      backgroundColor: "#2a07d6",
+                      color: "#fff",
+                      transform: "translateY(-1px)",
+                      boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+                    }
+                  : {}),
+              },
             }}
           >
             {item.name}
-            <Box sx={{ fontSize: 12, transform: openDropdown === item.name ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .25s" }}>
+            <Box
+              sx={{
+                fontSize: 12,
+                transform:
+                  openDropdown === item.name
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                transition: "transform .25s",
+              }}
+            >
               ▼
             </Box>
           </Button>
@@ -497,17 +551,54 @@ const Navbar: React.FC = () => {
                   to={drop.href}
                   external={isExternal(drop.href)}
                   onClick={closeMobileMenu}
+                  // sx={{
+                  //   display: "block",
+                  //   px: 1,
+                  //   py: 0.75,
+                  //   borderRadius: 1,
+                  //   background: isActive(drop.href)
+                  //     ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+                  //     : "#f9fafb",
+                  //   mb: 1,
+                  // }}
+
                   sx={{
                     display: "block",
-                    px: 1,
-                    py: 0.75,
-                    borderRadius: 1,
-                    background: isActive(drop.href) ? "linear-gradient(to right,#fef2f2,#fdf2f8)" : "#f9fafb",
-                    mb: 1,
+
+                    padding:
+                      item.name === "Creator"
+                        ? "0.75rem 1.2rem"
+                        : "0.75rem 1rem",
+
+                    borderRadius: "10px",
+
+                    border:
+                      item.name === "Creator" ? "1.5px solid #5b3cff" : "none",
+
+                    color: item.name === "Creator" ? "#5b3cff" : "#111827",
+
+                    fontWeight: 700,
+
+                    transition: "all 0.25s ease",
+
+                    "&:hover": {
+                      ...(item.name === "Creator"
+                        ? {
+                            backgroundColor: "#2a07d6",
+                            color: "#fff",
+                            transform: "translateY(-1px)",
+                            boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+                          }
+                        : {}),
+                    },
                   }}
                 >
                   <Typography sx={{ fontWeight: 600 }}>{drop.name}</Typography>
-                  {drop.desc && <Typography variant="caption" sx={{ color: "#6b7280" }}>{drop.desc}</Typography>}
+                  {drop.desc && (
+                    <Typography variant="caption" sx={{ color: "#6b7280" }}>
+                      {drop.desc}
+                    </Typography>
+                  )}
                 </NavLink>
               ))}
             </Box>
@@ -519,7 +610,51 @@ const Navbar: React.FC = () => {
     // plain link in mobile
     return (
       <Box key={item.name} sx={{ mb: 1 }}>
-        <NavLink to={item.href ?? "/"} external={isExternal(item.href)} onClick={closeMobileMenu} sx={{ display: "block", py: 1 }}>
+        <NavLink
+          to={item.href ?? "/"}
+          external={isExternal(item.href)}
+          onClick={closeMobileMenu}
+          // sx={{
+          //    display: "block", py: 1 }}
+          sx={{
+  display: "block",
+
+  padding:
+    item.name === "Creator"
+      ? "0.75rem 1.2rem"
+      : "0.75rem 1rem",
+
+  borderRadius: "10px",
+
+  border:
+    item.name === "Creator"
+      ? "1.5px solid #5b3cff"
+      : "none",
+
+  color:
+    item.name === "Creator"
+      ? "#5b3cff"
+      : "#111827",
+
+  fontWeight: 700,
+
+  transition: "all 0.25s ease",
+
+  "&:hover": {
+    ...(item.name === "Creator"
+      ? {
+          backgroundColor: "#2a07d6",
+          color: "#fff",
+          transform: "translateY(-1px)",
+          boxShadow: `0 6px 18px ${alpha(
+            "#220a9b",
+            0.25
+          )}`,
+        }
+      : {}),
+  },
+}}
+        >
           <Typography sx={{ fontWeight: 700 }}>{item.name}</Typography>
         </NavLink>
       </Box>
@@ -543,16 +678,53 @@ const Navbar: React.FC = () => {
           transition: "all 0.28s",
         }}
       >
-        <Box sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 2, sm: 3, md: 4 } }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: { xs: 64, md: 72 } }}>
+        <Box
+          sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 2, sm: 3, md: 4 } }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              height: { xs: 64, md: 72 },
+            }}
+          >
             {/* Left: Logo + Search + Filter */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: "1 1 auto", minWidth: 0 }}>
-              <RouterLink to="/" onClick={closeMobileMenu} style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-                <Box component="img" src="/Tiiron_logo.png" alt="Tiiron" sx={{ height: { xs: 32, md: 40 }, objectFit: "contain" }} />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                flex: "1 1 auto",
+                minWidth: 0,
+              }}
+            >
+              <RouterLink
+                to="/"
+                onClick={closeMobileMenu}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
+                }}
+              >
+                <Box
+                  component="img"
+                  src="/Tiiron_logo.png"
+                  alt="Tiiron"
+                  sx={{ height: { xs: 32, md: 40 }, objectFit: "contain" }}
+                />
               </RouterLink>
 
               {!isMobile && (
-                <Box sx={{ flex: 1, minWidth: 0, maxWidth: { lg: 380, xl: 400 }, ml: 3 }}>
+                <Box
+                  sx={{
+                    flex: 1,
+                    minWidth: 0,
+                    maxWidth: { lg: 380, xl: 400 },
+                    ml: 3,
+                  }}
+                >
                   <SearchBox />
                 </Box>
               )}
@@ -560,16 +732,24 @@ const Navbar: React.FC = () => {
 
             {/* Center: Desktop nav + Generate Quiz */}
             {!isMobile && (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mx: 3, flexShrink: 0 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  mx: 3,
+                  flexShrink: 0,
+                }}
+              >
                 {navigationItems.map((item) => renderDesktopNavItem(item))}
                 <Button
                   variant="contained"
                   size="large"
                   onClick={handleOpenQuizModal}
-                  sx={{ bgcolor: '#5b3cff', fontWeight: 600 }}
-                  >
-                  <AutoAwesomeIcon /> 
-                   Generate Quiz
+                  sx={{ bgcolor: "#5b3cff", fontWeight: 600 }}
+                >
+                  <AutoAwesomeIcon />
+                  Generate Quiz
                 </Button>
               </Box>
             )}
@@ -579,7 +759,14 @@ const Navbar: React.FC = () => {
               {!isMobile && isLoggedIn && (
                 <>
                   {/* Vertical divider after center nav items */}
-                  <Box sx={{ height: '32px', width: '1px', backgroundColor: '#e5e7eb', mx: 1 }} />
+                  <Box
+                    sx={{
+                      height: "32px",
+                      width: "1px",
+                      backgroundColor: "#e5e7eb",
+                      mx: 1,
+                    }}
+                  />
 
                   {/* Grouped action buttons with hover effects */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
@@ -587,12 +774,12 @@ const Navbar: React.FC = () => {
                       aria-label="Upgrade"
                       sx={{
                         color: "#0f172a",
-                        transition: 'all 0.2s ease',
-                        '&:hover': {
-                          backgroundColor: alpha('#EF4444', 0.1),
-                          color: '#EF4444',
-                          transform: 'scale(1.1)',
-                        }
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: alpha("#EF4444", 0.1),
+                          color: "#EF4444",
+                          transform: "scale(1.1)",
+                        },
                       }}
                     >
                       <WorkspacePremiumIcon />
@@ -603,15 +790,19 @@ const Navbar: React.FC = () => {
                       onClick={handleOpenCart}
                       sx={{
                         color: "#0f172a",
-                        transition: 'all 0.2s ease',
-                        '&:hover': {
-                          backgroundColor: alpha('#2563eb', 0.1),
-                          color: '#2563eb',
-                          transform: 'scale(1.1)',
-                        }
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: alpha("#2563eb", 0.1),
+                          color: "#2563eb",
+                          transform: "scale(1.1)",
+                        },
                       }}
                     >
-                      <Badge badgeContent={cartItemCount} color="error" invisible={cartItemCount === 0}>
+                      <Badge
+                        badgeContent={cartItemCount}
+                        color="error"
+                        invisible={cartItemCount === 0}
+                      >
                         <ShoppingCartIcon />
                       </Badge>
                     </IconButton>
@@ -620,12 +811,12 @@ const Navbar: React.FC = () => {
                       aria-label="Notifications"
                       sx={{
                         color: "#0f172a",
-                        transition: 'all 0.2s ease',
-                        '&:hover': {
-                          backgroundColor: alpha('#F59E0B', 0.1),
-                          color: '#F59E0B',
-                          transform: 'scale(1.1)',
-                        }
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          backgroundColor: alpha("#F59E0B", 0.1),
+                          color: "#F59E0B",
+                          transform: "scale(1.1)",
+                        },
                       }}
                     >
                       <NotificationPanel />
@@ -637,30 +828,39 @@ const Navbar: React.FC = () => {
               )}
 
               {!isMobile && !isLoggedIn && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mx: 2, px: 2, borderLeft: "1px solid #e5e7eb" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    mx: 2,
+                    px: 2,
+                    borderLeft: "1px solid #e5e7eb",
+                  }}
+                >
                   <RouterLink to="/login" style={{ textDecoration: "none" }}>
                     <Button
                       variant="outlined"
                       size="large"
                       sx={{
-                        borderColor: '#5b3cff',
-                        color: '#5b3cff',
+                        borderColor: "#5b3cff",
+                        color: "#5b3cff",
                         fontWeight: 600,
                         borderWidth: 2,
-                        minWidth: '120px',
-                        height: '40px',
-                        padding: '8px 24px',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        '&:hover': {
-                          borderColor: '#5b3cff',
-                          backgroundColor: '#5b3cff',
-                          color: '#ffffff',
-                          transform: 'translateY(-1px)',
-                          boxShadow: `0 4px 12px ${alpha('#5b3cff', 0.3)}`,
+                        minWidth: "120px",
+                        height: "40px",
+                        padding: "8px 24px",
+                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        "&:hover": {
+                          borderColor: "#5b3cff",
+                          backgroundColor: "#5b3cff",
+                          color: "#ffffff",
+                          transform: "translateY(-1px)",
+                          boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.3)}`,
                         },
-                        '&:active': {
-                          transform: 'translateY(0)',
-                        }
+                        "&:active": {
+                          transform: "translateY(0)",
+                        },
                       }}
                     >
                       Login
@@ -671,10 +871,10 @@ const Navbar: React.FC = () => {
                       variant="contained"
                       size="large"
                       sx={{
-                        bgcolor: '#5b3cff',
-                        minWidth: '120px',
-                        height: '40px',
-                        padding: '8px 24px',
+                        bgcolor: "#5b3cff",
+                        minWidth: "120px",
+                        height: "40px",
+                        padding: "8px 24px",
                         fontWeight: 600,
                       }}
                     >
@@ -685,7 +885,13 @@ const Navbar: React.FC = () => {
               )}
 
               {/* Mobile menu toggle */}
-              <IconButton onClick={toggleMobileMenu} sx={{ display: { xs: "inline-flex", lg: "none" }, color: "#0f172a" }}>
+              <IconButton
+                onClick={toggleMobileMenu}
+                sx={{
+                  display: { xs: "inline-flex", lg: "none" },
+                  color: "#0f172a",
+                }}
+              >
                 {isOpen ? <CloseIcon /> : <MenuIcon />}
               </IconButton>
             </Box>
@@ -693,11 +899,40 @@ const Navbar: React.FC = () => {
         </Box>
 
         {/* Mobile Drawer */}
-        <Drawer anchor="right" open={isOpen && isMobile} onClose={closeMobileMenu} sx={{ "& .MuiDrawer-paper": { width: { xs: "85%", sm: 400 } } }}>
-          <Box sx={{ height: "100%", display: "flex", flexDirection: "column", bgcolor: "#fff" }}>
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", p: 2, borderBottom: "1px solid #e5e7eb" }}>
-              <RouterLink to="/" onClick={closeMobileMenu} style={{ display: "flex", alignItems: "center" }}>
-                <Box component="img" src="/Tiiron_logo.png" alt="Tiiron" sx={{ height: 32 }} />
+        <Drawer
+          anchor="right"
+          open={isOpen && isMobile}
+          onClose={closeMobileMenu}
+          sx={{ "& .MuiDrawer-paper": { width: { xs: "85%", sm: 400 } } }}
+        >
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              bgcolor: "#fff",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                p: 2,
+                borderBottom: "1px solid #e5e7eb",
+              }}
+            >
+              <RouterLink
+                to="/"
+                onClick={closeMobileMenu}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <Box
+                  component="img"
+                  src="/Tiiron_logo.png"
+                  alt="Tiiron"
+                  sx={{ height: 32 }}
+                />
               </RouterLink>
               <IconButton onClick={closeMobileMenu}>
                 <CloseIcon />
@@ -722,23 +957,23 @@ const Navbar: React.FC = () => {
                     textAlign: "center",
                     p: 1.25,
                     borderRadius: 2,
-                    bgcolor: '#5b3cff',
+                    bgcolor: "#5b3cff",
                     color: "#fff",
                     fontWeight: 600,
-                    minHeight: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    '&:hover': {
-                      bgcolor: '#4a2fd4',
-                      transform: 'translateY(-1px)',
-                    }
+                    minHeight: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      bgcolor: "#4a2fd4",
+                      transform: "translateY(-1px)",
+                    },
                   }}
-                  >
-                  <AutoAwesomeIcon />   
-                   Generate Quiz
+                >
+                  <AutoAwesomeIcon />
+                  Generate Quiz
                 </Box>
               </Box>
             </Box>
@@ -746,67 +981,97 @@ const Navbar: React.FC = () => {
             <Box sx={{ p: 2, borderTop: "1px solid #e5e7eb" }}>
               {isLoggedIn ? (
                 <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
-                  <IconButton onClick={() => { handleOpenCart(); closeMobileMenu(); }} sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}>
-                    <Badge badgeContent={cartItemCount} color="error" invisible={cartItemCount === 0}><ShoppingCartIcon /></Badge>
+                  <IconButton
+                    onClick={() => {
+                      handleOpenCart();
+                      closeMobileMenu();
+                    }}
+                    sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}
+                  >
+                    <Badge
+                      badgeContent={cartItemCount}
+                      color="error"
+                      invisible={cartItemCount === 0}
+                    >
+                      <ShoppingCartIcon />
+                    </Badge>
                   </IconButton>
-                  <IconButton sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}><NotificationsIcon /></IconButton>
-                  <IconButton sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}><WorkspacePremiumIcon /></IconButton>
+                  <IconButton
+                    sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}
+                  >
+                    <NotificationsIcon />
+                  </IconButton>
+                  <IconButton
+                    sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}
+                  >
+                    <WorkspacePremiumIcon />
+                  </IconButton>
                   <ProfilePopup />
                 </Box>
               ) : (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                   <Box sx={{ display: "flex", gap: 1 }}>
-                    <RouterLink to="/login" onClick={closeMobileMenu} style={{ textDecoration: "none", flex: 1 }}>
+                    <RouterLink
+                      to="/login"
+                      onClick={closeMobileMenu}
+                      style={{ textDecoration: "none", flex: 1 }}
+                    >
                       <Box
                         sx={{
                           textAlign: "center",
                           p: 1,
                           borderRadius: 2,
-                          border: '2px solid #5b3cff',
-                          color: '#5b3cff',
+                          border: "2px solid #5b3cff",
+                          color: "#5b3cff",
                           fontWeight: 600,
-                          cursor: 'pointer',
-                          minHeight: '40px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                          '&:hover': {
-                            borderColor: '#5b3cff',
-                            backgroundColor: '#5b3cff',
-                            color: '#ffffff',
-                            transform: 'translateY(-1px)',
-                            boxShadow: `0 4px 12px ${alpha('#5b3cff', 0.3)}`,
+                          cursor: "pointer",
+                          minHeight: "40px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                          "&:hover": {
+                            borderColor: "#5b3cff",
+                            backgroundColor: "#5b3cff",
+                            color: "#ffffff",
+                            transform: "translateY(-1px)",
+                            boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.3)}`,
                           },
-                          '&:active': {
-                            transform: 'translateY(0)',
-                          }
+                          "&:active": {
+                            transform: "translateY(0)",
+                          },
                         }}
                       >
                         Login
                       </Box>
                     </RouterLink>
-                    <RouterLink to="/sign-up" onClick={closeMobileMenu} style={{ textDecoration: "none", flex: 1 }}>
-                      <Box sx={{
-                        textAlign: "center",
-                        p: 1.25,
-                        borderRadius: 2,
-                        bgcolor: '#5b3cff',
-                        color: "#fff",
-                        fontWeight: 600,
-                        minHeight: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        '&:hover': {
-                          transform: 'translateY(-1px)',
-                          boxShadow: `0 4px 12px ${alpha('#5b3cff', 0.3)}`,
-                        },
-                        '&:active': {
-                          transform: 'translateY(0)',
-                        }
-                      }}>
+                    <RouterLink
+                      to="/sign-up"
+                      onClick={closeMobileMenu}
+                      style={{ textDecoration: "none", flex: 1 }}
+                    >
+                      <Box
+                        sx={{
+                          textAlign: "center",
+                          p: 1.25,
+                          borderRadius: 2,
+                          bgcolor: "#5b3cff",
+                          color: "#fff",
+                          fontWeight: 600,
+                          minHeight: "40px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                          "&:hover": {
+                            transform: "translateY(-1px)",
+                            boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.3)}`,
+                          },
+                          "&:active": {
+                            transform: "translateY(0)",
+                          },
+                        }}
+                      >
                         Sign Up
                       </Box>
                     </RouterLink>
@@ -822,10 +1087,15 @@ const Navbar: React.FC = () => {
       <Box sx={{ height: { xs: 64, md: 72 } }} />
 
       {/* Cart Modal */}
-      {isLoggedIn && <CartModal isOpen={isCartOpen} onClose={handleCloseCart} />}
+      {isLoggedIn && (
+        <CartModal isOpen={isCartOpen} onClose={handleCloseCart} />
+      )}
 
       {/* Generate Quiz Modal */}
-      <GenerateQuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} />
+      <GenerateQuizModal
+        isOpen={isQuizModalOpen}
+        onClose={handleCloseQuizModal}
+      />
     </>
   );
 };
