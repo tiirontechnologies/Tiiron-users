@@ -118,7 +118,8 @@ function PartnerModal({ onClose }: { onClose: () => void }) {
         {status === "success" ? (
           <div className="text-center py-6">
             <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Request Sent 🚀
+              Thank you! Your request has been submitted successfully. Our team will get in touch with you shortly.
+
             </h3>
 
             <p className="text-sm text-gray-500">
@@ -265,7 +266,7 @@ useEffect(() => {
       title: "Our Solutions",
       links: [
         { name: "Tiiron ERP", href: "#",external:true },
-        { name: "Inacademics", href: "https://inacademic.com/" , external: true},
+        { name: "Inacademic", href: "https://inacademic.com/" , external: true},
         { name: "Tiiron Academy", href: "https://academy.tiiron.com/",external:true },
         { name: "Tiiron Technologies", href: "https://tiirontechnologies.com/" , external: true},
         // { name: "Case Studies", href: "#" },
