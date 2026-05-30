@@ -5,6 +5,7 @@ import {
   useGetFreeCoursesQuery,
   useGetCartQuery,
   useAddToCartServerMutation,
+  useGetCourseRatingQuery
 } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
@@ -15,6 +16,33 @@ const PAGE_LAYOUT_SX = {
   mx: "auto",
   px: { xs: 3, sm: 5, md: 10, lg: 15 },
   py: { xs: 3, md: 4 },
+};
+
+const CourseCardWithRating = ({
+  course,
+  isCourseInCart,
+  handleAddToCart,
+  isAddingToCart,
+}: any) => {
+  const { data: ratingData } = useGetCourseRatingQuery(course.id);
+
+  return (
+    <CourseCardWrapper
+      id={Number(course.id)}
+      thumbnailSrc={course.image}
+      tags={course.tags}
+      title={course.title}
+      chapters={course.totalChapters}
+      rating={ratingData?.data?.averageRating || 0}
+      reviewCount={ratingData?.data?.totalRatings || 0}
+      instructor={course.createdBy || "Instructor"}
+      price={course.price}
+      navigatePath={(id) => `/course-glossary/${id}`}
+      isCourseInCart={isCourseInCart}
+      onAddToCart={handleAddToCart}
+      isLoadingCart={isAddingToCart}
+    />
+  );
 };
 
 export default function FreeCourses() {
@@ -100,7 +128,7 @@ export default function FreeCourses() {
               py: { xs: 1, md: 2 },
             }}
           >
-            {courses.map((course) => {
+            {/* {courses.map((course) => {
               const courseId = Number(course.id);
               const isCourseInCart =
                 cartData?.data?.items?.some(
@@ -130,7 +158,25 @@ export default function FreeCourses() {
                   isLoadingCart={isAddingToCart}
                 />
               );
-            })}
+            })} */}
+            {courses.map((course) => {
+  const courseId = Number(course.id);
+
+  const isCourseInCart =
+    cartData?.data?.items?.some(
+      (item) => item.courseId === courseId
+    ) || false;
+
+  return (
+    <CourseCardWithRating
+      key={course.id}
+      course={course}
+      isCourseInCart={isCourseInCart}
+      handleAddToCart={handleAddToCart}
+      isAddingToCart={isAddingToCart}
+    />
+  );
+})}
           </Box>
         )}
       </PageToolbarLayout>

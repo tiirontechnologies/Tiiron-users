@@ -12,7 +12,7 @@ export const ENV = {
   BASE_URL,
   AUTH_URL: `${BASE_URL}${API_PREFIX}/auth`,
   SERVER_URL: `${BASE_URL}${API_PREFIX}`,
-  UPLOADS: `${BASE_URL}/`,
+  UPLOADS: ` `,
 };
 
 export const COLORS = {
