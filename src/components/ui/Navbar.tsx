@@ -84,7 +84,7 @@ const navigationItems: NavItem[] = [
       },
       // external example (keeps external behavior)
       {
-        name: "Inacademics",
+        name: "Inacademic",
         //  desc: "AI-powered learning solutions",
         href: "https://inacademic.com/",
       },
