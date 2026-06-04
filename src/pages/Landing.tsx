@@ -63,23 +63,6 @@ const CourseCardSkeleton = () => (
   </Card>
 );
 
-// semer effect for trndening section
-const TrendingCardSkeleton = () => (
-  <Card
-    elevation={0}
-    sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid #e0e0e0' }}
-  >
-    <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
-      <Skeleton variant="rectangular" width={80} height={80} sx={{ borderRadius: 1.5, flexShrink: 0 }} animation="wave" />
-      <Box sx={{ flex: 1 }}>
-        <Skeleton variant="text" width="90%" height={16} animation="wave" />
-        <Skeleton variant="text" width="60%" height={14} animation="wave" sx={{ mt: 0.5 }} />
-        <Skeleton variant="text" width="40%" height={14} animation="wave" sx={{ mt: 0.5 }} />
-      </Box>
-    </Stack>
-  </Card>
-);
-
 
 const Landing = () => {
   const theme = useTheme();
@@ -581,7 +564,7 @@ const Landing = () => {
           </Typography>
 
           <Grid container spacing={3}>
-            Most Popular Column
+            {/* Most Popular Column */}
             <Grid item xs={12} md={4}>
               <Box
                 sx={{
