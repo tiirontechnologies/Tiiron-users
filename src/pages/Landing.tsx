@@ -45,6 +45,40 @@ import {
 import { ICourse } from 'types/course.types';
 import Loader from '@components/ui/Spinner';
 import { useAuth } from '../hooks/useAuth';
+import Skeleton from '@mui/material/Skeleton';
+
+// semer efeecrt components for feature 
+const CourseCardSkeleton = () => (
+  <Card elevation={0} sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid #e0e0e0' }}>
+    <Skeleton variant="rectangular" height={160} animation="wave" />
+    <Box sx={{ p: 2 }}>
+      <Skeleton variant="text" width="60%" height={20} animation="wave" />
+      <Skeleton variant="text" width="90%" height={16} animation="wave" sx={{ mt: 1 }} />
+      <Skeleton variant="text" width="40%" height={16} animation="wave" sx={{ mt: 1 }} />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+        <Skeleton variant="text" width="30%" height={20} />
+        <Skeleton variant="rounded" width={80} height={32} />
+      </Box>
+    </Box>
+  </Card>
+);
+
+// semer effect for trndening section
+const TrendingCardSkeleton = () => (
+  <Card
+    elevation={0}
+    sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid #e0e0e0' }}
+  >
+    <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
+      <Skeleton variant="rectangular" width={80} height={80} sx={{ borderRadius: 1.5, flexShrink: 0 }} animation="wave" />
+      <Box sx={{ flex: 1 }}>
+        <Skeleton variant="text" width="90%" height={16} animation="wave" />
+        <Skeleton variant="text" width="60%" height={14} animation="wave" sx={{ mt: 0.5 }} />
+        <Skeleton variant="text" width="40%" height={14} animation="wave" sx={{ mt: 0.5 }} />
+      </Box>
+    </Stack>
+  </Card>
+);
 
 
 const Landing = () => {
@@ -477,9 +511,16 @@ const Landing = () => {
           </Stack>
 
           {fetchingBrowse ? (
-            <Box sx={{ textAlign: 'center', py: 8 }}>
-              <Loader />
-            </Box>
+            // <Box sx={{ textAlign: 'center', py: 8 }}>
+            //   <Loader />
+            // </Box>
+              <Grid container spacing={2}>
+              {[...Array(4)].map((_, i) => (
+                <Grid item xs={12} sm={6} md={3} key={i}>
+                  <CourseCardSkeleton />
+                </Grid>
+              ))}
+            </Grid>
           ) : errorBrowse ? (
             <Typography sx={{ textAlign: 'center', color: 'error.main', py: 8 }}>
               Failed to load courses.
@@ -540,7 +581,7 @@ const Landing = () => {
           </Typography>
 
           <Grid container spacing={3}>
-            {/* Most Popular Column */}
+            Most Popular Column
             <Grid item xs={12} md={4}>
               <Box
                 sx={{
