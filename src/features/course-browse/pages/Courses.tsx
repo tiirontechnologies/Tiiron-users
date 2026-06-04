@@ -10,6 +10,8 @@ import {
 } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
+// for rating for now 
+import { useGetCourseRatingQuery } from "../api/courseApi";
 
 const PAGE_LAYOUT_SX = {
   width: "100%",
@@ -17,6 +19,33 @@ const PAGE_LAYOUT_SX = {
   mx: "auto",
   px: { xs: 3, sm: 5, md: 10, lg: 15 },
   py: { xs: 3, md: 4 },
+};
+
+const CourseCardWithRating = ({
+  course,
+  isCourseInCart,
+  handleAddToCart,
+  isAddingToCart,
+}: any) => {
+  const { data: ratingData } = useGetCourseRatingQuery(course.id);
+
+  return (
+    <CourseCardWrapper
+      id={Number(course.id)}
+      thumbnailSrc={course.image}
+      tags={course.tags}
+      title={course.title}
+      chapters={course.totalChapters}
+      rating={ratingData?.data?.averageRating || 0}
+      reviewCount={ratingData?.data?.totalRatings || 0}
+      instructor={course.createdBy || "Instructor"}
+      price={course.price}
+      navigatePath={(id) => `/course-glossary/${id}`}
+      isCourseInCart={isCourseInCart}
+      onAddToCart={handleAddToCart}
+      isLoadingCart={isAddingToCart}
+    />
+  );
 };
 
 export default function Courses() {
@@ -136,7 +165,7 @@ export default function Courses() {
               py: { xs: 1, md: 2 },
             }}
           >
-            {courses.map((course) => {
+            {/* {courses.map((course) => {
               const courseId = Number(course.id);
               const isCourseInCart =
                 cartData?.data?.items?.some(
@@ -145,8 +174,8 @@ export default function Courses() {
 
               // Generate mock rating and review count for demo purposes
               // In production, this should come from the API
-              const mockRating = (4.5 + Math.random() * 0.5).toFixed(1);
-              const mockReviewCount = Math.floor(Math.random() * 15000) + 1000;
+              // const mockRating = (4.5 + Math.random() * 0.5).toFixed(1);
+              // const mockReviewCount = Math.floor(Math.random() * 15000) + 1000;
 
               return (
                 <CourseCardWrapper
@@ -156,8 +185,8 @@ export default function Courses() {
                   tags={course.tags}
                   title={course.title}
                   chapters={course.totalChapters}
-                  rating={parseFloat(mockRating)}
-                  reviewCount={mockReviewCount}
+                  // rating={parseFloat(mockRating)}
+                  // reviewCount={mockReviewCount}
                   instructor={course.createdBy || "Instructor"}
                   price={course.price}
                   navigatePath={(id) => `/course-glossary/${id}`}
@@ -166,7 +195,25 @@ export default function Courses() {
                   isLoadingCart={isAddingToCart}
                 />
               );
-            })}
+            })} */}
+            {courses.map((course) => {
+  const courseId = Number(course.id);
+
+  const isCourseInCart =
+    cartData?.data?.items?.some(
+      (item) => item.courseId === courseId
+    ) || false;
+
+  return (
+    <CourseCardWithRating
+      key={course.id}
+      course={course}
+      isCourseInCart={isCourseInCart}
+      handleAddToCart={handleAddToCart}
+      isAddingToCart={isAddingToCart}
+    />
+  );
+})}
           </Box>
         )}
       </PageToolbarLayout>
