@@ -9,6 +9,7 @@ import {
   CircularProgress,
   useTheme,
   useMediaQuery,
+    Skeleton
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -22,15 +23,70 @@ import { useSubmitQuizQuestionMutation } from "@features/quiz-generation/api/qui
 
 interface QuizPreviewProps {
   questions: QuizQuestion[];
+   isGenerating: boolean;
 }
 
-export const QuizPreview: React.FC<QuizPreviewProps> = ({ questions }) => {
+
+const QuizShimmer: React.FC = () => (
+  <Box sx={{ p: 2, borderRadius: "20px", bgcolor: "#FFFFFF", border: "1px solid #E2E8F0", minHeight: "500px" }}>
+    <Paper elevation={0} sx={{ p: { xs: 2, sm: 4 } }}>
+      
+      {/* Header shimmer */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Box>
+          <Skeleton variant="text" width={160} height={36} />
+          <Skeleton variant="text" width={220} height={22} />
+        </Box>
+        <Skeleton variant="circular" width={60} height={60} />
+      </Box>
+
+      {/* Chip shimmer */}
+      <Skeleton variant="rounded" width={100} height={24} sx={{ mb: 2, borderRadius: "16px" }} />
+
+      {/* Question text shimmer */}
+      <Skeleton variant="text" width="90%" height={32} sx={{ mb: 1 }} />
+      <Skeleton variant="text" width="70%" height={32} sx={{ mb: 3 }} />
+
+      {/* 4 Options shimmer */}
+      {[1, 2, 3, 4].map((i) => (
+        <Box
+          key={i}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            mb: 2,
+            p: 2,
+            border: "1px solid #E2E8F0",
+            borderRadius: "12px",
+          }}
+        >
+          <Skeleton variant="circular" width={22} height={22} />
+          <Skeleton variant="text" width={`${45 + i * 10}%`} height={22} />
+        </Box>
+      ))}
+
+      {/* Navigation buttons shimmer */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt={3} px={2}>
+        <Skeleton variant="rounded" width={90} height={40} sx={{ borderRadius: "8px" }} />
+        <Box display="flex" gap={2}>
+          <Skeleton variant="rounded" width={60} height={40} sx={{ borderRadius: "8px" }} />
+          <Skeleton variant="rounded" width={140} height={40} sx={{ borderRadius: "12px" }} />
+        </Box>
+      </Box>
+
+    </Paper>
+  </Box>
+);
+
+export const QuizPreview: React.FC<QuizPreviewProps> = ({ questions ,isGenerating }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<(string | string[])[]>([]);
   const [submissionResults, setSubmissionResults] = useState<Record<number, { isCorrect: boolean; correctOptionId: number }>>({});
 
   const [submitQuizQuestion, { isLoading }] = useSubmitQuizQuestionMutation();
 
+  
   // Update selectedAnswers when questions changes
   React.useEffect(() => {
     setSelectedAnswers(new Array(questions.length).fill(""));
@@ -38,9 +94,13 @@ export const QuizPreview: React.FC<QuizPreviewProps> = ({ questions }) => {
     setCurrentIndex(0);
   }, [questions]);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+// shimmer effect 
+if (isGenerating) {
+  return <QuizShimmer />;
+}
   if (questions.length === 0) {
     return (
       <Box sx={{ p: 4, textAlign: "center", bgcolor: "#FFFFFF", borderRadius: "20px", border: "1px solid #E2E8F0", minHeight: "500px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>

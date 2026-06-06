@@ -37,6 +37,7 @@ interface IQuizFormData {
 
 interface QuizConfigurationSidebarProps {
   onQuizGenerated: (questions: QuizQuestion[]) => void;
+   onGenerationStart: () => void;
 }
 
 const tabContainerStyle = {
@@ -73,7 +74,7 @@ const initialSourceText = `GitHub has transformed software development into a gl
 
 Following its acquisition by Microsoft, GitHub has expanded its services significantly, moving beyond simple Git hosting to offer advanced DevOps tools like GitHub Actions for continuous integration/continuous delivery (CI/CD) and GitHub Copilot for AI-assisted coding. This focus solidifies its role as the central hub for the entire software development lifecycle, from planning and coding to deployment and security.`;
 
-export const QuizConfigurationSidebar: React.FC<QuizConfigurationSidebarProps> = ({ onQuizGenerated }) => {
+export const QuizConfigurationSidebar: React.FC<QuizConfigurationSidebarProps> = ({ onQuizGenerated ,onGenerationStart}) => {
   const [activeTab, setActiveTab] = useState<"text" | "file" | "video">("text");
   const [videoSourceType, setVideoSourceType] = useState<"upload" | "url">(
     "upload"
@@ -103,6 +104,7 @@ export const QuizConfigurationSidebar: React.FC<QuizConfigurationSidebarProps> =
   });
 
   const onSubmit: SubmitHandler<IQuizFormData> = async (data) => {
+        onGenerationStart(); 
     try {
       const response = await generateQuiz({
         topic: data.focusKeyword || "General",
