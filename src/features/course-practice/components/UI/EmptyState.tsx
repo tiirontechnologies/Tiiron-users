@@ -14,6 +14,8 @@ const EmptyState: React.FC = () => {
         textAlign: "center",
         border: "1px solid #e2e8f0",
         boxShadow: SHADOWS.xl,
+         maxWidth: "1200px",  // ← ye
+    margin: "0 auto",
       }}
     >
       <Box
