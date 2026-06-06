@@ -1077,7 +1077,9 @@ const Landing = () => {
                   <Typography variant="caption">{p.level}</Typography>
                   <Typography variant="h6">{p.title}</Typography>
                   <Typography variant="body2">{p.courses} courses • {p.time}</Typography>
-                  <Button variant="contained" size="small" sx={{ mt: 2 }}>
+                  <Button 
+                  onClick={()=>navigate('/browse-courses')}
+                  variant="contained" size="small" sx={{ mt: 2 }}>
                     Start Path
                   </Button>
                 </Card>
@@ -1135,6 +1137,7 @@ const Landing = () => {
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
             <Button
+            onClick={()=>navigate("/browse-course/free")}
               variant="contained"
               sx={{
                 px: 5,
