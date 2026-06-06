@@ -156,7 +156,8 @@ const MainContent: React.FC<MainContentProps> = ({ questions, practiceData, refe
   return (
     <Box
       sx={{
-        marginLeft: "289px",
+        // marginLeft: "289px",
+        width: "calc(100% - 289px)",
         marginTop: "64px",
         padding: "32px",
         paddingBottom: "120px",
