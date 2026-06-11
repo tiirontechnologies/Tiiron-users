@@ -161,6 +161,39 @@ updateRating: builder.mutation<
   }),
   invalidatesTags: ["Course"],
 }),
+
+
+  submitAssignment: builder.mutation<
+      { success: boolean; message: string },
+      { courseId: string; submissionUrl: string }
+    >({
+      query: ({ courseId, submissionUrl }) => ({
+        url: `/course/${courseId}/assignment`,
+        method: "POST",
+        body: { submissionUrl },
+      }),
+    }),
+
+    getAssignment: builder.query<
+  {
+    success: boolean;
+    data: Array<{
+      id: number;
+      submissionUrl: string;
+      createdAt: string;
+      user: { id: number; username: string; firstName: string; lastName: string };
+      course: { id: number; title: string };
+    }>;
+  },
+  { courseId: string }
+>({
+  query: ({ courseId }) => ({
+    url: `/course/${courseId}/assignments`,
+    method: "GET",
+  }),
+  providesTags: ["Course"],
+}),
+
 //   
   }),
 });
@@ -175,6 +208,8 @@ export const {
    useGetCourseRatingsQuery,
     useGetMyRatingQuery,
   useUpdateRatingMutation,
+  useSubmitAssignmentMutation,
+  useGetAssignmentQuery,
 } = courseProgressApiSlice;
 
 

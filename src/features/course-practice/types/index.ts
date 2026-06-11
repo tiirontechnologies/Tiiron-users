@@ -179,4 +179,7 @@ export interface CoursePracticeApiResponse {
     contentTypes: ApiContentType[];
     unitStatus: UnitStatus;
   };
+   notes?: {
+      pdf_url?: string;
+    };
 }
