@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import {
   useGetChaptersQuery,
   useGetCourseByIdQuery,
-  useGetCourseRatingQuery
+  useGetCourseRatingQuery,
 } from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
@@ -14,9 +14,9 @@ import CourseGlossaryTabs from "./CourseGlossaryTabs";
 import CourseOverview from "./CourseOverview";
 import CourseLessons from "./CourseLessons";
 import CourseReviews from "./CourseReviews";
+import CourseCertificate from "./CourseCertificates";
 
 export default function CourseGlossary() {
-
   const { courseId } = useParams<{ courseId: string }>();
   const [activeTab, setActiveTab] = useState(0);
 
@@ -56,7 +56,7 @@ export default function CourseGlossary() {
     error: courseApiError,
   } = useGetCourseByIdQuery(
     { id: numericCourseId },
-    { skip: !courseId || isNaN(numericCourseId) }
+    { skip: !courseId || isNaN(numericCourseId) },
   );
 
   // Chapters API
@@ -71,13 +71,13 @@ export default function CourseGlossary() {
       page: 1,
       limit: 100,
     },
-    { skip: !courseId || isNaN(numericCourseId) }
+    { skip: !courseId || isNaN(numericCourseId) },
   );
 
   //  Rating API
-const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
-  skip: !numericCourseId,
-});
+  const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
+    skip: !numericCourseId,
+  });
 
   const course = courseData?.data;
   const chapters = chaptersData?.data?.chapters;
@@ -104,7 +104,6 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
           boxSizing: "border-box",
         }}
       >
-
         {isLoading ? (
           <Box
             sx={{
@@ -116,7 +115,6 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
           >
             <Loader />
           </Box>
-
         ) : isError ? (
           <Box
             sx={{
@@ -132,7 +130,6 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
             </Typography>
 
             <Typography variant="body2" color="text.secondary">
-
               {courseError && (
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
@@ -178,12 +175,9 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
                   </Typography>
                 </Box>
               )}
-
             </Typography>
           </Box>
-
         ) : (
-
           <>
             {/* Header Section */}
             <Box
@@ -195,7 +189,6 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
                 alignItems: { xs: "center", lg: "flex-start" },
               }}
             >
-
               <Box sx={{ flex: 1, width: "100%", minWidth: 0 }}>
                 <CourseGlossaryHeader
                   course={course}
@@ -217,7 +210,6 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
                   totalRatings={totalRatings}
                 />
               </Box>
-
             </Box>
 
             {/* Main Content */}
@@ -231,7 +223,6 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
                 boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
               }}
             >
-
               <Box sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
                 <CourseGlossaryTabs
                   activeTab={activeTab}
@@ -245,19 +236,16 @@ const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
                   pb: { xs: 4, md: 5 },
                 }}
               >
-
                 {activeTab === 0 && <CourseOverview course={course} />}
 
-                {activeTab === 1 && (
-                  <CourseLessons chapters={chapters} />
-                )}
+                {activeTab === 1 && <CourseLessons chapters={chapters} />}
 
-                {activeTab === 2 && (
+                {activeTab === 2 && <CourseCertificate />}
+                
+                {activeTab === 3 && (
                   <CourseReviews courseId={numericCourseId} />
                 )}
-
               </Box>
-
             </Box>
           </>
         )}
