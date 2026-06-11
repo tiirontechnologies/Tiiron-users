@@ -32,6 +32,7 @@ export default function CourseGlossaryTabs({ activeTab, onTabChange }: CourseGlo
     >
       <Tab label="Overview" />
       <Tab label="Lessons" />
+      <Tab label="Certificates" />
       <Tab label="Reviews" />
     </Tabs>
   );
