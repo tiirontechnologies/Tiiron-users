@@ -1,10 +1,6 @@
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import TwitterIcon from "@mui/icons-material/Twitter";
-// import { LinkedinIcon, TwitterIcon } from "lucide-react";
+import {   Linkedin, Twitter } from "lucide-react";
 import profile1 from "../../assets/profile/rishabh_profile.jpg";
-import profile2 from "../../assets/profile/tarun_profile.jpg";
-import profile3 from "../../assets/profile/himanshu_profile.png";
-import profile4 from "../../assets/profile/ramanuj_profile.jpg";
+
 
 const teamMembers = [
   {
@@ -17,21 +13,21 @@ const teamMembers = [
   {
     name: "Tarun Pandey",
     role: "Co-Founder",
-    image: profile2,
+    image: "/tarun_Profile.png",
     bio: "Focused on scalable systems and performance. Passionate about technology and creating delightful user experiences.",
     socials: { linkedin: "https://in.linkedin.com/in/tpandey495", twitter: "https://x.com/tpandey495", profile: "https://tarunpandey.netlify.app/" },
   },
   {
-    name: "Himanshu",
-    role: "Lead Developer",
-    image: profile3,
+    name: "Mrs. Kiran Devi",
+    role: "Director",
+     image:"/image.png",
     bio: "Driving innovation and leading the development team to deliver high-quality solutions.",
     socials: { linkedin: "#", twitter: "#", profile: "#" },
   },
   {
-    name: "Ramanuj Giri",
-    role: "Junior Developer",
-    image: profile4,
+    name: "Devendra Kumar Singh",
+    role: "Academic Director",
+      image:"/Academic_Director.png",
     bio: "Transforming insights into seamless user experiences and turning data into meaningful designs.",
     socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
   },
@@ -83,7 +79,7 @@ const MemberCard = ({ member }: any) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <LinkedInIcon className="w-4 h-4" />
+                <Linkedin className="w-4 h-4" />
               </a>
             )}
             {socials.twitter && (
@@ -94,7 +90,7 @@ const MemberCard = ({ member }: any) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <TwitterIcon className="w-4 h-4" />
+                <Twitter className="w-4 h-4" />
               </a>
             )}
           </div>
