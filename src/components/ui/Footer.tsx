@@ -99,7 +99,7 @@ function PartnerModal({ onClose }: { onClose: () => void }) {
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 transition"
+          className="absolute top-4 right-4 cursor-pointer  p-1 rounded-full hover:bg-gray-100 transition"
         >
           <Close className="text-gray-500" />
         </button>
@@ -221,7 +221,7 @@ function PartnerModal({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-full hover:from-red-600 hover:to-pink-600 transition-all"
+              className="w-full py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-full cursor-pointer  hover:from-red-600 hover:to-pink-600 transition-all"
             >
               {status === "loading"
                 ? "Sending..."
@@ -310,7 +310,7 @@ useEffect(() => {
     { icon: <LocationOn />,
       //  href: "https://maps.app.goo.gl/ZfZcpnYpLWUfiKfp6", 
         // href: "https://www.google.com/maps/place/Varanasi,+Uttar+Pradesh",
-        href:"https://maps.app.goo.gl/t2urofbHoNakbAGe6?g_st=ac",
+        href:"https://maps.app.goo.gl/9yNMM2q1uKX9x5uS9",
        label: "Location" },
   ];
 
@@ -742,6 +742,31 @@ useEffect(() => {
         }}
       >
         Terms & Conditions
+      </Link>
+
+      <Typography
+        component="span"
+        sx={{
+          color: "#9ca3af",
+          fontSize: { xs: "12px", md: "14px" },
+        }}
+      >
+        •
+      </Typography>
+      <Link
+        href="/refund-policy"
+        underline="none"
+        sx={{
+          color: "#6b7280",
+          fontSize: { xs: "12px", md: "14px" },
+          transition: "0.2s",
+          "&:hover": {
+            color: "#111827",
+            textDecoration: "underline",
+          },
+        }}
+      >
+      Refund Policy 
       </Link>
 
       <Typography

@@ -163,35 +163,30 @@ updateRating: builder.mutation<
 }),
 
 
-  submitAssignment: builder.mutation<
-      { success: boolean; message: string },
-      { courseId: string; submissionUrl: string }
-    >({
-      query: ({ courseId, submissionUrl }) => ({
-        url: `/course/${courseId}/assignment`,
-        method: "POST",
-        body: { submissionUrl },
-      }),
-    }),
+  getAssignment: builder.query({
+  query: (courseId) =>
+    `/course/${courseId}/assignments`,
+}),
 
-    getAssignment: builder.query<
-  {
-    success: boolean;
-    data: Array<{
-      id: number;
-      submissionUrl: string;
-      createdAt: string;
-      user: { id: number; username: string; firstName: string; lastName: string };
-      course: { id: number; title: string };
-    }>;
-  },
-  { courseId: string }
+submitAssignment: builder.mutation({
+  query: ({ assignmentId, submissionUrl }) => ({
+    url: `/course/assignments/${assignmentId}/submit`,
+    method: "POST",
+    body: {
+      submissionUrl,
+    },
+  }),
+}),
+
+
+getUnitNotes: builder.query<
+  { title: string; driveUrl: string }[],
+  number 
 >({
-  query: ({ courseId }) => ({
-    url: `/course/${courseId}/assignments`,
+  query: (unitId) => ({
+    url: `/course/units/${unitId}/notes`, // Correct endpoint
     method: "GET",
   }),
-  providesTags: ["Course"],
 }),
 
 //   
@@ -210,6 +205,7 @@ export const {
   useUpdateRatingMutation,
   useSubmitAssignmentMutation,
   useGetAssignmentQuery,
+    useGetUnitNotesQuery,
 } = courseProgressApiSlice;
 
 

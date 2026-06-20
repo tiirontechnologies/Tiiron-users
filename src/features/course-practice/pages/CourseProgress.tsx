@@ -140,6 +140,7 @@ const CourseProgress: React.FC = () => {
       <Box sx={MAIN_CONTENT_STYLE}>
         <CoursePracticeContent
           data={practiceData}
+           unitId={selectedUnitId}
           
         />
       </Box>
