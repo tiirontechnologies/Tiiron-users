@@ -1,431 +1,28 @@
-// import React, { useState } from "react";
-// import {
-//   Box,
-//   Typography,
-//   TextField,
-//   Button,
-//   InputAdornment,
-// } from "@mui/material";
-// import LinkIcon from "@mui/icons-material/Link";
-// import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-// import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-// import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-
-// const isValidDriveLink = (url: string) =>
-//   url.includes("drive.google.com") || url.includes("docs.google.com");
-
-// const AssignmentTab: React.FC = () => {
-//   const [driveLink, setDriveLink] = useState("");
-//   const [error, setError] = useState("");
-//   const [submitted, setSubmitted] = useState(false);
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     setDriveLink(e.target.value);
-//     if (error) setError("");
-//   };
-
-//   const handleSubmit = async () => {
-//     if (!driveLink.trim()) {
-//       setError("Google Drive link daalo.");
-//       return;
-//     }
-//     if (!isValidDriveLink(driveLink)) {
-//       setError("Sirf Google Drive ya Docs link accepted hai.");
-//       return;
-//     }
-//     setIsLoading(true);
-//     // TODO: apni API call yahan lagao
-//     await new Promise((r) => setTimeout(r, 900));
-//     setIsLoading(false);
-//     setSubmitted(true);
-//   };
-
-//   /* ── Submitted ── */
-//   if (submitted) {
-//     return (
-//       <Box
-//         sx={{
-//           maxWidth: 520,
-//           mx: "auto",
-//           mt: 6,
-//           display: "flex",
-//           flexDirection: "column",
-//           alignItems: "center",
-//           textAlign: "center",
-//           gap: 2,
-//         }}
-//       >
-//         <Box
-//           sx={{
-//             width: 68,
-//             height: 68,
-//             borderRadius: "50%",
-//             bgcolor: "#F0FDF4",
-//             display: "flex",
-//             alignItems: "center",
-//             justifyContent: "center",
-//           }}
-//         >
-//           <CheckCircleOutlineIcon sx={{ fontSize: 38, color: "#16A34A" }} />
-//         </Box>
-//         <Typography variant="h6" fontWeight={700} color="#1F2937">
-//           Assignment Submitted!
-//         </Typography>
-//         <Typography variant="body2" color="text.secondary">
-//           Your work has been received. Instructor will review it shortly.
-//         </Typography>
-//         <Box
-//           component="a"
-//           href={driveLink}
-//           target="_blank"
-//           rel="noopener noreferrer"
-//           sx={{
-//             display: "inline-flex",
-//             alignItems: "center",
-//             gap: 0.75,
-//             px: 2,
-//             py: 0.75,
-//             borderRadius: 99,
-//             border: "1px solid #E2E8F0",
-//             bgcolor: "#F8FAFC",
-//             color: "#2563EB",
-//             fontSize: 13,
-//             textDecoration: "none",
-//             wordBreak: "break-all",
-//             "&:hover": { bgcolor: "#EFF6FF" },
-//           }}
-//         >
-//           <LinkIcon sx={{ fontSize: 15 }} />
-//           {driveLink.length > 52 ? driveLink.slice(0, 52) + "…" : driveLink}
-//           <OpenInNewIcon sx={{ fontSize: 13, flexShrink: 0 }} />
-//         </Box>
-//         <Button
-//           variant="outlined"
-//           size="small"
-//           sx={{ mt: 1, textTransform: "none", borderRadius: 2 }}
-//           onClick={() => {
-//             setSubmitted(false);
-//             setDriveLink("");
-//           }}
-//         >
-//           Resubmit
-//         </Button>
-//       </Box>
-//     );
-//   }
-
-//   /* ── Form ── */
-//   return (
-//     <Box sx={{ maxWidth: 580, pt: 3, pb: 6 }}>
-//       <Typography variant="h6" fontWeight={700} color="#1F2937" gutterBottom>
-//         Submit Assignment
-//       </Typography>
-//       <Typography
-//         variant="body2"
-//         color="text.secondary"
-//         sx={{ mb: 3, lineHeight: 1.7 }}
-//       >
-//         Complete the assignment and upload it to Google Drive. Paste the shared
-//         link below — make sure the sharing permission is set to{" "}
-//         <Box component="span" fontWeight={600} color="#374151">
-//           "Anyone with the link can view"
-//         </Box>
-//         .
-//       </Typography>
-
-//       {/* Steps */}
-//       <Box
-//         sx={{
-//           display: "flex",
-//           flexDirection: "column",
-//           gap: 1.5,
-//           p: 2.5,
-//           borderRadius: 2.5,
-//           bgcolor: "#F8FAFC",
-//           border: "1px solid #E2E8F0",
-//           mb: 3.5,
-//         }}
-//       >
-//         {[
-//           "Assignment file Google Drive pe upload karo",
-//           'File → "Share" → "Anyone with the link can view" karo',
-//           "Link copy karo aur neeche paste karo",
-//         ].map((step, i) => (
-//           <Box
-//             key={i}
-//             sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}
-//           >
-//             <Box
-//               sx={{
-//                 minWidth: 22,
-//                 height: 22,
-//                 borderRadius: "50%",
-//                 bgcolor: "#6366F1",
-//                 color: "#fff",
-//                 fontSize: 12,
-//                 fontWeight: 700,
-//                 display: "flex",
-//                 alignItems: "center",
-//                 justifyContent: "center",
-//                 mt: "1px",
-//               }}
-//             >
-//               {i + 1}
-//             </Box>
-//             <Typography variant="body2" color="#4B5563">
-//               {step}
-//             </Typography>
-//           </Box>
-//         ))}
-//       </Box>
-
-//       <TextField
-//         fullWidth
-//         label="Google Drive Link"
-//         placeholder="https://drive.google.com/file/d/..."
-//         value={driveLink}
-//         onChange={handleChange}
-//         error={!!error}
-//         helperText={error}
-//         InputProps={{
-//           startAdornment: (
-//             <InputAdornment position="start">
-//               <LinkIcon
-//                 sx={{ color: error ? "#EF4444" : "#9CA3AF", fontSize: 20 }}
-//               />
-//             </InputAdornment>
-//           ),
-//         }}
-//         sx={{
-//           mb: 2.5,
-//           "& .MuiOutlinedInput-root": { borderRadius: 2, fontSize: 14 },
-//         }}
-//       />
-
-//       <Button
-//         variant="contained"
-//         onClick={handleSubmit}
-//         disabled={isLoading}
-//         startIcon={<CloudUploadIcon />}
-//         sx={{
-//           textTransform: "none",
-//           fontWeight: 600,
-//           px: 3.5,
-//           py: 1.1,
-//           borderRadius: 2,
-//           fontSize: 14,
-//           bgcolor: "#6366F1",
-//           "&:hover": { bgcolor: "#4F46E5" },
-//           "&:disabled": { bgcolor: "#C7D2FE", color: "#fff" },
-//         }}
-//       >
-//         {isLoading ? "Submitting…" : "Submit Assignment"}
-//       </Button>
-//     </Box>
-//   );
-// };
-
-// export default AssignmentTab;
-
-// new code for futuer ============================
-
-// import React, { useState } from "react";
-// import {
-//   Box, Typography, TextField, Button, InputAdornment, Skeleton,
-// } from "@mui/material";
-// import LinkIcon from "@mui/icons-material/Link";
-// import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-// import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-// import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-// import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-// import { useParams } from "react-router-dom";
-// import {
-//   useGetAssignmentQuery,
-//   useSubmitAssignmentMutation,
-// } from "../../api/courseProgressApi"; 
-
-// const isValidDriveLink = (url: string) =>
-//   url.includes("drive.google.com") || url.includes("docs.google.com");
-
-// const AssignmentTab: React.FC = () => {
-//   const { courseId = "" } = useParams();
-//   const [driveLink, setDriveLink] = useState("");
-//   const [error, setError] = useState("");
-//   const [isResubmitting, setIsResubmitting] = useState(false);
-
-//   const { data, isLoading, isError } = useGetAssignmentQuery(
-//     { courseId },
-//     { skip: !courseId }
-//   );
-//   const [submitAssignment, { isLoading: isSubmitting }] = useSubmitAssignmentMutation();
-
-//   const submission = data?.data?.[0]; // latest submission
-//   const isAlreadySubmitted = !!submission && !isResubmitting;
-
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     setDriveLink(e.target.value);
-//     if (error) setError("");
-//   };
-
-//   const handleSubmit = async () => {
-//     if (!driveLink.trim()) { setError("Please paste your Google Drive link."); return; }
-//     if (!isValidDriveLink(driveLink)) { setError("Only Google Drive or Docs links are accepted."); return; }
-//     try {
-//       await submitAssignment({ courseId, submissionUrl: driveLink.trim() }).unwrap();
-//       setIsResubmitting(false);
-//       setDriveLink("");
-//     } catch (err: any) {
-//       setError(err?.data?.message || "Submission failed. Please try again.");
-//     }
-//   };
-
-//   /* ── Loading ── */
-//   if (isLoading) {
-//     return (
-//       <Box sx={{ maxWidth: 580, pt: 3 }}>
-//         <Skeleton variant="rounded" height={28} width="40%" sx={{ mb: 2 }} />
-//         <Skeleton variant="rounded" height={80} sx={{ mb: 2 }} />
-//         <Skeleton variant="rounded" height={56} sx={{ mb: 2 }} />
-//         <Skeleton variant="rounded" height={44} width={160} />
-//       </Box>
-//     );
-//   }
-
-//   /* ── Already submitted ── */
-//   if (isAlreadySubmitted) {
-//     return (
-//       <Box sx={{ maxWidth: 520, pt: 3 }}>
-
-//         {/* Success banner */}
-//         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, p: 2, borderRadius: 2, bgcolor: "#F0FDF4", border: "1px solid #BBF7D0", mb: 3 }}>
-//           <CheckCircleOutlineIcon sx={{ fontSize: 32, color: "#16A34A", flexShrink: 0 }} />
-//           <Box>
-//             <Typography fontWeight={700} color="#15803D">Assignment Submitted</Typography>
-//             <Typography variant="body2" color="#166534">
-//               Your work has been received. The instructor will review it shortly.
-//             </Typography>
-//           </Box>
-//         </Box>
-
-//         {/* Submission details */}
-//         <Box sx={{ p: 2.5, borderRadius: 2, border: "1px solid #E2E8F0", bgcolor: "#F8FAFC", mb: 3 }}>
-//           <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
-//             Submitted Link
-//           </Typography>
-//           <Box
-//             component="a"
-//             href={submission.submissionUrl}
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             sx={{ display: "flex", alignItems: "center", gap: 0.75, mt: 0.75, color: "#2563EB", fontSize: 13, textDecoration: "none", wordBreak: "break-all", "&:hover": { textDecoration: "underline" } }}
-//           >
-//             <LinkIcon sx={{ fontSize: 15, flexShrink: 0 }} />
-//             {submission.submissionUrl.length > 60
-//               ? submission.submissionUrl.slice(0, 60) + "…"
-//               : submission.submissionUrl}
-//             <OpenInNewIcon sx={{ fontSize: 13, flexShrink: 0 }} />
-//           </Box>
-
-//           {/* Submitted on */}
-//           <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mt: 1.5 }}>
-//             <CalendarTodayIcon sx={{ fontSize: 13, color: "text.disabled" }} />
-//             <Typography variant="caption" color="text.secondary">
-//               Submitted on{" "}
-//               {new Date(submission.createdAt).toLocaleDateString("en-IN", {
-//                 day: "numeric", month: "short", year: "numeric",
-//               })}
-//             </Typography>
-//           </Box>
-//         </Box>
-
-//         <Button
-//           variant="outlined"
-//           size="small"
-//           onClick={() => setIsResubmitting(true)}
-//           sx={{ textTransform: "none", borderRadius: 2 }}
-//         >
-//           Resubmit
-//         </Button>
-//       </Box>
-//     );
-//   }
-
-//   /* ── Form ── */
-//   return (
-//     <Box sx={{ maxWidth: 580, pt: 3, pb: 6 }}>
-//       <Typography variant="h6" fontWeight={700} color="#1F2937" gutterBottom>
-//         Submit Assignment
-//       </Typography>
-//       <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.7 }}>
-//         Complete the assignment and upload it to Google Drive. Paste the shared
-//         link below — make sure sharing is set to{" "}
-//         <Box component="span" fontWeight={600} color="#374151">
-//           "Anyone with the link can view"
-//         </Box>.
-//       </Typography>
-
-//       {/* Steps */}
-//       <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, p: 2.5, borderRadius: 2.5, bgcolor: "#F8FAFC", border: "1px solid #E2E8F0", mb: 3.5 }}>
-//         {[
-//           "Upload your assignment file to Google Drive",
-//           'Right-click → "Share" → set to "Anyone with the link can view"',
-//           "Copy the link and paste it below",
-//         ].map((step, i) => (
-//           <Box key={i} sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}>
-//             <Box sx={{ minWidth: 22, height: 22, borderRadius: "50%", bgcolor: "#6366F1", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", mt: "1px" }}>
-//               {i + 1}
-//             </Box>
-//             <Typography variant="body2" color="#4B5563">{step}</Typography>
-//           </Box>
-//         ))}
-//       </Box>
-
-//       <TextField
-//         fullWidth
-//         label="Google Drive Link"
-//         placeholder="https://drive.google.com/file/d/..."
-//         value={driveLink}
-//         onChange={handleChange}
-//         error={!!error}
-//         helperText={error}
-//         InputProps={{
-//           startAdornment: (
-//             <InputAdornment position="start">
-//               <LinkIcon sx={{ color: error ? "#EF4444" : "#9CA3AF", fontSize: 20 }} />
-//             </InputAdornment>
-//           ),
-//         }}
-//         sx={{ mb: 2.5, "& .MuiOutlinedInput-root": { borderRadius: 2, fontSize: 14 } }}
-//       />
-
-//       <Button
-//         variant="contained"
-//         onClick={handleSubmit}
-//         disabled={isSubmitting}
-//         startIcon={<CloudUploadIcon />}
-//         sx={{ textTransform: "none", fontWeight: 600, px: 3.5, py: 1.1, borderRadius: 2, fontSize: 14, bgcolor: "#6366F1", "&:hover": { bgcolor: "#4F46E5" }, "&:disabled": { bgcolor: "#C7D2FE", color: "#fff" } }}
-//       >
-//         {isSubmitting ? "Submitting…" : "Submit Assignment"}
-//       </Button>
-//     </Box>
-//   );
-// };
-
-// export default AssignmentTab;
-
-// for now its only drive links ==============================
-
 import React, { useState } from "react";
 import {
-  Box, Typography, TextField, Button, InputAdornment, Skeleton,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  InputAdornment,
+  Skeleton,
+  Paper,
+  Alert,
+  Chip,
 } from "@mui/material";
+
 import LinkIcon from "@mui/icons-material/Link";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import GradeIcon from "@mui/icons-material/Grade";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+
 import { useParams } from "react-router-dom";
+
 import {
   useGetAssignmentQuery,
   useSubmitAssignmentMutation,
@@ -434,182 +31,375 @@ import {
 const isValidDriveLink = (url: string) =>
   url.includes("drive.google.com") || url.includes("docs.google.com");
 
-const AssignmentTab: React.FC = () => {
-  const { courseId = "" } = useParams();
+// ─── Types ────────────────────────────────────────────────────────────────────
+interface AssignmentItem {
+  id: number;
+  title: string;
+  description?: string;
+  maxMarks: number;
+  driveLink?: string;
+  driveUrl?: string;
+  submissions?: Array<{
+    id: number;
+    submissionUrl: string;
+    marks: number | null;
+    feedback: string | null;
+  }>;
+  submission?: { submissionUrl: string };
+  submissionUrl?: string;
+}
+
+interface AssignmentCardProps {
+  assignment: AssignmentItem;
+  refetch: () => void;
+}
+
+// ─── Single Assignment Card ───────────────────────────────────────────────────
+const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) => {
   const [driveLink, setDriveLink] = useState("");
   const [error, setError] = useState("");
+  const [expanded, setExpanded] = useState(true);
+  const [justSubmitted, setJustSubmitted] = useState(false);
+  const [submittedUrl, setSubmittedUrl] = useState("");
 
-  const { data, isLoading } = useGetAssignmentQuery(
-    { courseId },
-    { skip: !courseId }
-  );
-  const [submitAssignment, { isLoading: isSubmitting }] = useSubmitAssignmentMutation();
+  const [submitAssignment, { isLoading: isSubmitting }] =
+    useSubmitAssignmentMutation();
 
-  const submission = data?.data?.[0];
-  const isAlreadySubmitted = !!submission;
+  // Backend returns only the logged-in user's own submission
+  const userSubmission =
+    assignment.submissions?.[0] ||
+    assignment.submission ||
+    (assignment.submissionUrl
+      ? { submissionUrl: assignment.submissionUrl, marks: null, feedback: null }
+      : null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDriveLink(e.target.value);
-    if (error) setError("");
-  };
+  const alreadySubmitted = !!userSubmission || justSubmitted;
+  const effectiveUrl = userSubmission?.submissionUrl || submittedUrl;
 
   const handleSubmit = async () => {
-    if (!driveLink.trim()) { setError("Please paste your Google Drive link."); return; }
-    if (!isValidDriveLink(driveLink)) { setError("Only Google Drive or Docs links are accepted."); return; }
+    if (!driveLink.trim()) {
+      setError("Please enter Google Drive link");
+      return;
+    }
+    if (!isValidDriveLink(driveLink)) {
+      setError("Please enter a valid Google Drive link");
+      return;
+    }
     try {
-      await submitAssignment({ courseId, submissionUrl: driveLink.trim() }).unwrap();
+      await submitAssignment({
+        assignmentId: assignment.id,
+        submissionUrl: driveLink.trim(),
+      }).unwrap();
+      setSubmittedUrl(driveLink.trim());
+      setJustSubmitted(true);
       setDriveLink("");
+      setError("");
+      refetch();
     } catch (err: any) {
-      setError(err?.data?.message || "Submission failed. Please try again.");
+      setError(err?.data?.message || "Failed to submit assignment");
     }
   };
 
-  /* ── Loading ── */
-  if (isLoading) {
-    return (
-      <Box sx={{ maxWidth: 580, pt: 3 }}>
-        <Skeleton variant="rounded" height={28} width="40%" sx={{ mb: 2 }} />
-        <Skeleton variant="rounded" height={80} sx={{ mb: 2 }} />
-        <Skeleton variant="rounded" height={56} sx={{ mb: 2 }} />
-        <Skeleton variant="rounded" height={44} width={160} />
-      </Box>
-    );
-  }
-
-  /* ── Already submitted ── */
-  if (isAlreadySubmitted) {
-    return (
-      <Box sx={{ maxWidth: 520, pt: 3 }}>
-
-        {/* Success banner */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, p: 2, borderRadius: 2, bgcolor: "#F0FDF4", border: "1px solid #BBF7D0", mb: 3 }}>
-          <CheckCircleOutlineIcon sx={{ fontSize: 32, color: "#16A34A", flexShrink: 0 }} />
-          <Box>
-            <Typography fontWeight={700} color="#15803D">Assignment Submitted</Typography>
-            <Typography variant="body2" color="#166534">
-              Your work has been received. The instructor will review it shortly.
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Notice */}
-       <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 1.5, borderRadius: 2, bgcolor: "#FFFBEB", border: "1px solid #FDE68A", mb: 3 }}>
-  <Typography fontSize={15}>📌</Typography>
-  <Typography variant="caption" color="#92400E">
-    This assignment has been submitted. For any changes, please reach out to your instructor.
-  </Typography>
-</Box>
-
-        {/* Submission details */}
-        <Box sx={{ p: 2.5, borderRadius: 2, border: "1px solid #E2E8F0", bgcolor: "#F8FAFC", mb: 3 }}>
-          <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
-            Submitted Link
-          </Typography>
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        border: "1px solid #E5E7EB",
+        borderRadius: 3,
+        overflow: "hidden",
+        mb: 3,
+      }}
+    >
+      {/* ── Card Header (click to expand/collapse) ── */}
+      <Box
+        onClick={() => setExpanded((p) => !p)}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          px: 3,
+          py: 2,
+          cursor: "pointer",
+          bgcolor: expanded ? "#f8f9ff" : "#fff",
+          borderBottom: expanded ? "1px solid #E5E7EB" : "none",
+          transition: "background 0.2s",
+          "&:hover": { bgcolor: "#f0f3ff" },
+        }}
+      >
+        <Box display="flex" alignItems="center" gap={1.5}>
           <Box
-            component="a"
-            href={submission.submissionUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ display: "flex", alignItems: "center", gap: 0.75, mt: 0.75, color: "#2563EB", fontSize: 13, textDecoration: "none", wordBreak: "break-all", "&:hover": { textDecoration: "underline" } }}
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: 2,
+              bgcolor: "#e8eaf6",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <LinkIcon sx={{ fontSize: 15, flexShrink: 0 }} />
-            {submission.submissionUrl.length > 60
-              ? submission.submissionUrl.slice(0, 60) + "…"
-              : submission.submissionUrl}
-            <OpenInNewIcon sx={{ fontSize: 13, flexShrink: 0 }} />
+            <AssignmentIcon sx={{ color: "#3949ab", fontSize: 20 }} />
           </Box>
-
-          {/* Submitted on */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mt: 1.5 }}>
-            <CalendarTodayIcon sx={{ fontSize: 13, color: "text.disabled" }} />
-            <Typography variant="caption" color="text.secondary">
-              Submitted on{" "}
-              {new Date(submission.createdAt).toLocaleDateString("en-IN", {
-                day: "numeric", month: "short", year: "numeric",
-              })}
+          <Box>
+            <Typography fontWeight={700} fontSize={15} color="#1a237e">
+              {assignment.title}
             </Typography>
+            <Box display="flex" alignItems="center" gap={1} mt={0.3}>
+              <Chip
+                icon={<GradeIcon sx={{ fontSize: "13px !important" }} />}
+                label={`${assignment.maxMarks} marks`}
+                size="small"
+                sx={{ bgcolor: "#e8eaf6", color: "#3949ab", fontWeight: 600, fontSize: 11 }}
+              />
+              {alreadySubmitted && (
+                <Chip
+                  icon={<CheckCircleOutlineIcon sx={{ fontSize: "13px !important" }} />}
+                  label={
+                    userSubmission?.marks != null
+                      ? `Scored: ${userSubmission.marks}/${assignment.maxMarks}`
+                      : "Submitted"
+                  }
+                  size="small"
+                  color="success"
+                  variant="outlined"
+                  sx={{ fontWeight: 600, fontSize: 11 }}
+                />
+              )}
+            </Box>
           </Box>
         </Box>
+        {expanded ? (
+          <ExpandLessIcon sx={{ color: "#9fa8da" }} />
+        ) : (
+          <ExpandMoreIcon sx={{ color: "#9fa8da" }} />
+        )}
+      </Box>
 
-        {/* View Submission Button */}
-        {/* <Button
-          variant="contained"
-          startIcon={<OpenInNewIcon />}
-          href={submission.submissionUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          component="a"
+      {/* ── Expandable Body ── */}
+      {expanded && (
+        <Box
           sx={{
-            textTransform: "none",
-            borderRadius: 2,
-            bgcolor: "#6366F1",
-            "&:hover": { bgcolor: "#4F46E5" },
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
           }}
         >
-          View Submission
-        </Button> */}
+          {/* LEFT — Assignment Details */}
+          <Box
+            sx={{
+              p: 3,
+              borderRight: { md: "1px solid #E5E7EB" },
+              borderBottom: { xs: "1px solid #E5E7EB", md: "none" },
+            }}
+          >
+            <Typography
+              variant="overline"
+              sx={{ color: "#9fa8da", fontWeight: 700, letterSpacing: 1, fontSize: 11 }}
+            >
+              Instructions
+            </Typography>
 
+            {assignment.description && (
+              <Typography
+                color="text.secondary"
+                sx={{ lineHeight: 1.8, mt: 1, mb: 2.5, fontSize: 14 }}
+              >
+                {assignment.description}
+              </Typography>
+            )}
+
+            {(assignment.driveLink || assignment.driveUrl) && (
+              <Button
+                variant="outlined"
+                href={(assignment.driveLink || assignment.driveUrl)!}
+                target="_blank"
+                rel="noreferrer"
+                startIcon={<OpenInNewIcon />}
+                size="small"
+                sx={{
+                  textTransform: "none",
+                  borderRadius: 2,
+                  borderColor: "#c5cae9",
+                  color: "#3949ab",
+                }}
+              >
+                Open Assignment File
+              </Button>
+            )}
+          </Box>
+
+          {/* RIGHT — Submit / Success */}
+          <Box sx={{ p: 3 }}>
+            <Typography
+              variant="overline"
+              sx={{ color: "#9fa8da", fontWeight: 700, letterSpacing: 1, fontSize: 11 }}
+            >
+              Your Submission
+            </Typography>
+
+            {alreadySubmitted ? (
+              // ── SUCCESS STATE ──────────────────────────────────────────
+              <Box mt={1.5}>
+                {/* Big success banner */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.5,
+                    bgcolor: "#f0fdf4",
+                    border: "1px solid #bbf7d0",
+                    borderRadius: 2.5,
+                    px: 2.5,
+                    py: 2,
+                    mb: 2,
+                  }}
+                >
+                  <TaskAltIcon sx={{ color: "#16a34a", fontSize: 32, flexShrink: 0 }} />
+                  <Box>
+                    <Typography fontWeight={700} fontSize={14} color="#15803d">
+                      Assignment Submitted!
+                    </Typography>
+                    <Typography fontSize={12} color="#166534" mt={0.2}>
+                      Your work has been received. We'll notify you once it's reviewed.
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Marks + feedback if graded */}
+                {userSubmission?.marks != null && (
+                  <Box
+                    sx={{
+                      bgcolor: "#eff6ff",
+                      border: "1px solid #bfdbfe",
+                      borderRadius: 2,
+                      px: 2,
+                      py: 1.5,
+                      mb: 2,
+                    }}
+                  >
+                    <Typography fontWeight={700} fontSize={13} color="#1d4ed8">
+                      Marks: {userSubmission.marks} / {assignment.maxMarks}
+                    </Typography>
+                    {userSubmission.feedback && (
+                      <Typography fontSize={12} color="#1e40af" mt={0.5}>
+                        Feedback: {userSubmission.feedback}
+                      </Typography>
+                    )}
+                  </Box>
+                )}
+
+                <Button
+                  variant="outlined"
+                  href={effectiveUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  startIcon={<OpenInNewIcon />}
+                  size="small"
+                  sx={{ textTransform: "none", borderRadius: 2 }}
+                >
+                  View My Submission
+                </Button>
+              </Box>
+            ) : (
+              // ── SUBMIT FORM ────────────────────────────────────────────
+              <Box mt={1.5}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 2, lineHeight: 1.7, fontSize: 13 }}
+                >
+                  Upload your solution to Google Drive and paste the sharing link below.
+                  Make sure sharing is set to{" "}
+                  <strong>Anyone with the link can view.</strong>
+                </Typography>
+
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Google Drive Link"
+                  placeholder="https://drive.google.com/file/d/..."
+                  value={driveLink}
+                  onChange={(e) => {
+                    setDriveLink(e.target.value);
+                    setError("");
+                  }}
+                  error={!!error}
+                  helperText={error}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LinkIcon sx={{ fontSize: 18, color: "#9fa8da" }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ mb: 2, "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                />
+
+                <Button
+                  variant="contained"
+                  startIcon={<CloudUploadIcon />}
+                  disabled={isSubmitting}
+                  onClick={handleSubmit}
+                  size="small"
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: 600,
+                    borderRadius: 2,
+                    px: 2.5,
+                    background: "linear-gradient(135deg, #5c6bc0 0%, #3949ab 100%)",
+                    "&:hover": {
+                      background: "linear-gradient(135deg, #3949ab 0%, #283593 100%)",
+                    },
+                  }}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Assignment"}
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </Box>
+      )}
+    </Paper>
+  );
+};
+
+// ─── Main Tab ─────────────────────────────────────────────────────────────────
+const AssignmentTab: React.FC = () => {
+  const { courseId = "" } = useParams();
+
+  const { data, isLoading, refetch } = useGetAssignmentQuery(courseId, {
+    skip: !courseId,
+  });
+
+  const assignments = data?.data || [];
+
+  if (isLoading) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Skeleton height={60} sx={{ mb: 2, borderRadius: 2 }} />
+        <Skeleton height={60} sx={{ mb: 2, borderRadius: 2 }} />
+        <Skeleton height={60} sx={{ borderRadius: 2 }} />
       </Box>
     );
   }
 
-  /* ── Form ── */
-  return (
-    <Box sx={{ maxWidth: 580, pt: 3, pb: 6 }}>
-      <Typography variant="h6" fontWeight={700} color="#1F2937" gutterBottom>
-        Submit Assignment
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.7 }}>
-        Complete the assignment and upload it to Google Drive. Paste the shared
-        link below — make sure sharing is set to{" "}
-        <Box component="span" fontWeight={600} color="#374151">
-          "Anyone with the link can view"
-        </Box>.
-      </Typography>
-
-      {/* Steps */}
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, p: 2.5, borderRadius: 2.5, bgcolor: "#F8FAFC", border: "1px solid #E2E8F0", mb: 3.5 }}>
-        {[
-          "Upload your assignment file to Google Drive",
-          'Right-click → "Share" → set to "Anyone with the link can view"',
-          "Copy the link and paste it below",
-        ].map((step, i) => (
-          <Box key={i} sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}>
-            <Box sx={{ minWidth: 22, height: 22, borderRadius: "50%", bgcolor: "#6366F1", color: "#fff", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", mt: "1px" }}>
-              {i + 1}
-            </Box>
-            <Typography variant="body2" color="#4B5563">{step}</Typography>
-          </Box>
-        ))}
+  if (assignments.length === 0) {
+    return (
+      <Box sx={{ p: 4, textAlign: "center" }}>
+        <AssignmentIcon sx={{ fontSize: 48, color: "#ccc", mb: 1 }} />
+        <Typography color="text.secondary">No assignments available</Typography>
       </Box>
+    );
+  }
 
-      <TextField
-        fullWidth
-        label="Google Drive Link"
-        placeholder="https://drive.google.com/file/d/..."
-        value={driveLink}
-        onChange={handleChange}
-        error={!!error}
-        helperText={error}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <LinkIcon sx={{ color: error ? "#EF4444" : "#9CA3AF", fontSize: 20 }} />
-            </InputAdornment>
-          ),
-        }}
-        sx={{ mb: 2.5, "& .MuiOutlinedInput-root": { borderRadius: 2, fontSize: 14 } }}
-      />
+  return (
+    <Box sx={{ mt: 2 }}>
+      <Typography variant="subtitle2" color="text.secondary" mb={2} fontWeight={600}>
+        {assignments.length} Assignment{assignments.length !== 1 ? "s" : ""}
+      </Typography>
 
-      <Button
-        variant="contained"
-        onClick={handleSubmit}
-        disabled={isSubmitting}
-        startIcon={<CloudUploadIcon />}
-        sx={{ textTransform: "none", fontWeight: 600, px: 3.5, py: 1.1, borderRadius: 2, fontSize: 14, bgcolor: "#6366F1", "&:hover": { bgcolor: "#4F46E5" }, "&:disabled": { bgcolor: "#C7D2FE", color: "#fff" } }}
-      >
-        {isSubmitting ? "Submitting…" : "Submit Assignment"}
-      </Button>
+      {assignments.map((assignment: any) => (
+        <AssignmentCard key={assignment.id} assignment={assignment} refetch={refetch} />
+      ))}
     </Box>
   );
 };

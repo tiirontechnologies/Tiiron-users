@@ -7,28 +7,24 @@ const teamMembers = [
     name: "Rishabh Singh",
     role: "Co-Founder",
     image: profile1,
-    bio: "Architect of our platform. Leads strategy and growth. Drives product design and roadmap.",
     socials: { linkedin: "https://www.linkedin.com/in/itsindrajput/", twitter: "https://twitter.com/itsindrajput", profile: "https://itsindrajput.netlify.app/" },
   },
   {
     name: "Tarun Pandey",
     role: "Co-Founder",
     image: "/tarun_Profile.png",
-    bio: "Focused on scalable systems and performance. Passionate about technology and creating delightful user experiences.",
     socials: { linkedin: "https://in.linkedin.com/in/tpandey495", twitter: "https://x.com/tpandey495", profile: "https://tarunpandey.netlify.app/" },
   },
   {
     name: "Mrs. Kiran Devi",
     role: "Director",
      image:"/image.png",
-    bio: "Driving innovation and leading the development team to deliver high-quality solutions.",
     socials: { linkedin: "#", twitter: "#", profile: "#" },
   },
   {
     name: "Devendra Kumar Singh",
     role: "Academic Director",
       image:"/Academic_Director.png",
-    bio: "Transforming insights into seamless user experiences and turning data into meaningful designs.",
     socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
   },
 ];
