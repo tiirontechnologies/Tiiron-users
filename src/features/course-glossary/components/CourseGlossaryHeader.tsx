@@ -46,6 +46,10 @@ export default function CourseGlossaryHeader({
     }
   };
 const level = course?.level || course?.difficulty || course?.courseLevel || "All Levels";
+
+
+const hasRating = Number(averageRating) >= 1;
+
   return (
     <Box
       sx={{
@@ -115,6 +119,7 @@ const level = course?.level || course?.difficulty || course?.courseLevel || "All
           }}
         >
           <Box
+            id="course-overview"
             sx={{
               position: "absolute",
               left: "-16px",
@@ -199,7 +204,8 @@ const level = course?.level || course?.difficulty || course?.courseLevel || "All
               flexWrap: "wrap"
             }}
           >
-            {averageRating && averageRating > 0 && (
+            {/* {averageRating && averageRating > 0 && ( */}
+            {hasRating && (
               <>
                 <Box
                   component="span"
@@ -227,12 +233,12 @@ const level = course?.level || course?.difficulty || course?.courseLevel || "All
                 <Box component="span" sx={{ color: "#64748B" }}>
                   ({totalRatings} ratings)
                 </Box>
-              </>
-            )}
-
             <Box component="span" sx={{ color: "#64748B" }}>
               |
             </Box>
+              </>
+            )}
+
 
             <Box component="span" sx={{ color: "#64748B" }}>
               22 Total Hours

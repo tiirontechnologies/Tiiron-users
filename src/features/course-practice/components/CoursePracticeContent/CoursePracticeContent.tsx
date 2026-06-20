@@ -497,6 +497,7 @@ import NotesSection from "../Notes/Notes"
 
 interface Props {
   data: CoursePracticeApiResponse["data"];
+    unitId: string;
 }
 
 interface UserAnswers {
@@ -511,11 +512,7 @@ interface UserAnswers {
 
 
 
-const CertificateSection = () => (
-  <Box sx={{ p: 4, textAlign: "center" }}>
-    <Typography variant="h6">Certificate coming soon...</Typography>
-  </Box>
-);
+
 
 /* =====================================================
    QUESTION RENDERER (Single Responsibility)
@@ -711,7 +708,7 @@ const StyledTab = styled(Tab)(() => ({
    MAIN COMPONENT
 ===================================================== */
 
-const CoursePracticeContent: React.FC<Props> = ({ data }) => {
+const CoursePracticeContent: React.FC<Props> = ({ data ,  unitId}) => {
   const { courseId = "" } = useParams();
   const navigate = useNavigate();
 
@@ -897,9 +894,14 @@ const CoursePracticeContent: React.FC<Props> = ({ data }) => {
   <NotesSection courseName={course?.title} />
       
       } */}
-
+{/* 
 {videoTab === 1 && (
   <NotesSection courseId={Number(courseId)} />
+)} */}
+{videoTab === 1 && (
+  <NotesSection
+    unitId={Number(unitId)}
+  />
 )}
 
       {videoTab === 2 && <AssignmentTab />}

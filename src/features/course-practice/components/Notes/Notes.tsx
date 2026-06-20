@@ -1,307 +1,178 @@
 // import React from "react";
-// import { Box, Typography, Button } from "@mui/material";
-// import DownloadIcon from "@mui/icons-material/Download";
+// import { 
+//   Box, 
+//   Typography, 
+//   Button, 
+//   Paper, 
+//   Skeleton,
+//   Divider
+// } from "@mui/material";
+// import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+// import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+// import FolderIcon from "@mui/icons-material/Folder";
 
-// interface NotesSectionProps {
-//   pdfUrl?: string;
+// import { useGetUnitNotesQuery } from "../../api/courseProgressApi";
+
+
+// interface Note {
+//   id: number;
+//   title: string;
+//   driveUrl: string;
+//   unitId: number;
 // }
 
-// const NotesSection: React.FC<NotesSectionProps> = ({ pdfUrl }) => {
-//   if (!pdfUrl) {
+// const NotesSection: React.FC<NotesSectionProps> = ({ unitId }) => {
+
+//   const {
+//   data: response,
+//   isLoading,
+//   error,
+// } = useGetUnitNotesQuery(unitId!, {
+//   skip: !unitId,
+// });
+
+// const notes: Note[] = response?.data || [];
+
+
+//   // Loading state
+//   if (isLoading) {
+//     return (
+//       <Box sx={{ p: 2 }}>
+//         <Skeleton variant="rectangular" height={60} sx={{ mb: 2, borderRadius: 1.25 }} />
+//         <Skeleton variant="rectangular" height={60} sx={{ mb: 2, borderRadius: 1.25 }} />
+//         <Skeleton variant="rectangular" height={60} sx={{ borderRadius: 1.25 }} />
+//       </Box>
+//     );
+//   }
+
+//   // Error state
+//   if (error) {
 //     return (
 //       <Box sx={{ p: 4, textAlign: "center" }}>
-//         <Typography variant="h6" color="text.secondary">
-//           No notes available
+//         <PictureAsPdfIcon sx={{ fontSize: 48, color: "#cbd5e1", mb: 2 }} />
+//         <Typography variant="h6" color="error" sx={{ mb: 1 }}>
+//           Failed to load notes
+//         </Typography>
+//         <Typography variant="caption" color="text.secondary">
+//           {error?.message || "Please try again later"}
 //         </Typography>
 //       </Box>
 //     );
 //   }
 
-//   // Google Drive URL ko embed format mein convert karo
-//   const getEmbedUrl = (url: string) => {
-//     // Google Drive share link → embed link
-//     // https://drive.google.com/file/d/FILE_ID/view → https://drive.google.com/file/d/FILE_ID/preview
-//     if (url.includes("drive.google.com")) {
-//       return url.replace("/view", "/preview").replace("/edit", "/preview");
-//     }
-//     // Supabase ya direct PDF URL
-//     return `${url}#toolbar=0`;
-//   };
-
-//   const embedUrl = getEmbedUrl(pdfUrl);
+//   // No notes state
+//   if (!notes || notes.length === 0) {
+//     return (
+//       <Box sx={{ p: 4, textAlign: "center" }}>
+//         <PictureAsPdfIcon sx={{ fontSize: 48, color: "#cbd5e1", mb: 2 }} />
+//         <Typography variant="h6" color="text.secondary">
+//           📚 No notes available for this unit
+//         </Typography>
+//         <Typography variant="caption" color="text.secondary">
+//           Check back later or contact your instructor
+//         </Typography>
+//       </Box>
+//     );
+//   }
 
 //   return (
 //     <Box sx={{ p: 2 }}>
-//       {/* Download Button */}
-//       <Box sx={{ mb: 2, display: "flex", justifyContent: "flex-end" }}>
-//         <Button
-//           variant="contained"
-//           startIcon={<DownloadIcon />}
-//           href={pdfUrl}
-//           download
-//           target="_blank"
-//           rel="noreferrer"
+//       {/* Section Header */}
+//       <Box sx={{ mb: 3 }}>
+//         <Typography 
+//           variant="h6" 
+//           sx={{ fontWeight: 700, color: "#1f2937", display: "flex", alignItems: "center", gap: 1 }}
 //         >
-//           Download PDF
-//         </Button>
-//       </Box>
-
-//       {/* PDF Viewer */}
-//       <Box
-//         sx={{
-//           width: "100%",
-//           height: "80vh",
-//           border: "1px solid #e0e0e0",
-//           borderRadius: "8px",
-//           overflow: "hidden",
-//         }}
-//       >
-//         <iframe
-//           src={embedUrl}
-//           width="100%"
-//           height="100%"
-//           style={{ border: "none" }}
-//           title="Notes PDF"
-//           allow="autoplay"
-//         />
-//       </Box>
-//     </Box>
-//   );
-// };
-
-// export default NotesSection;
-
-// import React from "react";
-// import { Box, Typography, Button, Paper } from "@mui/material";
-// import DownloadIcon from "@mui/icons-material/Download";
-// import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-// import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-
-// interface NotesSectionProps {
-//   pdfUrl?: string;
-//   driveUrl?: string; // Google Drive link
-// }
-
-// const NotesSection: React.FC<NotesSectionProps> = ({ pdfUrl, driveUrl }) => {
-//   if (!pdfUrl) {
-//     return (
-//       <Box sx={{ p: 4, textAlign: "center" }}>
-//         <Typography variant="h6" color="text.secondary">
-//           No notes available
+//           <FolderIcon sx={{ color: "#f97316" }} />
+//           Course Notes ({notes.length})
+//         </Typography>
+//         <Typography variant="caption" color="text.secondary">
+//           Click to open notes in Google Drive
 //         </Typography>
 //       </Box>
-//     );
-//   }
 
-//   return (
-//     <Box sx={{ p: 2 }}>
-//       {/* PDF Card */}
-//       <Paper
-//         elevation={0}
-//         sx={{
-//           display: "flex",
-//           alignItems: "center",
-//           justifyContent: "space-between",
-//           p: 2,
-//           mb: 3,
-//           border: "1px solid #e0e0e0",
-//           borderRadius: "10px",
-//           backgroundColor: "#fafafa",
-//         }}
-//       >
-//         {/* Left - PDF Icon + Name */}
-//         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-//           <PictureAsPdfIcon sx={{ color: "#e53935", fontSize: 36 }} />
-//           <Box>
-//             <Typography fontWeight={600} fontSize="15px">
-//               Course Notes
-//             </Typography>
-//             <Typography variant="caption" color="text.secondary">
-//               PDF Document
-//             </Typography>
-//           </Box>
-//         </Box>
-
-//         {/* Right - Buttons */}
-//         <Box sx={{ display: "flex", gap: 1.5 }}>
-//           {driveUrl && (
-//             <Button
-//               variant="outlined"
-//               startIcon={<OpenInNewIcon />}
-//               href={driveUrl}
-//               target="_blank"
-//               rel="noreferrer"
-//               size="small"
+//       {/* Notes List */}
+//       <Paper elevation={0} sx={{ border: "1px solid #e5e7eb", borderRadius: 1.5, overflow: "hidden" }}>
+//         {notes.map((note, index) => (
+//           <Box key={index}>
+//             <Box
+//               sx={{
+//                 display: "flex",
+//                 justifyContent: "space-between",
+//                 alignItems: "center",
+//                 py: 2,
+//                 px: 2.5,
+//                 backgroundColor: index % 2 === 0 ? "#ffffff" : "#f9fafb",
+//                 "&:hover": {
+//                   backgroundColor: index % 2 === 0 ? "#f3f4f6" : "#f0f1f5",
+//                 },
+//                 transition: "background-color 0.2s",
+//               }}
 //             >
-//               Open in Drive
-//             </Button>
-//           )}
-//           <Button
-//             variant="contained"
-//             startIcon={<DownloadIcon />}
-//             href={pdfUrl}
-//             download
-//             target="_blank"
-//             rel="noreferrer"
-//             size="small"
-//           >
-//             Download
-//           </Button>
-//         </Box>
-//       </Paper>
+//               {/* Left - Icon + Title */}
+//               <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
+//                 <PictureAsPdfIcon 
+//                   sx={{ 
+//                     color: "#e53935", 
+//                     fontSize: 32,
+//                     flexShrink: 0
+//                   }} 
+//                 />
+//                 <Box>
+//                   <Typography 
+//                     sx={{ 
+//                       fontWeight: 600, 
+//                       fontSize: "15px",
+//                       color: "#1f2937",
+//                     }}
+//                   >
+//                     {note.title}
+//                   </Typography>
+//                   <Typography variant="caption" color="text.secondary">
+//                     PDF Document
+//                   </Typography>
+//                 </Box>
+//               </Box>
 
-//       {/* PDF Viewer */}
-//       <Box
-//         sx={{
-//           width: "100%",
-//           height: "80vh",
-//           border: "1px solid #e0e0e0",
-//           borderRadius: "8px",
-//           overflow: "hidden",
-//         }}
-//       >
-//         <iframe
-//           src={`${pdfUrl}#toolbar=0`}
-//           width="100%"
-//           height="100%"
-//           style={{ border: "none" }}
-//           title="Notes PDF"
-//           allow="autoplay"
-//         />
-//       </Box>
-//     </Box>
-//   );
-// };
-
-// export default NotesSection; 
-
-
-
-// new component codes 
-
-
-
-// import React from "react";
-// import { Box, Typography, Button, Paper } from "@mui/material";
-// import DownloadIcon from "@mui/icons-material/Download";
-// import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-// import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-
-// interface NotesSectionProps {
-//   pdfUrl?: string;
-//   driveUrl?: string;
-// }
-
-// const NotesSection: React.FC<NotesSectionProps> = ({ pdfUrl, driveUrl }) => {
-
-//   // Dono nahi hain toh empty state
-//   if (!pdfUrl && !driveUrl) {
-//     return (
-//       <Box sx={{ p: 4, textAlign: "center" }}>
-//         <Typography variant="h6" color="text.secondary">
-//           No notes available
-//         </Typography>
-//       </Box>
-//     );
-//   }
-
-//   return (
-//     <Box sx={{ p: 2 }}>
-//       {/* PDF Card */}
-//       <Paper
-//         elevation={0}
-//         sx={{
-//           display: "flex",
-//           alignItems: "center",
-//           justifyContent: "space-between",
-//           p: 2,
-//           mb: 3,
-//           border: "1px solid #e0e0e0",
-//           borderRadius: "10px",
-//           backgroundColor: "#fafafa",
-//         }}
-//       >
-//         {/* Left - PDF Icon + Name */}
-//         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-//           <PictureAsPdfIcon sx={{ color: "#e53935", fontSize: 36 }} />
-//           <Box>
-//             <Typography fontWeight={600} fontSize="15px">
-//               Course Notes
-//             </Typography>
-//             <Typography variant="caption" color="text.secondary">
-//               PDF Document
-//             </Typography>
-//           </Box>
-//         </Box>
-
-//         {/* Right - Buttons */}
-//         <Box sx={{ display: "flex", gap: 1.5 }}>
-//           {/* pdf nahi hai toh drive btn dikha */}
-//           {!pdfUrl && driveUrl && (
-//             <Button
-//               variant="contained"
-//               startIcon={<OpenInNewIcon />}
-//               href={driveUrl}
-//               target="_blank"
-//               rel="noreferrer"
-//               size="small"
-//             >
-//               Open in Drive
-//             </Button>
-//           )}
-
-//           {/* pdf hai toh drive outlined + download dono dikha */}
-//           {pdfUrl && (
-//             <>
-//               {driveUrl && (
-//                 <Button
-//                   variant="outlined"
-//                   startIcon={<OpenInNewIcon />}
-//                   href={driveUrl}
-//                   target="_blank"
-//                   rel="noreferrer"
-//                   size="small"
-//                 >
-//                   Open in Drive
-//                 </Button>
-//               )}
+//               {/* Right - Button */}
 //               <Button
 //                 variant="contained"
-//                 startIcon={<DownloadIcon />}
-//                 href={pdfUrl}
-//                 download
+//                 size="small"
+//                 startIcon={<OpenInNewIcon />}
+//                 href={note.driveUrl}
 //                 target="_blank"
 //                 rel="noreferrer"
-//                 size="small"
+//                 sx={{
+//                   textTransform: "none",
+//                   fontWeight: 600,
+//                   flexShrink: 0,
+//                   ml: 2,
+//                 }}
 //               >
-//                 Download
+//                 Open
 //               </Button>
-//             </>
-//           )}
-//         </Box>
+//             </Box>
+            
+//             {/* Divider - except last item */}
+//             {index < notes.length - 1 && <Divider sx={{ my: 0 }} />}
+//           </Box>
+//         ))}
 //       </Paper>
 
-//       {/* PDF Viewer — sirf tab jab pdfUrl ho */}
-//       {pdfUrl && (
-//         <Box
-//           sx={{
-//             width: "100%",
-//             height: "80vh",
-//             border: "1px solid #e0e0e0",
-//             borderRadius: "8px",
-//             overflow: "hidden",
-//           }}
-//         >
-//           <iframe
-//             src={`${pdfUrl}#toolbar=0`}
-//             width="100%"
-//             height="100%"
-//             style={{ border: "none" }}
-//             title="Notes PDF"
-//             allow="autoplay"
-//           />
-//         </Box>
-//       )}
+//       {/* Info Box */}
+//       <Box 
+//         sx={{ 
+//           mt: 3, 
+//           p: 2.5, 
+//           backgroundColor: "#eff6ff", 
+//           borderRadius: 1.5,
+//           borderLeft: "4px solid #3b82f6"
+//         }}
+//       >
+//        <Typography variant="caption" sx={{ color: "#1e40af", lineHeight: 1.6 }}>
+//   💡 <strong>Note:</strong> Study materials are hosted on Google Drive. You can access, download, or print them directly.
+// </Typography>
+//       </Box>
 //     </Box>
 //   );
 // };
@@ -310,36 +181,86 @@
 
 
 
-// fort now its static 
 
 import React from "react";
-import { Box, Typography, Button, Paper } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import {
+  Box,
+  Typography,
+  Button,
+  Skeleton,
+  Divider,
+} from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
-interface NotesSectionProps {
-  pdfUrl?: string;
-  driveUrl?: string;
-  courseId?: number;
+import { useGetUnitNotesQuery } from "../../api/courseProgressApi";
+
+interface Note {
+  id: number;
+  title: string;
+  driveUrl: string;
+  unitId: number;
 }
 
+interface NotesSectionProps {
+  unitId?: number;
+}
 
-const COURSE_DRIVE_URLS: Record<number, string> = {
-  1: "https://drive.google.com/drive/folders/1GlyM4w1VEjdLB5ckTguIanp_Ib0aU44F",
-  2: "https://drive.google.com/drive/folders/1ZyDTALLLcctT_JVZYhX2C9Fy_AxZa3cO?usp=sharing",
-};
+const NotesSection: React.FC<NotesSectionProps> = ({ unitId }) => {
+  const { data: response, isLoading, error } = useGetUnitNotesQuery(
+    unitId!,
+    {
+      skip: !unitId,
+    }
+  );
 
-const NotesSection: React.FC<NotesSectionProps> = ({ pdfUrl, driveUrl, courseId }) => {
+  const notes: Note[] = response?.data || [];
 
-
-  const resolvedDriveUrl = driveUrl || (courseId ? COURSE_DRIVE_URLS[courseId] : undefined);
-
-  if (!pdfUrl && !resolvedDriveUrl) {
+  // Loading UI
+  if (isLoading) {
     return (
-      <Box sx={{ p: 4, textAlign: "center" }}>
-        <Typography variant="h6" color="text.secondary">
-          No notes available
+      <Box sx={{ p: 2 }}>
+        {[1, 2, 3].map((i) => (
+          <Skeleton
+            key={i}
+            variant="rectangular"
+            height={80}
+            sx={{ mb: 2, borderRadius: 2 }}
+          />
+        ))}
+      </Box>
+    );
+  }
+
+  // Error UI (fixed)
+  if (error) {
+    return (
+      <Box sx={{ py: 6, textAlign: "center" }}>
+        <PictureAsPdfIcon sx={{ fontSize: 60, color: "#e5e7eb", mb: 2 }} />
+
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+          Failed to load notes
+        </Typography>
+
+        <Typography variant="body2" color="text.secondary">
+          Please try again later or refresh the page.
+        </Typography>
+      </Box>
+    );
+  }
+
+  // Empty state
+  if (!notes.length) {
+    return (
+      <Box sx={{ py: 8, textAlign: "center" }}>
+        <PictureAsPdfIcon sx={{ fontSize: 70, color: "#e5e7eb", mb: 2 }} />
+
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+          No Study Materials Found
+        </Typography>
+
+        <Typography variant="body2" color="text.secondary">
+          PDFs will appear here once uploaded by the instructor.
         </Typography>
       </Box>
     );
@@ -347,95 +268,122 @@ const NotesSection: React.FC<NotesSectionProps> = ({ pdfUrl, driveUrl, courseId 
 
   return (
     <Box sx={{ p: 2 }}>
-      <Paper
-        elevation={0}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          p: 2,
-          mb: 3,
-          border: "1px solid #e0e0e0",
-          borderRadius: "10px",
-          backgroundColor: "#fafafa",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-          <PictureAsPdfIcon sx={{ color: "#e53935", fontSize: 36 }} />
-          <Box>
-            <Typography fontWeight={600} fontSize="15px">
-              Course Notes
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              PDF Document
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box sx={{ display: "flex", gap: 1.5 }}>
-          {!pdfUrl && resolvedDriveUrl && (
-            <Button
-              variant="contained"
-              startIcon={<OpenInNewIcon />}
-              href={resolvedDriveUrl}
-              target="_blank"
-              rel="noreferrer"
-              size="small"
-            >
-              Open in Drive
-            </Button>
-          )}
-
-          {pdfUrl && (
-            <>
-              {resolvedDriveUrl && (
-                <Button
-                  variant="outlined"
-                  startIcon={<OpenInNewIcon />}
-                  href={resolvedDriveUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  size="small"
-                >
-                  Open in Drive
-                </Button>
-              )}
-              <Button
-                variant="contained"
-                startIcon={<DownloadIcon />}
-                href={pdfUrl}
-                download
-                target="_blank"
-                rel="noreferrer"
-                size="small"
-              >
-                Download
-              </Button>
-            </>
-          )}
-        </Box>
-      </Paper>
-
-      {pdfUrl && (
-        <Box
+      {/* Header */}
+      <Box sx={{ mb: 3 }}>
+        <Typography
+          variant="h6"
           sx={{
-            width: "100%",
-            height: "80vh",
-            border: "1px solid #e0e0e0",
-            borderRadius: "8px",
-            overflow: "hidden",
+            fontWeight: 800,
+            color: "#111827",
           }}
         >
-          <iframe
-            src={`${pdfUrl}#toolbar=0`}
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-            title="Notes PDF"
-            allow="autoplay"
-          />
-        </Box>
-      )}
+          Study Notes
+        </Typography>
+
+        <Typography variant="body2" color="text.secondary">
+          Access downloadable PDF materials for this unit
+        </Typography>
+      </Box>
+
+      {/* Notes List */}
+      <Box>
+        {notes.map((note, index) => (
+          <React.Fragment key={note.id}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                p: 2.5,
+                borderRadius: 3,
+                border: "1px solid #e5e7eb",
+                bgcolor: "#fff",
+                transition: "all 0.25s ease",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
+                  borderColor: "#4F39F6",
+                },
+              }}
+            >
+              {/* Left Side */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                {/* PDF Icon Box */}
+                <Box
+                  sx={{
+                    width: 55,
+                    height: 55,
+                    borderRadius: 2,
+                    bgcolor: "#FEE2E2",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <PictureAsPdfIcon
+                    sx={{ fontSize: 30, color: "#DC2626" }}
+                  />
+                </Box>
+
+                {/* Title */}
+                <Box>
+                  <Typography
+                    sx={{
+                      fontWeight: 700,
+                      color: "#111827",
+                      fontSize: "15px",
+                    }}
+                  >
+                    {note.title}
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#6B7280" }}
+                  >
+                    PDF Document
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Button */}
+              <Button
+                href={note.driveUrl}
+                target="_blank"
+                rel="noreferrer"
+                variant="outlined"
+                endIcon={<OpenInNewIcon />}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 600,
+                  borderRadius: 2,
+                  borderColor: "#4F39F6",
+                  color: "#4F39F6",
+                  px: 2.5,
+                  "&:hover": {
+                    bgcolor: "#4F39F6",
+                    color: "#fff",
+                    borderColor: "#4F39F6",
+                  },
+                }}
+              >
+                Open
+              </Button>
+            </Box>
+
+            {index < notes.length - 1 && (
+              <Divider sx={{ my: 2 }} />
+            )}
+          </React.Fragment>
+        ))}
+      </Box>
     </Box>
   );
 };

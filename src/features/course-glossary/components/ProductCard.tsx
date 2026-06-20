@@ -234,7 +234,7 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
             fontSize: { xs: "28px", md: "32px" },
           }}
         >
-          ${course?.price || "0.00"}
+            ₹{course?.price || "0.00"}
         </Typography>
         <Typography
           variant="body1"
@@ -244,7 +244,7 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
             fontSize: { xs: "16px", md: "18px" },
           }}
         >
-          $99.5
+            ₹3000.00
         </Typography>
         <Box
           sx={{

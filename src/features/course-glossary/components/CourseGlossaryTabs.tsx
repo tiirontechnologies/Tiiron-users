@@ -25,7 +25,7 @@ export default function CourseGlossaryTabs({ activeTab, onTabChange }: CourseGlo
           fontWeight: 600,
         },
         "& .MuiTabs-indicator": {
-          backgroundColor: "#4F39F6",
+          backgroundColor: "#090715",
           height: 3,
         },
       }}
