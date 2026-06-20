@@ -45,7 +45,7 @@ interface AssignmentItem {
     marks: number | null;
     feedback: string | null;
   }>;
-  submission?: { submissionUrl: string };
+submission?: { submissionUrl: string; marks: number | null; feedback: string | null };
   submissionUrl?: string;
 }
 
