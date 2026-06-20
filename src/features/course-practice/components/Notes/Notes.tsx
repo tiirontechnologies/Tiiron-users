@@ -214,7 +214,8 @@ const NotesSection: React.FC<NotesSectionProps> = ({ unitId }) => {
     }
   );
 
-  const notes: Note[] = response?.data || [];
+  // const notes: Note[] = response?.data || [];
+  const notes: Note[] = (response as any)?.data || [];
 
   // Loading UI
   if (isLoading) {
