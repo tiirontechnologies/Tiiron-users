@@ -1,282 +1,4 @@
-// import React from "react";
 
-// const TermsAndConditions: React.FC = () => {
-//   return (
-//     <div className="min-h-screen bg-white">
-//       <div className="max-w-5xl mx-auto px-6 py-12">
-//         <div className="mb-10">
-//           <h1 className="text-4xl font-bold text-gray-900 mb-3">
-//             Terms & Conditions
-//           </h1>
-//           <p className="text-gray-600">
-//             Last Updated: June 19, 2026
-//           </p>
-//         </div>
-
-//         <div className="prose prose-gray max-w-none">
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
-//             <p className="text-gray-700 leading-7">
-//               Welcome to our Learning Management System (LMS). These Terms &
-//               Conditions govern your access to and use of our platform,
-//               including courses, assessments, certificates, learning resources,
-//               and related services.
-//             </p>
-//             <p className="text-gray-700 leading-7 mt-4">
-//               By creating an account, purchasing a course, or accessing our
-//               platform, you agree to comply with these Terms & Conditions.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">2. Definitions</h2>
-
-//             <ul className="list-disc pl-6 space-y-2 text-gray-700">
-//               <li>
-//                 <strong>Platform:</strong> Our LMS website and related
-//                 educational services.
-//               </li>
-//               <li>
-//                 <strong>User:</strong> Any learner, student, mentor,
-//                 instructor, or visitor using the platform.
-//               </li>
-//               <li>
-//                 <strong>Course:</strong> Any educational program, certification,
-//                 training, or learning content.
-//               </li>
-//               <li>
-//                 <strong>Content:</strong> Videos, assignments, quizzes,
-//                 presentations, documents, downloadable files, and educational
-//                 materials.
-//               </li>
-//             </ul>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               3. Account Registration
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               Users must provide accurate and complete information during
-//               registration. You are responsible for maintaining the security of
-//               your account credentials.
-//             </p>
-
-//             <ul className="list-disc pl-6 mt-4 space-y-2 text-gray-700">
-//               <li>Keep login credentials confidential.</li>
-//               <li>Do not share accounts with others.</li>
-//               <li>
-//                 Notify us immediately if unauthorized access is suspected.
-//               </li>
-//             </ul>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               4. Course Enrollment & Access
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               Upon successful enrollment and payment, users receive access to
-//               course content according to the plan purchased.
-//             </p>
-
-//             <ul className="list-disc pl-6 mt-4 space-y-2 text-gray-700">
-//               <li>Lifetime access where specified.</li>
-//               <li>Subscription-based access where applicable.</li>
-//               <li>Batch-based or limited-duration access.</li>
-//             </ul>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               5. Payments & Billing
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               All fees must be paid before access to paid content is granted.
-//               Payments are processed through third-party payment gateways.
-//             </p>
-
-//             <ul className="list-disc pl-6 mt-4 space-y-2 text-gray-700">
-//               <li>Applicable taxes may apply.</li>
-//               <li>Payment gateway fees may be charged separately.</li>
-//               <li>
-//                 We are not responsible for third-party payment failures or
-//                 delays.
-//               </li>
-//             </ul>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               6. Refund Policy
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               Refunds are governed by our Refund Policy. Eligibility depends on
-//               course access, content consumption, and the refund period
-//               specified during enrollment.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               7. User Responsibilities
-//             </h2>
-
-//             <p className="text-gray-700 leading-7 mb-4">
-//               Users agree to use the platform responsibly and lawfully.
-//             </p>
-
-//             <ul className="list-disc pl-6 space-y-2 text-gray-700">
-//               <li>Do not share paid content.</li>
-//               <li>Do not upload harmful software.</li>
-//               <li>Do not misuse platform resources.</li>
-//               <li>Do not impersonate another user.</li>
-//               <li>Do not engage in harassment or abuse.</li>
-//             </ul>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               8. Intellectual Property Rights
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               All platform content remains the intellectual property of the
-//               platform owner. Users receive a limited license for personal
-//               learning purposes only.
-//             </p>
-
-//             <p className="text-gray-700 leading-7 mt-4">
-//               Users may not reproduce, distribute, sell, or publicly share
-//               course content without written permission.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               9. Certificates & Completion
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               Certificates may be awarded upon successful completion of course
-//               requirements, including assessments, attendance, and assignments.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               10. Academic Integrity
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               Cheating, plagiarism, impersonation, or any dishonest academic
-//               activity is strictly prohibited.
-//             </p>
-
-//             <p className="text-gray-700 leading-7 mt-4">
-//               Violations may result in suspension, certificate revocation, or
-//               permanent account termination.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               11. Platform Availability
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               We strive to keep the platform available at all times, but do not
-//               guarantee uninterrupted access. Maintenance, upgrades, or
-//               technical issues may occasionally affect availability.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               12. Limitation of Liability
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               We are not liable for indirect losses, business interruptions,
-//               data loss, employment outcomes, certification decisions, or
-//               learning results arising from the use of the platform.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               13. Suspension & Termination
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               We reserve the right to suspend or terminate accounts that violate
-//               these Terms & Conditions or misuse platform resources.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">14. Privacy</h2>
-
-//             <p className="text-gray-700 leading-7">
-//               Your use of the platform is also governed by our Privacy Policy.
-//               By using our services, you consent to the collection and
-//               processing of information necessary to provide educational
-//               services.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">
-//               15. Changes to Terms
-//             </h2>
-
-//             <p className="text-gray-700 leading-7">
-//               We may update these Terms & Conditions periodically. Continued use
-//               of the platform after updates constitutes acceptance of the
-//               revised terms.
-//             </p>
-//           </section>
-
-//           <section className="mb-10">
-//             <h2 className="text-2xl font-semibold mb-4">16. Governing Law</h2>
-
-//             <p className="text-gray-700 leading-7">
-//               These Terms shall be governed by the laws of India. Any disputes
-//               shall be subject to the jurisdiction of courts located in Noida,
-//               Uttar Pradesh, India.
-//             </p>
-//           </section>
-
-//           <section>
-//             <h2 className="text-2xl font-semibold mb-4">
-//               17. Contact Information
-//             </h2>
-
-//             <div className="rounded-xl border border-gray-200 p-6 bg-gray-50">
-//               <p className="text-gray-700">
-//                 <strong>Email:</strong> support@yourdomain.com
-//               </p>
-
-//               <p className="text-gray-700 mt-2">
-//                 <strong>Website:</strong> https://yourdomain.com
-//               </p>
-
-//               <p className="text-gray-700 mt-2">
-//                 <strong>Company:</strong> Your Company Name
-//               </p>
-//             </div>
-//           </section>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TermsAndConditions;
 
 import React from "react";
 import {
@@ -785,7 +507,7 @@ const TermsAndConditions: React.FC = () => {
                 <p className="text-slate-700 leading-8">
                   These Terms shall be governed by the laws of India. Any
                   disputes shall be subject to the jurisdiction of courts
-                  located in Noida, Uttar Pradesh, India.
+                  located in Lucknow, Uttar Pradesh, India.
                 </p>
               </div>
             </div>
@@ -810,7 +532,7 @@ const TermsAndConditions: React.FC = () => {
                     </div>
                     <a
                       href="mailto:contact@tiiron.com"
-                      className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+                      className="font-medium hover:text-blue-700 font-medium text-sm"
                     >
                       contact@tiiron.com
                     </a>
@@ -826,7 +548,7 @@ const TermsAndConditions: React.FC = () => {
                     </div>
                     <a
                       href="https://tiiron.com"
-                      className="text-blue-600 hover:text-blue-700 font-medium text-sm break-all"
+                      className="font-medium  hover:text-blue-700 font-medium text-sm break-all"
                     >
                       https://tiiron.com
                     </a>
@@ -840,9 +562,12 @@ const TermsAndConditions: React.FC = () => {
                         Company
                       </span>
                     </div>
-                    <p className="text-slate-900 font-medium text-sm">
+                    <a 
+                    href="https://tiirontechnologies.com/"
+                    target="_blank"
+                    className="text-slate-900 font-medium text-sm hover:text-blue-600">
                       Tiiron Technologies Pvt. Ltd.
-                    </p>
+                    </a>
                   </div>
                 </div>
               </div>

@@ -387,11 +387,13 @@ const ContactPage: React.FC = () => {
         {/* ================= LEFT SIDE: CONTACT FORM ================= */}
         <div className="lg:col-span-7 bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold text-red-500 tracking-tight">
-              We're Always Ready
+            <h1 className="text-3xl font-extrabold text-red-600 tracking-tight">
+              {/* We're Always Ready */}
+              Get in Touch
             </h1>
             <p className="text-indigo-900 mt-2 font-medium">
-              Get in touch with your Technology Partner.
+              {/* Get in touch with your Technology Partner. */}
+              We'd love to hear from you.
             </p>
           </div>
 
@@ -520,6 +522,7 @@ const ContactPage: React.FC = () => {
             <div className="flex flex-wrap gap-4">
               <a
                 href="https://www.facebook.com/tiirontechnologies/"
+                target="_blank"
                 className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
                 <Facebook className="text-[#1877F2]" size={18} fill="#1877F2" />
@@ -527,6 +530,7 @@ const ContactPage: React.FC = () => {
               </a>
               <a
                 href="https://www.instagram.com/tiirontechnologies"
+                target="_blank"
                 className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
                 <Instagram className="text-[#E4405F]" size={18} />
@@ -540,7 +544,7 @@ const ContactPage: React.FC = () => {
                 <span className="text-sm">YouTube</span>
               </a> */}
               <a
-                href="https://www.linkedin.com/company/tiirontechnologies/"
+                href="https://www.linkedin.com/company/tiiron/"
                 target="_blank"
                 className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
@@ -548,7 +552,8 @@ const ContactPage: React.FC = () => {
                 <span className="text-sm">LinkedIn</span>
               </a>
               <a
-                href="https://x.com/tiirontech"
+                href="https://x.com/tiironlms"
+                 target="_blank"
                 className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
                 <Twitter className="text-[#0A66C2]" size={18} fill="#0A66C2" />
