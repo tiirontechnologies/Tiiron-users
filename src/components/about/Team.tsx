@@ -19,13 +19,14 @@ const teamMembers = [
     name: "Mrs. Kiran Devi",
     role: "Director",
      image:"/image.png",
-    socials: { linkedin: "#", twitter: "#", profile: "#" },
+    socials: { linkedin: " ", twitter: " ", profile: " " },
   },
   {
     name: "Devendra Kumar Singh",
     role: "Academic Director",
       image:"/Academic_Director.png",
-    socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
+    socials: { linkedin: " ", twitter: " ", profile: " " },
+    // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
   },
 ];
 
