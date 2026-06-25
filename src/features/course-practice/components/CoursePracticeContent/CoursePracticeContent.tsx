@@ -904,7 +904,9 @@ const CoursePracticeContent: React.FC<Props> = ({ data ,  unitId}) => {
   />
 )}
 
-      {videoTab === 2 && <AssignmentTab />}
+      {videoTab === 2 && <AssignmentTab 
+      unitId={Number(unitId)}
+      />}
 
       {/* Footer only for Practice tab */}
       {videoTab === 0 && (

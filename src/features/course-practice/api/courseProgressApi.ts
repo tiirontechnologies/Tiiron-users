@@ -165,7 +165,7 @@ updateRating: builder.mutation<
 
   getAssignment: builder.query({
   query: (courseId) =>
-    `/course/${courseId}/assignments`,
+    `/course/unit/${courseId}/assignments`,
 }),
 
 submitAssignment: builder.mutation({
