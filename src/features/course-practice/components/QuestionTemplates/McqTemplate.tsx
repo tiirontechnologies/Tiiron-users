@@ -185,17 +185,25 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
               sx={{
                 flex: { xs: "1 1 100%", sm: "1 1 180px" },
                 minWidth: 0,
+                maxWidth: "100%",
                 border: `2px solid ${borderColor}`,
                 p: { xs: "9px 11px", sm: "10px 13px" },
                 borderRadius: "8px",
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
                 gap: 1,
-                flexWrap: { xs: "wrap", sm: "nowrap" },
+                flexWrap: "wrap",
                 mb: 1,
                 background: backgroundColor,
                 cursor: effectivePracticeMode ? "pointer" : "default",
                 transition: "all 0.2s ease",
+                "& > .MuiTypography-root:not(:first-of-type)": {
+                  width: "100%",
+                  maxWidth: "100%",
+                  ml: "28px",
+                  overflowWrap: "anywhere",
+                  lineHeight: 1.35,
+                },
                 "&:hover": effectivePracticeMode
                   ? {
                     borderColor: COLORS.primary,
@@ -217,6 +225,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                   accentColor: (isSelected || isPreviouslySelected) ? COLORS.primary : COLORS.border.light,
                   cursor: effectivePracticeMode ? "pointer" : "default",
                   flexShrink: 0,
+                  marginTop: "2px",
                 }}
               />
               <Typography
@@ -227,6 +236,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                   flex: 1,
                   minWidth: 0,
                   wordBreak: "break-word",
+                  overflowWrap: "anywhere",
+                  lineHeight: 1.45,
                 }}
               >
                 {opt.text}
