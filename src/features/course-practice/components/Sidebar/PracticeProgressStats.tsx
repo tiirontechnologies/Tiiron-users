@@ -33,9 +33,9 @@ const PracticeProgressStats: React.FC<PracticeProgressStatsProps> = ({
   return (
     <Box
       sx={{
-        mt: 2,
-        p: 2,
-        borderRadius: "12px",
+        mt: 1.5,
+        p: 1.5,
+        borderRadius: "10px",
         background: COLORS.background.light,
         border: `1px solid ${COLORS.border.light}`,
       }}
@@ -43,7 +43,7 @@ const PracticeProgressStats: React.FC<PracticeProgressStatsProps> = ({
       <Typography
         variant="h6"
         sx={{
-          fontSize: "14px",
+          fontSize: "13px",
           fontWeight: 600,
           color: COLORS.text.primary,
           mb: 1,
@@ -53,14 +53,14 @@ const PracticeProgressStats: React.FC<PracticeProgressStatsProps> = ({
       </Typography>
 
       {/* Progress Bar (NEW) */}
-      <Box sx={{ my: 1 }}>
+      <Box sx={{ my: 0.75 }}>
         <Typography sx={{ fontSize: "12px", color: COLORS.text.secondary }}>
           Progress: {progressPercent}%
         </Typography>
         <LinearProgress
           variant="determinate"
           value={progressPercent}
-          sx={{ height: 6, borderRadius: 3 }}
+          sx={{ height: 5, borderRadius: 3 }}
         />
       </Box>
 

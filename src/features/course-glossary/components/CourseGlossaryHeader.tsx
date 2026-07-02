@@ -183,7 +183,7 @@ const hasRating = Number(averageRating) >= 1;
           )}
         </Box>
 
-        {/* ⭐ RATING (DYNAMIC) */}
+    
         <Box
           sx={{
             width: "100%",
@@ -204,7 +204,6 @@ const hasRating = Number(averageRating) >= 1;
               flexWrap: "wrap"
             }}
           >
-            {/* {averageRating && averageRating > 0 && ( */}
             {hasRating && (
               <>
                 <Box

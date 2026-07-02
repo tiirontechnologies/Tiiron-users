@@ -74,6 +74,7 @@ const SubjectiveTemplate: React.FC<SubjectiveTemplateProps> = ({
         disabled={!practiceMode}
         sx={{
           width: "100%",
+          boxSizing: "border-box",
           minHeight: "120px",
           padding: "12px 16px",
           border: practiceMode ? "2px solid #D1D5DB" : "1px solid #E5E7EB",
@@ -107,7 +108,9 @@ const SubjectiveTemplate: React.FC<SubjectiveTemplateProps> = ({
           mt: 1,
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: { xs: "flex-start", sm: "center" },
+          flexDirection: { xs: "column", sm: "row" },
+          gap: 0.5,
         }}
       >
         <Typography sx={{ fontSize: "12px", color: "#6B7280" }}>

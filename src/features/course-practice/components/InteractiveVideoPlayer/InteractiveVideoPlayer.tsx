@@ -187,7 +187,7 @@ export default function InteractiveVideoPlayer({
 
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', mb: 4 }}>
+    <Box sx={{ position: 'relative', width: '100%', mb: { xs: 2, md: 2.5 } }}>
       {/* 16:9 Video Container */}
       <Box 
         sx={{ 
@@ -195,7 +195,7 @@ export default function InteractiveVideoPlayer({
           width: "100%",
           paddingBottom: "56.25%", 
           overflow: "hidden",
-          borderRadius: "12px",
+          borderRadius: { xs: "8px", sm: "12px" },
           boxShadow: SHADOWS.md,
           backgroundColor: '#000'
         }}
@@ -217,12 +217,19 @@ export default function InteractiveVideoPlayer({
         open={activeGroupIndex !== null} 
         fullWidth 
         maxWidth="sm"
+        PaperProps={{
+          sx: {
+            m: { xs: 1.5, sm: 3 },
+            width: { xs: "calc(100% - 24px)", sm: "100%" },
+            maxHeight: { xs: "calc(100% - 24px)", sm: "calc(100% - 64px)" },
+          },
+        }}
         // Force them to at least see the questions before continuing
       >
-        <DialogContent sx={{ minHeight: '300px' }}>
+        <DialogContent sx={{ minHeight: { xs: 'auto', sm: '300px' }, p: { xs: 2, sm: 3 } }}>
           {activeGroup && activeGroup.questions[currentQuestionIndex] && (
             <Box>
-                <Typography variant="h6" sx={{ mb: 3, textAlign: 'center', fontWeight: 'bold' }}>
+                <Typography variant="h6" sx={{ mb: { xs: 2, sm: 3 }, textAlign: 'center', fontWeight: 'bold', fontSize: { xs: "1rem", sm: "1.25rem" } }}>
                     Knowledge Check ({currentQuestionIndex + 1} of {activeGroup.questions.length})
                 </Typography>
                 
@@ -233,7 +240,7 @@ export default function InteractiveVideoPlayer({
                     const userAnswer = getUserAnswer(videoContentType.id, qId);
 
                     return (
-                        <Box sx={{ mb: 4, p: 2, border: '1px solid #e5e7eb', borderRadius: 2 }}>
+                        <Box sx={{ mb: { xs: 2, sm: 4 }, p: { xs: 1.5, sm: 2 }, border: '1px solid #e5e7eb', borderRadius: 2 }}>
                             {apiQ.title && (
                                 <Typography variant="subtitle1" fontWeight="bold" mb={1}>
                                     {apiQ.title}
@@ -276,13 +283,13 @@ export default function InteractiveVideoPlayer({
             </Box>
           )}
         </DialogContent>
-        <DialogActions sx={{ p: 2, pt: 0, justifyContent: 'center' }}>
+        <DialogActions sx={{ p: { xs: 2, sm: 2 }, pt: 0, justifyContent: 'center' }}>
             {feedback ? (
-               <Button variant="contained" color="primary" onClick={handleNextQuestion} sx={{ minWidth: 200 }}>
+               <Button variant="contained" color="primary" onClick={handleNextQuestion} sx={{ minWidth: { xs: 0, sm: 200 }, width: { xs: "100%", sm: "auto" } }}>
                    {activeGroup && currentQuestionIndex < activeGroup.questions.length - 1 ? "Next Question" : "Continue Video"}
                </Button>
             ) : (
-               <Button variant="contained" color="primary" onClick={handleSubmitQuestion} disabled={isSubmitting} sx={{ minWidth: 200 }}>
+               <Button variant="contained" color="primary" onClick={handleSubmitQuestion} disabled={isSubmitting} sx={{ minWidth: { xs: 0, sm: 200 }, width: { xs: "100%", sm: "auto" } }}>
                    {isSubmitting ? <CircularProgress size={24} color="inherit" /> : "Submit"}
                </Button>
             )}

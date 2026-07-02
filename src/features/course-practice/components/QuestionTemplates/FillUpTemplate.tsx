@@ -121,6 +121,8 @@ const FillUpTemplate: React.FC<FillUpTemplateProps> = ({
         placeholder={practiceMode ? "Type your answer here..." : ""}
         sx={{
           p: "8px 12px",
+          width: "100%",
+          boxSizing: "border-box",
           borderRadius: "6px",
           border: `1px solid ${COLORS.primary}`,
           background: COLORS.background.white,

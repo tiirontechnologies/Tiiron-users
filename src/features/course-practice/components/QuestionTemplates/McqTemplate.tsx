@@ -113,7 +113,7 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
           </Typography>
         </Box>
       )}
-      <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", gap: { xs: 1.25, sm: 2 }, flexWrap: "wrap" }}>
         {question.content.options.map((opt, oidx) => {
           // Use API option ID if available, otherwise fall back to index
           const optionId = opt.id?.toString() ?? oidx.toString();
@@ -183,13 +183,15 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
               key={oidx}
               onClick={() => handleOptionClick(oidx)}
               sx={{
-                flex: 1,
-                minWidth: 180,
+                flex: { xs: "1 1 100%", sm: "1 1 180px" },
+                minWidth: 0,
                 border: `2px solid ${borderColor}`,
-                p: "12px 16px",
+                p: { xs: "9px 11px", sm: "10px 13px" },
                 borderRadius: "8px",
                 display: "flex",
                 alignItems: "center",
+                gap: 1,
+                flexWrap: { xs: "wrap", sm: "nowrap" },
                 mb: 1,
                 background: backgroundColor,
                 cursor: effectivePracticeMode ? "pointer" : "default",
@@ -212,17 +214,19 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                 disabled={!effectivePracticeMode || isPracticed}
                 onChange={() => handleOptionClick(oidx)}
                 style={{
-                  marginRight: 12,
                   accentColor: (isSelected || isPreviouslySelected) ? COLORS.primary : COLORS.border.light,
                   cursor: effectivePracticeMode ? "pointer" : "default",
+                  flexShrink: 0,
                 }}
               />
               <Typography
                 sx={{
-                  fontSize: "15px",
+                  fontSize: { xs: "14px", sm: "14px" },
                   color: textColor,
                   fontWeight: 500,
                   flex: 1,
+                  minWidth: 0,
+                  wordBreak: "break-word",
                 }}
               >
                 {opt.text}
@@ -236,7 +240,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                         fontSize: "12px",
                         color: "#10B981",
                         fontWeight: 600,
-                        ml: 1,
+                        ml: { xs: 0, sm: 1 },
+                        width: { xs: "100%", sm: "auto" },
                       }}
                     >
                       ✓ Your Answer (Correct)
@@ -248,7 +253,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                         fontSize: "12px",
                         color: "#EF4444",
                         fontWeight: 600,
-                        ml: 1,
+                        ml: { xs: 0, sm: 1 },
+                        width: { xs: "100%", sm: "auto" },
                       }}
                     >
                       ✗ Your Answer (Wrong)
@@ -260,7 +266,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                         fontSize: "12px",
                         color: "#10B981",
                         fontWeight: 600,
-                        ml: 1,
+                        ml: { xs: 0, sm: 1 },
+                        width: { xs: "100%", sm: "auto" },
                       }}
                     >
                       ✓ Correct Answer
@@ -275,7 +282,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                     fontSize: "12px",
                     color: "#10B981",
                     fontWeight: 600,
-                    ml: 1,
+                    ml: { xs: 0, sm: 1 },
+                    width: { xs: "100%", sm: "auto" },
                   }}
                 >
                   ✓ Correct
@@ -287,7 +295,8 @@ const McqTemplate: React.FC<McqTemplateProps> = ({
                     fontSize: "12px",
                     color: "#EF4444",
                     fontWeight: 600,
-                    ml: 1,
+                    ml: { xs: 0, sm: 1 },
+                    width: { xs: "100%", sm: "auto" },
                   }}
                 >
                   ✗ Your Answer

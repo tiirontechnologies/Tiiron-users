@@ -82,7 +82,20 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
         });
       }
     } catch (error) {
+    
+        if (error?.status === 401) {
+    navigate("/login");
+    showSnackbar({
+       message: "You're just one step away! Sign in to enroll and start learning.",
+        severity: "warning",
+        duration: 4000,
+        position: { vertical: "bottom", horizontal: "center" },
+      });
+    return;
+  }
       console.error("Enrollment error:", error);
+     
+
       showSnackbar({
         message: "Failed to enroll. Please try again.",
         severity: "error",
