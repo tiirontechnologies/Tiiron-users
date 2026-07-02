@@ -29,7 +29,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
   const dispatch= useDispatch();
 
   return (
-    <List component="nav" sx={{ mt: 1, px: 0.5 }}>
+    <List component="nav" sx={{ mt: 0.75, px: 0.5 }}>
       {chapters?.map((chapter, index) => {
         const hasChildren = chapter?.units && chapter?.units?.length > 0;
         const isOpen = openIndex === index;
@@ -45,10 +45,10 @@ const NavigationList: React.FC<NavigationListProps> = ({
                 }
               }}
               sx={{
-                borderRadius: "14px",
-                mb: 1.5,
-                py: 1.5,
-                px: 2,
+                borderRadius: "10px",
+                mb: 1,
+                py: 1,
+                px: 1.25,
                 background: isOpen
                   ? "linear-gradient(135deg, rgba(79, 57, 246, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%)"
                   : COLORS.background.white,
@@ -87,20 +87,20 @@ const NavigationList: React.FC<NavigationListProps> = ({
                 },
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%", position: "relative", zIndex: 1 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, width: "100%", position: "relative", zIndex: 1 }}>
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    width: 36,
-                    height: 36,
-                    borderRadius: "10px",
+                    width: 30,
+                    height: 30,
+                    borderRadius: "8px",
                     background: isOpen
                       ? GRADIENTS.primary
                       : "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%)",
                     color: isOpen ? "white" : COLORS.primary,
-                    fontSize: "14px",
+                    fontSize: "13px",
                     fontWeight: 700,
                     boxShadow: isOpen
                       ? "0 2px 8px rgba(79, 57, 246, 0.3)"
@@ -115,11 +115,11 @@ const NavigationList: React.FC<NavigationListProps> = ({
                   primary={chapter?.title}
                   sx={{
                     color: isOpen ? COLORS.text.primary : COLORS.text.secondary,
-                    fontSize: "15px",
+                    fontSize: "14px",
                     fontWeight: isOpen ? 600 : 500,
                     letterSpacing: "-0.01em",
                     "& .MuiListItemText-primary": {
-                      fontSize: "15px",
+                      fontSize: "14px",
                       fontWeight: isOpen ? 600 : 500,
                       color: isOpen ? COLORS.text.primary : COLORS.text.secondary,
                       letterSpacing: "-0.01em",
@@ -134,8 +134,8 @@ const NavigationList: React.FC<NavigationListProps> = ({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      width: 28,
-                      height: 28,
+                      width: 24,
+                      height: 24,
                       borderRadius: "6px",
                       background: isOpen
                         ? "rgba(79, 57, 246, 0.1)"
@@ -144,9 +144,9 @@ const NavigationList: React.FC<NavigationListProps> = ({
                     }}
                   >
                     {isOpen ? (
-                      <ExpandLess sx={{ color: COLORS.primary, fontSize: 22, fontWeight: 600 }} />
+                      <ExpandLess sx={{ color: COLORS.primary, fontSize: 20, fontWeight: 600 }} />
                     ) : (
-                      <ExpandMore sx={{ color: COLORS.text.muted, fontSize: 22 }} />
+                      <ExpandMore sx={{ color: COLORS.text.muted, fontSize: 20 }} />
                     )}
                   </Box>
                 )}
@@ -168,7 +168,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
                   component="div"
                   disablePadding
                   sx={{
-                    ml: 3,
+                    ml: 2,
                     mt: 0.5,
                     mb: 1,
                     pl: 1,
@@ -196,10 +196,10 @@ const NavigationList: React.FC<NavigationListProps> = ({
                         <ListItemButton
                           key={unit.title}
                           sx={{
-                            pl: 2.5,
-                            py: 1.25,
-                            borderRadius: "10px",
-                            mb: 0.75,
+                            pl: 1.75,
+                            py: 0.9,
+                            borderRadius: "9px",
+                            mb: 0.6,
                             background: isSelected
                               ? "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.06) 100%)"
                               : isCompleted
@@ -252,22 +252,22 @@ const NavigationList: React.FC<NavigationListProps> = ({
                             onUnitSelect(unit.id)
                           }}
                         >
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "100%" }}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, width: "100%" }}>
                             <Box
                               sx={{
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: 28,
-                                height: 28,
-                                borderRadius: "8px",
+                                width: 24,
+                                height: 24,
+                                borderRadius: "7px",
                                 background: isSelected
                                   ? GRADIENTS.primary
                                   : isCompleted
                                     ? "linear-gradient(135deg, #10B981 0%, #059669 100%)"
                                     : "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%)",
                                 color: isSelected || isCompleted ? "white" : COLORS.primary,
-                                fontSize: "12px",
+                                fontSize: "11px",
                                 fontWeight: 700,
                                 boxShadow: isSelected || isCompleted
                                   ? "0 2px 6px rgba(79, 57, 246, 0.25)"
@@ -285,11 +285,11 @@ const NavigationList: React.FC<NavigationListProps> = ({
                                   : isCompleted
                                     ? "#065F46"
                                     : COLORS.text.secondary,
-                                fontSize: "14px",
+                                fontSize: "13px",
                                 fontWeight: isSelected || isCompleted ? 600 : 500,
                                 letterSpacing: "-0.01em",
                                 "& .MuiListItemText-primary": {
-                                  fontSize: "14px",
+                                  fontSize: "13px",
                                   fontWeight: isSelected || isCompleted ? 600 : 500,
                                   color: isSelected
                                     ? COLORS.text.primary
@@ -308,8 +308,8 @@ const NavigationList: React.FC<NavigationListProps> = ({
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                width: 28,
-                                height: 28,
+                                width: 24,
+                                height: 24,
                                 borderRadius: "6px",
                                 background: isCompleted
                                   ? "rgba(16, 185, 129, 0.1)"
@@ -320,9 +320,9 @@ const NavigationList: React.FC<NavigationListProps> = ({
                               }}
                             >
                               {isCompleted ? (
-                                <CheckCircle sx={{ color: "#10B981", fontSize: 20, fontWeight: 600 }} />
+                                <CheckCircle sx={{ color: "#10B981", fontSize: 18, fontWeight: 600 }} />
                               ) : (
-                                <PlayArrow sx={{ color: isSelected ? COLORS.primary : COLORS.text.muted, fontSize: 18 }} />
+                                <PlayArrow sx={{ color: isSelected ? COLORS.primary : COLORS.text.muted, fontSize: 16 }} />
                               )}
                             </Box>
                           </Box>
