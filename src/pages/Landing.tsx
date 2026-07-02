@@ -946,28 +946,7 @@ const Landing = () => {
       {/* -------------------------------------- */}
       {/* TESTIMONIALS */}
       {/* -------------------------------------- */}
-      <Box sx={{ py: 6 }}>
-        <Container maxWidth="lg">
-          <Typography variant="h5" fontWeight={700}>Trusted by learners like you</Typography>
-
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            {testimonials.map((t, i) => (
-              <Grid item xs={12} md={4} key={i}>
-                <Card variant="outlined" sx={{ p: 2 }}>
-                  <Typography>"{t.text}"</Typography>
-                  <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar>{t.name[0]}</Avatar>
-                    <Box>
-                      <Typography fontWeight={700}>{t.name}</Typography>
-                      <Typography variant="caption">{t.tag}</Typography>
-                    </Box>
-                  </Box>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
-      </Box>
+     
 
       <Box sx={{ py: 8, background: "#f8fafc" }}>
   <Container maxWidth="lg">
