@@ -226,7 +226,13 @@ export default function InteractiveVideoPlayer({
         }}
         // Force them to at least see the questions before continuing
       >
-        <DialogContent sx={{ minHeight: { xs: 'auto', sm: '300px' }, p: { xs: 2, sm: 3 } }}>
+        <DialogContent
+          sx={{
+            minHeight: { xs: 'auto', sm: '300px' },
+            p: { xs: 2, sm: 3 },
+            overflowX: 'hidden',
+          }}
+        >
           {activeGroup && activeGroup.questions[currentQuestionIndex] && (
             <Box>
                 <Typography variant="h6" sx={{ mb: { xs: 2, sm: 3 }, textAlign: 'center', fontWeight: 'bold', fontSize: { xs: "1rem", sm: "1.25rem" } }}>
@@ -240,7 +246,16 @@ export default function InteractiveVideoPlayer({
                     const userAnswer = getUserAnswer(videoContentType.id, qId);
 
                     return (
-                        <Box sx={{ mb: { xs: 2, sm: 4 }, p: { xs: 1.5, sm: 2 }, border: '1px solid #e5e7eb', borderRadius: 2 }}>
+                        <Box
+                          sx={{
+                            mb: { xs: 2, sm: 4 },
+                            p: { xs: 1.5, sm: 2 },
+                            border: '1px solid #e5e7eb',
+                            borderRadius: 2,
+                            minWidth: 0,
+                            overflow: 'hidden',
+                          }}
+                        >
                             {apiQ.title && (
                                 <Typography variant="subtitle1" fontWeight="bold" mb={1}>
                                     {apiQ.title}
@@ -250,33 +265,66 @@ export default function InteractiveVideoPlayer({
                                 {renderQuestion(apiQ, transformed, userAnswer, (ans: any) => handleAnswerChange(videoContentType.id, qId, ans))}
                             </Box>
                             
-                            {feedback && (
-                                <Box sx={{ mt: 3, p: 2, borderRadius: 2, backgroundColor: feedback.isCorrect ? '#f0fdf4' : '#fef2f2', border: `1px solid ${feedback.isCorrect ? '#bbf7d0' : '#fecaca'}` }}>
-                                    <Typography variant="subtitle2" sx={{ color: feedback.isCorrect ? '#166534' : '#991b1b', fontWeight: 'bold' }}>
-                                        {feedback.isCorrect ? "Correct!" : "Incorrect"}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ mt: 1 }}>Score: <strong>{feedback.score}</strong> / {apiQ.score || 1}</Typography>
-                                    
-                                    <Typography variant="body2" sx={{ mt: 1 }}>
-                                        Your Answer: <strong>
-                                            {apiQ.mcq?.options ? (
-                                                Array.isArray(userAnswer) 
-                                                  ? userAnswer.map((a: any) => apiQ.mcq.options.find((o: any) => o.id === Number(a))?.text).filter(Boolean).join(', ') 
-                                                  : apiQ.mcq.options.find((o: any) => o.id === Number(userAnswer))?.text || String(userAnswer)
-                                            ) : String(userAnswer)}
-                                        </strong>
-                                    </Typography>
-                                    
-                                    <Typography variant="body2" sx={{ mt: 0.5, color: '#166534' }}>
-                                        Correct Answer: <strong>
-                                            {apiQ.mcq?.options ? 
-                                                apiQ.mcq.options.filter((o: any) => o.isCorrect).map((o: any) => o.text).join(', ')
-                                                : JSON.stringify(feedback.correctAnswer)
-                                            }
-                                        </strong>
-                                    </Typography>
-                                </Box>
-                            )}
+                            {feedback && (() => {
+                                const yourAnswerText = apiQ.mcq?.options
+                                  ? Array.isArray(userAnswer)
+                                    ? userAnswer
+                                        .map((a: any) => apiQ.mcq.options.find((o: any) => o.id === Number(a))?.text)
+                                        .filter(Boolean)
+                                        .join(', ')
+                                    : apiQ.mcq.options.find((o: any) => o.id === Number(userAnswer))?.text || String(userAnswer)
+                                  : String(userAnswer);
+                                const correctAnswerText = apiQ.mcq?.options
+                                  ? apiQ.mcq.options.filter((o: any) => o.isCorrect).map((o: any) => o.text).join(', ')
+                                  : typeof feedback.correctAnswer === 'string'
+                                    ? feedback.correctAnswer
+                                    : JSON.stringify(feedback.correctAnswer);
+
+                                return (
+                                  <Box
+                                    sx={{
+                                      mt: { xs: 2, sm: 3 },
+                                      p: { xs: 1.5, sm: 2 },
+                                      borderRadius: 2,
+                                      backgroundColor: feedback.isCorrect ? '#f0fdf4' : '#fef2f2',
+                                      border: `1px solid ${feedback.isCorrect ? '#bbf7d0' : '#fecaca'}`,
+                                      display: 'grid',
+                                      gap: 1,
+                                      minWidth: 0,
+                                      overflowWrap: 'anywhere',
+                                    }}
+                                  >
+                                      <Box
+                                        sx={{
+                                          display: 'flex',
+                                          alignItems: { xs: 'flex-start', sm: 'center' },
+                                          justifyContent: 'space-between',
+                                          gap: 1,
+                                          flexDirection: { xs: 'column', sm: 'row' },
+                                          minWidth: 0,
+                                        }}
+                                      >
+                                        <Typography
+                                          variant="subtitle2"
+                                          sx={{ color: feedback.isCorrect ? '#166534' : '#991b1b', fontWeight: 'bold' }}
+                                        >
+                                            {feedback.isCorrect ? "Correct!" : "Incorrect"}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ flexShrink: 0 }}>
+                                            Score: <strong>{feedback.score}</strong> / {apiQ.score || 1}
+                                        </Typography>
+                                      </Box>
+
+                                      <Typography variant="body2" sx={{ minWidth: 0, lineHeight: 1.5 }}>
+                                          Your Answer: <Box component="strong" sx={{ wordBreak: 'break-word' }}>{yourAnswerText || '-'}</Box>
+                                      </Typography>
+
+                                      <Typography variant="body2" sx={{ minWidth: 0, lineHeight: 1.5, color: '#166534' }}>
+                                          Correct Answer: <Box component="strong" sx={{ wordBreak: 'break-word' }}>{correctAnswerText || '-'}</Box>
+                                      </Typography>
+                                  </Box>
+                                );
+                            })()}
                         </Box>
                     );
                 })()}
