@@ -27,6 +27,7 @@ export const useCourseProgress = () => {
     data: unitsDataRaw,
     isFetching: isUnitsLoading,
     isError: isUnitsError,
+      error: unitsError,
     refetch: refetchContent,
   } = useGetContentByTopicIdQuery(
     { unitId: selectedUnitId, courseId: courseId! },
@@ -103,6 +104,7 @@ export const useCourseProgress = () => {
     courseId,
     courseData,
     unitsData,
+    unitsError,
     practiceData, 
     unitInfo,
     selectedUnitId,

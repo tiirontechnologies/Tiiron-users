@@ -63,6 +63,7 @@ const CodeChallengeCard: React.FC<CodeChallengeCardProps> = ({
               alignItems: "flex-start",
               justifyContent: "space-between",
               gap: 2,
+              flexDirection: { xs: "column", sm: "row" },
             }}
           >
             {/* Challenge Name and Details */}
@@ -88,6 +89,7 @@ const CodeChallengeCard: React.FC<CodeChallengeCardProps> = ({
                     color: COLORS.text.primary,
                     mb: 1.5,
                     lineHeight: 1.4,
+                    wordBreak: "break-word",
                   }}
                 >
                   {question.title || "Code Challenge"}
@@ -167,6 +169,8 @@ const CodeChallengeCard: React.FC<CodeChallengeCardProps> = ({
                 display: "flex",
                 alignItems: "center",
                 gap: 2,
+                justifyContent: { xs: "space-between", sm: "flex-end" },
+                width: { xs: "100%", sm: "auto" },
                 flexShrink: 0,
               }}
             >
@@ -212,6 +216,7 @@ const CodeChallengeCard: React.FC<CodeChallengeCardProps> = ({
                         color: "white",
                         fontSize: "14px",
                         fontWeight: 500,
+                        width: { xs: "100%", sm: "auto" },
                         px: 2.5,
                         py: 1,
                         borderRadius: "6px",

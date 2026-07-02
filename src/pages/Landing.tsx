@@ -46,6 +46,17 @@ import { ICourse } from 'types/course.types';
 import Loader from '@components/ui/Spinner';
 import { useAuth } from '../hooks/useAuth';
 import Skeleton from '@mui/material/Skeleton';
+import heroSetion from "../assets/images/heroSetion.png"
+
+// Swiper React Components इम्पोर्ट करें
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Swiper Modules (Autoplay और Pagination के लिए)
+import { Autoplay, Pagination } from 'swiper/modules';
+
+// Swiper के ज़रूरी CSS Styles
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 // semer efeecrt components for feature 
 const CourseCardSkeleton = () => (
@@ -158,233 +169,75 @@ const Landing = () => {
         )}, ${alpha(theme.palette.common.white, 1)})`,
       }}
     >
-      {/* -------------------------------------- */}
       {/* HERO SECTION */}
-      {/* -------------------------------------- */}
-      <Box component="section" sx={{ bgcolor: '#f6f8ff', py: { xs: 6, md: 8 } }}>
-        <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            {/* LEFT */}
-            <Grid item xs={12} md={7}>
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 800,
-                  lineHeight: 1.02,
-                  fontSize: { xs: '2rem', sm: '2.6rem', md: '3.25rem' },
-                  color: '#0f1724',
-                }}
-              >
-                Master skills faster with
-                <Box component="span" display="block" sx={{ color: '#0b56ff' }}>
-                  AI-powered learning
-                </Box>
-              </Typography>
+      <Box component="section" sx={{ bgcolor: 'rgb(229, 233, 247)', py: { xs: 6, md: 8 } }}>
+  <Container maxWidth="lg">
+    <Grid container spacing={4} alignItems="center">
+      {/* LEFT */}
+      <Grid item xs={12} md={7}>
+        <Typography
+          variant="h2"
+          sx={{
+            fontWeight: 800,
+            lineHeight: 1.02,
+            fontSize: { xs: '2rem', sm: '2.6rem', md: '3.25rem' },
+            color: '#0f1724',
+          }}
+        >
+          Master skills faster with
+          <Box component="span" display="block" sx={{ color: '#0b56ff' }}>
+            AI-powered learning
+          </Box>
+        </Typography>
 
-              <Typography sx={{ mt: 2, color: '#556080', maxWidth: 620 }}>
-                Personalized courses, smart quizzes, and real-time practice that help you learn by doing — not by memorizing.
-              </Typography>
+        <Typography sx={{ mt: 2, color: '#556080', maxWidth: 620 }}>
+          Personalized courses, smart quizzes, and real-time practice that help you learn by doing — not by memorizing.
+        </Typography>
 
-              <Stack direction="row" spacing={2} mt={4}>
-                <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff' }} onClick={() => navigate('/browse-course/free')}>
-                  Start Learning Free
-                </Button>
+        <Stack direction="row" spacing={2} mt={4}>
+          <Button variant="contained" size="large" sx={{ bgcolor: '#5b3cff' }} onClick={() => navigate('/browse-course/free')}>
+            Start Learning Free
+          </Button>
 
-                <Button variant="outlined" size="large" onClick={() => navigate('/browse-courses')}>
-                  Explore Courses
-                </Button>
-              </Stack>
+          <Button variant="outlined" size="large" onClick={() => navigate('/browse-courses')}>
+            Explore Courses
+          </Button>
+        </Stack>
 
-              {/* Search */}
-              <Paper component="form" onSubmit={(e) => { e.preventDefault(); onSearch(query); }} sx={{ mt: 3, p: '6px 10px', display: 'flex', alignItems: 'center', width: { xs: '100%', sm: 520 } }}>
-                <IconButton type="submit" sx={{ p: '10px' }}><SearchIcon /></IconButton>
-                <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search courses, skills, topics..." value={query} onChange={(e) => setQuery(e.target.value)} />
-                <Button onClick={() => onSearch(query)} variant="contained" size="small">Search</Button>
-              </Paper>
+        {/* Search */}
+        <Paper component="form" onSubmit={(e) => { e.preventDefault(); onSearch(query); }} sx={{ mt: 3, p: '6px 10px', display: 'flex', alignItems: 'center', width: { xs: '100%', sm: 520 } }}>
+          <IconButton type="submit" sx={{ p: '10px' }}><SearchIcon /></IconButton>
+          <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search courses, skills, topics..." value={query} onChange={(e) => setQuery(e.target.value)} />
+          <Button onClick={() => onSearch(query)} variant="contained" size="small">Search</Button>
+        </Paper>
 
-              {/* Hero Stats */}
-              <Box sx={{ mt: 3, display: 'flex', gap: 3, flexWrap: 'wrap', color: 'text.secondary' }}>
-                {stats.map((s, i) => (
-                  <Typography key={i} variant="body2">
-                    <strong style={{ color: theme.palette.primary.main }}>{s.value}</strong> {s.label}
-                  </Typography>
-                ))}
-              </Box>
-            </Grid>
+        {/* Hero Stats */}
+        <Box sx={{ mt: 3, display: 'flex', gap: 3, flexWrap: 'wrap', color: 'text.secondary' }}>
+          {stats.map((s, i) => (
+            <Typography key={i} variant="body2">
+              <strong style={{ color: theme.palette.primary.main }}>{s.value}</strong> {s.label}
+            </Typography>
+          ))}
+        </Box>
+      </Grid>
 
-            {/* RIGHT */}
-            <Grid item xs={12} md={5}>
-              <Card
-                elevation={0}
-                sx={{
-                  borderRadius: 3,
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.06)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.15)}`,
-                    transform: 'translateY(-4px)',
-                  },
-                }}
-              >
-                <Box sx={{ p: { xs: 3, md: 4 }, position: 'relative', zIndex: 1 }}>
-                  {/* Header */}
-                  <Box sx={{ mb: 3 }}>
-                    <Chip
-                      label="AI Mentor"
-                      size="small"
-                      sx={{
-                        bgcolor: alpha(theme.palette.primary.main, 0.1),
-                        color: theme.palette.primary.main,
-                        fontWeight: 600,
-                        fontSize: '0.75rem',
-                        mb: 1.5,
-                        height: 24,
-                      }}
-                    />
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        fontWeight: 700,
-                        color: '#0f1724',
-                        fontSize: { xs: '1.25rem', sm: '1.5rem' },
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      Practice Mode Active
-                    </Typography>
-                  </Box>
-
-                  {/* Features List */}
-                  <Stack spacing={2} sx={{ mb: 3 }}>
-                    {[
-                      'Personalized quizzes',
-                      'Analytics dashboard',
-                      'Progress tracking',
-                    ].map((feature, index) => (
-                      <Stack
-                        key={index}
-                        direction="row"
-                        alignItems="center"
-                        spacing={1.5}
-                        sx={{
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            transform: 'translateX(4px)',
-                          },
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            borderRadius: '50%',
-                            bgcolor: theme.palette.primary.main,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexShrink: 0,
-                            boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.3)}`,
-                          }}
-                        >
-                          <CheckCircleIcon
-                            sx={{
-                              color: '#ffffff',
-                              fontSize: 14,
-                            }}
-                          />
-                        </Box>
-                        <Typography
-                          sx={{
-                            fontWeight: 500,
-                            color: '#1e293b',
-                            fontSize: '0.9375rem',
-                          }}
-                        >
-                          {feature}
-                        </Typography>
-                      </Stack>
-                    ))}
-                  </Stack>
-
-                  {/* Success Metric */}
-                  <Box
-                    sx={{
-                      p: 2.5,
-                      borderRadius: 2,
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
-                      border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Box>
-                      <Typography
-                        sx={{
-                          fontSize: '2rem',
-                          fontWeight: 800,
-                          color: theme.palette.primary.main,
-                          lineHeight: 1,
-                        }}
-                      >
-                        98%
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: '0.8125rem',
-                          fontWeight: 600,
-                          color: '#556080',
-                          mt: 0.5,
-                        }}
-                      >
-                        Success Rate
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: '50%',
-                        background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: `0 4px 16px ${alpha(theme.palette.primary.main, 0.4)}`,
-                      }}
-                    >
-                      <CheckCircleIcon sx={{ color: '#ffffff', fontSize: 28 }} />
-                    </Box>
-                  </Box>
-                </Box>
-              </Card>
-
-              {/* Floating Action Buttons */}
-              {/* <Box
-                sx={{
-                  position: 'fixed',
-                  right: 20,
-                  bottom: 24,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 2,
-                  zIndex: 2000,
-                }}
-              >
-                <Fab variant="extended" sx={{ bgcolor: '#5b3cff', color: '#fff' }}>
-                  <FlashOnIcon sx={{ mr: 1 }} /> Quiz
-                </Fab>
-
-                <Fab size="small" sx={{ bgcolor: '#fff', boxShadow: 3 }}>
-                  <SearchIcon />
-                </Fab>
-              </Box> */}
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+      {/* RIGHT - Image Section */}
+<Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+  <Box
+    component="img"
+    src="/heroSetion.png"
+    alt="AI Learning"
+    sx={{
+      width: '100%',
+      maxWidth: '700px',
+      mixBlendMode: 'multiply',   // ← yeh magic hai
+      // borderRadius, boxShadow — hata diya
+    }}
+  />
+</Grid>
+    </Grid>
+  </Container>
+</Box>
 
       {/* -------------------------------------- */}
       {/* CATEGORIES */}
@@ -610,6 +463,7 @@ const Landing = () => {
                         borderRadius: 2,
                         overflow: 'hidden',
                         cursor: 'pointer',
+                         mb: 2, 
                         transition: 'all 0.3s ease',
                         border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
                         '&:hover': {
@@ -1114,6 +968,167 @@ const Landing = () => {
           </Grid>
         </Container>
       </Box>
+
+      <Box sx={{ py: 8, background: "#f8fafc" }}>
+  <Container maxWidth="lg">
+
+    {/* ── Heading ── */}
+    <Box sx={{ textAlign: "center", mb: 6 }}>
+      <Box
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.8,
+          background: "#eff6ff",
+          border: "1px solid #bfdbfe",
+          borderRadius: "100px",
+          px: 1.8,
+          py: "5px",
+          mb: 2,
+        }}
+      >
+        <Box sx={{ width: 6, height: 6, borderRadius: "50%", background: "#2563eb" }} />
+        <Typography
+          sx={{
+            fontSize: "0.72rem",
+            fontWeight: 700,
+            color: "#1e40af",
+            letterSpacing: "0.07em",
+            textTransform: "uppercase",
+          }}
+        >
+          Student Reviews
+        </Typography>
+      </Box>
+
+      <Typography
+        variant="h5"
+        fontWeight={800}
+        sx={{
+          fontSize: { xs: "1.5rem", md: "2rem" },
+          letterSpacing: "-0.02em",
+          color: "#0f172a",
+          lineHeight: 1.2,
+        }}
+      >
+        Trusted by{" "}
+        <Box component="span" sx={{ color: "#0841be" }}>
+          learners like you
+        </Box>
+      </Typography>
+
+      <Typography
+        sx={{ color: "#64748b", fontSize: "0.95rem", mt: 1.2, maxWidth: 420, mx: "auto" }}
+      >
+        Real stories from students who levelled up — no filters, no scripts.
+      </Typography>
+    </Box>
+
+    {/* ── Cards Grid ── */}
+    <Grid container spacing={2.5}>
+      {testimonials.map((t, i) => (
+        <Grid item xs={12} md={4} key={i}>
+          <Card
+            elevation={0}
+            sx={{
+              p: "26px 24px 20px",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              borderRadius: "16px",
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              transition:
+                "transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s ease, border-color 0.28s ease",
+              "&:hover": {
+                transform: "translateY(-6px)",
+                borderColor: "#2563eb",
+                boxShadow: "0 16px 32px -10px rgba(37,99,235,0.14)",
+              },
+            }}
+          >
+            {/* Top section */}
+            <Box>
+              {/* Blue accent bar */}
+              <Box
+                sx={{
+                  width: 28,
+                  height: 3,
+                  background: "#2563eb",
+                  borderRadius: "2px",
+                  mb: 2,
+                }}
+              />
+
+              {/* Stars */}
+              <Box sx={{ display: "flex", gap: "3px", mb: 1.8 }}>
+                {Array.from({ length: 5 }).map((_, s) => (
+                  <Box
+                    key={s}
+                    component="span"
+                    sx={{ fontSize: "13px", color: "#f59e0b", lineHeight: 1 }}
+                  >
+                    ★
+                  </Box>
+                ))}
+              </Box>
+
+              {/* Quote */}
+              <Typography
+                sx={{
+                  color: "#475569",
+                  fontSize: "0.92rem",
+                  lineHeight: 1.7,
+                  fontWeight: 400,
+                  mb: 3,
+                }}
+              >
+                &ldquo;{t.text}&rdquo;
+              </Typography>
+            </Box>
+
+            {/* Bottom: divider + profile */}
+            <Box>
+              <Box sx={{ height: "1px", background: "#e2e8f0", mb: 2 }} />
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                <Avatar
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    background: "linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)",
+                    fontSize: "0.9rem",
+                    fontWeight: 700,
+                    boxShadow: "0 3px 8px rgba(37,99,235,0.2)",
+                  }}
+                >
+                  {t.name[0]}
+                </Avatar>
+                <Box>
+                  <Typography
+                    fontWeight={700}
+                    sx={{ fontSize: "0.87rem", color: "#0f172a", lineHeight: 1.2 }}
+                  >
+                    {t.name}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "#64748b", fontWeight: 500, mt: "2px", display: "block" }}
+                  >
+                    {t.tag}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+
+  </Container>
+</Box>
+
+
 
       {/* -------------------------------------- */}
       {/* CTA */}
