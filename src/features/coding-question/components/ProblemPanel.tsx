@@ -27,12 +27,16 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
         flex: 1,
         display: "flex",
         flexDirection: "column",
-        background: "#18181b",
+        background: "rgba(24, 24, 27, 0.96)",
         color: "#fff",
+        "& .MuiTypography-root": {
+          color: "#fff",
+        },
         overflow: "hidden",
         width: "100%",
-        border: "1px solid white",
-        borderRadius: '9px'
+        border: "1px solid rgba(255,255,255,0.10)",
+        borderRadius: "12px",
+        boxShadow: "0 18px 45px rgba(0,0,0,0.24)",
       }}
     >
       <Box
@@ -62,10 +66,11 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
               top: 0,
               zIndex: 10,
               flexShrink: 0,
-              borderBottom: "1px solid #27272a",
-              background: "#0f0f12 !important",
+              borderBottom: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(15, 15, 18, 0.94) !important",
               width: "100%",
               overflow: "visible",
+              backdropFilter: "blur(10px)",
             }}
           >
             <Tabs
@@ -78,19 +83,25 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
               sx={{
                 width: "100%",
                 minHeight: 48,
-                px: 1,
-                backgroundColor: "#0f0f12 !important",
+                px: { xs: 0.5, sm: 1 },
+                backgroundColor: "transparent !important",
                 "& .MuiTab-root": {
-                  color: "#fff",
+                  color: "#ffffff",
                   textTransform: "none",
                   minHeight: 48,
                   fontWeight: 500,
-                  backgroundColor: "#0f0f12",
+                  px: { xs: 1.25, sm: 2 },
+                  backgroundColor: "transparent",
+                  transition: "color 0.2s ease, background-color 0.2s ease",
+                  "&:hover": {
+                    color: "#fff",
+                    backgroundColor: "rgba(255,255,255,0.04)",
+                  },
                 },
-                "& .Mui-selected": { color: "#fff" },
-                "& .MuiTab-iconWrapper": { color: "#fff" },
+                "& .Mui-selected": { color: "#fff !important", fontWeight: 800 },
+                "& .MuiTab-iconWrapper": { color: "inherit" },
                 "& .MuiTabs-indicator": {
-                  backgroundColor: "#fff",
+                  backgroundColor: "#7c6cff",
                   height: 3,
                   borderRadius: "3px 3px 0 0",
                 },
@@ -105,7 +116,7 @@ export const ProblemPanel: React.FC<ProblemPanelProps> = () => {
               <Tab icon={<RestoreIcon />} iconPosition="start" label="Submissions" value="4" />
             </Tabs>
           </Box>
-          <Box sx={{ flex: 1, minWidth: 0, p: activeTab === "1" ? 2 : 2 }}>
+          <Box sx={{ flex: 1, minWidth: 0, p: { xs: 1.5, sm: 2 } }}>
             {activeTab === "1" && <Description question={question} />}
             {activeTab === "2" && <Editorial question={question} />}
             {activeTab === "3" && <Solution question={question} />}

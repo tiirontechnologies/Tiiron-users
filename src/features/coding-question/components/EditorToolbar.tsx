@@ -7,9 +7,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import CloudDoneIcon from "@mui/icons-material/CloudDone";
+import CodeIcon from "@mui/icons-material/Code";
 import { COLORS } from "../../../config/env";
-import { PAGE } from "../constants";
 import type { LanguageInfo } from "../utils/languageUtils";
 
 interface EditorToolbarProps {
@@ -32,42 +35,58 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   return (
     <Box
       sx={{
-        px: 2,
-        py: 1.5,
-        borderBottom: "1px solid #27272a",
+        px: { xs: 1.25, sm: 1.75, md: 2 },
+        py: { xs: 1, sm: 1.25 },
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
         display: "flex",
         justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#18181b",
+        alignItems: { xs: "stretch", sm: "center" },
+        gap: { xs: 1, sm: 1.5 },
+        flexDirection: { xs: "column", sm: "row" },
+        backgroundColor: "rgba(24, 24, 27, 0.98)",
         flexShrink: 0,
+        color: "#fff",
+        "& .MuiTypography-root": { color: "#fff" },
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 1.5 }, minWidth: 0 }}>
+        <CodeIcon sx={{ color: "#8b7cff", fontSize: 20, flexShrink: 0 }} />
         <Typography
           variant="subtitle2"
-          sx={{ fontWeight: 600, color: "#fff", fontSize: "0.875rem" }}
+          sx={{
+            fontWeight: 700,
+            color: "#ffffff !important",
+            fontSize: "0.875rem",
+            whiteSpace: "nowrap",
+          }}
         >
-          Code Editor
+          Editor
         </Typography>
         {availableLanguages.length > 0 ? (
           <FormControl
             size="small"
             sx={{
-              minWidth: 140,
+              minWidth: { xs: 0, sm: 150 },
+              width: { xs: "100%", sm: 160 },
               "& .MuiOutlinedInput-root": {
-                backgroundColor: "#27272a",
-                borderRadius: PAGE.radius,
-                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#3f3f46" },
-                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#52525b" },
+                backgroundColor: "rgba(39,39,42,0.88)",
+                borderRadius: "10px",
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "rgba(255,255,255,0.10)" },
+                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "rgba(255,255,255,0.18)" },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                   borderColor: COLORS.primary,
                   borderWidth: "1px",
                 },
               },
-              "& .MuiInputBase-input": { color: "#fff", fontSize: "0.8125rem" },
-              "& .MuiInputLabel-root": { color: "#71717a" },
-              "& .MuiInputLabel-root.Mui-focused": { color: COLORS.primary },
-              "& .MuiSvgIcon-root": { color: "#71717a" },
+              "& .MuiInputBase-input": {
+                color: "#fff !important",
+                WebkitTextFillColor: "#fff !important",
+                fontSize: "0.8125rem",
+                fontWeight: 700,
+              },
+              "& .MuiInputLabel-root": { color: "#fff !important", opacity: 0.82, fontWeight: 700 },
+              "& .MuiInputLabel-root.Mui-focused": { color: "#fff !important" },
+              "& .MuiSvgIcon-root": { color: "#fff" },
             }}
           >
             <InputLabel id="language-select-label">Language</InputLabel>
@@ -81,6 +100,21 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
                 const lang = availableLanguages.find((l) => l.value === value);
                 return lang ? lang.label : "Select Language";
               }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: "#18181b",
+                    color: "#fff",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    "& .MuiMenuItem-root": {
+                      color: "#fff",
+                      fontWeight: 600,
+                      "&:hover": { backgroundColor: "rgba(255,255,255,0.08)" },
+                      "&.Mui-selected": { backgroundColor: "rgba(79,57,246,0.30)" },
+                    },
+                  },
+                },
+              }}
             >
               {availableLanguages.map((lang) => (
                 <MenuItem key={lang.value} value={lang.value}>
@@ -90,51 +124,62 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
             </Select>
           </FormControl>
         ) : isLoadingLanguages ? (
-          <Typography variant="body2" sx={{ color: "#71717a" }}>
+          <Typography variant="body2" sx={{ color: "#ffffff !important", opacity: 0.82, fontWeight: 700 }}>
             Loading languages...
           </Typography>
         ) : (
-          <Typography variant="body2" sx={{ color: "#71717a" }}>
+          <Typography variant="body2" sx={{ color: "#ffffff !important", opacity: 0.82, fontWeight: 700 }}>
             No languages available
           </Typography>
         )}
       </Box>
-      <Box sx={{ display: "flex", gap: 1 }}>
-        <Button
-          variant="outlined"
-          onClick={onRun}
-          sx={{
-            textTransform: "none",
-            borderRadius: PAGE.radius,
-            borderColor: "#3f3f46",
-            color: "#a1a1aa",
-            fontWeight: 500,
-            "&:hover": {
-              borderColor: COLORS.primary,
-              color: COLORS.primary,
-              backgroundColor: "rgba(79, 57, 246, 0.08)",
-            },
-          }}
-        >
-          Run
-        </Button>
-        <Button
-          variant="contained"
-          onClick={onSubmit}
-          sx={{
-            textTransform: "none",
-            borderRadius: PAGE.radius,
-            backgroundColor: COLORS.primary,
-            fontWeight: 500,
-            boxShadow: "none",
-            "&:hover": {
-              backgroundColor: COLORS.primaryDark,
+      <Box sx={{ display: "flex", gap: 1, justifyContent: { xs: "stretch", sm: "flex-end" } }}>
+        <Tooltip title="Run test cases">
+          <Button
+            variant="outlined"
+            onClick={onRun}
+            startIcon={<PlayArrowIcon />}
+            sx={{
+              textTransform: "none",
+              borderRadius: "10px",
+              borderColor: "rgba(255,255,255,0.12)",
+              color: "#fff",
+              fontWeight: 700,
+              minHeight: 36,
+              flex: { xs: 1, sm: "0 0 auto" },
+              "&:hover": {
+                borderColor: COLORS.primary,
+                color: "#fff",
+                backgroundColor: "rgba(79, 57, 246, 0.12)",
+              },
+            }}
+          >
+            Run
+          </Button>
+        </Tooltip>
+        <Tooltip title="Submit solution">
+          <Button
+            variant="contained"
+            onClick={onSubmit}
+            startIcon={<CloudDoneIcon />}
+            sx={{
+              textTransform: "none",
+              borderRadius: "10px",
+              backgroundColor: COLORS.primary,
+              color: "#fff",
+              fontWeight: 700,
+              minHeight: 36,
+              flex: { xs: 1, sm: "0 0 auto" },
               boxShadow: "none",
-            },
-          }}
-        >
-          Submit
-        </Button>
+              "&:hover": {
+                backgroundColor: COLORS.primaryDark,
+                boxShadow: "none",
+              },
+            }}
+          >
+            Submit
+          </Button>
+        </Tooltip>
       </Box>
     </Box>
   );
