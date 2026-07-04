@@ -20,20 +20,35 @@ const Submission: React.FC<SubmissionProps> = ({ question }) => {
     const submissions = question?.practices || [];
 
     return (
-        <Box sx={{ p: 2 }}>
-            <Typography variant="h5" sx={{ mb: 3, color: "#fff" }}>
+        <Box sx={{ p: { xs: 0.5, sm: 1 }, color: "#fff" }}>
+            <Typography variant="h5" sx={{ mb: 2, color: "#ffffff !important", fontWeight: 800, fontSize: { xs: "1.1rem", sm: "1.35rem" } }}>
                 Submission History
             </Typography>
 
             {submissions.length === 0 ? (
-                <Typography sx={{ color: "#a1a1aa", fontStyle: "italic" }}>
+                <Box
+                    sx={{
+                        p: 2,
+                        borderRadius: "10px",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        backgroundColor: "rgba(255,255,255,0.03)",
+                    }}
+                >
+                <Typography sx={{ color: "#ffffff !important", opacity: 0.82, fontStyle: "italic" }}>
                     You haven't submitted any solutions for this problem yet.
                 </Typography>
+                </Box>
             ) : (
-                <TableContainer sx={{ background: "transparent" }}>
+                <TableContainer
+                    sx={{
+                        background: "rgba(255,255,255,0.03)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        borderRadius: "10px",
+                    }}
+                >
                     <Table sx={{ minWidth: 400 }}>
                         <TableHead>
-                            <TableRow sx={{ "& th": { color: "#71717a", borderBottom: "1px solid #27272a" } }}>
+                            <TableRow sx={{ "& th": { color: "#ffffff !important", borderBottom: "1px solid rgba(255,255,255,0.08)", fontWeight: 800 } }}>
                                 <TableCell>Status</TableCell>
                                 <TableCell>Score</TableCell>
                                 <TableCell>Time Spent</TableCell>
@@ -45,8 +60,9 @@ const Submission: React.FC<SubmissionProps> = ({ question }) => {
                                 <TableRow
                                     key={sub.id}
                                     sx={{
-                                        "&:hover": { backgroundColor: "rgba(255,255,255,0.03)" },
-                                        "& td": { borderBottom: "1px solid #27272a", color: "#e4e4e7" },
+                                        "&:hover": { backgroundColor: "rgba(255,255,255,0.04)" },
+                                        "& td": { borderBottom: "1px solid rgba(255,255,255,0.08)", color: "#ffffff !important", fontWeight: 600 },
+                                        "&:last-child td": { borderBottom: 0 },
                                     }}
                                 >
                                     <TableCell>
@@ -58,6 +74,7 @@ const Submission: React.FC<SubmissionProps> = ({ question }) => {
                                                 color: sub.isCorrect ? "#22c55e" : "#ef4444",
                                                 fontWeight: 600,
                                                 border: `1px solid ${sub.isCorrect ? "#22c55e" : "#ef4444"}`,
+                                                borderRadius: "7px",
                                             }}
                                         />
                                     </TableCell>

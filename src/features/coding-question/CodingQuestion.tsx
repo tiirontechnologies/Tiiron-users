@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { Header, ProblemPanel, EditorPanel } from "./components";
 
@@ -10,7 +10,10 @@ const CodingQuestionPage: React.FC = () => {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "#0f0f12",
+        background:
+          "linear-gradient(180deg, #101114 0%, #0d0e11 42%, #111215 100%)",
+        color: "#f8fafc",
+        overflow: "hidden",
       }}
     >
       <Header />
@@ -19,45 +22,45 @@ const CodingQuestionPage: React.FC = () => {
         sx={{
           flex: 1,
           display: "flex",
-          overflow: "hidden",
-          p: 1.5,
-          gap: 1.5,
-          backgroundColor: "#0f0f12",
+          minHeight: 0,
+          overflow: { xs: "auto", md: "hidden" },
+          p: { xs: 1, sm: 1.25, md: 1.5 },
+          background:
+            "radial-gradient(circle at top left, rgba(79, 57, 246, 0.10), transparent 28%), #0d0e11",
         }}
       >
-        <Grid container sx={{ flex: 1, overflow: "hidden", minHeight: 0, }} spacing={1.5}>
-          <Grid
-            item
-            xs={12}
-            md={6}
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1fr) minmax(0, 1fr)" },
+            gap: { xs: 1.25, md: 1.5 },
+            width: "100%",
+          }}
+        >
+          <Box
             sx={{
+              minWidth: 0,
+              minHeight: { xs: 420, md: 0 },
               display: "flex",
               overflow: "hidden",
-              minHeight: 0,
-              order: { xs: 1, md: 1 },
-              height: "100vh",
-              overflowY: "scroll"
             }}
           >
             <ProblemPanel />
-          </Grid>
+          </Box>
 
-          <Grid
-            item
-            xs={12}
-            md={6}
+          <Box
             sx={{
+              minWidth: 0,
+              minHeight: { xs: 560, md: 0 },
               display: "flex",
-              flexDirection: "column",
               overflow: "hidden",
-              minHeight: 0,
-              maxHeight: "100vh",
-              order: { xs: 2, md: 2 }
             }}
           >
             <EditorPanel />
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
