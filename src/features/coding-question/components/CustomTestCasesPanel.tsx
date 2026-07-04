@@ -22,64 +22,71 @@ const styles = {
     height,
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#18181b !important",
-    borderBottom: "1px solid #27272a",
+    backgroundColor: "#17171b !important",
+    borderTop: "1px solid rgba(255,255,255,0.08)",
+    minHeight: 170,
   }),
 
   tabs: {
     minHeight: TAB_HEIGHT,
-    borderBottom: "1px solid #27272a",
-    backgroundColor: "#0f0f12 !important",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+    backgroundColor: "#121216 !important",
     "& .MuiTab-root": {
       color: "#a1a1aa",
       textTransform: "none",
       minHeight: TAB_HEIGHT,
+      fontWeight: 600,
       "&.Mui-selected": {
         color: "#ffffff",
       },
     },
     "& .MuiTabs-indicator": {
-      backgroundColor: "#ffffff",
+      backgroundColor: "#8b7cff",
     },
   },
 
   subTabs: {
     minHeight: TAB_HEIGHT,
-    backgroundColor: "#0f0f12 !important",
-    borderBottom: "1px solid #27272a",
+    backgroundColor: "#151519 !important",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
     "& .MuiTab-root": {
       color: "#a1a1aa",
       textTransform: "none",
       minHeight: TAB_HEIGHT,
+      fontWeight: 600,
       "&.Mui-selected": {
         color: "#ffffff",
       },
     },
     "& .MuiTabs-indicator": {
-      backgroundColor: "#ffffff",
+      backgroundColor: "#8b7cff",
     },
   },
 
   editor: {
-    border: "1px solid #27272a",
-    backgroundColor: "#0f0f12",
+    backgroundColor: "#17171b",
     flex: 1,
     overflow: "auto",
-    color: "white"
+    color: "white",
+    minHeight: 0,
   },
 
   editorHeader: {
-    px: 1,
-    py: 0.5,
+    px: 1.5,
+    py: 0.75,
     display: "flex",
     justifyContent: "space-between",
-    borderBottom: "1px solid #27272a",
+    alignItems: "center",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+    color: "#d4d4d8",
   },
 
   resizeHandle: {
     height: 6,
     cursor: "row-resize",
-    backgroundColor: "#27272a",
+    background:
+      "linear-gradient(90deg, transparent, rgba(139,124,255,0.42), transparent)",
+    opacity: 0.9,
   },
 };
 
@@ -134,10 +141,16 @@ const TestCaseEditor = memo(
     return (
       <Box sx={styles.editor}>
         <Box sx={styles.editorHeader}>
-          <Typography variant="caption">Testcase</Typography>
+          <Typography variant="caption" sx={{ fontWeight: 700 }}>
+            Testcase
+          </Typography>
           <IconButton
             size="small"
             onClick={() => onDelete(testCase.id)}
+            sx={{
+              color: "#a1a1aa",
+              "&:hover": { color: "#fff", backgroundColor: "rgba(255,255,255,0.08)" },
+            }}
           >
             <DeleteOutlineIcon fontSize="small" />
           </IconButton>
@@ -155,6 +168,7 @@ const TestCaseEditor = memo(
             }}
             inputSx={{
               backgroundColor: "#0f0f12 !important",
+              borderRadius: "10px",
               fontFamily: "monospace",
               "& .MuiInputBase-input, & input": {
                 color: "white !important",
@@ -203,7 +217,7 @@ const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }
     <Box
       sx={{
         border: `1px solid ${borderColor}`,
-        borderRadius: "8px",
+        borderRadius: "10px",
         backgroundColor: bgColor,
         overflow: "hidden",
       }}
@@ -247,6 +261,7 @@ const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }
             fontWeight: 600,
             fontSize: "0.7rem",
             color: "#fff",
+            borderRadius: "7px",
             backgroundColor: hasError
               ? "#ef4444"
               : passed
@@ -257,7 +272,7 @@ const ResultCard = ({ result, index }: { result: TestCaseResult; index: number }
       </Box>
 
       {/* Body */}
-      <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box sx={{ p: { xs: 1.5, sm: 2 }, display: "flex", flexDirection: "column", gap: 2 }}>
         {/* Input(s) */}
         {result.input !== undefined && (
           <CustomTextField
@@ -417,7 +432,7 @@ const ResultView = ({
 
   if (!results || results.length === 0) {
     return (
-      <Box sx={{ p: 3, flex: 1 }}>
+      <Box sx={{ p: 3, flex: 1, display: "flex", alignItems: "center" }}>
         <Typography sx={{ color: "#71717a" }}>
           Click Run to see results
         </Typography>
@@ -438,7 +453,7 @@ const ResultView = ({
           display: "flex",
           alignItems: "center",
           gap: 2,
-          borderBottom: "1px solid #27272a",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
           backgroundColor: allPassed
             ? "rgba(34, 197, 94, 0.08)"
             : "rgba(239, 68, 68, 0.08)",
@@ -491,7 +506,7 @@ const ResultView = ({
       </Tabs>
 
       {/* Individual Result (Scrollable content) */}
-      <Box sx={{ p: 2, flex: 1, overflow: "auto" }}>
+      <Box sx={{ p: { xs: 1.5, sm: 2 }, flex: 1, overflow: "auto" }}>
         {results[activeResultIndex] && (
           <ResultCard
             result={results[activeResultIndex]}

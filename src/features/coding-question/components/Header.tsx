@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
-import { Box, Typography, Button, Divider, Chip } from "@mui/material";
+import { Box, Typography, IconButton, Chip, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { COLORS } from "../../../config/env";
-import { ApiQuestion } from "../types";
 import { PAGE } from "../constants";
 
 const getDifficultyColor = (difficulty?: string) => {
@@ -34,46 +33,54 @@ export const Header: React.FC<HeaderProps> = () => {
     <Box
       sx={{
         height: PAGE.headerHeight,
-        backgroundColor: "#18181b",
-        borderBottom: "1px solid #27272a",
-        px: 3,
+        backgroundColor: "rgba(24, 24, 27, 0.96)",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
+        px: { xs: 1.25, sm: 2, md: 2.5 },
         display: "flex",
         alignItems: "center",
-        gap: 2,
+        gap: { xs: 1, sm: 1.5 },
         flexShrink: 0,
+        backdropFilter: "blur(12px)",
+        color: "#fff",
       }}
     >
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => {
-          if (onClose) {
-            onClose();
-          } else {
-            navigate(-1);
-          }
-        }}
-        sx={{
-          color: "#a1a1aa",
-          textTransform: "none",
-          fontWeight: 500,
-          borderRadius: PAGE.radius,
-          "&:hover": {
-            backgroundColor: "rgba(255,255,255,0.06)",
-            color: "#fff",
-          },
-        }}
-      >
-        Back
-      </Button>
-      <Divider orientation="vertical" flexItem sx={{ borderColor: "#27272a" }} />
+      <Tooltip title="Back">
+        <IconButton
+          onClick={() => {
+            if (onClose) {
+              onClose();
+            } else {
+              navigate(-1);
+            }
+          }}
+          sx={{
+            width: 38,
+            height: 38,
+            color: "#d4d4d8",
+            border: "1px solid rgba(255,255,255,0.10)",
+            borderRadius: "10px",
+            backgroundColor: "rgba(255,255,255,0.04)",
+            "&:hover": {
+              backgroundColor: "rgba(255,255,255,0.08)",
+              color: "#fff",
+            },
+          }}
+        >
+          <ArrowBackIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
       <Typography
         variant="h6"
         sx={{
-          fontWeight: 600,
-          color: "#fff",
+          fontWeight: 800,
+          color: "#ffffff !important",
           flex: 1,
-          fontSize: "1rem",
-          letterSpacing: "-0.01em",
+          minWidth: 0,
+          fontSize: { xs: "0.92rem", sm: "1rem" },
+          letterSpacing: 0,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
       >
         {isLoading ? "Loading..." : (question?.title || "Code Challenge")}
@@ -86,10 +93,15 @@ export const Header: React.FC<HeaderProps> = () => {
             backgroundColor: getDifficultyColor(question.questiontypecon?.name || "Medium"),
             color: "white",
             fontWeight: 600,
-            height: 28,
-            borderRadius: 6,
-          }}
-        />
+          height: 26,
+          borderRadius: "8px",
+          flexShrink: 0,
+          "& .MuiChip-label": {
+            color: "#fff",
+            fontWeight: 800,
+          },
+        }}
+      />
       )}
     </Box>
   );
