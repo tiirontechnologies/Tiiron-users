@@ -1,10 +1,11 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { ReactNode } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { Box, CircularProgress } from "@mui/material";
 
 interface PrivateRouteProps {
   children: ReactNode;
-  allowedRoles?: string[]; // optional
+  allowedRoles?: string[];
 }
 
 export default function PrivateRoute({
@@ -12,8 +13,22 @@ export default function PrivateRoute({
   allowedRoles,
 }: PrivateRouteProps) {
   const location = useLocation();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
   const role = localStorage.getItem("roleId");
+
+  // ⏳ Auth check abhi pending hai — kuch decide mat karo
+  if (isLoading) {
+    return (
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   // ❌ Not logged in
   if (!isLoggedIn) {

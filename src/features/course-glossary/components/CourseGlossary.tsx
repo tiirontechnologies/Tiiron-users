@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import {
   useGetChaptersQuery,
   useGetCourseByIdQuery,
-  useGetCourseRatingQuery,
 } from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
@@ -74,17 +73,14 @@ export default function CourseGlossary() {
     { skip: !courseId || isNaN(numericCourseId) },
   );
 
-  //  Rating API
-  const { data: ratingData } = useGetCourseRatingQuery(numericCourseId, {
-    skip: !numericCourseId,
-  });
+
 
   const course = courseData?.data;
   const chapters = chaptersData?.data?.chapters;
 
   // ⭐ Correct rating values
-  const averageRating = ratingData?.data?.averageRating;
-  const totalRatings = ratingData?.data?.totalRatings;
+  const averageRating = courseData?.data?.averagerating ;
+  const totalRatings = courseData?.data?.totalRatings;
 
   const isLoading = courseLoading || chaptersLoading;
   const isError = courseError || chaptersError;
