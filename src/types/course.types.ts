@@ -34,15 +34,17 @@ interface ICourse {
   level?: string;
   objective?: string[];
 
-  // ⭐ Rating fields from backend
   averageRating?: number;
   totalRatings?: number;
   rating?: number;
 
-  // ⭐ Level/Difficulty fields
   difficulty?: string;
   courseLevel?: string;
-}
+  createdByUser?:{
+    profile?:{
+    picture:string;
+  }
+}}
 
 interface ICourseCardProps {
   id: number;
