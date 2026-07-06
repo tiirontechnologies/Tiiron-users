@@ -13,11 +13,9 @@ export default function CourseGlossaryHeader({
   course,
   chapters,
   averageRating,
-  totalRatings
+  totalRatings,
 }: CourseGlossaryHeaderProps) {
-
-  const totalLessons =
-    chapters?.reduce((acc, chapter) => acc + (chapter?.units?.length || 0), 0) || 0;
+  const totalLessons =chapters?.length|| 0;
 
   const [isTruncated, setIsTruncated] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
@@ -35,20 +33,24 @@ export default function CourseGlossaryHeader({
     }
   }, [course?.description]);
 
+  const DEFAULT_AVATAR = "/images/avatarUser.png";
+  const instructorAvatar =
+  course?.createdByUser?.profile?.picture || DEFAULT_AVATAR;
+
   const handleReadMore = () => {
     const overviewElement = document.getElementById("course-overview");
 
     if (overviewElement) {
       overviewElement.scrollIntoView({
         behavior: "smooth",
-        block: "start"
+        block: "start",
       });
     }
   };
-const level = course?.level || course?.difficulty || course?.courseLevel || "All Levels";
+  const level =
+    course?.level || course?.difficulty || course?.courseLevel || "All Levels";
 
-
-const hasRating = Number(averageRating) >= 1;
+  const hasRating = Number(averageRating) >= 1;
 
   return (
     <Box
@@ -62,7 +64,7 @@ const hasRating = Number(averageRating) >= 1;
         boxSizing: "border-box",
         borderRadius: 3,
         p: { xs: 3, md: 4 },
-        width: "100%"
+        width: "100%",
       }}
     >
       <Box
@@ -70,7 +72,7 @@ const hasRating = Number(averageRating) >= 1;
           gap: { xs: 2, md: 3 },
           display: "flex",
           flexDirection: "column",
-          width: "100%"
+          width: "100%",
         }}
       >
         {/* Course Title */}
@@ -97,10 +99,9 @@ const hasRating = Number(averageRating) >= 1;
                 left: 0,
                 width: "60px",
                 height: "4px",
-                background:
-                  "linear-gradient(90deg, #4F39F6 0%, #8B5CF6 100%)",
-                borderRadius: "2px"
-              }
+                background: "linear-gradient(90deg, #4F39F6 0%, #8B5CF6 100%)",
+                borderRadius: "2px",
+              },
             }}
           >
             {course?.title || "Course Title"}
@@ -115,7 +116,7 @@ const hasRating = Number(averageRating) >= 1;
             mt: { xs: 2.5, md: 3 },
             mb: 1,
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
           }}
         >
           <Box
@@ -129,10 +130,9 @@ const hasRating = Number(averageRating) >= 1;
               background:
                 "linear-gradient(180deg, #4F39F6 0%, #8B5CF6 50%, #A78BFA 100%)",
               borderRadius: "2px",
-              display: { xs: "none", md: "block" }
+              display: { xs: "none", md: "block" },
             }}
           />
-
 
           <Typography
             variant="body1"
@@ -157,8 +157,8 @@ const hasRating = Number(averageRating) >= 1;
                 float: "left",
                 lineHeight: 1,
                 marginRight: "8px",
-                color: "#4F39F6"
-              }
+                color: "#4F39F6",
+              },
             }}
           >
             {course?.description}
@@ -175,7 +175,7 @@ const hasRating = Number(averageRating) >= 1;
                 color: "#4F39F6",
                 fontWeight: 700,
                 fontSize: { xs: "14px", md: "15px" },
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               ...Read More
@@ -183,13 +183,12 @@ const hasRating = Number(averageRating) >= 1;
           )}
         </Box>
 
-    
         <Box
           sx={{
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            gap: { xs: 2, md: 2.5 }
+            gap: { xs: 2, md: 2.5 },
           }}
         >
           <Typography
@@ -201,7 +200,7 @@ const hasRating = Number(averageRating) >= 1;
               display: "flex",
               alignItems: "center",
               gap: 1,
-              flexWrap: "wrap"
+              flexWrap: "wrap",
             }}
           >
             {hasRating && (
@@ -232,12 +231,11 @@ const hasRating = Number(averageRating) >= 1;
                 <Box component="span" sx={{ color: "#64748B" }}>
                   ({totalRatings} ratings)
                 </Box>
-            <Box component="span" sx={{ color: "#64748B" }}>
-              |
-            </Box>
+                <Box component="span" sx={{ color: "#64748B" }}>
+                  |
+                </Box>
               </>
             )}
-
 
             <Box component="span" sx={{ color: "#64748B" }}>
               22 Total Hours
@@ -267,25 +265,30 @@ const hasRating = Number(averageRating) >= 1;
               display: "flex",
               alignItems: "center",
               gap: 1.5,
-              flexWrap: "wrap"
+              flexWrap: "wrap",
             }}
           >
+         
             <Avatar
               alt={course?.createdBy || "Instructor"}
-              src="/images/avatarUser.png"
+              src={instructorAvatar}
+              imgProps={{
+                onError: (e) => {
+                  e.currentTarget.src = DEFAULT_AVATAR;
+                },
+              }}
               sx={{
                 width: { xs: 36, md: 40 },
                 height: { xs: 36, md: 40 },
-                border: "2px solid #E2E8F0"
+                border: "2px solid #E2E8F0",
               }}
             />
-
             <Typography
               variant="body2"
               sx={{
                 fontSize: { xs: "12px", md: "16px" },
                 color: "#1E293B",
-                fontWeight: 500
+                fontWeight: 500,
               }}
             >
               Created by{" "}
@@ -301,7 +304,7 @@ const hasRating = Number(averageRating) >= 1;
               display: "flex",
               alignItems: "center",
               gap: 1.5,
-              flexWrap: "wrap"
+              flexWrap: "wrap",
             }}
           >
             <Avatar
@@ -309,7 +312,7 @@ const hasRating = Number(averageRating) >= 1;
               src="/icons/Icon.svg"
               sx={{
                 width: 20,
-                height: 20
+                height: 20,
               }}
             />
 
@@ -317,9 +320,9 @@ const hasRating = Number(averageRating) >= 1;
               variant="body2"
               sx={{
                 fontSize: { xs: "12px", md: "16px" },
-                color: "#64748B"
+                color: "#64748B",
               }}
-            >   
+            >
               {Array.isArray(course?.language)
                 ? course.language.map((lang) => lang.toUpperCase()).join(", ")
                 : course?.language?.toUpperCase() || "Language not available"}

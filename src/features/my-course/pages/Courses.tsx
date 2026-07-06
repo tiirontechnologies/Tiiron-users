@@ -4,7 +4,7 @@ import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import { useGetMyEnrolledCoursesQuery } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface CoursesProps {
@@ -153,8 +153,7 @@ export default function Courses({ onCourseClick }: CoursesProps) {
               const mockProgress = Math.floor(Math.random() * 100);
 
               // Mock learner rating - in production, this should come from API
-              const mockLearnerRating = Math.random() * 5;
-
+              const mockLearnerRating = course.averageRating ?? 0;
               // Get instructor/organization name - prefer createdBy, fallback to orgCode
               const instructorName = course.createdBy || course.orgCode || "";
 

@@ -54,6 +54,7 @@ export default function CourseReviews({ courseId }) {
               rating={item.value}
               date={new Date(item.createdAt).toDateString()}
               review={item.review}
+              avatar={item.user.profile.picture}
             />
           ))}
 
