@@ -50,7 +50,8 @@ export default function CourseGlossaryHeader({
   const level =
     course?.level || course?.difficulty || course?.courseLevel || "All Levels";
 
-  const hasRating = Number(averageRating) >= 1;
+const roundedRating = Number(averageRating ?? 0).toFixed(1);
+const hasRating = Number(roundedRating) >= 1;
 
   return (
     <Box
@@ -213,7 +214,7 @@ export default function CourseGlossaryHeader({
                     component="span"
                     sx={{ fontWeight: 700, color: "#4F39F6" }}
                   >
-                    {averageRating}
+                    {roundedRating}
                   </Box>
 
                   {Array(5)

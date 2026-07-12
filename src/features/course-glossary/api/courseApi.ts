@@ -67,11 +67,21 @@ export const courseApiSlice = baseApi.injectEndpoints({
       providesTags: ["Chapter"],
     }),
 
+    // loggedin querry 
+      // Get logged-in user
+    getLoggedInUser: builder.query({
+      query: () => ({
+        url: "/profile/me",
+        method: "GET",
+      }),
+      providesTags: ["Profile"],
+    }),
   }),
 });
 
 // Export hooks
 export const {
+    useGetLoggedInUserQuery,
   useGetCoursesQuery,
   useGetCourseByIdQuery,
   useGetCourseRatingQuery,

@@ -631,14 +631,14 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
         mb: 2.5,
       }}
     >
-      <RocketLaunchOutlinedIcon sx={{ fontSize: 32, color: "#185FA5" }} />
+      <RocketLaunchOutlinedIcon sx={{ fontSize: 32, color: "#0d1cc0" }} />
     </Box>
 
     <Typography
       sx={{
         fontSize: { xs: "1.05rem", sm: "1.15rem", md: "1.2rem" },
         fontWeight: 600,
-        color: "#1F2937",
+        color: "#0d5ac7",
         mb: 1,
       }}
     >
@@ -664,11 +664,11 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
         gap: 0.75,
         px: 2,
         py: 0.75,
-        bgcolor: "#E6F1FB",
+        bgcolor: "#e6e7fb",
         borderRadius: "20px",
       }}
     >
-      <AutoAwesomeIcon sx={{ fontSize: 15, color: "#185FA5" }} />
+      <AutoAwesomeIcon sx={{ fontSize: 15, color: "#1512cc" }} />
       <Typography sx={{ fontSize: "0.78rem", fontWeight: 600, color: "#185FA5" }}>
         Coming soon
       </Typography>
