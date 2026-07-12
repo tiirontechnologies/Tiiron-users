@@ -989,7 +989,7 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
             </Grid>
             <Grid item xs={6} sx={{ pl: "28px" }}>
               <InfoRow label="Enrollment ID" value={cert.enrollmentId} />
-              <InfoRow label="Evaluation Date" value={cert.evaluationDate} />
+              <InfoRow label="Evaluation Date" value="08 July 2026"/>
               <InfoRow label="Mentor Name" value={cert.mentorName} />
               <InfoRow label="Batch" value={cert.batch} />
             </Grid>
@@ -1113,8 +1113,8 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
       </Box>
 
       <Box sx={{ position: "absolute", left: 0, right: 0, bottom: 0, zIndex: 2, display: "grid", gridTemplateColumns: "1fr 1fr 1.3fr", alignItems: "center", bgcolor: COLORS.darkNavy, color: "#fff", fontSize: "0.74rem", py: "9px", px: "100px 70px", gap: "18px" }}>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}><LanguageIcon sx={{ fontSize: 16 }} />www.inacademic.com</Box>
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}><EmailIcon sx={{ fontSize: 16 }} />contact@inacademic.com</Box>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}><LanguageIcon sx={{ fontSize: 16 }} />www.tiirontechnologies.com</Box>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}><EmailIcon sx={{ fontSize: 16 }} />contact@tiirontechnologies.com</Box>
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}><LocationOnIcon sx={{ fontSize: 17 }} />Lucknow, Uttar Pradesh, India</Box>
       </Box>
     </Box>
