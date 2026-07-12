@@ -134,8 +134,8 @@ const Landing = () => {
   ];
 
   const stats = [
-    { value: '5K+', label: 'Active Learners' },
-    { value: '12+', label: 'Expert Courses' },
+    { value: '1K+', label: 'Active Learners' },
+    { value: '15+', label: 'Expert Courses' },
     // { value: '98%', label: 'Success Rate' },
     { value: '24/7', label: 'AI Support' },
   ];

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Box,
@@ -44,7 +43,11 @@ interface AssignmentItem {
     marks: number | null;
     feedback: string | null;
   }>;
-submission?: { submissionUrl: string; marks: number | null; feedback: string | null };
+  submission?: {
+    submissionUrl: string;
+    marks: number | null;
+    feedback: string | null;
+  };
   submissionUrl?: string;
 }
 
@@ -54,7 +57,10 @@ interface AssignmentCardProps {
 }
 
 // ─── Single Assignment Card ───────────────────────────────────────────────────
-const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) => {
+const AssignmentCard: React.FC<AssignmentCardProps> = ({
+  assignment,
+  refetch,
+}) => {
   const [driveLink, setDriveLink] = useState("");
   const [error, setError] = useState("");
   const [expanded, setExpanded] = useState(true);
@@ -148,11 +154,20 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) 
                 icon={<GradeIcon sx={{ fontSize: "13px !important" }} />}
                 label={`${assignment.maxMarks} marks`}
                 size="small"
-                sx={{ bgcolor: "#e8eaf6", color: "#3949ab", fontWeight: 600, fontSize: 11 }}
+                sx={{
+                  bgcolor: "#e8eaf6",
+                  color: "#3949ab",
+                  fontWeight: 600,
+                  fontSize: 11,
+                }}
               />
               {alreadySubmitted && (
                 <Chip
-                  icon={<CheckCircleOutlineIcon sx={{ fontSize: "13px !important" }} />}
+                  icon={
+                    <CheckCircleOutlineIcon
+                      sx={{ fontSize: "13px !important" }}
+                    />
+                  }
                   label={
                     userSubmission?.marks != null
                       ? `Scored: ${userSubmission.marks}/${assignment.maxMarks}`
@@ -192,7 +207,12 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) 
           >
             <Typography
               variant="overline"
-              sx={{ color: "#9fa8da", fontWeight: 700, letterSpacing: 1, fontSize: 11 }}
+              sx={{
+                color: "#9fa8da",
+                fontWeight: 700,
+                letterSpacing: 1,
+                fontSize: 11,
+              }}
             >
               Instructions
             </Typography>
@@ -230,7 +250,12 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) 
           <Box sx={{ p: 3 }}>
             <Typography
               variant="overline"
-              sx={{ color: "#9fa8da", fontWeight: 700, letterSpacing: 1, fontSize: 11 }}
+              sx={{
+                color: "#9fa8da",
+                fontWeight: 700,
+                letterSpacing: 1,
+                fontSize: 11,
+              }}
             >
               Your Submission
             </Typography>
@@ -252,13 +277,16 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) 
                     mb: 2,
                   }}
                 >
-                  <TaskAltIcon sx={{ color: "#16a34a", fontSize: 32, flexShrink: 0 }} />
+                  <TaskAltIcon
+                    sx={{ color: "#16a34a", fontSize: 32, flexShrink: 0 }}
+                  />
                   <Box>
                     <Typography fontWeight={700} fontSize={14} color="#15803d">
                       Assignment Submitted!
                     </Typography>
                     <Typography fontSize={12} color="#166534" mt={0.2}>
-                      Your work has been received. We'll notify you once it's reviewed.
+                      Your work has been received. We'll notify you once it's
+                      reviewed.
                     </Typography>
                   </Box>
                 </Box>
@@ -306,8 +334,8 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) 
                   color="text.secondary"
                   sx={{ mb: 2, lineHeight: 1.7, fontSize: 13 }}
                 >
-                  Upload your solution to Google Drive and paste the sharing link below.
-                  Make sure sharing is set to{" "}
+                  Upload your solution to Google Drive and paste the sharing
+                  link below. Make sure sharing is set to{" "}
                   <strong>Anyone with the link can view.</strong>
                 </Typography>
 
@@ -330,7 +358,10 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) 
                       </InputAdornment>
                     ),
                   }}
-                  sx={{ mb: 2, "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                  sx={{
+                    mb: 2,
+                    "& .MuiOutlinedInput-root": { borderRadius: 2 },
+                  }}
                 />
 
                 <Button
@@ -344,9 +375,11 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, refetch }) 
                     fontWeight: 600,
                     borderRadius: 2,
                     px: 2.5,
-                    background: "linear-gradient(135deg, #5c6bc0 0%, #3949ab 100%)",
+                    background:
+                      "linear-gradient(135deg, #5c6bc0 0%, #3949ab 100%)",
                     "&:hover": {
-                      background: "linear-gradient(135deg, #3949ab 0%, #283593 100%)",
+                      background:
+                        "linear-gradient(135deg, #3949ab 0%, #283593 100%)",
                     },
                   }}
                 >
@@ -382,20 +415,39 @@ const AssignmentTab: React.FC<{ unitId: number }> = ({ unitId }) => {
   if (assignments.length === 0) {
     return (
       <Box sx={{ p: 4, textAlign: "center" }}>
-        <AssignmentIcon sx={{ fontSize: 48, color: "#ccc", mb: 1 }} />
-        <Typography color="text.secondary">No assignments available</Typography>
+        <AssignmentIcon sx={{ fontSize: 48, color: "#3e4fe3f1", mb: 1 }} />
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+          Practice Tasks Are on the Way
+        </Typography>
+
+        <Typography color="text.secondary">
+          New assignments will appear here once they're published by your
+          instructor.
+        </Typography>
+        <Typography color="text.secondary">
+          Stay tuned and keep learning!
+        </Typography>
       </Box>
     );
   }
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="subtitle2" color="text.secondary" mb={2} fontWeight={600}>
+      <Typography
+        variant="subtitle2"
+        color="text.secondary"
+        mb={2}
+        fontWeight={600}
+      >
         {assignments.length} Assignment{assignments.length !== 1 ? "s" : ""}
       </Typography>
 
       {assignments.map((assignment: any) => (
-        <AssignmentCard key={assignment.id} assignment={assignment} refetch={refetch} />
+        <AssignmentCard
+          key={assignment.id}
+          assignment={assignment}
+          refetch={refetch}
+        />
       ))}
     </Box>
   );

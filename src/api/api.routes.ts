@@ -53,7 +53,7 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Course', 'Chapter', 'Question', 'QuestionBank', 'Unit', 'Auth', 'Cart', 'Enrollment', 'PracticeSession', 'Progress', 'Rating'],
+  tagTypes: ['Course', 'Chapter', 'Question', 'QuestionBank', 'Unit', 'Auth', 'Cart', 'Enrollment', 'PracticeSession', 'Progress', 'Rating', 'Profile'],
   endpoints: (builder) => ({
     // Check authentication status
     checkAuth: builder.query<{ success: boolean }, void>({

@@ -296,7 +296,7 @@ useEffect(() => {
               sx={{
                 width: "40%",
                 position: "relative",
-                backgroundImage: `url("https://images.unsplash.com/photo-1607746882042-944635dfe10e")`,
+                backgroundImage: `url("/feedback-girl.png")`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
