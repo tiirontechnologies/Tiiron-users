@@ -3,6 +3,8 @@ import { Tabs, Tab } from "@mui/material";
 interface CourseGlossaryTabsProps {
   activeTab: number;
   onTabChange: (tab: number) => void;
+  courseId?: string;
+  courseName?: string;
 }
 
 export default function CourseGlossaryTabs({ activeTab, onTabChange }: CourseGlossaryTabsProps) {

@@ -1,9 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import {
-  useGetChaptersQuery,
-  useGetCourseByIdQuery,
-} from "../api/courseApi";
+import { useGetChaptersQuery, useGetCourseByIdQuery } from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
 import { useState } from "react";
@@ -73,13 +70,11 @@ export default function CourseGlossary() {
     { skip: !courseId || isNaN(numericCourseId) },
   );
 
-
-
   const course = courseData?.data;
   const chapters = chaptersData?.data?.chapters;
 
   // ⭐ Correct rating values
-  const averageRating = courseData?.data?.averagerating ;
+  const averageRating = courseData?.data?.averagerating;
   const totalRatings = courseData?.data?.totalRatings;
 
   const isLoading = courseLoading || chaptersLoading;
@@ -223,6 +218,8 @@ export default function CourseGlossary() {
                 <CourseGlossaryTabs
                   activeTab={activeTab}
                   onTabChange={setActiveTab}
+                  courseId={String(numericCourseId)}
+                  courseName={course?.title ?? ""}
                 />
               </Box>
 
@@ -236,8 +233,13 @@ export default function CourseGlossary() {
 
                 {activeTab === 1 && <CourseLessons chapters={chapters} />}
 
-                {activeTab === 2 && <CourseCertificate />}
-                
+                {activeTab === 2 && (
+                  <CourseCertificate
+                    courseId={String(numericCourseId)}
+                    courseName={course?.title ?? ""}
+                  />
+                )}
+
                 {activeTab === 3 && (
                   <CourseReviews courseId={numericCourseId} />
                 )}
