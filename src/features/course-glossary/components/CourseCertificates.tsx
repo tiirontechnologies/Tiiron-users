@@ -126,6 +126,7 @@ function buildCertificateData(
   courseId: string,
   courseName: string,
 ): CertificateData {
+  
   const evalData = getEvaluationDataForUser(userId, studentName);
   const courseConfig = COURSE_CONFIG[courseId] ?? {
     mentorName: "Priya Mehrotra",
@@ -133,6 +134,20 @@ function buildCertificateData(
     courseCode: "FSWD",
   };
   const skills = COURSE_SKILLS[courseId] ?? COURSE_SKILLS["1"];
+  // const skills = COURSE_SKILLS[courseId] ?? COURSE_SKILLS["1"];
+
+  const isCourse8 = String(courseId) === "8";
+  const duration = isCourse8
+    ? `${formatOrdinalDate(new Date(2026, 5, 25))} - ${formatOrdinalDate(new Date(2026, 6, 10))}`
+    : `${formatOrdinalDate(new Date(2026, 5, 8))} - ${formatOrdinalDate(new Date(2026, 6, 8))}`;
+  const evaluationDate = isCourse8
+    ? formatOrdinalDate(new Date(2026, 6, 11))
+    : formatOrdinalDate(new Date(2026, 6, 9));
+
+  const isSpecialCollegeUser = [30, 32, 27].includes(Number(userId));
+  const college = isSpecialCollegeUser ? "RBPU, Hoshiarpur" : "MM(DU)";
+
+  // const iconStyle = { fontSize: 18, color: COLORS.textSecondary };
   const iconStyle = { fontSize: 18, color: COLORS.textSecondary };
   const icons = [
     <EventNoteIcon sx={iconStyle} />,
@@ -147,10 +162,13 @@ function buildCertificateData(
   return {
     studentName,
     enrollmentId: `INA-${courseConfig.courseCode}-${String(userId).padStart(4, "0")}`,
-    internshipTrack: courseName,
-    college: "Tiiron Technologies",
-    duration: "3rd March 2025 - 3rd June 2025",
-    evaluationDate: formatOrdinalDate(new Date(2025, 5, 4)),
+    internshipTrack: courseName.toLocaleUpperCase(),
+    // college: "Tiiron Technologies",
+    college,
+    // duration: "3rd March 2025 - 3rd June 2025",
+    // evaluationDate: formatOrdinalDate(new Date(2025, 5, 4)),
+     duration,
+    evaluationDate,
     mentorName: courseConfig.mentorName,
     batch: courseConfig.batch,
     scores: evalData.scores.map((score, index) => ({
@@ -418,6 +436,7 @@ const CertificateHeader = () => (
 );
 
 function CertificateBody({ cert }: { cert: CertificateData }) {
+
   const mentorSignature = getMentorSignature(cert.mentorName);
   return (
     <Box
@@ -496,6 +515,24 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
             title="Student Information"
             icon={<PersonOutlineIcon sx={{ fontSize: 20, color: "#fff" }} />}
           />
+          {/* <Grid container sx={{ px: "16px", py: "8px" }}>
+            <Grid
+              item
+              xs={6}
+              sx={{ borderRight: `1px solid ${COLORS.border}`, pr: "18px" }}
+            >
+              <InfoRow label="Student Name" value={cert.studentName} />
+              <InfoRow label="Taining Program " value={cert.internshipTrack} />
+              <InfoRow label="College / University" value={cert.college} />
+              <InfoRow label="Duration" value={cert.duration} />
+            </Grid>
+            <Grid item xs={6} sx={{ pl: "28px" }}>
+              <InfoRow label="Enrollment ID" value={cert.enrollmentId} />
+              <InfoRow label="Evaluation Date" value="08 July 2026" />
+              <InfoRow label="Mentor Name" value={cert.mentorName} />
+              <InfoRow label="Batch" value={cert.batch} />
+            </Grid>
+          </Grid> */}
           <Grid container sx={{ px: "16px", py: "8px" }}>
             <Grid
               item
@@ -503,13 +540,13 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
               sx={{ borderRight: `1px solid ${COLORS.border}`, pr: "18px" }}
             >
               <InfoRow label="Student Name" value={cert.studentName} />
-              <InfoRow label="Internship Track" value={cert.internshipTrack} />
+              <InfoRow label="Training Program" value={cert.internshipTrack} />
               <InfoRow label="College / University" value={cert.college} />
               <InfoRow label="Duration" value={cert.duration} />
             </Grid>
             <Grid item xs={6} sx={{ pl: "28px" }}>
               <InfoRow label="Enrollment ID" value={cert.enrollmentId} />
-              <InfoRow label="Evaluation Date" value="08 July 2026" />
+              <InfoRow label="Evaluation Date" value={cert.evaluationDate} />
               <InfoRow label="Mentor Name" value={cert.mentorName} />
               <InfoRow label="Batch" value={cert.batch} />
             </Grid>
