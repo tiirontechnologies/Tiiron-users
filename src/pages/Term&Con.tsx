@@ -547,10 +547,10 @@ const TermsAndConditions: React.FC = () => {
                       </span>
                     </div>
                     <a
-                      href="https://tiiron.com"
+                      href="https://www.tiiron.com"
                       className="font-medium  hover:text-blue-700 font-medium text-sm break-all"
                     >
-                      https://tiiron.com
+                      https://www.tiiron.com
                     </a>
                   </div>
 
