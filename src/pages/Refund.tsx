@@ -337,10 +337,10 @@ const RefundPolicy: React.FC = () => {
                       <span className="font-semibold">Website</span>
                     </div>
                     <a
-                      href="https://tiiron.com"
+                      href="https://www.tiiron.com"
                       className="text-black-600 text-sm font-medium "
                     >
-                      https://tiiron.com
+                      https://www.tiiron.com
                     </a>
                   </div>
 

@@ -363,38 +363,76 @@ const Landing = () => {
             </Typography>
           ) : (
 
-            <Grid container spacing={2}>
-              {featuredCoursesData?.map((course, index) => {
+            // <Grid container spacing={2}>
+            //   {featuredCoursesData?.map((course, index) => {
 
-                const rating = ratings[index]?.averageRating || 0;
-                const reviewCount = ratings[index]?.totalRatings || 0;
+            //     const rating = ratings[index]?.averageRating || 0;
+            //     const reviewCount = ratings[index]?.totalRatings || 0;
 
-                const isCourseInCart =
-                  cartData?.data?.items?.some(
-                    (item) => item.courseId === Number(course.id)
-                  ) || false;
+            //     const isCourseInCart =
+            //       cartData?.data?.items?.some(
+            //         (item) => item.courseId === Number(course.id)
+            //       ) || false;
 
-                return (
-                  <Grid item xs={12} sm={6} md={3} key={course.id}>
-                    <CourseCardWrapper
-                      id={course.id}
-                      thumbnailSrc={course.image}
-                      tags={course.tags}
-                      title={course.title}
-                      chapters={course.totalChapters}
-                      rating={rating}
-                      reviewCount={reviewCount}
-                      instructor={course.createdBy}
-                      price={course.price}
-                      navigatePath={(id) => `/course-glossary/${id}`}
-                      isCourseInCart={isCourseInCart}
-                      onAddToCart={handleAddToCart}
-                      isLoadingCart={isAddingToCart}
-                    />
-                  </Grid>
-                );
-              })}
-            </Grid>
+            //     return (
+            //       <Grid item xs={12} sm={6} md={3} key={course.id}>
+            //         <CourseCardWrapper
+            //           id={course.id}
+            //           thumbnailSrc={course.image}
+            //           tags={course.tags}
+            //           title={course.title}
+            //           chapters={course.totalChapters}
+            //           rating={rating}
+            //           reviewCount={reviewCount}
+            //           instructor={course.createdBy}
+            //           price={course.price}
+            //           navigatePath={(id) => `/course-glossary/${id}`}
+            //           isCourseInCart={isCourseInCart}
+            //           onAddToCart={handleAddToCart}
+            //           isLoadingCart={isAddingToCart}
+            //         />
+            //       </Grid>
+            //     );
+            //   })}
+            // </Grid>
+
+  <Grid container spacing={2}>
+    {featuredCoursesData
+      ?.map((course, index) => ({
+        course,
+        rating: ratings[index]?.averageRating || 0,
+        reviewCount: ratings[index]?.totalRatings || 0,
+      }))
+      .sort((a, b) => b.rating - a.rating)
+      .map(({ course, rating, reviewCount }) => {
+
+        const isCourseInCart =
+          cartData?.data?.items?.some(
+            (item) => item.courseId === Number(course.id)
+          ) || false;
+
+        return (
+          <Grid item xs={12} sm={6} md={3} key={course.id}>
+            <CourseCardWrapper
+              id={course.id}
+              thumbnailSrc={course.image}
+              tags={course.tags}
+              title={course.title}
+              chapters={course.totalChapters}
+              rating={rating}
+              reviewCount={reviewCount}
+              instructor={course.createdBy}
+              price={course.price}
+              navigatePath={(id) => `/course-glossary/${id}`}
+              isCourseInCart={isCourseInCart}
+              onAddToCart={handleAddToCart}
+              isLoadingCart={isAddingToCart}
+            />
+          </Grid>
+        );
+      })}
+  </Grid>
+
           )}
         </Container>
       </Box>
