@@ -94,6 +94,35 @@ const MENTOR_SIGNATURES: Record<string, string> = {
   akash: SignatureAkash,
 };
 
+
+// mock data for preview 
+const TEST_CERT_DATA: CertificateData = {
+  studentName: "Test Student",
+  enrollmentId: "INA-FSWD-0000",
+  internshipTrack: "FULL STACK WEB DEVELOPMENT",
+  college: "Sample College",
+  duration: "8th June 2026 - 8th July 2026",
+  evaluationDate: "9th July 2026",
+  mentorName: "Priya Mehrotra",
+  batch: "FSWD-MAR25-B1",
+  scores: [
+    { label: "Attendance & Punctuality", score: "8.5 / 10", icon: <EventNoteIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
+    { label: "Task Completion", score: "8.0 / 10", icon: <AssignmentTurnedInIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
+    { label: "Technical Skills", score: "8.7 / 10", icon: <MemoryIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
+    { label: "Problem Solving", score: "8.2 / 10", icon: <LightbulbIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
+    { label: "Code Quality", score: "8.4 / 10", icon: <CodeIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
+    { label: "Communication", score: "8.1 / 10", icon: <ForumIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
+    { label: "Overall Discipline", score: "8.6 / 10", icon: <AssignmentIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
+  ],
+  overall: "8.4 / 10",
+  assessment: "EXCELLENT",
+  verificationId: "TIIRON-TEST-0000",
+  skills: COURSE_SKILLS["1"] ?? [],
+  remarks:
+    "This is a sample preview. Log in to view and download your actual evaluation report.",
+};
+
+
 function getMentorSignature(mentorName: string): string | undefined {
   const key = Object.keys(MENTOR_SIGNATURES).find((name) =>
     mentorName.toLowerCase().includes(name),
@@ -1116,7 +1145,176 @@ const SkeletonBar = ({
   />
 );
 
-const CertificatePreviewCard = ({ onView }: { onView: () => void }) => (
+// const CertificatePreviewCard = ({ onView }: { onView: () => void }) => (
+//   <Paper
+//     elevation={0}
+//     onClick={onView}
+//     sx={{
+//       cursor: "pointer",
+//       border: `1px solid ${COLORS.border}`,
+//       borderRadius: "10px",
+//       p: { xs: "16px", sm: "28px" },
+//       bgcolor: COLORS.background,
+//       boxShadow: "0 1px 3px rgba(8,31,92,0.04)",
+//       "&:hover": { boxShadow: "0 4px 16px rgba(8,31,92,0.1)" },
+//     }}
+//   >
+//     <Box
+//       sx={{
+//         display: "flex",
+//         justifyContent: "space-between",
+//         alignItems: "center",
+//         mb: "16px",
+//       }}
+//     >
+//       <Box
+//         component="img"
+//         src="/Inacademic_Logo.png"
+//         alt="Inacademic Logo"
+//         crossOrigin="anonymous"
+//         sx={{ height: { xs: 36, sm: 54 }, width: "auto", objectFit: "contain" }}
+//       />
+//       <Box sx={{ textAlign: "center" }}>
+//         <SchoolIcon sx={{ color: COLORS.primaryBlue, fontSize: 20 }} />
+//         <Typography
+//           sx={{
+//             fontWeight: 950,
+//             fontSize: { xs: "1.1rem", sm: "1.7rem" },
+//             fontFamily: FONT_FAMILY,
+//           }}
+//         >
+//           <Box component="span" sx={{ color: COLORS.accentRed }}>
+//             IN
+//           </Box>
+//           <Box component="span" sx={{ color: COLORS.darkNavy }}>
+//             ACADEMIC
+//           </Box>
+//         </Typography>
+//         <Typography
+//           sx={{
+//             fontSize: { xs: "0.55rem", sm: "0.65rem" },
+//             letterSpacing: "1.8px",
+//             color: COLORS.textPrimary,
+//             fontWeight: 800,
+//           }}
+//         >
+//           INTERNAL EVALUATION REPORT
+//         </Typography>
+//       </Box>
+//       <Box
+//         component="img"
+//         src="/Tiiron_Technologies_Logo.png"
+//         alt="Tiiron Technologies Logo"
+//         crossOrigin="anonymous"
+//         sx={{ height: { xs: 36, sm: 54 }, width: "auto", objectFit: "contain" }}
+//       />
+//     </Box>
+//     <Box sx={{ height: 1, background: COLORS.border, mb: "22px" }} />
+//     <SkeletonBar height={60} />
+//     <Box sx={{ height: 14 }} />
+//     <SkeletonBar height={70} />
+//     <Box sx={{ height: 14 }} />
+//     <Grid container spacing={2}>
+//       <Grid item xs={7}>
+//         <SkeletonBar height={200} />
+//       </Grid>
+//       <Grid item xs={5}>
+//         <SkeletonBar height={200} />
+//       </Grid>
+//     </Grid>
+//     <Box sx={{ height: 14 }} />
+//     <SkeletonBar height={60} />
+//     <Box
+//       sx={{
+//         display: "flex",
+//         alignItems: "center",
+//         justifyContent: "center",
+//         mt: "22px",
+//         color: COLORS.textMuted,
+//       }}
+//     >
+//       <VisibilityIcon sx={{ fontSize: 16, mr: "8px" }} />
+//       <Typography sx={{ fontSize: "0.78rem", fontWeight: 700 }}>
+//         Click to view full report
+//       </Typography>
+//     </Box>
+//   </Paper>
+// );
+
+
+// const CertificatePreviewCard = ({
+//   cert,
+//   onView,
+// }: {
+//   cert: CertificateData;
+//   onView: () => void;
+// }) => (
+//   <Paper
+//     elevation={0}
+//     onClick={onView}
+//     sx={{
+//       cursor: "pointer",
+//       border: `1px solid ${COLORS.border}`,
+//       borderRadius: "10px",
+//       p: { xs: "10px", sm: "16px" },
+//       bgcolor: COLORS.background,
+//       boxShadow: "0 1px 3px rgba(8,31,92,0.04)",
+//       "&:hover": { boxShadow: "0 4px 16px rgba(8,31,92,0.1)" },
+//     }}
+//   >
+//     <Box
+//       sx={{
+//         width: "100%",
+//         overflow: "hidden",
+//         borderRadius: "8px",
+//         border: `1px solid ${COLORS.border}`,
+//       }}
+//     >
+//       <Box
+//         sx={{
+//           width: CERT_WIDTH,
+//           transformOrigin: "top left",
+//           pointerEvents: "none",
+//           transform: {
+//             xs: "scale(0.34)",
+//             sm: "scale(0.42)",
+//             md: "scale(0.5)",
+//           },
+//           mb: {
+//             xs: `-${CERT_HEIGHT * (1 - 0.34)}px`,
+//             sm: `-${CERT_HEIGHT * (1 - 0.42)}px`,
+//             md: `-${CERT_HEIGHT * (1 - 0.5)}px`,
+//           },
+//         }}
+//       >
+//         <CertificateBody cert={cert} />
+//       </Box>
+//     </Box>
+//     <Box
+//       sx={{
+//         display: "flex",
+//         alignItems: "center",
+//         justifyContent: "center",
+//         mt: "16px",
+//         color: COLORS.textMuted,
+//       }}
+//     >
+//       <VisibilityIcon sx={{ fontSize: 16, mr: "8px" }} />
+//       <Typography sx={{ fontSize: "0.78rem", fontWeight: 700 }}>
+//         Click to view full report
+//       </Typography>
+//     </Box>
+//   </Paper>
+// );
+
+
+const CertificatePreviewCard = ({
+  cert,
+  onView,
+}: {
+  cert: CertificateData;
+  onView: () => void;
+}) => (
   <Paper
     elevation={0}
     onClick={onView}
@@ -1124,7 +1322,7 @@ const CertificatePreviewCard = ({ onView }: { onView: () => void }) => (
       cursor: "pointer",
       border: `1px solid ${COLORS.border}`,
       borderRadius: "10px",
-      p: { xs: "16px", sm: "28px" },
+      p: { xs: "10px", sm: "16px" },
       bgcolor: COLORS.background,
       boxShadow: "0 1px 3px rgba(8,31,92,0.04)",
       "&:hover": { boxShadow: "0 4px 16px rgba(8,31,92,0.1)" },
@@ -1132,75 +1330,54 @@ const CertificatePreviewCard = ({ onView }: { onView: () => void }) => (
   >
     <Box
       sx={{
+        width: "100%",
         display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        mb: "16px",
+        justifyContent: "center",
       }}
     >
       <Box
-        component="img"
-        src="/Inacademic_Logo.png"
-        alt="Inacademic Logo"
-        crossOrigin="anonymous"
-        sx={{ height: { xs: 36, sm: 54 }, width: "auto", objectFit: "contain" }}
-      />
-      <Box sx={{ textAlign: "center" }}>
-        <SchoolIcon sx={{ color: COLORS.primaryBlue, fontSize: 20 }} />
-        <Typography
+        sx={{
+          position: "relative",
+          width: { xs: 180, sm: 220, md: 260, lg: 300 },
+          height: { xs: 255, sm: 311, md: 368, lg: 424 },
+          overflow: "hidden",
+          borderRadius: "8px",
+          border: `1px solid ${COLORS.border}`,
+          flexShrink: 0,
+        }}
+      >
+        <Box
           sx={{
-            fontWeight: 950,
-            fontSize: { xs: "1.1rem", sm: "1.7rem" },
-            fontFamily: FONT_FAMILY,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: CERT_WIDTH,
+            transformOrigin: "top left",
+            pointerEvents: "none",
+            // transform: {
+            //   xs: "scale(0.2857)",
+            //   sm: "scale(0.3571)",
+            //   md: "scale(0.42)",
+            //   lg: "scale(0.5)",
+            // },
+             transform: {
+              xs: "scale(0.2143)",
+              sm: "scale(0.2619)",
+              md: "scale(0.3095)",
+              lg: "scale(0.3571)",
+            },
           }}
         >
-          <Box component="span" sx={{ color: COLORS.accentRed }}>
-            IN
-          </Box>
-          <Box component="span" sx={{ color: COLORS.darkNavy }}>
-            ACADEMIC
-          </Box>
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: { xs: "0.55rem", sm: "0.65rem" },
-            letterSpacing: "1.8px",
-            color: COLORS.textPrimary,
-            fontWeight: 800,
-          }}
-        >
-          INTERNAL EVALUATION REPORT
-        </Typography>
+          <CertificateBody cert={cert} />
+        </Box>
       </Box>
-      <Box
-        component="img"
-        src="/Tiiron_Technologies_Logo.png"
-        alt="Tiiron Technologies Logo"
-        crossOrigin="anonymous"
-        sx={{ height: { xs: 36, sm: 54 }, width: "auto", objectFit: "contain" }}
-      />
     </Box>
-    <Box sx={{ height: 1, background: COLORS.border, mb: "22px" }} />
-    <SkeletonBar height={60} />
-    <Box sx={{ height: 14 }} />
-    <SkeletonBar height={70} />
-    <Box sx={{ height: 14 }} />
-    <Grid container spacing={2}>
-      <Grid item xs={7}>
-        <SkeletonBar height={200} />
-      </Grid>
-      <Grid item xs={5}>
-        <SkeletonBar height={200} />
-      </Grid>
-    </Grid>
-    <Box sx={{ height: 14 }} />
-    <SkeletonBar height={60} />
     <Box
       sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        mt: "22px",
+        mt: "16px",
         color: COLORS.textMuted,
       }}
     >
@@ -1211,7 +1388,6 @@ const CertificatePreviewCard = ({ onView }: { onView: () => void }) => (
     </Box>
   </Paper>
 );
-
 export default function CourseCertificate({
   courseId,
   courseName,
@@ -1236,27 +1412,6 @@ export default function CourseCertificate({
   const userData = userResponse?.data;
   const isAuthenticated = !isUserError && !!userData?.id;
 
-  //   useEffect(() => {
-  //     if (!isAuthenticated || !userData?.id) return;
-  //     let cancelled = false;
-
-  //     const fetchEnrollmentId = async () => {
-  //       try {
-  //         const res = await axios.get(`
-  // https://tiiron-verify.onrender.com/api/certificates/search/${userData?.id}`); // 👈 apna actual endpoint yaha daal do
-  //         if (!cancelled) {
-  //           setApiEnrollmentId(res.data?.enrollmentId ?? res.data?.data?.enrollmentId ?? null);
-  //         }
-  //       } catch (err) {
-  //         console.error("Failed to fetch enrollmentId:", err);
-  //       }
-  //     };
-
-  //     fetchEnrollmentId();
-  //     return () => {
-  //       cancelled = true;
-  //     };
-  //   }, [isAuthenticated, userData?.id]);
 
   useEffect(() => {
     if (!isAuthenticated || !userData?.email) return;
@@ -1285,13 +1440,6 @@ export default function CourseCertificate({
     };
   }, [isAuthenticated, userData?.email]);
 
-  // const cert = useMemo(() => {
-  //   if (!isAuthenticated || !userData?.id) return null;
-  //   const studentName = `${userData.firstName ?? ""} ${userData.lastName ?? ""}`.trim() || "Student";
-  //   const data = buildCertificateData(Number(userData.id), studentName, String(courseId), courseName);
-  //   return apiEnrollmentId ? { ...data, enrollmentId: apiEnrollmentId } : data;
-  // }, [courseId, courseName, isAuthenticated, userData?.firstName, userData?.id, userData?.lastName, apiEnrollmentId]);
-
   const cert = useMemo(() => {
     if (!isAuthenticated || !userData?.id) return null;
     const studentName =
@@ -1319,6 +1467,8 @@ export default function CourseCertificate({
     userData?.lastName,
     apiEnrollmentId,
   ]);
+
+  const displayCert = cert ?? TEST_CERT_DATA;
 
   const redirectToLogin = () => {
     window.location.href = "/login";
@@ -1499,7 +1649,8 @@ export default function CourseCertificate({
     <Box sx={{ py: 4, px: { xs: 1.5, sm: 3 }, background: "#F1F5F9" }}>
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12} lg={8}>
-          <CertificatePreviewCard onView={handleViewFull} />
+          {/* <CertificatePreviewCard onView={handleViewFull} /> */}
+          <CertificatePreviewCard cert={displayCert} onView={handleViewFull} />
         </Grid>
         <Grid item xs={12} lg={4}>
           <Paper
@@ -1524,7 +1675,7 @@ export default function CourseCertificate({
             >
               Quick Summary
             </Typography>
-            {cert ? (
+            {/* {cert ? (
               <>
                 <InfoRow label="Student" value={cert.studentName} />
                 <InfoRow label="Overall Score" value={cert.overall} />
@@ -1533,6 +1684,17 @@ export default function CourseCertificate({
               <>
                 <SkeletonBar height={14} />
                 <SkeletonBar height={14} />
+              </>
+            )} */}
+            {cert ? (
+              <>
+                <InfoRow label="Student" value={displayCert.studentName} />
+                <InfoRow label="Overall Score" value={displayCert.overall} />
+              </>
+            ) : (
+              <>
+                <InfoRow label="Student" value={displayCert.studentName} />
+                <InfoRow label="Overall Score" value={displayCert.overall} />
               </>
             )}
             <Button
