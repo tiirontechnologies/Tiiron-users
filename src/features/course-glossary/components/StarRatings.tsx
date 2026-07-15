@@ -40,30 +40,35 @@ export default function StarRatings({ averageRating = 0, totalRatings = 0, ratin
       }}
     >
       {/* ⭐ Top Rating Summary */}
-      <Box display="flex" alignItems="center" gap={1.5}>
-        <Box display="flex" alignItems="center" gap={0.5}>
-          {[...Array(5)].map((_, i) => (
-            <StarIcon
-              key={i}
-              sx={{
-                fontSize: 20,
-                color:
-                  i < Math.round(averageRating)
-                    ? "#FBBF24"
-                    : "#E2E8F0",
-              }}
-            />
-          ))}
-        </Box>
+      <Box
+  display="flex"
+  alignItems="center"
+  flexWrap="wrap"
+  gap={{ xs: 1, sm: 1.5 }}
+>
+  <Box display="flex" alignItems="center" gap={0.5}>
+    {[...Array(5)].map((_, i) => (
+      <StarIcon
+        key={i}
+        sx={{
+          fontSize: { xs: 16, sm: 18, md: 20 },
+          color:
+            i < Math.round(averageRating)
+              ? "#FBBF24"
+              : "#E2E8F0",
+        }}
+      />
+    ))}
+  </Box>
 
-        <Typography fontWeight={700} fontSize={24}>
-          {averageRating || 0}
-        </Typography>
+  <Typography fontWeight={700} sx={{ fontSize: { xs: 18, sm: 20, md: 24 } }}>
+    {averageRating || 0}
+  </Typography>
 
-        <Typography fontSize={14} sx={{ color: "#64748B" }}>
-          {totalRatings} reviews
-        </Typography>
-      </Box>
+  <Typography sx={{ fontSize: { xs: 12, sm: 13, md: 14 }, color: "#64748B" }}>
+    {totalRatings} reviews
+  </Typography>
+</Box>
 
       {/* ⭐ Rating Distribution */}
       <Box display="flex" flexDirection="column" gap={1.5}>
