@@ -83,25 +83,17 @@ const Landing = () => {
 
   // 🔹 Featured courses
   const { data: browseData, isFetching: fetchingBrowse, isError: errorBrowse } =
-    useGetCourseForFeedQuery({ limit: 4, page: 1 });
+    useGetCourseForFeedQuery({ limit: 10, page: 1 });
 
   const featuredCoursesData: ICourse[] =
     (browseData as any)?.data?.courses || [];
 
-
-  const courseIds = featuredCoursesData.map((c) => c.id);
-
-  const rating1 = useGetCourseRatingQuery(courseIds[0], { skip: !courseIds[0] });
-  const rating2 = useGetCourseRatingQuery(courseIds[1], { skip: !courseIds[1] });
-  const rating3 = useGetCourseRatingQuery(courseIds[2], { skip: !courseIds[2] });
-  const rating4 = useGetCourseRatingQuery(courseIds[3], { skip: !courseIds[3] });
-
-  const ratings = [
-    rating1?.data?.data,
-    rating2?.data?.data,
-    rating3?.data?.data,
-    rating4?.data?.data,
-  ];
+      const sortedFeaturedCourses = [...featuredCoursesData].sort(
+    (a, b) =>
+      (Number(b.rating || b.averageRating) || 0) -
+      (Number(a.rating || a.averageRating) || 0)
+  );
+  
   // 🔹 Cart Data
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,
@@ -347,9 +339,7 @@ const Landing = () => {
           </Stack>
 
           {fetchingBrowse ? (
-            // <Box sx={{ textAlign: 'center', py: 8 }}>
-            //   <Loader />
-            // </Box>
+           
               <Grid container spacing={2}>
               {[...Array(4)].map((_, i) => (
                 <Grid item xs={12} sm={6} md={3} key={i}>
@@ -396,44 +386,54 @@ const Landing = () => {
             //   })}
             // </Grid>
 
-  <Grid container spacing={2}>
-    {featuredCoursesData
-      ?.map((course, index) => ({
-        course,
-        rating: ratings[index]?.averageRating || 0,
-        reviewCount: ratings[index]?.totalRatings || 0,
-      }))
-      .sort((a, b) => b.rating - a.rating)
-      .map(({ course, rating, reviewCount }) => {
+            // ) : (
 
-        const isCourseInCart =
-          cartData?.data?.items?.some(
-            (item) => item.courseId === Number(course.id)
-          ) || false;
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              spaceBetween={16}
+              slidesPerView={1.15}
+              autoplay={{ delay: 3500, disableOnInteraction: false }}
+              pagination={{ clickable: true }}
+              breakpoints={{
+                480: { slidesPerView: 1.5, spaceBetween: 16 },
+                640: { slidesPerView: 2.2, spaceBetween: 16 },
+                960: { slidesPerView: 3, spaceBetween: 20 },
+                1280: { slidesPerView: 4, spaceBetween: 20 },
+              }}
+              style={{ paddingBottom: 40 }}
+            >
+              {sortedFeaturedCourses?.map((course) => {
 
-        return (
-          <Grid item xs={12} sm={6} md={3} key={course.id}>
-            <CourseCardWrapper
-              id={course.id}
-              thumbnailSrc={course.image}
-              tags={course.tags}
-              title={course.title}
-              chapters={course.totalChapters}
-              rating={rating}
-              reviewCount={reviewCount}
-              instructor={course.createdBy}
-              price={course.price}
-              navigatePath={(id) => `/course-glossary/${id}`}
-              isCourseInCart={isCourseInCart}
-              onAddToCart={handleAddToCart}
-              isLoadingCart={isAddingToCart}
-            />
-          </Grid>
-        );
-      })}
-  </Grid>
+                const rating = Number(course.rating || course.averageRating) || 0;
+                const reviewCount = Number(course.reviewCount || course.totalRatings) || 0;
 
-          )}
+                const isCourseInCart =
+                  cartData?.data?.items?.some(
+                    (item) => item.courseId === Number(course.id)
+                  ) || false;
+
+                return (
+                  <SwiperSlide key={course.id}>
+                    <CourseCardWrapper
+                      id={course.id}
+                      thumbnailSrc={course.image}
+                      tags={course.tags}
+                      title={course.title}
+                      chapters={course.totalChapters}
+                      rating={rating}
+                      reviewCount={reviewCount}
+                      instructor={course.createdBy}
+                      price={course.price}
+                      navigatePath={(id) => `/course-glossary/${id}`}
+                      isCourseInCart={isCourseInCart}
+                      onAddToCart={handleAddToCart}
+                      isLoadingCart={isAddingToCart}
+                    />
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+                  )}
         </Container>
       </Box>
 
