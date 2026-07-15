@@ -83,25 +83,17 @@ const Landing = () => {
 
   // 🔹 Featured courses
   const { data: browseData, isFetching: fetchingBrowse, isError: errorBrowse } =
-    useGetCourseForFeedQuery({ limit: 4, page: 1 });
+    useGetCourseForFeedQuery({ limit: 10, page: 1 });
 
   const featuredCoursesData: ICourse[] =
     (browseData as any)?.data?.courses || [];
 
-
-  const courseIds = featuredCoursesData.map((c) => c.id);
-
-  const rating1 = useGetCourseRatingQuery(courseIds[0], { skip: !courseIds[0] });
-  const rating2 = useGetCourseRatingQuery(courseIds[1], { skip: !courseIds[1] });
-  const rating3 = useGetCourseRatingQuery(courseIds[2], { skip: !courseIds[2] });
-  const rating4 = useGetCourseRatingQuery(courseIds[3], { skip: !courseIds[3] });
-
-  const ratings = [
-    rating1?.data?.data,
-    rating2?.data?.data,
-    rating3?.data?.data,
-    rating4?.data?.data,
-  ];
+      const sortedFeaturedCourses = [...featuredCoursesData].sort(
+    (a, b) =>
+      (Number(b.rating || b.averageRating) || 0) -
+      (Number(a.rating || a.averageRating) || 0)
+  );
+  
   // 🔹 Cart Data
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,
@@ -126,12 +118,181 @@ const Landing = () => {
     { title: 'AI Engineering Track', courses: 2, time: '8 months', level: 'Advanced' },
   ];
 
-  // 🔹 Testimonials
   const testimonials = [
-    { name: 'Aman', text: 'I improved my interview performance and landed a job in 3 months.', tag: 'Data Scientist' },
-    { name: 'Priya', text: 'The AI quizzes made studying focused and efficient.', tag: 'Frontend Dev' },
-    { name: 'Rohit', text: 'Clear paths and project-based tasks helped me build a portfolio.', tag: 'Full-stack' },
-  ];
+  {
+    name: 'Alok Thakur',
+    text: 'It was a highly productive internship experience where I learned industry standards and developed a solid understanding of Frontend technologies.',
+    tag: 'Frontend Development'
+  },
+  {
+    name: 'Divyam Shrivastav',
+    text: 'I learned Python fundamentals, improved my coding skills, and gained practical experience. This internship was very helpful for my learning and confidence.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Raj Shekhar Sah',
+    text: 'I learned the industry-level work and its actual use after college. It is highly recommended for students to understand and get real industry exposure.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Kenisha Thakur',
+    text: 'It was a great learning experience. I improved my Python fundamentals, polished my concepts, and gained valuable hands-on backend development skills.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Srishti',
+    text: 'The learning content was decent. Gained some good initial insights into the track, though more active live mentorship sessions would make it even better.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Dilpreet Kaur',
+    text: 'This Python internship gave me practical experience that went beyond theory. I improved my programming, debugging, and problem-solving skills on real tasks.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Harmanpreet Singh',
+    text: 'This internship helped me learn new skills, improve my self-confidence, and understand how tasks are executed professionally in a corporate environment.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Vishal mani',
+    text: 'Gained basic familiarity with Python concepts and standard modules. It was a decent learning path to start my programming journey.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Aalok jha',
+    text: 'Improved my technical skills, communication, and teamwork. I gained practical experience by working on real tasks, and the mentor was supportive throughout.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Rajesh Mehta',
+    text: 'I got to learn many new things from the Python classes. Thank you for setting up such a structured and helpful curriculum for our career growth.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Sanvi',
+    text: 'The practical approach here is excellent. I ended up learning and implementing more skills in this internship than I did in an entire college semester.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Khushi Ahuja',
+    text: 'It was a highly rewarding program that helped me learn coding concepts practically. Working on real tasks made the concepts much easier to understand.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Ranjan Kumar Mahato',
+    text: 'I got valuable practical experience in developing real-world projects from scratch, which greatly helped me build confidence in my coding skills.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Mani',
+    text: 'This internship was incredibly insightful. I managed to learn more practical frontend skills here than during my entire previous college semester.',
+    tag: 'Frontend Development'
+  },
+  {
+    name: 'Ishika',
+    text: 'The structured tasks along with highly cooperative and supportive mentors made this internship a smooth and enriching learning experience for me.',
+    tag: 'Python Development'
+  },
+  {
+    name: 'Manveer kaur',
+    text: 'This internship helped me learn essential industry-level practical skills and apply my knowledge directly by working on real-world projects.',
+    tag: 'Frontend Development'
+  }
+];
+
+//   const testimonials = [
+//   {
+//     name: 'Alok Thakur',
+//     text: 'Good experience of intership',
+//     tag: 'Frontend Development'
+//   },
+//   {
+//     name: 'Alok Thakur',
+//     text: 'Yes',
+//     tag: 'Frontend Development'
+//   },
+//   {
+//     name: 'Divyam Shrivastav',
+//     text: 'I learned Python fundamentals, improved my coding skills, and gained practical experience. This internship was very helpful for my learning and confidence.',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Raj Shekhar Sah',
+//     text: 'I learned the industry level work and use of it after the college life. It should be helpful to the students to understand and get experience for industry level.',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Kenisha Thakur',
+//     text: 'It was a great learning experience. I improved my Python fundamentals and gained practical backend development skills.',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Srishti',
+//     text: 'It was fine but the teacher should interact more and make the course interesting',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Dilpreet Kaur',
+//     text: 'This Python internship gave me practical experience that went beyond theory. I improved my programming, debugging, and problem-solving skills while working on real tasks, and it boosted my confidence in writing Python code.',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Harmanpreet Singh',
+//     text: 'This internship helped me learn new skills, improve my confidence, and understand how work is done in a professional environment.',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Vishal mani',
+//     text: 'Lost of connection with student',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Aalok jha',
+//     text: 'This internship helped me improve my technical skills, communication, and teamwork. I gained practical experience by working on real tasks, and the mentor was supportive throughout the internship. It was a valuable learning experience, and I would recommend this internship to other students.',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Alok Thakur',
+//     text: 'Good experience',
+//     tag: 'Frontend Development'
+//   },
+//   {
+//     name: 'Rajesh Mehta',
+//     text: 'I learn many things from class of python... thank you to make your future good',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Sanvi',
+//     text: 'I learned more in this internship than I did in one semester',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Khushi Ahuja',
+//     text: 'It helped me to learn practically',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Ranjan Kumar Mahato',
+//     text: 'I got practical experience of developing any project.',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Mani',
+//     text: 'I learn more in this intership than I did in my last semester.',
+//     tag: 'Frontend Development'
+//   },
+//   {
+//     name: 'Ishika',
+//     text: 'Mentors are so coperative and supportive',
+//     tag: 'Python Development'
+//   },
+//   {
+//     name: 'Manveer kaur',
+//     text: 'This internship helped me learn practical skills and apply my knowledge through real projects',
+//     tag: 'Frontend Development'
+//   }
+// ];
 
   const stats = [
     { value: '1K+', label: 'Active Learners' },
@@ -347,9 +508,7 @@ const Landing = () => {
           </Stack>
 
           {fetchingBrowse ? (
-            // <Box sx={{ textAlign: 'center', py: 8 }}>
-            //   <Loader />
-            // </Box>
+           
               <Grid container spacing={2}>
               {[...Array(4)].map((_, i) => (
                 <Grid item xs={12} sm={6} md={3} key={i}>
@@ -363,77 +522,53 @@ const Landing = () => {
             </Typography>
           ) : (
 
-            // <Grid container spacing={2}>
-            //   {featuredCoursesData?.map((course, index) => {
+          
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              spaceBetween={16}
+              slidesPerView={1.15}
+              autoplay={{ delay: 3500, disableOnInteraction: false }}
+              pagination={{ clickable: true }}
+              breakpoints={{
+                480: { slidesPerView: 1.5, spaceBetween: 16 },
+                640: { slidesPerView: 2.2, spaceBetween: 16 },
+                960: { slidesPerView: 3, spaceBetween: 20 },
+                1280: { slidesPerView: 4, spaceBetween: 20 },
+              }}
+              style={{ paddingBottom: 40 }}
+            >
+              {sortedFeaturedCourses?.map((course) => {
 
-            //     const rating = ratings[index]?.averageRating || 0;
-            //     const reviewCount = ratings[index]?.totalRatings || 0;
+                const rating = Number(course.averageRating) || 0;
+                const reviewCount = Number(course.totalRatings) || 0;
 
-            //     const isCourseInCart =
-            //       cartData?.data?.items?.some(
-            //         (item) => item.courseId === Number(course.id)
-            //       ) || false;
+                const isCourseInCart =
+                  cartData?.data?.items?.some(
+                    (item) => item.courseId === Number(course.id)
+                  ) || false;
 
-            //     return (
-            //       <Grid item xs={12} sm={6} md={3} key={course.id}>
-            //         <CourseCardWrapper
-            //           id={course.id}
-            //           thumbnailSrc={course.image}
-            //           tags={course.tags}
-            //           title={course.title}
-            //           chapters={course.totalChapters}
-            //           rating={rating}
-            //           reviewCount={reviewCount}
-            //           instructor={course.createdBy}
-            //           price={course.price}
-            //           navigatePath={(id) => `/course-glossary/${id}`}
-            //           isCourseInCart={isCourseInCart}
-            //           onAddToCart={handleAddToCart}
-            //           isLoadingCart={isAddingToCart}
-            //         />
-            //       </Grid>
-            //     );
-            //   })}
-            // </Grid>
-
-  <Grid container spacing={2}>
-    {featuredCoursesData
-      ?.map((course, index) => ({
-        course,
-        rating: ratings[index]?.averageRating || 0,
-        reviewCount: ratings[index]?.totalRatings || 0,
-      }))
-      .sort((a, b) => b.rating - a.rating)
-      .map(({ course, rating, reviewCount }) => {
-
-        const isCourseInCart =
-          cartData?.data?.items?.some(
-            (item) => item.courseId === Number(course.id)
-          ) || false;
-
-        return (
-          <Grid item xs={12} sm={6} md={3} key={course.id}>
-            <CourseCardWrapper
-              id={course.id}
-              thumbnailSrc={course.image}
-              tags={course.tags}
-              title={course.title}
-              chapters={course.totalChapters}
-              rating={rating}
-              reviewCount={reviewCount}
-              instructor={course.createdBy}
-              price={course.price}
-              navigatePath={(id) => `/course-glossary/${id}`}
-              isCourseInCart={isCourseInCart}
-              onAddToCart={handleAddToCart}
-              isLoadingCart={isAddingToCart}
-            />
-          </Grid>
-        );
-      })}
-  </Grid>
-
-          )}
+                return (
+                  <SwiperSlide key={course.id}>
+                    <CourseCardWrapper
+                      id={course.id}
+                      thumbnailSrc={course.image}
+                      tags={course.tags}
+                      title={course.title}
+                      chapters={course.totalChapters}
+                      rating={rating}
+                      reviewCount={reviewCount}
+                      instructor={course.createdBy}
+                      price={course.price}
+                      navigatePath={(id) => `/course-glossary/${id}`}
+                      isCourseInCart={isCourseInCart}
+                      onAddToCart={handleAddToCart}
+                      isLoadingCart={isAddingToCart}
+                    />
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+                  )}
         </Container>
       </Box>
 
@@ -981,175 +1116,186 @@ const Landing = () => {
         </Container>
       </Box>
 
-      {/* -------------------------------------- */}
       {/* TESTIMONIALS */}
-      {/* -------------------------------------- */}
-     
+ 
+<Box sx={{ py: 8, background: "#f8fafc" }}>
+        <Container maxWidth="lg">
 
-      <Box sx={{ py: 8, background: "#f8fafc" }}>
-  <Container maxWidth="lg">
-
-    {/* ── Heading ── */}
-    <Box sx={{ textAlign: "center", mb: 6 }}>
-      <Box
-        sx={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 0.8,
-          background: "#eff6ff",
-          border: "1px solid #bfdbfe",
-          borderRadius: "100px",
-          px: 1.8,
-          py: "5px",
-          mb: 2,
-        }}
-      >
-        <Box sx={{ width: 6, height: 6, borderRadius: "50%", background: "#2563eb" }} />
-        <Typography
-          sx={{
-            fontSize: "0.72rem",
-            fontWeight: 700,
-            color: "#1e40af",
-            letterSpacing: "0.07em",
-            textTransform: "uppercase",
-          }}
-        >
-          Student Reviews
-        </Typography>
-      </Box>
-
-      <Typography
-        variant="h5"
-        fontWeight={800}
-        sx={{
-          fontSize: { xs: "1.5rem", md: "2rem" },
-          letterSpacing: "-0.02em",
-          color: "#0f172a",
-          lineHeight: 1.2,
-        }}
-      >
-        Trusted by{" "}
-        <Box component="span" sx={{ color: "#0841be" }}>
-          learners like you
-        </Box>
-      </Typography>
-
-      <Typography
-        sx={{ color: "#64748b", fontSize: "0.95rem", mt: 1.2, maxWidth: 420, mx: "auto" }}
-      >
-        Real stories from students who levelled up — no filters, no scripts.
-      </Typography>
-    </Box>
-
-    {/* ── Cards Grid ── */}
-    <Grid container spacing={2.5}>
-      {testimonials.map((t, i) => (
-        <Grid item xs={12} md={4} key={i}>
-          <Card
-            elevation={0}
-            sx={{
-              p: "26px 24px 20px",
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              borderRadius: "16px",
-              background: "#ffffff",
-              border: "1px solid #e2e8f0",
-              transition:
-                "transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s ease, border-color 0.28s ease",
-              "&:hover": {
-                transform: "translateY(-6px)",
-                borderColor: "#2563eb",
-                boxShadow: "0 16px 32px -10px rgba(37,99,235,0.14)",
-              },
-            }}
-          >
-            {/* Top section */}
-            <Box>
-              {/* Blue accent bar */}
-              <Box
-                sx={{
-                  width: 28,
-                  height: 3,
-                  background: "#2563eb",
-                  borderRadius: "2px",
-                  mb: 2,
-                }}
-              />
-
-              {/* Stars */}
-              <Box sx={{ display: "flex", gap: "3px", mb: 1.8 }}>
-                {Array.from({ length: 5 }).map((_, s) => (
-                  <Box
-                    key={s}
-                    component="span"
-                    sx={{ fontSize: "13px", color: "#f59e0b", lineHeight: 1 }}
-                  >
-                    ★
-                  </Box>
-                ))}
-              </Box>
-
-              {/* Quote */}
+          {/* ── Heading ── */}
+          <Box sx={{ textAlign: "center", mb: 6 }}>
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.8,
+                background: "#eff6ff",
+                border: "1px solid #bfdbfe",
+                borderRadius: "100px",
+                px: 1.8,
+                py: "5px",
+                mb: 2,
+              }}
+            >
+              <Box sx={{ width: 6, height: 6, borderRadius: "50%", background: "#2563eb" }} />
               <Typography
                 sx={{
-                  color: "#475569",
-                  fontSize: "0.92rem",
-                  lineHeight: 1.7,
-                  fontWeight: 400,
-                  mb: 3,
+                  fontSize: "0.72rem",
+                  fontWeight: 700,
+                  color: "#1e40af",
+                  letterSpacing: "0.07em",
+                  textTransform: "uppercase",
                 }}
               >
-                &ldquo;{t.text}&rdquo;
+                Student Reviews
               </Typography>
             </Box>
 
-            {/* Bottom: divider + profile */}
-            <Box>
-              <Box sx={{ height: "1px", background: "#e2e8f0", mb: 2 }} />
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                <Avatar
+            <Typography
+              variant="h5"
+              fontWeight={800}
+              sx={{
+                fontSize: { xs: "1.5rem", md: "2rem" },
+                letterSpacing: "-0.02em",
+                color: "#0f172a",
+                lineHeight: 1.2,
+              }}
+            >
+              Trusted by{" "}
+              <Box component="span" sx={{ color: "#0841be" }}>
+                learners like you
+              </Box>
+            </Typography>
+
+            <Typography
+              sx={{ color: "#64748b", fontSize: "0.95rem", mt: 1.2, maxWidth: 420, mx: "auto" }}
+            >
+              Real stories from students who levelled up — no filters, no scripts.
+            </Typography>
+          </Box>
+
+          {/* ── Carousel ── */}
+          <Swiper
+            modules={[Autoplay, Pagination]}
+            spaceBetween={20}
+            slidesPerView={1.1}
+            centeredSlides={false}
+            loop={testimonials.length > 3}
+            autoplay={{ delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            speed={800}
+            pagination={{ clickable: true }}
+            breakpoints={{
+              600: { slidesPerView: 1.5, spaceBetween: 20 },
+              900: { slidesPerView: 2.2, spaceBetween: 24 },
+              1200: { slidesPerView: 3, spaceBetween: 24 },
+            }}
+            style={{ paddingBottom: 44 }}
+          >
+            {testimonials.map((t, i) => (
+              <SwiperSlide key={i}>
+                <Card
+                  elevation={0}
                   sx={{
-                    width: 40,
-                    height: 40,
-                    background: "linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)",
-                    fontSize: "0.9rem",
-                    fontWeight: 700,
-                    boxShadow: "0 3px 8px rgba(37,99,235,0.2)",
+                    p: "26px 24px 20px",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    borderRadius: "16px",
+                    background: "#ffffff",
+                    border: "1px solid #e2e8f0",
+                    transition:
+                      "transform 0.28s cubic-bezier(0.4,0,0.2,1), box-shadow 0.28s ease, border-color 0.28s ease",
+                    "&:hover": {
+                      transform: "translateY(-6px)",
+                      borderColor: "#2563eb",
+                      boxShadow: "0 16px 32px -10px rgba(37,99,235,0.14)",
+                    },
                   }}
                 >
-                  {t.name[0]}
-                </Avatar>
-                <Box>
-                  <Typography
-                    fontWeight={700}
-                    sx={{ fontSize: "0.87rem", color: "#0f172a", lineHeight: 1.2 }}
-                  >
-                    {t.name}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: "#64748b", fontWeight: 500, mt: "2px", display: "block" }}
-                  >
-                    {t.tag}
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
+                  {/* Top section */}
+                  <Box>
+                    {/* Blue accent bar */}
+                    <Box
+                      sx={{
+                        width: 28,
+                        height: 3,
+                        background: "#2563eb",
+                        borderRadius: "2px",
+                        mb: 2,
+                      }}
+                    />
 
-  </Container>
-</Box>
+                    {/* Stars */}
+                    <Box sx={{ display: "flex", gap: "3px", mb: 1.8 }}>
+                      {Array.from({ length: 5 }).map((_, s) => (
+                        <Box
+                          key={s}
+                          component="span"
+                          sx={{ fontSize: "13px", color: "#f59e0b", lineHeight: 1 }}
+                        >
+                          ★
+                        </Box>
+                      ))}
+                    </Box>
+
+                    {/* Quote */}
+                    <Typography
+                      sx={{
+                        color: "#475569",
+                        fontSize: "0.92rem",
+                        lineHeight: 1.7,
+                        fontWeight: 400,
+                        mb: 3,
+                      }}
+                    >
+                      &ldquo;{t.text}&rdquo;
+                    </Typography>
+                  </Box>
+
+                  {/* Bottom: divider + profile */}
+                  <Box>
+                    <Box sx={{ height: "1px", background: "#e2e8f0", mb: 1}} />
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Avatar
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          background: "linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)",
+                          fontSize: "0.9rem",
+                          fontWeight: 700,
+                          boxShadow: "0 3px 8px rgba(37,99,235,0.2)",
+                        }}
+                      >
+                        {t.name[0]}
+                      </Avatar>
+                      <Box>
+                        <Typography
+                          fontWeight={700}
+                          sx={{ fontSize: "0.87rem", color: "#0f172a", lineHeight: 1.2 }}
+                        >
+                          {t.name}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "#64748b", fontWeight: 500, mt: "2px", display: "block" }}
+                        >
+                          {t.tag}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Card>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+        </Container>
+      </Box>
 
 
 
-      {/* -------------------------------------- */}
       {/* CTA */}
-      {/* -------------------------------------- */}
+   
       <Container maxWidth="lg" sx={{ pt: 5, pb: 6 }}>
         <Card
           sx={{

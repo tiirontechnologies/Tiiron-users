@@ -75,7 +75,7 @@ export default function CourseGlossary() {
 
   // ⭐ Correct rating values
   const averageRating = courseData?.data?.averagerating;
-  const totalRatings = courseData?.data?.totalRatings;
+  const totalRatings = courseData?.data?.totalrating;
 
   const isLoading = courseLoading || chaptersLoading;
   const isError = courseError || chaptersError;
