@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Box,
@@ -11,13 +10,16 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { School } from "@mui/icons-material";
+import { School , MenuBookRounded } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import StarIcon from "@mui/icons-material/Star";
 import { COLORS, GRADIENTS, SHADOWS } from "../../constants";
 import { useGetMyRatingQuery } from "../../api/courseProgressApi";
 import { useParams } from "react-router-dom";
 import RatingDialog from "../Rating/RatingDialog";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 interface HeaderProps {
   courseName?: string;
@@ -25,7 +27,11 @@ interface HeaderProps {
   onMenuClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ courseName, chapterInfo, onMenuClick }) => {
+const Header: React.FC<HeaderProps> = ({
+  courseName,
+  chapterInfo,
+  onMenuClick,
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [openRating, setOpenRating] = React.useState(false);
@@ -34,11 +40,17 @@ const Header: React.FC<HeaderProps> = ({ courseName, chapterInfo, onMenuClick })
 
   const { data } = useGetMyRatingQuery(
     { courseId: courseId as string },
-    { skip: !courseId }
+    { skip: !courseId },
   );
 
   const averageRating = data?.data?.value || 0;
   const myRating = data?.data;
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(anchorEl);
+  const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) =>
+    setAnchorEl(e.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
 
   return (
     <>
@@ -125,11 +137,12 @@ const Header: React.FC<HeaderProps> = ({ courseName, chapterInfo, onMenuClick })
                   color: COLORS.text.muted,
                   display: "flex",
                   alignItems: "center",
-                  gap: 0.5,
+                  gap: 0.8,
                   whiteSpace: "nowrap",
                 }}
               >
-                📚 {chapterInfo}
+              <MenuBookRounded sx={{ fontSize: "19px", color: "#6563d3" }} />
+              {chapterInfo}
               </Typography>
               <Chip
                 label="In Progress"
@@ -138,6 +151,7 @@ const Header: React.FC<HeaderProps> = ({ courseName, chapterInfo, onMenuClick })
                   background: GRADIENTS.primary,
                   color: "white",
                   fontWeight: 600,
+                
                   fontSize: { xs: "10px", md: "12px" },
                   height: { xs: "18px", md: "20px" },
                 }}
@@ -149,38 +163,68 @@ const Header: React.FC<HeaderProps> = ({ courseName, chapterInfo, onMenuClick })
         {/* Right Section - Rating (Hidden on mobile) */}
         <Box
           sx={{
-            display: { xs: "none", sm: "flex", md: "flex" },
+            display: "flex",
             alignItems: "center",
-            gap: { xs: 1, md: 2 },
-            ml: 2,
+            gap: { xs: 0.5, sm: 1, md: 2 },
+            ml: { xs: 1, sm: 2 },
             flexShrink: 0,
           }}
         >
           {averageRating ? (
             <>
+              {/* Mobile: button-style rating chip */}
+              <Box
+                sx={{
+                  display: { xs: "flex", sm: "none" },
+                  alignItems: "center",
+                  gap: 0.5,
+                  background: "#FFF7ED",
+                  border: "1px solid #FDBA74",
+                  borderRadius: "999px",
+                  px: 1.2,
+                  py: 0.4,
+                }}
+              >
+                <StarIcon sx={{ fontSize: "14px", color: "#F97316" }} />
+                <Typography
+                  sx={{ fontWeight: 600, fontSize: "11px", color: "#c2410c" }}
+                >
+                  {averageRating.toFixed(1)} Rating
+                </Typography>
+              </Box>
+
+              {/* Desktop/Tablet: full stars + count + Update button (same as pehle) */}
               <Rating
                 value={averageRating}
                 readOnly
                 precision={0.5}
-                sx={{ color: "#F97316" }}
+                sx={{ display: { xs: "none", sm: "flex" }, color: "#F97316" }}
               />
-              <Typography sx={{ fontWeight: 600, fontSize: { xs: "13px", md: "14px" } }}>
+              <Typography
+                sx={{
+                  display: { xs: "none", sm: "block" },
+                  fontWeight: 600,
+                  fontSize: { sm: "13px", md: "14px" },
+                }}
+              >
                 {averageRating.toFixed(1)}
+                {data?.data?.totalReviews ? ` (${data.data.totalReviews})` : ""}
               </Typography>
               <Button
                 variant="outlined"
                 size="small"
                 onClick={() => setOpenRating(true)}
                 sx={{
+                  display: { xs: "none", sm: "inline-flex" },
                   background: "transparent !important",
                   color: "#f97316 !important",
                   border: "1.5px solid #f97316 !important",
                   borderRadius: "10px !important",
                   textTransform: "none !important",
                   fontWeight: "600 !important",
-                  fontSize: { xs: "12px", md: "14px" },
+                  fontSize: { sm: "12px", md: "14px" },
                   boxShadow: "none !important",
-                  px: { xs: 1, md: 1.5 },
+                  px: { sm: 1, md: 1.5 },
                   py: 0.5,
                   "&:hover": {
                     background: "transparent !important",
@@ -192,31 +236,66 @@ const Header: React.FC<HeaderProps> = ({ courseName, chapterInfo, onMenuClick })
               </Button>
             </>
           ) : (
-            <Button
-              variant="contained"
-              disableElevation
-              startIcon={<StarIcon sx={{ fontSize: "16px" }} />}
-              onClick={() => setOpenRating(true)}
-              sx={{
-                backgroundColor: "#F97316 !important",
-                color: "#fff !important",
-                textTransform: "none",
-                fontWeight: 600,
-                borderRadius: "999px",
-                px: { xs: 1.5, md: 2.5 },
-                py: { xs: 0.5, md: 0.8 },
-                fontSize: { xs: "12px", md: "14px" },
-                boxShadow: "0 2px 8px rgba(238,156,14,0.4) !important",
-                "&:hover": {
+            <>
+              {/* Mobile: rating nahi hai to chhota star icon */}
+              <IconButton
+                onClick={() => setOpenRating(true)}
+                size="small"
+                sx={{ display: { xs: "flex", sm: "none" }, p: 0.5 }}
+              >
+                <StarIcon sx={{ fontSize: "20px", color: "#F97316" }} />
+              </IconButton>
+
+              {/* Desktop/Tablet: full Rate button */}
+              <Button
+                variant="contained"
+                disableElevation
+                startIcon={<StarIcon sx={{ fontSize: "16px" }} />}
+                onClick={() => setOpenRating(true)}
+                sx={{
+                  display: { xs: "none", sm: "inline-flex" },
                   backgroundColor: "#F97316 !important",
-                  boxShadow: "0 4px 12px rgba(217,119,6,0.5) !important",
-                },
-                "&:active": { backgroundColor: "#F97316 !important" },
+                  color: "#fff !important",
+                  textTransform: "none",
+                  fontWeight: 600,
+                  borderRadius: "999px",
+                  px: { xs: 1.5, md: 2.5 },
+                  py: { xs: 0.5, md: 0.8 },
+                  fontSize: { xs: "12px", md: "14px" },
+                  boxShadow: "0 2px 8px rgba(238,156,14,0.4) !important",
+                  "&:hover": {
+                    backgroundColor: "#F97316 !important",
+                    boxShadow: "0 4px 12px rgba(217,119,6,0.5) !important",
+                  },
+                  "&:active": { backgroundColor: "#F97316 !important" },
+                }}
+              >
+                Rate
+              </Button>
+            </>
+          )}
+
+          {/* Three dot - sirf mobile pe, sirf jab rating already di hai (Update ke liye) */}
+          {averageRating ? (
+            <IconButton
+              size="small"
+              onClick={handleMenuOpen}
+              sx={{ display: { xs: "flex", sm: "none" }, p: 0.5 }}
+            >
+              <MoreVertIcon sx={{ fontSize: "18px", color: "#374151" }} />
+            </IconButton>
+          ) : null}
+
+          <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose}>
+            <MenuItem
+              onClick={() => {
+                setOpenRating(true);
+                handleMenuClose();
               }}
             >
-              Rate
-            </Button>
-          )}
+              Update Rating
+            </MenuItem>
+          </Menu>
         </Box>
       </Box>
 
