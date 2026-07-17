@@ -208,7 +208,7 @@ const Header: React.FC<HeaderProps> = ({
                 }}
               >
                 {averageRating.toFixed(1)}
-                {data?.data?.totalReviews ? ` (${data.data.totalReviews})` : ""}
+                {/* {data?.data?.totalReviews ? ` (${data.data.totalReviews})` : ""} */}
               </Typography>
               <Button
                 variant="outlined"
