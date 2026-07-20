@@ -65,7 +65,9 @@ import Mani from "../assets/students_images/Mani.png";
 import Manveer from "../assets/students_images/Manveer.jpeg";
 import RajeshRajM from "../assets/students_images/RajeshRajM.jpg";
 import Ranjan from "../assets/students_images/Ranjan.jpg";
+// import srishti from "../assets/students_images/srishti.jpg";
 import srishti from "../assets/students_images/srishti.jpg";
+
 import ShahilGulati from "../assets/students_images/ShahilGulati.png";
 import SawanPandit from "../assets/students_images/SawanPandit.png";
 
