@@ -6,6 +6,9 @@ import MyCourses from "../features/my-course/pages/Courses";
 import ViewProfile from "../features/user/pages/ViewProfile";
 import PrivateRoute from "@layouts/PrivateRoute";
 import ContactForm from "@pages/Contact";
+import EducatorProfile from "@features/user/pages/EducatorProfile";
+import UserProfile from "@features/user/pages/UserProfile";
+import StudentProfile from "@features/user";
 
 export const userRoutes: Route[] = [
     {
@@ -35,6 +38,27 @@ export const userRoutes: Route[] = [
           <PrivateRoute>
             <ViewProfile />
           </PrivateRoute>
+        )
+    },
+    {
+        label: "Instructor",
+        path: "/instructor",
+        element: (
+          <PrivateRoute>
+            {/* <ViewProfile /> */}
+            <EducatorProfile/>
+          </PrivateRoute>
+        )
+    },
+       {
+        label: "UserProfile",
+        path: "/myprofile",
+        element: (
+          <PrivateRoute>
+            {/* <UserProfile/> */}
+            <StudentProfile/>
+          </PrivateRoute>
+          
         )
     },
     {

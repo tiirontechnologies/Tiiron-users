@@ -10,7 +10,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { School , MenuBookRounded } from "@mui/icons-material";
+import { School, MenuBookRounded } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 import StarIcon from "@mui/icons-material/Star";
 import { COLORS, GRADIENTS, SHADOWS } from "../../constants";
@@ -82,18 +82,16 @@ const Header: React.FC<HeaderProps> = ({
             minWidth: 0,
           }}
         >
-          {/* Hamburger Menu - Mobile Only */}
           {isMobile && (
             <IconButton
               onClick={onMenuClick}
-              sx={{ color: "#374151" }}
+              sx={{ color: "#374151", flexShrink: 0 }}
               size="small"
             >
               <MenuIcon sx={{ fontSize: "20px" }} />
             </IconButton>
           )}
 
-          {/* Avatar */}
           <Avatar
             sx={{
               background: GRADIENTS.primary,
@@ -106,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({
           </Avatar>
 
           {/* Course Info */}
-          <Box sx={{ minWidth: 0 }}>
+          <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography
               sx={{
                 fontSize: { xs: "14px", sm: "16px", md: "18px" },
@@ -116,6 +114,7 @@ const Header: React.FC<HeaderProps> = ({
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
+                maxWidth: { xs: "150px", sm: "220px", md: "320px" },
               }}
             >
               {courseName}
@@ -126,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({
                 alignItems: "center",
                 gap: 0.5,
                 mt: { xs: 0.25, md: 0.5 },
-                flexWrap: "wrap",
+                minWidth: 0,
               }}
             >
               <Typography
@@ -137,12 +136,26 @@ const Header: React.FC<HeaderProps> = ({
                   color: COLORS.text.muted,
                   display: "flex",
                   alignItems: "center",
-                  gap: 0.8,
+                  gap: 0.5,
                   whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: { xs: "90px", sm: "140px", md: "200px" },
                 }}
               >
-              <MenuBookRounded sx={{ fontSize: "19px", color: "#6563d3" }} />
-              {chapterInfo}
+                <MenuBookRounded
+                  sx={{ fontSize: "19px", color: "#6563d3", flexShrink: 0 }}
+                />
+                <Box
+                  component="span"
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {chapterInfo}
+                </Box>
               </Typography>
               <Chip
                 label="In Progress"
@@ -151,16 +164,16 @@ const Header: React.FC<HeaderProps> = ({
                   background: GRADIENTS.primary,
                   color: "white",
                   fontWeight: 600,
-                
                   fontSize: { xs: "10px", md: "12px" },
                   height: { xs: "18px", md: "20px" },
+                  flexShrink: 0,
                 }}
               />
             </Box>
           </Box>
         </Box>
 
-        {/* Right Section - Rating (Hidden on mobile) */}
+        {/* Right Section - Rating */}
         <Box
           sx={{
             display: "flex",
@@ -172,8 +185,9 @@ const Header: React.FC<HeaderProps> = ({
         >
           {averageRating ? (
             <>
-              {/* Mobile: button-style rating chip */}
+              {/* Mobile: tappable rating chip -> opens update dialog */}
               <Box
+                onClick={() => setOpenRating(true)}
                 sx={{
                   display: { xs: "flex", sm: "none" },
                   alignItems: "center",
@@ -183,17 +197,18 @@ const Header: React.FC<HeaderProps> = ({
                   borderRadius: "999px",
                   px: 1.2,
                   py: 0.4,
+                  cursor: "pointer",
                 }}
               >
                 <StarIcon sx={{ fontSize: "14px", color: "#F97316" }} />
                 <Typography
                   sx={{ fontWeight: 600, fontSize: "11px", color: "#c2410c" }}
                 >
-                  {averageRating.toFixed(1)} Rating
+                  {averageRating.toFixed(1)}
                 </Typography>
               </Box>
 
-              {/* Desktop/Tablet: full stars + count + Update button (same as pehle) */}
+              {/* Desktop/Tablet */}
               <Rating
                 value={averageRating}
                 readOnly
@@ -208,7 +223,6 @@ const Header: React.FC<HeaderProps> = ({
                 }}
               >
                 {averageRating.toFixed(1)}
-                {/* {data?.data?.totalReviews ? ` (${data.data.totalReviews})` : ""} */}
               </Typography>
               <Button
                 variant="outlined"
@@ -237,7 +251,6 @@ const Header: React.FC<HeaderProps> = ({
             </>
           ) : (
             <>
-              {/* Mobile: rating nahi hai to chhota star icon */}
               <IconButton
                 onClick={() => setOpenRating(true)}
                 size="small"
@@ -246,7 +259,6 @@ const Header: React.FC<HeaderProps> = ({
                 <StarIcon sx={{ fontSize: "20px", color: "#F97316" }} />
               </IconButton>
 
-              {/* Desktop/Tablet: full Rate button */}
               <Button
                 variant="contained"
                 disableElevation
@@ -275,7 +287,7 @@ const Header: React.FC<HeaderProps> = ({
             </>
           )}
 
-          {/* Three dot - sirf mobile pe, sirf jab rating already di hai (Update ke liye) */}
+          {/* 3-dot: sirf mobile pe, sirf jab rating already hai */}
           {averageRating ? (
             <IconButton
               size="small"
@@ -299,7 +311,6 @@ const Header: React.FC<HeaderProps> = ({
         </Box>
       </Box>
 
-      {/* Rating Dialog */}
       <RatingDialog
         open={openRating}
         onClose={() => setOpenRating(false)}
