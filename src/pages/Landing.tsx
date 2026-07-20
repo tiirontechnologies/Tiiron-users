@@ -48,15 +48,27 @@ import { useAuth } from '../hooks/useAuth';
 import Skeleton from '@mui/material/Skeleton';
 import heroSetion from "../assets/images/heroSetion.png"
 
-// Swiper React Components इम्पोर्ट करें
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Swiper Modules (Autoplay और Pagination के लिए)
 import { Autoplay, Pagination } from 'swiper/modules';
-
-// Swiper के ज़रूरी CSS Styles
 import 'swiper/css';
 import 'swiper/css/pagination';
+
+
+// student profiles 
+import Alok from "../assets/students_images/Alok.jpg";
+import keniisha_Thakur from "../assets/students_images/Keniisha_Thakur.png";
+import deepak_k from "../assets/students_images/deepak_k.png";
+import DilpreetKaur from "../assets/students_images/DilpreetKaur.png";
+import defaultI  from "../assets/students_images/defaultI.png";
+import ishika from "../assets/students_images/ishika.png";
+import Mani from "../assets/students_images/Mani.png";
+import Manveer from "../assets/students_images/Manveer.jpeg";
+import RajeshRajM from "../assets/students_images/RajeshRajM.jpg";
+import Ranjan from "../assets/students_images/Ranjan.jpg";
+import srishti from "../assets/students_images/srishti.jpg";
+import ShahilGulati from "../assets/students_images/ShahilGulati.png";
+import SawanPandit from "../assets/students_images/SawanPandit.png";
+
 
 // semer efeecrt components for feature 
 const CourseCardSkeleton = () => (
@@ -122,12 +134,14 @@ const Landing = () => {
   {
     name: 'Alok Thakur',
     text: 'It was a highly productive internship experience where I learned industry standards and developed a solid understanding of Frontend technologies.',
-    tag: 'Frontend Development'
+    tag: 'Frontend Development',
+
   },
   {
     name: 'Divyam Shrivastav',
     text: 'I learned Python fundamentals, improved my coding skills, and gained practical experience. This internship was very helpful for my learning and confidence.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+    image: defaultI
   },
   {
     name: 'Raj Shekhar Sah',
@@ -137,17 +151,20 @@ const Landing = () => {
   {
     name: 'Kenisha Thakur',
     text: 'It was a great learning experience. I improved my Python fundamentals, polished my concepts, and gained valuable hands-on backend development skills.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+    image:keniisha_Thakur
   },
   {
     name: 'Srishti',
     text: 'The learning content was decent. Gained some good initial insights into the track, though more active live mentorship sessions would make it even better.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+    image: srishti
   },
   {
     name: 'Dilpreet Kaur',
     text: 'This Python internship gave me practical experience that went beyond theory. I improved my programming, debugging, and problem-solving skills on real tasks.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+    image: DilpreetKaur
   },
   {
     name: 'Harmanpreet Singh',
@@ -162,12 +179,14 @@ const Landing = () => {
   {
     name: 'Aalok jha',
     text: 'Improved my technical skills, communication, and teamwork. I gained practical experience by working on real tasks, and the mentor was supportive throughout.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+     image:Alok
   },
   {
     name: 'Rajesh Mehta',
     text: 'I got to learn many new things from the Python classes. Thank you for setting up such a structured and helpful curriculum for our career growth.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+    image: RajeshRajM
   },
   {
     name: 'Sanvi',
@@ -182,117 +201,40 @@ const Landing = () => {
   {
     name: 'Ranjan Kumar Mahato',
     text: 'I got valuable practical experience in developing real-world projects from scratch, which greatly helped me build confidence in my coding skills.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+    image: Ranjan
   },
   {
     name: 'Mani',
     text: 'This internship was incredibly insightful. I managed to learn more practical frontend skills here than during my entire previous college semester.',
-    tag: 'Frontend Development'
+    tag: 'Frontend Development',
+    image:Mani
   },
   {
     name: 'Ishika',
     text: 'The structured tasks along with highly cooperative and supportive mentors made this internship a smooth and enriching learning experience for me.',
-    tag: 'Python Development'
+    tag: 'Python Development',
+    image:ishika
   },
   {
     name: 'Manveer kaur',
     text: 'This internship helped me learn essential industry-level practical skills and apply my knowledge directly by working on real-world projects.',
-    tag: 'Frontend Development'
-  }
+    tag: 'Frontend Development',
+     image:Manveer
+  },
+  {
+    name: 'Shahil Gulati',
+    text: 'This internship gave me hands-on experience with real frontend projects. I improved my UI development skills and learned to write clean, maintainable code.',
+    tag: 'Frontend Development',
+    image: ShahilGulati
+  },
+  {
+    name: 'Sawan Pandit',
+    text: 'Working on real datasets during this internship helped me strengthen my data analysis skills and understand how insights are used to drive decisions.',
+    tag: 'Data Analyst',
+    image: SawanPandit 
+  },
 ];
-
-//   const testimonials = [
-//   {
-//     name: 'Alok Thakur',
-//     text: 'Good experience of intership',
-//     tag: 'Frontend Development'
-//   },
-//   {
-//     name: 'Alok Thakur',
-//     text: 'Yes',
-//     tag: 'Frontend Development'
-//   },
-//   {
-//     name: 'Divyam Shrivastav',
-//     text: 'I learned Python fundamentals, improved my coding skills, and gained practical experience. This internship was very helpful for my learning and confidence.',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Raj Shekhar Sah',
-//     text: 'I learned the industry level work and use of it after the college life. It should be helpful to the students to understand and get experience for industry level.',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Kenisha Thakur',
-//     text: 'It was a great learning experience. I improved my Python fundamentals and gained practical backend development skills.',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Srishti',
-//     text: 'It was fine but the teacher should interact more and make the course interesting',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Dilpreet Kaur',
-//     text: 'This Python internship gave me practical experience that went beyond theory. I improved my programming, debugging, and problem-solving skills while working on real tasks, and it boosted my confidence in writing Python code.',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Harmanpreet Singh',
-//     text: 'This internship helped me learn new skills, improve my confidence, and understand how work is done in a professional environment.',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Vishal mani',
-//     text: 'Lost of connection with student',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Aalok jha',
-//     text: 'This internship helped me improve my technical skills, communication, and teamwork. I gained practical experience by working on real tasks, and the mentor was supportive throughout the internship. It was a valuable learning experience, and I would recommend this internship to other students.',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Alok Thakur',
-//     text: 'Good experience',
-//     tag: 'Frontend Development'
-//   },
-//   {
-//     name: 'Rajesh Mehta',
-//     text: 'I learn many things from class of python... thank you to make your future good',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Sanvi',
-//     text: 'I learned more in this internship than I did in one semester',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Khushi Ahuja',
-//     text: 'It helped me to learn practically',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Ranjan Kumar Mahato',
-//     text: 'I got practical experience of developing any project.',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Mani',
-//     text: 'I learn more in this intership than I did in my last semester.',
-//     tag: 'Frontend Development'
-//   },
-//   {
-//     name: 'Ishika',
-//     text: 'Mentors are so coperative and supportive',
-//     tag: 'Python Development'
-//   },
-//   {
-//     name: 'Manveer kaur',
-//     text: 'This internship helped me learn practical skills and apply my knowledge through real projects',
-//     tag: 'Frontend Development'
-//   }
-// ];
 
   const stats = [
     { value: '1K+', label: 'Active Learners' },
@@ -1257,6 +1199,7 @@ const Landing = () => {
                     <Box sx={{ height: "1px", background: "#e2e8f0", mb: 1}} />
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <Avatar
+                      src={t.image}
                         sx={{
                           width: 40,
                           height: 40,
