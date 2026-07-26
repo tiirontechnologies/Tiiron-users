@@ -1,67 +1,4 @@
-// import React from "react";
-// import { Camera, MapPin, Mail, Calendar, Globe, Star, BadgeCheck } from "lucide-react";
-// import InfoRow from "./InfoRow";
 
-// const ProfileCard: React.FC = () => {
-//   return (
-//     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-//       <div className="relative mx-auto w-fit">
-//         <img
-//           src="https://i.pravatar.cc/160?img=12"
-//           alt="Profile"
-//           className="h-24 w-24 rounded-full object-cover ring-4 ring-white sm:h-28 sm:w-28"
-//         />
-//         <button
-//           type="button"
-//           className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white shadow-md hover:bg-indigo-700"
-//         >
-//           <Camera size={14} />
-//         </button>
-//       </div>
-
-//       <div className="mt-4 text-center">
-//         <div className="flex items-center justify-center gap-1.5">
-//           <h2 className="text-lg font-bold text-slate-900">Rishabh Singh</h2>
-//           <BadgeCheck size={18} className="text-indigo-600" />
-//         </div>
-//         <p className="mt-0.5 text-sm text-slate-500">Frontend Developer&nbsp;|&nbsp;Learner</p>
-//       </div>
-
-//       <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-//         <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
-//           Level 4 Learner
-//         </span>
-//         <span className="flex items-center gap-1 text-xs font-medium text-slate-500">
-//           <Star size={13} className="text-amber-400" fill="currentColor" />
-//           2,450 XP
-//         </span>
-//       </div>
-
-//       <div className="mt-3">
-//         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
-//           <div className="h-full w-[61%] rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" />
-//         </div>
-//         <p className="mt-1.5 text-xs text-slate-500">2,450 / 4,000 XP to Level 5</p>
-//       </div>
-
-//       <div className="mt-5 space-y-3 border-t border-slate-100 pt-4 text-sm">
-//         <InfoRow icon={MapPin} label="Location" value="Lucknow, India" />
-//         <InfoRow icon={Mail} label="Email" value="rishabh.singh@email.com" />
-//         <InfoRow icon={Calendar} label="Member Since" value="Jan 2024" />
-//         <InfoRow icon={Globe} label="Language" value="English (US)" />
-//       </div>
-
-//       <button
-//         type="button"
-//         className="mt-5 w-full rounded-lg border border-indigo-200 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50"
-//       >
-//         Edit Profile
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default ProfileCard;
 
 
 import React, { useEffect, useRef, useState, type ComponentType } from "react";
@@ -76,6 +13,8 @@ import {
   Github,
   Instagram,
   Linkedin,
+  Facebook,
+  Twitter,
   Code2,
   Terminal,
   Loader2,
@@ -98,18 +37,20 @@ interface IconProps {
 type LucideIconType = ComponentType<IconProps>;
 
 interface SocialFieldDef {
-  key: "github" | "instagram" | "linkedin" | "leetcode" | "hackerrank";
+  key: "github" | "instagram" | "linkedin" | "facebook" | "twitter" | "leetcode" | "hackerrank";
   icon: LucideIconType;
   label: string;
   baseUrl: string;
   placeholder: string;
 }
 
-// These are the 5 social accounts we're currently collecting on the profile.
+// Ab saare 7 social accounts cover ho rahe hain (pehle facebook/twitter list mein the hi nahi)
 const socialFieldDefs: SocialFieldDef[] = [
   { key: "github", icon: Github, label: "GitHub", baseUrl: "https://github.com/", placeholder: "username" },
   { key: "instagram", icon: Instagram, label: "Instagram", baseUrl: "https://instagram.com/", placeholder: "username" },
   { key: "linkedin", icon: Linkedin, label: "LinkedIn", baseUrl: "https://linkedin.com/in/", placeholder: "username" },
+  { key: "facebook", icon: Facebook, label: "Facebook", baseUrl: "https://facebook.com/", placeholder: "username" },
+  { key: "twitter", icon: Twitter, label: "Twitter", baseUrl: "https://twitter.com/", placeholder: "username" },
   { key: "leetcode", icon: Code2, label: "LeetCode", baseUrl: "https://leetcode.com/", placeholder: "username" },
   { key: "hackerrank", icon: Terminal, label: "HackerRank", baseUrl: "https://hackerrank.com/", placeholder: "username" },
 ];
@@ -118,6 +59,19 @@ function toFullUrl(value: string, baseUrl: string): string {
   if (!value) return "#";
   if (value.startsWith("http://") || value.startsWith("https://")) return value;
   return `${baseUrl}${value}`;
+}
+
+// Backend "Leetcode" / "HackerRank" (capital) bhejta hai jabki frontend "leetcode" / "hackerrank"
+// (lowercase) use karta hai — case-sensitive JS keys ki wajah se ye 2 fields hamesha
+// undefined dikh rahe the. Yahan normalize kar diya taaki poore component mein
+// hamesha lowercase keys hi use ho.
+function normalizeProfile<T extends Record<string, any>>(raw: T | undefined) {
+  if (!raw) return raw;
+  return {
+    ...raw,
+    leetcode: raw.leetcode ?? raw.Leetcode ?? "",
+    hackerrank: raw.hackerrank ?? raw.HackerRank ?? "",
+  };
 }
 
 interface EditFormValues {
@@ -130,6 +84,8 @@ interface EditFormValues {
   github: string;
   instagram: string;
   linkedin: string;
+  facebook: string;
+  twitter: string;
   leetcode: string;
   hackerrank: string;
 }
@@ -143,7 +99,7 @@ const ProfileCard: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const profile = data?.data?.profile;
+  const profile = normalizeProfile(data?.data?.profile);
   const firstName = data?.data?.firstName ?? "";
   const lastName = data?.data?.lastName ?? "";
   const fullName = [firstName, lastName].filter(Boolean).join(" ") || "Your Name";
@@ -159,6 +115,8 @@ const ProfileCard: React.FC = () => {
       github: "",
       instagram: "",
       linkedin: "",
+      facebook: "",
+      twitter: "",
       leetcode: "",
       hackerrank: "",
     },
@@ -177,6 +135,8 @@ const ProfileCard: React.FC = () => {
         github: profile?.github ?? "",
         instagram: profile?.instagram ?? "",
         linkedin: profile?.linkedin ?? "",
+        facebook: profile?.facebook ?? "",
+        twitter: profile?.twitter ?? "",
         leetcode: profile?.leetcode ?? "",
         hackerrank: profile?.hackerrank ?? "",
       });
@@ -195,6 +155,8 @@ const ProfileCard: React.FC = () => {
       github: values.github,
       instagram: values.instagram,
       linkedin: values.linkedin,
+      facebook: values.facebook,
+      twitter: values.twitter,
       leetcode: values.leetcode,
       hackerrank: values.hackerrank,
     };
@@ -382,7 +344,12 @@ const ProfileCard: React.FC = () => {
           <BadgeCheck size={18} className="text-indigo-600" />
         </div>
         {profile?.headline && <p className="mt-0.5 text-sm text-slate-500">{profile.headline}</p>}
-        {profile?.biography && <p className="mt-2 text-xs italic text-slate-400">"{profile.biography}"</p>}
+        {profile?.biography && (
+          <p
+            className="mt-2 text-xs italic text-slate-400"
+            dangerouslySetInnerHTML={{ __html: profile.biography }}
+          />
+        )}
       </div>
 
       <div className="mt-5 space-y-3 border-t border-slate-100 pt-4 text-sm">
