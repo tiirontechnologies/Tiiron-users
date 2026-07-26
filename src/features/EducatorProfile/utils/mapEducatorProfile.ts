@@ -45,22 +45,27 @@ function buildSocialLinks(profile: RawApiUser['profile']): SocialLink[] {
 export function mapApiToEducatorProfileData(apiUser: RawApiUser): EducatorProfileData {
   const profile = apiUser.profile;
   const bioText = stripHtml(profile.biography);
+return {
+  name: `${apiUser.firstName} ${apiUser.lastName}`.trim(),
+  title: profile.headline || '',
+  avatarUrl: profile.picture || '',
 
-  return {
-    name: `${apiUser.firstName} ${apiUser.lastName}`.trim(),
-    title: profile.headline || '',
-    avatarUrl: profile.picture || '',
-    isVerified: false,
-    tags: [],
-    rating: 0,
-    reviewCount: 0,
-    learnerCount: '',
-    bio: bioText ? [bioText] : [],
-    expertise: [],
-    featuredCourses: [],
-    reviews: [],
-    microStats: [],
-    achievements: [],
-    socialLinks: buildSocialLinks(profile),
-  };
+  bannerImageUrl: '',
+  courseCount: 0,
+  yearsExperience: 0,
+  quote: '',
+
+  isVerified: false,
+  tags: [],
+  rating: 0,
+  reviewCount: 0,
+  learnerCount: '',
+  bio: bioText ? [bioText] : [],
+  expertise: [],
+  featuredCourses: [],
+  reviews: [],
+  microStats: [],
+  achievements: [],
+  socialLinks: buildSocialLinks(profile),
+};
 }
