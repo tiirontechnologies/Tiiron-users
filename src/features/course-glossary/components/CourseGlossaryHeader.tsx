@@ -1,6 +1,7 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import { ICourse } from "../../../types/course.types";
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface CourseGlossaryHeaderProps {
   course: ICourse | undefined;
@@ -52,6 +53,16 @@ export default function CourseGlossaryHeader({
 
 const roundedRating = Number(averageRating ?? 0).toFixed(1);
 const hasRating = Number(roundedRating) >= 1;
+
+
+
+// naviagte 
+const navigate = useNavigate();
+
+const handleInstructorNavigate = (username: string) => {
+  if (!username) return;
+  navigate(`/Instructor/${username}`);
+};
 
   return (
     <Box
@@ -268,6 +279,7 @@ const hasRating = Number(roundedRating) >= 1;
               gap: 1.5,
               flexWrap: "wrap",
             }}
+              onClick={() => handleInstructorNavigate(course.createdBy)}
           >
          
             <Avatar
@@ -293,7 +305,7 @@ const hasRating = Number(roundedRating) >= 1;
               }}
             >
               Created by{" "}
-              <Box component="span" sx={{ fontWeight: 600 }}>
+              <Box component="span" sx={{ fontWeight: 600 ,cursor:"pointer"}}>
                 {course?.createdBy || "Instructor"}
               </Box>
             </Typography>
