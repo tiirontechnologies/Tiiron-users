@@ -21,7 +21,7 @@ const StudentProfile: React.FC = () => {
 
           <main className="space-y-6">
             <HeroSection />
-            <StatsBar />
+            {/* <StatsBar /> */}
             <TabsSection />
           </main>
         </div>

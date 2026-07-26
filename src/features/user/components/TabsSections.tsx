@@ -5,6 +5,8 @@ import CurrentlyLearningCard from "./CurrentLearningCards";
 import AchievementsCard from "./AchivementCards";
 import LearningJourneyCard from "./LearningJourneyCard";
 import SkillsCard from "./SkillsCards";
+import ComingSoon from "./CoomingSoon";
+import MyCoursesTab from "./CoursesTab";
 
 const TabsSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
@@ -28,7 +30,7 @@ const TabsSection: React.FC = () => {
         ))}
       </div>
 
-      {activeTab === "Overview" && (
+      {/* {activeTab === "Overview" && (
         <div className="grid grid-cols-1 gap-5 p-4 sm:p-6 lg:grid-cols-2">
           <CurrentlyLearningCard />
           <AchievementsCard />
@@ -37,9 +39,30 @@ const TabsSection: React.FC = () => {
         </div>
       )}
 
-      {activeTab !== "Overview" && (
-        <div className="p-6 text-sm text-slate-400">{activeTab} content coming soon.</div>
+      {activeTab == "MyCourses" && (
+        // <div className="p-6 text-sm text-slate-400">{activeTab} content coming soon.</div>
+        <MyCoursesTab/>
       )}
+      {activeTab !== "Overview"  && (
+        // <div className="p-6 text-sm text-slate-400">{activeTab} content coming soon.</div>
+        <ComingSoon/>
+      )} */}
+
+
+      {activeTab === "Overview" && (
+  <div className="grid grid-cols-1 gap-5 p-4 sm:p-6 lg:grid-cols-2">
+    <CurrentlyLearningCard />
+    <AchievementsCard />
+    <LearningJourneyCard />
+    <SkillsCard />
+  </div>
+)}
+
+{activeTab === "My Courses" && <MyCoursesTab />}
+
+{activeTab !== "Overview" && activeTab !== "My Courses" && (
+  <ComingSoon />
+)}
     </div>
   );
 };
