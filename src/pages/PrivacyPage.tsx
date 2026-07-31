@@ -364,7 +364,7 @@ const PrivacyPolicy: React.FC = () => {
                     </div>
                     <a
                       href="mailto:contact@tiiron.com"
-                      className="text-black-600 text-sm font-medium "
+                      className="text-black-600 text-sm font-medium hover:text-blue-800 "
                     >
                       contact@tiiron.com
                     </a>
@@ -377,7 +377,7 @@ const PrivacyPolicy: React.FC = () => {
                     </div>
                     <a
                       href="https://www.tiiron.com"
-                      className="text-black-600 text-sm font-medium "
+                      className="text-black-600 text-sm font-medium hover:text-blue-800"
                     >
                       https://www.tiiron.com
                     </a>
@@ -391,7 +391,7 @@ const PrivacyPolicy: React.FC = () => {
                     <a 
                     href="https://tiirontechnologies.com/"
                     target="_blank"
-                    className="text-sm font-medium">
+                    className="text-sm font-medium hover:text-blue-800">
                       Tiiron Technologies Pvt. Ltd.
                     </a>
                   </div>

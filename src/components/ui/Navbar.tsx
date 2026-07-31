@@ -334,29 +334,11 @@ const Navbar: React.FC = () => {
           }
           sx={{ position: "relative" }}
         >
-          <Button
+          {/* <Button
             variant="text"
             onClick={() =>
               setOpenDropdown((prev) => (prev === item.name ? null : item.name))
             }
-            // sx={{
-            //   display: "flex",
-            //   alignItems: "center",
-            //   gap: 0.5,
-            //   fontWeight: 700,
-            //   fontSize: 15,
-            //   textTransform: "none",
-            //   padding: "0.625rem 1rem",
-            //   borderRadius: 2,
-            //   color: "#111827",
-            //   backgroundColor: "transparent",
-            //   "&:hover": {
-            //     color: "transparent",
-            //     background: "linear-gradient(to right,#ef4444,#a855f7)",
-            //     WebkitBackgroundClip: "text",
-            //     WebkitTextFillColor: "transparent",
-            //   },
-            // }}
 
             sx={{
               display: "flex",
@@ -369,7 +351,7 @@ const Navbar: React.FC = () => {
               padding:
                 item.name === "Explore" ? "0.5rem 2rem" : "0.625rem 1rem",
 
-              borderRadius: "10px",
+              borderRadius: "5px",
 
               border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
 
@@ -411,7 +393,70 @@ const Navbar: React.FC = () => {
             >
               ▼
             </Box>
-          </Button>
+          </Button> */}
+          <Button
+  variant="text"
+  onClick={() =>
+    setOpenDropdown((prev) => (prev === item.name ? null : item.name))
+  }
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    gap: 0.4,
+
+    minHeight: 36,
+    py: 0.45,
+    px: item.name === "Explore" ? 2 : 1,
+
+    fontWeight: 700,
+    fontSize: 15,
+    lineHeight: 1.2,
+    textTransform: "none",
+
+    borderRadius: "5px",
+
+    border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
+
+    color: item.name === "Explore" ? "#5b3cff" : "#111827",
+
+    backgroundColor: "transparent",
+
+    transition: "all 0.25s ease",
+
+    "&:hover": {
+      ...(item.name === "Explore"
+        ? {
+            backgroundColor: "#2a07d6",
+            color: "#fff",
+            transform: "translateY(-1px)",
+            boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
+          }
+        : {
+            color: "transparent",
+            background: "linear-gradient(to right,#ef4444,#a855f7)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }),
+    },
+  }}
+>
+  <Box component="span">{item.name}</Box>
+
+  <Box
+    component="span"
+    sx={{
+      fontSize: 11,
+      ml: 0.4,
+      transform:
+        openDropdown === item.name
+          ? "rotate(180deg)"
+          : "rotate(0deg)",
+      transition: "transform .2s",
+    }}
+  >
+    ▼
+  </Box>
+</Button>
           {renderDropdownBox(item)}
         </Box>
       );
@@ -545,7 +590,7 @@ const Navbar: React.FC = () => {
 
           {openDropdown === item.name && (
             <Box sx={{ pl: 2, mt: 1 }}>
-              {item.dropdown!.map((drop) => (
+              {/* {item.dropdown!.map((drop) => (
                 <NavLink
                   key={drop.name}
                   to={drop.href}
@@ -600,7 +645,87 @@ const Navbar: React.FC = () => {
                     </Typography>
                   )}
                 </NavLink>
-              ))}
+              ))} */}
+
+
+              {item.dropdown.map((drop) => {
+  const active = isActive(drop.href);
+  return (
+    <NavLink
+      key={drop.name}
+      to={drop.href}
+      onClick={() => setOpenDropdown(null)}
+      external={isExternal(drop.href)}
+      sx={{
+        position: "relative",
+        display: "block",
+        padding: "0.6rem 1rem",
+        borderRadius: "8px",
+        background: active
+          ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+          : "transparent",
+        textDecoration: "none",
+      }}
+    >
+      <Box
+        className="accent-bar"
+        sx={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          height: "100%",
+          width: "4px",
+          background: "linear-gradient(to bottom,#ef4444,#ec4899)",
+          borderRadius: "0 6px 6px 0",
+          opacity: active ? 1 : 0,
+          transition: "opacity 0.2s",
+        }}
+      />
+      <Typography
+        variant="body1"
+        sx={{
+          fontWeight: 600,
+          fontSize: 15,
+          color: active ? "#ef4444" : "#0f172a",
+        }}
+      >
+        {drop.name}
+        {item.name === "Resources" &&
+          ["Blog", "Docs", "Community"].includes(drop.name) && (
+            <Box
+              component="span"
+              sx={{
+                ml: 1,
+                display: "inline-flex",
+                alignItems: "center",
+                px: 0.5,
+                py: 0.125,
+                borderRadius: "9999px",
+                backgroundColor: "#e7f0fd",
+                color: "#2563eb",
+                fontSize: 10,
+                fontWeight: 700,
+                border: "1px solid #b6d1fa",
+                marginLeft: 8,
+              }}
+            >
+              Coming Soon
+            </Box>
+          )}
+      </Typography>
+
+      {/* only render caption if desc exists */}
+      {/* {drop.desc && (
+        <Typography
+          variant="caption"
+          sx={{ color: active ? "#374151" : "#6b7280" }}
+        >
+          {drop.desc}
+        </Typography>
+      )} */}
+    </NavLink>
+  );
+})}
             </Box>
           )}
         </Box>
@@ -1084,7 +1209,7 @@ const Navbar: React.FC = () => {
       </nav>
 
       {/* Spacer so page content doesn't sit under fixed nav */}
-      <Box sx={{ height: { xs: 64, md: 72 } }} />
+      <Box sx={{ height: { xs: 50, md:72 } }} />
 
       {/* Cart Modal */}
       {isLoggedIn && (
