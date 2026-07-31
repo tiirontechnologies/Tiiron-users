@@ -180,14 +180,9 @@ const Landing = () => {
   },
   {
     name: 'Aalok jha',
-<<<<<<< Updated upstream
     text: 'Improved my technical skills, communication, and teamwork. I gained practical experience by working on real tasks, and the mentor was supportive throughout.',
     tag: 'Python Development',
      image:Alok
-=======
-    text: 'Improved my technical skills, communication, and teamwork. I gained practical experience on real tasks, and the mentor was supportive throughout.',
-    tag: 'Python Development'
->>>>>>> Stashed changes
   },
   {
     name: 'Rajesh Mehta',
