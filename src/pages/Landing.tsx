@@ -180,9 +180,14 @@ const Landing = () => {
   },
   {
     name: 'Aalok jha',
+<<<<<<< Updated upstream
     text: 'Improved my technical skills, communication, and teamwork. I gained practical experience by working on real tasks, and the mentor was supportive throughout.',
     tag: 'Python Development',
      image:Alok
+=======
+    text: 'Improved my technical skills, communication, and teamwork. I gained practical experience on real tasks, and the mentor was supportive throughout.',
+    tag: 'Python Development'
+>>>>>>> Stashed changes
   },
   {
     name: 'Rajesh Mehta',
@@ -1080,7 +1085,7 @@ const Landing = () => {
                 mb: 2,
               }}
             >
-              <Box sx={{ width: 6, height: 6, borderRadius: "50%", background: "#2563eb" }} />
+              <Box sx={{ width: "auto", height: 6, borderRadius: "50%", background: "#2563eb" }} />
               <Typography
                 sx={{
                   fontSize: "0.72rem",
@@ -1111,7 +1116,7 @@ const Landing = () => {
             </Typography>
 
             <Typography
-              sx={{ color: "#64748b", fontSize: "0.95rem", mt: 1.2, maxWidth: 420, mx: "auto" }}
+              sx={{ color: "#64748b", fontSize: "0.95rem", mt: 1.2, maxWidth: 650, mx: "auto" }}
             >
               Real stories from students who levelled up — no filters, no scripts.
             </Typography>

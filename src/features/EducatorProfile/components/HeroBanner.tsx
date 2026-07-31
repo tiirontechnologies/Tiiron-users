@@ -101,7 +101,7 @@ const handleShareProfile = async () => {
             ) : (
               <Tag icon={GraduationCap} text="Software Engineer" />
             )}
-            <Tag icon={MapPin} text="Instructor at TiironTechnologies" />
+            <Tag icon={MapPin} text="TiironTechnologies" />
           </div>
 
           <div className="mt-5 flex max-w-max gap-2 rounded-xl bg-white/5 p-3 backdrop-blur">
