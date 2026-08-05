@@ -55,13 +55,15 @@ export default function EducatorProfile({ onMessageClick }: EducatorProfileProps
     <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 8 }}>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={3}>
-            <ProfileSidebar data={data}   language={apiUser.profile?.language}
-  website={apiUser.profile?.website}/>
+          <Grid item xs={12} md={9} order={{ xs: 1, md: 2 }}>
+            <HeroBanner data={data} />
           </Grid>
 
-          <Grid item xs={12} md={9}>
-            <HeroBanner data={data} />
+          <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
+            <ProfileSidebar data={data} language={apiUser.profile?.language} website={apiUser.profile?.website} />
+          </Grid>
+
+          <Grid item xs={12} md={9} order={{ xs: 3, md: 3 }} sx={{ ml: { md: "25%" } }}>
             {/* <StatsRow stats={data.microStats} /> */}
             <ProfileTabs value={tabValue} onChange={handleTabChange} />
 

@@ -180,7 +180,7 @@ const Landing = () => {
   },
   {
     name: 'Aalok jha',
-    text: 'Improved my technical skills, communication, and teamwork. I gained practical experience by working on real tasks, and the mentor was supportive throughout.',
+    text: 'Improved my technical skills, communication, and teamwork. I gained practical experience  on real tasks, and the mentor was supportive throughout.',
     tag: 'Python Development',
      image:Alok
   },

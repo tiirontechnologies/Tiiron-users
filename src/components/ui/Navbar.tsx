@@ -208,121 +208,113 @@ const Navbar: React.FC = () => {
   };
 
   /* ========== Render helpers ========== */
+const renderDropdownBox = (item: NavItem) => {
+  if (!item.dropdown || item.dropdown.length === 0) return null;
 
-  const renderDropdownBox = (item: NavItem) => {
-    if (!item.dropdown || item.dropdown.length === 0) return null;
-
-    return (
-      <Box
-        className="dropdown-container"
-        data-dropdown={item.name}
-        sx={{
-          position: "absolute",
-          top: "100%",
-          left: 0,
-          mt: 0.25,
-          pt: 0.5,
-          backgroundColor: "white",
-          borderRadius: "12px",
-          boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
-          padding: "0.75rem",
-          minWidth: "256px",
-          width: "256px",
-          maxWidth: "90vw",
-          zIndex: 1200,
-          border: "1px solid #e5e7eb",
-          opacity: openDropdown === item.name ? 1 : 0,
-          visibility: openDropdown === item.name ? "visible" : "hidden",
-          transform:
-            openDropdown === item.name ? "translateY(0)" : "translateY(-8px)",
-          transition: "all 0.26s cubic-bezier(0.4,0,0.2,1)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.25rem",
-          pointerEvents: openDropdown === item.name ? "auto" : "none",
-        }}
-      >
-        {item.dropdown.map((drop) => {
-          const active = isActive(drop.href);
-          return (
-            <NavLink
-              key={drop.name}
-              to={drop.href}
-              onClick={() => setOpenDropdown(null)}
-              external={isExternal(drop.href)}
+  return (
+    <Box
+      className="dropdown-container"
+      data-dropdown={item.name}
+      sx={{
+        position: "absolute",
+        top: "100%",
+        left: 0,
+        mt: 0.25,
+        pt: 0,                 // 👈 pehle 0.5 tha
+        backgroundColor: "white",
+        borderRadius: "12px",
+        boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+        padding: "0.5rem",     // 👈 pehle 0.75rem tha
+        minWidth: "256px",
+        width: "256px",
+        maxWidth: "90vw",
+        zIndex: 1200,
+        border: "1px solid #e5e7eb",
+        opacity: openDropdown === item.name ? 1 : 0,
+        visibility: openDropdown === item.name ? "visible" : "hidden",
+        transform:
+          openDropdown === item.name ? "translateY(0)" : "translateY(-8px)",
+        transition: "all 0.26s cubic-bezier(0.4,0,0.2,1)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.1rem",         // 👈 pehle 0.25rem tha
+        pointerEvents: openDropdown === item.name ? "auto" : "none",
+      }}
+    >
+      {item.dropdown.map((drop) => {
+        const active = isActive(drop.href);
+        return (
+          <NavLink
+            key={drop.name}
+            to={drop.href}
+            onClick={() => setOpenDropdown(null)}
+            external={isExternal(drop.href)}
+            sx={{
+              position: "relative",
+              display: "block",
+              padding: "0.5rem 0.75rem 0 ", 
+              borderRadius: "8px",
+              background: active
+                ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+                : "transparent",
+              textDecoration: "none",
+            }}
+          >
+            {/* accent bar */}
+            <Box
+              className="accent-bar"
               sx={{
-                position: "relative",
-                display: "block",
-                padding: "0.75rem 1rem",
-                borderRadius: "8px",
-                background: active
-                  ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
-                  : "transparent",
-                textDecoration: "none",
+                position: "absolute",
+                left: 0,
+                top: 0,
+                height: "100%",
+                width: "2px",
+                background: "linear-gradient(to bottom,#ef4444,#ec4899)",
+                borderRadius: "0 6px 6px 0",
+                opacity: active ? 1 : 0,
+                transition: "opacity 0.2s",
+              }}
+            />
+            <Typography
+              variant="body1"
+              sx={{
+                fontWeight: 600,
+                fontSize: 15,
+                color: active ? "#ef4444" : "#0f172a",
+                mb: drop.desc ? 0.25 : 0,
               }}
             >
-              {/* accent bar */}
-              <Box
-                className="accent-bar"
-                sx={{
-                  position: "absolute",
-                  left: 0,
-                  top: 0,
-                  height: "100%",
-                  width: "4px",
-                  background: "linear-gradient(to bottom,#ef4444,#ec4899)",
-                  borderRadius: "0 6px 6px 0",
-                  opacity: active ? 1 : 0,
-                  transition: "opacity 0.2s",
-                }}
-              />
-              <Typography
-                variant="body1"
-                sx={{
-                  fontWeight: 600,
-                  fontSize: 15,
-                  color: active ? "#ef4444" : "#0f172a",
-                  mb: 0.25,
-                }}
-              >
-                {drop.name}
-                {item.name === "Resources" &&
-                  ["Blog", "Docs", "Community"].includes(drop.name) && (
-                    <Box
-                      component="span"
-                      sx={{
-                        ml: 1,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        px: 0.5,
-                        py: 0.125,
-                        borderRadius: "9999px",
-                        backgroundColor: "#e7f0fd",
-                        color: "#2563eb",
-                        fontSize: 10,
-                        fontWeight: 700,
-                        border: "1px solid #b6d1fa",
-                        marginLeft: 8,
-                      }}
-                    >
-                      Coming Soon
-                    </Box>
-                  )}
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{ color: active ? "#374151" : "#6b7280" }}
-              >
-                {drop.desc}
-              </Typography>
-            </NavLink>
-          );
-        })}
-      </Box>
-    );
-  };
-
-  const renderDesktopNavItem = (item: NavItem) => {
+              {drop.name}
+              {item.name === "Resources" &&
+                ["Blog", "Docs", "Community"].includes(drop.name) && (
+                  <Box
+                    component="span"
+                    sx={{
+                      ml: 0.5,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      px: 0.5,
+                      py: 0.125,
+                      borderRadius: "9999px",
+                      backgroundColor: "#e7f0fd",
+                      color: "#2563eb",
+                      fontSize: 10,
+                      fontWeight: 700,
+                      border: "1px solid #b6d1fa",
+                      marginLeft: 8,
+                    }}
+                  >
+                    Coming Soon
+                  </Box>
+                )}
+            </Typography>
+          </NavLink>
+        );
+      })}
+    </Box>
+  );
+};
+const renderDesktopNavItem = (item: NavItem) => {
     // If item has dropdown -> render button that toggles dropdown on click & hover
     if (item.hasDropdown && item.dropdown && item.dropdown.length > 0) {
       return (
@@ -659,7 +651,7 @@ const Navbar: React.FC = () => {
       sx={{
         position: "relative",
         display: "block",
-        padding: "0.6rem 1rem",
+        padding: "0.6rem",
         borderRadius: "8px",
         background: active
           ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
