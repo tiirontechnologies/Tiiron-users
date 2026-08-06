@@ -4,13 +4,14 @@
 import CustomTextField from "@components/ui/textfields/CustomTextField";
 import LoginPng from "@images/login.png";
 import AuthLayout from "@layouts/AuthLayout";
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Alert, Box, Snackbar, Typography } from "@mui/material";
 import { useLoginMutation } from "../../api/authApi";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { TAuth } from "types/auth.types";
 import { useNavigate } from "react-router-dom";
 import { ENV } from "../../../../config/env";
+import ForgotPasswordModal from "../forgot-password";
 
 const Login = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -18,6 +19,7 @@ const Login = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const [authLogin, { isLoading }] = useLoginMutation();
   const {
     control,
@@ -57,6 +59,7 @@ const Login = () => {
   };
 
   return (
+    <>
     <AuthLayout
       imageSrc={LoginPng}
       imageOnLeft={false}
@@ -114,6 +117,12 @@ const Login = () => {
             />
             <span style={{ color: "red" }}>{errors.password?.message}</span>
           </Box>
+          <Box sx={{ mt: -1, textAlign: "right" }}>
+            <Typography component="span" role="button" tabIndex={0} onClick={() => setForgotPasswordOpen(true)} onKeyDown={(event) => event.key === "Enter" && setForgotPasswordOpen(true)} sx={{ color: "#5b35f2", fontSize: 13, fontWeight: 700, cursor: "pointer", "&:hover": { color: "#3E2DC4", textDecoration: "underline" } }}>
+              <Box component="span" sx={{ color: "#1932d2" }}>Can&apos;t sign in? Reset your password.
+                </Box>
+            </Typography>
+          </Box>
           <Snackbar
             open={snackbarOpen}
             autoHideDuration={6000}
@@ -130,6 +139,8 @@ const Login = () => {
         </Box>
       }
     />
+    <ForgotPasswordModal open={forgotPasswordOpen} onClose={() => setForgotPasswordOpen(false)} />
+    </>
   );
 };
 
