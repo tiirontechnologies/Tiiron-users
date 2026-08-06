@@ -115,7 +115,7 @@ const HeroSection: React.FC = () => {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl px-5 py-8 text-white shadow-sm sm:px-8 sm:py-9"
+      className="relative overflow-hidden rounded-2xl px-5 pb-8 pt-16 text-white shadow-sm sm:px-8 sm:py-9"
       style={{
         backgroundImage: `url(${ProfileBanner})`,
         backgroundSize: "cover",

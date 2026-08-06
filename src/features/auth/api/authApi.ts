@@ -55,7 +55,7 @@ export const authApiSlice = authApi.injectEndpoints({
       }),
       invalidatesTags: ['Auth'],
     }),
-    
+
     // Logout endpoint
     logout: builder.mutation<void, void>({
       query: () => ({
@@ -65,6 +65,42 @@ export const authApiSlice = authApi.injectEndpoints({
       invalidatesTags: ['Auth'],
     }),
 
+    // Sends a password-reset OTP and establishes the reset session cookie.
+    requestPasswordReset: builder.mutation<
+      { success: boolean; message: string },
+      { email: string }
+    >({
+      query: (body) => ({
+        url: '/forgot-password',
+        method: 'POST',
+        body,
+      }),
+    }),
+
+    // Verifies the OTP against the email and reset session cookie.
+    verifyPasswordResetOtp: builder.mutation<
+      { success: boolean; message: string },
+      { email: string; otp: string }
+    >({
+      query: (body) => ({
+        url: '/verify-reset-otp',
+        method: 'POST',
+        body,
+      }),
+    }),
+
+    // Resets the password using the verified httpOnly-cookie session.
+    resetPassword: builder.mutation<
+      { success: boolean; message: string },
+      { password: string }
+    >({
+      query: (body) => ({
+        url: '/reset-password',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Auth'],
+    }),
   }),
 });
 
@@ -74,4 +110,7 @@ export const {
   useRegisterOrganizationMutation,
   useRegisterUserMutation,
   useLogoutMutation,
+  useRequestPasswordResetMutation,
+  useVerifyPasswordResetOtpMutation,
+  useResetPasswordMutation,
 } = authApiSlice;

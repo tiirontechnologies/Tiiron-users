@@ -181,12 +181,12 @@ const ContactPage: React.FC = () => {
             <h3 className="text-base font-bold text-indigo-900 mb-4">
               Connect with us on social media
             </h3>
-            <div className="flex flex-wrap gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <a
                 href="https://www.facebook.com/tiirontechnologies/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
+                className="flex items-center justify-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-3 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
                 <Facebook className="text-[#1877F2] shrink-0" size={18} fill="#1877F2" />
                 <span className="text-sm">Facebook</span>
@@ -195,7 +195,7 @@ const ContactPage: React.FC = () => {
                 href="https://www.instagram.com/tiirontechnologies"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
+                className="flex items-center justify-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-3 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
                 <Instagram className="text-[#E4405F] shrink-0" size={18} />
                 <span className="text-sm">Instagram</span>
@@ -204,7 +204,7 @@ const ContactPage: React.FC = () => {
                 href="https://www.linkedin.com/company/tiiron/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
+                className="flex items-center justify-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-3 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
                 <Linkedin className="text-[#0A66C2] shrink-0" size={18} fill="#0A66C2" />
                 <span className="text-sm">LinkedIn</span>
@@ -213,7 +213,7 @@ const ContactPage: React.FC = () => {
                 href="https://x.com/tiironlms"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-2 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
+                className="flex items-center justify-center space-x-2 border border-slate-100 bg-white shadow-sm px-4 py-3 rounded-xl text-slate-700 font-medium hover:shadow-md transition-all"
               >
                 <Twitter className="text-[#0A66C2] shrink-0" size={18} fill="#0A66C2" />
                 <span className="text-sm">Twitter</span>
@@ -227,8 +227,8 @@ const ContactPage: React.FC = () => {
           {/* Top Cards: Mail & Sales Info */}
           <div className="w-full max-w-full overflow-hidden bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 space-y-5">
             {/* Email Row */}
-            <div className="flex items-center gap-3 sm:gap-4 bg-blue-50/50 p-3 rounded-xl border border-blue-50 min-w-0">
-              <div className="p-3 border border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-xl shadow-md shadow-blue-900/20 shrink-0">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-blue-50/50 p-3 rounded-xl border border-blue-50 min-w-0">
+              <div className="p-3 border border-red-600 text-red-600 rounded-xl shadow-md shadow-blue-900/20 shrink-0 flex items-center justify-center">
                 <Mail size={20} />
               </div>
               <div className="min-w-0 flex-1">
@@ -239,11 +239,11 @@ const ContactPage: React.FC = () => {
             </div>
 
             {/* Sales Contacts */}
-            <div className="flex items-start gap-3 sm:gap-4 bg-blue-50/50 p-4 rounded-xl border border-blue-50 min-w-0">
-              <div className="p-3 border border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-xl shadow-md shadow-blue-900/20 mt-1 shrink-0">
-                <Phone size={20} />
-              </div>
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-3 w-full min-w-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-blue-50/50 p-4 rounded-xl border border-blue-50 min-w-0">
+              <div className="flex items-start gap-3">
+                <div className="p-3 border border-red-600 text-red-600 rounded-xl shadow-md shadow-blue-900/20 flex items-center justify-center">
+                  <Phone size={20} />
+                </div>
                 <div className="min-w-0">
                   <h4 className="text-xs font-bold text-[#FF1E00] tracking-wider uppercase">
                     Call Now
@@ -251,6 +251,11 @@ const ContactPage: React.FC = () => {
                   <p className="text-sm font-bold text-indigo-900 mt-1 break-words [overflow-wrap:anywhere]">
                     +91 9161218740
                   </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="p-3 border border-red-600 text-red-600 rounded-xl shadow-md shadow-blue-900/20 flex items-center justify-center">
+                  <Phone size={20} />
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-xs font-bold text-[#FF1E00] tracking-wider uppercase">

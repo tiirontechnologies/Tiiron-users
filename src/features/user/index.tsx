@@ -17,13 +17,16 @@ const StudentProfile: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_1fr]">
-          <ProfileSidebar />
-
-          <main className="space-y-6">
+          <main className="order-1 lg:col-start-2 lg:row-start-1">
             <HeroSection />
+          </main>
+          <div className="order-2 lg:col-start-1 lg:row-start-1 lg:row-span-2">
+            <ProfileSidebar />
+          </div>
+          <section className="order-3 lg:col-start-2">
             {/* <StatsBar /> */}
             <TabsSection />
-          </main>
+          </section>
         </div>
       </div>
     </div>
