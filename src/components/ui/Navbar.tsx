@@ -225,8 +225,8 @@ const renderDropdownBox = (item: NavItem) => {
         borderRadius: "12px",
         boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
         padding: "0.5rem",     // 👈 pehle 0.75rem tha
-        minWidth: "256px",
-        width: "256px",
+        minWidth: "208px",
+        width: "208px",
         maxWidth: "90vw",
         zIndex: 1200,
         border: "1px solid #e5e7eb",
@@ -396,9 +396,11 @@ const renderDesktopNavItem = (item: NavItem) => {
     alignItems: "center",
     gap: 0.4,
 
-    minHeight: 36,
+    width: 154,
+    minWidth: 154,
+    minHeight: 40,
     py: 0.45,
-    px: item.name === "Explore" ? 2 : 1,
+    px: 1,
 
     fontWeight: 700,
     fontSize: 15,
@@ -479,7 +481,10 @@ const renderDesktopNavItem = (item: NavItem) => {
           // }}
 
           sx={{
-            padding: item.name === "Creator" ? "0.5rem 2rem" : "0.5rem 0.75rem",
+            width: item.name === "Creator" ? 154 : "auto",
+            minWidth: item.name === "Creator" ? 154 : "auto",
+            minHeight: item.name === "Creator" ? 40 : "auto",
+            padding: item.name === "Creator" ? "0.5rem 1rem" : "0.5rem 0.75rem",
             borderRadius: "10px",
             display: "inline-block",
             fontWeight: 700,
@@ -863,7 +868,7 @@ const renderDesktopNavItem = (item: NavItem) => {
                   variant="contained"
                   size="large"
                   onClick={handleOpenQuizModal}
-                  sx={{ bgcolor: "#5b3cff", fontWeight: 600 }}
+                  sx={{ bgcolor: "#5b3cff", fontWeight: 600, width: 154, minWidth: 154, minHeight: 40 }}
                 >
                   <AutoAwesomeIcon />
                   Generate Quiz

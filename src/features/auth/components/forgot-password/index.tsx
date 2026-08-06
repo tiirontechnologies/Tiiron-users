@@ -17,6 +17,11 @@ import {
   PasswordOutlined,
 } from "@mui/icons-material";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  useRequestPasswordResetMutation,
+  useResetPasswordMutation,
+  useVerifyPasswordResetOtpMutation,
+} from "../../api/authApi";
 
 type Props = { open: boolean; onClose: () => void };
 const steps = ["Find account", "Verify OTP", "New password"];
@@ -30,6 +35,14 @@ const fieldSx = {
   },
 };
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+  if (error && typeof error === "object" && "data" in error) {
+    const data = (error as { data?: { message?: string } }).data;
+    if (data?.message) return data.message;
+  }
+  return fallback;
+};
+
 const ForgotPasswordModal = ({ open, onClose }: Props) => {
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState("");
@@ -38,6 +51,12 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false);
+  const [requestPasswordReset, { isLoading: isSendingOtp }] =
+    useRequestPasswordResetMutation();
+  const [verifyPasswordResetOtp, { isLoading: isVerifyingOtp }] =
+    useVerifyPasswordResetOtpMutation();
+  const [resetPassword, { isLoading: isResettingPassword }] =
+    useResetPasswordMutation();
   const maskedEmail = useMemo(() => {
     const [name, domain] = email.split("@");
     return name && domain
@@ -57,29 +76,43 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
     }
   }, [open]);
 
-  const verifyOtp = (code: string) => {
+  const verifyOtp = async (code: string) => {
     if (code.length !== 6)
       return setError("Enter the 6-digit code sent to your email.");
     setError("");
-    // TODO: Call the verify-password-reset-OTP API here.
-    setStep(2);
+    try {
+      await verifyPasswordResetOtp({ email, otp: code }).unwrap();
+      setStep(2);
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, "Invalid or expired OTP. Please try again."));
+      setOtp(["", "", "", "", "", ""]);
+      document.getElementById("reset-otp-0")?.focus();
+    }
   };
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     setError("");
     if (step === 0) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
         return setError("Please enter a valid email address.");
-      // TODO: Call the send-password-reset-OTP API here.
-      setStep(1);
+      try {
+        await requestPasswordReset({ email }).unwrap();
+        setStep(1);
+      } catch (requestError) {
+        setError(getErrorMessage(requestError, "Could not send an OTP. Please try again."));
+      }
     } else if (step === 2) {
       if (password.length < 8)
         return setError("Password must be at least 8 characters long.");
       if (password !== confirmPassword)
         return setError("Passwords do not match.");
-      // TODO: Call the reset-password API here.
-      setCompleted(true);
+      try {
+        await resetPassword({ password }).unwrap();
+        setCompleted(true);
+      } catch (requestError) {
+        setError(getErrorMessage(requestError, "Could not reset password. Please try again."));
+      }
     }
   };
 
@@ -98,6 +131,17 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
     setStep(0);
     setOtp(["", "", "", "", "", ""]);
     setError("");
+  };
+
+  const resendOtp = async () => {
+    setError("");
+    try {
+      await requestPasswordReset({ email }).unwrap();
+      setOtp(["", "", "", "", "", ""]);
+      document.getElementById("reset-otp-0")?.focus();
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, "Could not resend the OTP. Please try again."));
+    }
   };
 
   return (
@@ -292,6 +336,7 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
                         key={index}
                         id={`reset-otp-${index}`}
                         value={value}
+                        disabled={isVerifyingOtp}
                         onChange={(e) => updateOtp(e.target.value, index)}
                         inputProps={{
                           inputMode: "numeric",
@@ -323,22 +368,20 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
                       component="span"
                       role="button"
                       tabIndex={0}
-                      onClick={() => {
-                        setOtp(["", "", "", "", "", ""]);
-                        setError("");
-                      }}
+                      onClick={resendOtp}
                       onKeyDown={(event) =>
                         event.key === "Enter" &&
-                        setOtp(["", "", "", "", "", ""])
+                        resendOtp()
                       }
                       sx={{
                         color: "#5b35f2 !important",
                         fontWeight: 800,
-                        cursor: "pointer",
+                        cursor: isSendingOtp ? "default" : "pointer",
+                        pointerEvents: isSendingOtp ? "none" : "auto",
                         "&:hover": { textDecoration: "underline" },
                       }}
                     >
-                      Resend code
+                      {isSendingOtp ? "Sending..." : "Resend code"}
                     </Typography>
                   </Typography>
                 </>
@@ -395,6 +438,7 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
                     type="submit"
                     fullWidth
                     variant="contained"
+                    disabled={isSendingOtp || isResettingPassword}
                     sx={{
                       borderRadius: 2.5,
                       py: 1.35,
@@ -407,7 +451,13 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
                       },
                     }}
                   >
-                    {step === 0 ? "Send verification code" : "Update password"}
+                    {step === 0
+                      ? isSendingOtp
+                        ? "Sending..."
+                        : "Send verification code"
+                      : isResettingPassword
+                        ? "Updating..."
+                        : "Update password"}
                   </Button>
                 </Box>
               )}
