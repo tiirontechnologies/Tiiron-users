@@ -37,7 +37,10 @@ const fieldSx = {
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (error && typeof error === "object" && "data" in error) {
-    const data = (error as { data?: { message?: string } }).data;
+    const data = (error as {
+      data?: { message?: string; errors?: Array<{ message?: string }> };
+    }).data;
+    if (data?.errors?.[0]?.message) return data.errors[0].message;
     if (data?.message) return data.message;
   }
   return fallback;
@@ -51,6 +54,7 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [requestPasswordReset, { isLoading: isSendingOtp }] =
     useRequestPasswordResetMutation();
   const [verifyPasswordResetOtp, { isLoading: isVerifyingOtp }] =
@@ -73,8 +77,19 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
       setConfirmPassword("");
       setError("");
       setCompleted(false);
+      setResendCooldown(0);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+
+    const timer = window.setInterval(() => {
+      setResendCooldown((seconds) => Math.max(seconds - 1, 0));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [resendCooldown]);
 
   const verifyOtp = async (code: string) => {
     if (code.length !== 6)
@@ -99,12 +114,13 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
       try {
         await requestPasswordReset({ email }).unwrap();
         setStep(1);
+        setResendCooldown(120);
       } catch (requestError) {
         setError(getErrorMessage(requestError, "Could not send an OTP. Please try again."));
       }
     } else if (step === 2) {
-      if (password.length < 8)
-        return setError("Password must be at least 8 characters long.");
+      if (password.length < 6)
+        return setError("Password must be at least 6 characters long.");
       if (password !== confirmPassword)
         return setError("Passwords do not match.");
       try {
@@ -134,15 +150,22 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
   };
 
   const resendOtp = async () => {
+    if (resendCooldown > 0) return;
+
     setError("");
     try {
       await requestPasswordReset({ email }).unwrap();
       setOtp(["", "", "", "", "", ""]);
+      setResendCooldown(120);
       document.getElementById("reset-otp-0")?.focus();
     } catch (requestError) {
       setError(getErrorMessage(requestError, "Could not resend the OTP. Please try again."));
     }
   };
+
+  const resendLabel = resendCooldown > 0
+    ? `Resend in ${String(Math.floor(resendCooldown / 60)).padStart(2, "0")}:${String(resendCooldown % 60).padStart(2, "0")}`
+    : "Resend code";
 
   return (
     <Dialog
@@ -376,12 +399,18 @@ const ForgotPasswordModal = ({ open, onClose }: Props) => {
                       sx={{
                         color: "#5b35f2 !important",
                         fontWeight: 800,
-                        cursor: isSendingOtp ? "default" : "pointer",
-                        pointerEvents: isSendingOtp ? "none" : "auto",
+                        cursor:
+                          isSendingOtp || resendCooldown > 0
+                            ? "default"
+                            : "pointer",
+                        pointerEvents:
+                          isSendingOtp || resendCooldown > 0
+                            ? "none"
+                            : "auto",
                         "&:hover": { textDecoration: "underline" },
                       }}
                     >
-                      {isSendingOtp ? "Sending..." : "Resend code"}
+                      {isSendingOtp ? "Sending..." : resendLabel}
                     </Typography>
                   </Typography>
                 </>
