@@ -51,33 +51,71 @@ export default function EducatorProfile({ onMessageClick }: EducatorProfileProps
 
   const data = mapApiToEducatorProfileData(apiUser);
 
+  // return (
+  //   <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 8 }}>
+  //     <Container maxWidth="xl" sx={{ pt: 4 }}>
+  //       <Grid container spacing={3}>
+  //         <Grid item xs={12} md={9} order={{ xs: 1, md: 2 }}>
+  //           <HeroBanner data={data} />
+  //         </Grid>
+
+  //         <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
+  //           <ProfileSidebar data={data} language={apiUser.profile?.language} website={apiUser.profile?.website} />
+  //         </Grid>
+
+  //         <Grid item xs={12} md={9} order={{ xs: 3, md: 3 }} sx={{ ml: { md: "25%" } }}>
+  //           {/* <StatsRow stats={data.microStats} /> */}
+  //           <ProfileTabs value={tabValue} onChange={handleTabChange} />
+
+  //           {tabValue === 0 && <AboutTab data={data} />}
+  //           {tabValue === 1 && <ComingSoon/>}
+  //           {tabValue === 2 && <ComingSoon/>}
+  //           {tabValue === 3 && <ComingSoon/>}
+  //           {tabValue === 4 && <ComingSoon/>}
+  //           {tabValue === 5 && <ComingSoon/>}
+  //         </Grid>
+  //       </Grid>
+
+  //       {/* <AchievementsSection achievements={data.achievements} /> */}
+  //     </Container>
+  //   </Box>
+  // );
+
+
   return (
-    <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 8 }}>
-      <Container maxWidth="xl" sx={{ pt: 4 }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={9} order={{ xs: 1, md: 2 }}>
-            <HeroBanner data={data} />
-          </Grid>
-
-          <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
-            <ProfileSidebar data={data} language={apiUser.profile?.language} website={apiUser.profile?.website} />
-          </Grid>
-
-          <Grid item xs={12} md={9} order={{ xs: 3, md: 3 }} sx={{ ml: { md: "25%" } }}>
-            {/* <StatsRow stats={data.microStats} /> */}
-            <ProfileTabs value={tabValue} onChange={handleTabChange} />
-
-            {tabValue === 0 && <AboutTab data={data} />}
-            {tabValue === 1 && <ComingSoon/>}
-            {tabValue === 2 && <ComingSoon/>}
-            {tabValue === 3 && <ComingSoon/>}
-            {tabValue === 4 && <ComingSoon/>}
-            {tabValue === 5 && <ComingSoon/>}
-          </Grid>
+  <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 8 }}>
+    <Container maxWidth="xl" sx={{ pt: 4 }}>
+      <Grid container spacing={3}>
+        {/* Sidebar - left column */}
+        <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
+          <ProfileSidebar
+            data={data}
+            language={apiUser.profile?.language}
+            website={apiUser.profile?.website}
+          />
         </Grid>
 
-        {/* <AchievementsSection achievements={data.achievements} /> */}
-      </Container>
-    </Box>
-  );
+        {/* Right column - HeroBanner + Tabs stacked together */}
+        <Grid item xs={12} md={9} order={{ xs: 1, md: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <HeroBanner data={data} />
+
+            <Box>
+              <ProfileTabs value={tabValue} onChange={handleTabChange} />
+
+              {tabValue === 0 && <AboutTab data={data} />}
+              {tabValue === 1 && <ComingSoon />}
+              {tabValue === 2 && <ComingSoon />}
+              {tabValue === 3 && <ComingSoon />}
+              {tabValue === 4 && <ComingSoon />}
+              {tabValue === 5 && <ComingSoon />}
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+
+      {/* <AchievementsSection achievements={data.achievements} /> */}
+    </Container>
+  </Box>
+);
 }

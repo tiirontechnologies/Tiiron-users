@@ -250,7 +250,7 @@ const ContactPage: React.FC = () => {
                   </h4>
                   <p className="text-sm font-bold text-indigo-900 mt-1 break-words [overflow-wrap:anywhere]">
                     +91 9161218740
-                  </p>
+                  </p>    
                 </div>
               </div>
               <div className="flex items-start gap-3">

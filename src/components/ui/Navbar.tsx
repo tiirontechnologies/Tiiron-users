@@ -249,16 +249,70 @@ const renderDropdownBox = (item: NavItem) => {
             to={drop.href}
             onClick={() => setOpenDropdown(null)}
             external={isExternal(drop.href)}
-            sx={{
-              position: "relative",
-              display: "block",
-              padding: "0.5rem 0.75rem 0 ", 
-              borderRadius: "8px",
-              background: active
-                ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
-                : "transparent",
-              textDecoration: "none",
-            }}
+//           sx={{
+//   position: "relative",
+//   display: "block",
+//   padding: "0.5rem 0.5rem 0.5rem 0.1rem",
+//   // borderRadius: "8px",
+//   background: active
+//     ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+//     : "transparent",
+//   textDecoration: "none",
+//   transition: "background 0.2s ease",
+//   "&:hover": {
+//     background: active
+//       ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+//       : "linear-gradient(to right,#f5f3ff,#fdf2f8)",
+//   },
+// }}
+
+sx={{
+  position: "relative",
+  display: "block",
+  padding: "0.5rem 0.6rem",
+  borderRadius: "8px",
+  borderBottom: "1px solid rgba(91, 60, 255, 0.15)",
+  background: active
+    ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+    : "transparent",
+  textDecoration: "none",
+  transition: "background 0.2s ease, border-color 0.2s ease",
+  "&:hover": {
+    background: active
+      ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+      : "linear-gradient(to right,#f5f3ff,#fdf2f8)",
+    borderBottom: "1px solid #3411b0",   // 👈 reddish line on hover
+  },
+  "&:last-child": {
+    borderBottom: "none",
+    "&:hover": {
+      borderBottom: "1px solid #190dc4",   // last item pe bhi hover pe line aani chahiye
+    },
+  },
+}}
+
+
+
+// sx={{
+//   position: "relative",
+//   display: "block",
+//   padding: "0.5rem 0.6rem 0.5rem 0.1rem",
+//   borderRadius: "8px",
+//   borderBottom: "1px solid rgba(91, 60, 255, 0.15)",   // 👈 bluish line
+//   background: active
+//     ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+//     : "transparent",
+//   textDecoration: "none",
+//   transition: "background 0.2s ease",
+//   "&:hover": {
+//     background: active
+//       ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
+//       : "linear-gradient(to right,#f5f3ff,#fdf2f8)",
+//   },
+//   "&:last-child": {
+//     borderBottom: "none",   
+//   },
+// }}
           >
             {/* accent bar */}
             <Box
@@ -269,7 +323,7 @@ const renderDropdownBox = (item: NavItem) => {
                 top: 0,
                 height: "100%",
                 width: "2px",
-                background: "linear-gradient(to bottom,#ef4444,#ec4899)",
+                // background: "linear-gradient(to bottom,#ef4444,#ec4899)",
                 borderRadius: "0 6px 6px 0",
                 opacity: active ? 1 : 0,
                 transition: "opacity 0.2s",
@@ -326,66 +380,7 @@ const renderDesktopNavItem = (item: NavItem) => {
           }
           sx={{ position: "relative" }}
         >
-          {/* <Button
-            variant="text"
-            onClick={() =>
-              setOpenDropdown((prev) => (prev === item.name ? null : item.name))
-            }
-
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 0.5,
-              fontWeight: 700,
-              fontSize: 15,
-              textTransform: "none",
-
-              padding:
-                item.name === "Explore" ? "0.5rem 2rem" : "0.625rem 1rem",
-
-              borderRadius: "5px",
-
-              border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
-
-              color: item.name === "Explore" ? "#5b3cff" : "#111827",
-
-              backgroundColor: "transparent",
-
-              transition: "all 0.25s ease",
-
-              "&:hover": {
-                ...(item.name === "Explore"
-                  ? {
-                      backgroundColor: "#2a07d6",
-                      color: "#fff",
-                      transform: "translateY(-1px)",
-                      boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
-                    }
-                  : {
-                      color: "transparent",
-                      background: "linear-gradient(to right,#ef4444,#a855f7)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }),
-              },
-            }}
-          >
-            <Box component="span">{item.name}</Box>
-            <Box
-              component="span"
-              sx={{
-                fontSize: 11,
-                ml: 0.5,
-                transform:
-                  openDropdown === item.name
-                    ? "rotate(180deg)"
-                    : "rotate(0deg)",
-                transition: "transform .2s",
-              }}
-            >
-              ▼
-            </Box>
-          </Button> */}
+   
           <Button
   variant="text"
   onClick={() =>
@@ -396,20 +391,20 @@ const renderDesktopNavItem = (item: NavItem) => {
     alignItems: "center",
     gap: 0.4,
 
-    width: 154,
-    minWidth: 154,
-    minHeight: 40,
+    width: 120,
+    minWidth: 150,
+    minHeight: 36,
     py: 0.45,
     px: 1,
 
     fontWeight: 700,
-    fontSize: 15,
+    fontSize: 16,
     lineHeight: 1.2,
-    textTransform: "none",
+    textTransform: "bold",
 
     borderRadius: "5px",
 
-    border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
+    border: item.name === "Explore" ? "1.6px solid #5b3cff" : "none",
 
     color: item.name === "Explore" ? "#5b3cff" : "#111827",
 
@@ -463,61 +458,48 @@ const renderDesktopNavItem = (item: NavItem) => {
           to={item.href ?? "/"}
           external={isExternal(item.href)}
           onClick={() => setOpenDropdown(null)}
-          // sx={{
-          //   padding: "0.5rem 0.75rem",
-          //   borderRadius: 1,
-          //   display: "inline-block",
-          //   fontWeight: 700,
-          //   fontSize: 15,
-          //   textDecoration: "none",
-          //   color: isActive(item.href) ? "#ef4444" : "#111827",
-          //   transition: "color 0.2s ease",
-          //   "&:hover": {
-          //     color: "transparent",
-          //     background: "linear-gradient(to right,#ef4444,#a855f7)",
-          //     WebkitBackgroundClip: "text",
-          //     WebkitTextFillColor: "transparent",
-          //   },
-          // }}
+          
+      sx={{
+  width: item.name === "Creator" ? 130 : "auto",
+  minWidth: item.name === "Creator" ? 130 : "auto",
+  height: item.name === "Creator" ? 36 : "auto",
+  boxSizing: "border-box",
+  padding: item.name === "Creator" ? "0 12px" : "0.5rem 0.75rem",
+  borderRadius: "8px",
+  display: item.name === "Creator" ? "inline-flex" : "inline-block",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 700,
+  fontSize: 15,
+  textDecoration: "none",
 
-          sx={{
-            width: item.name === "Creator" ? 154 : "auto",
-            minWidth: item.name === "Creator" ? 154 : "auto",
-            minHeight: item.name === "Creator" ? 40 : "auto",
-            padding: item.name === "Creator" ? "0.5rem 1rem" : "0.5rem 0.75rem",
-            borderRadius: "10px",
-            display: "inline-block",
-            fontWeight: 700,
-            fontSize: 15,
-            textDecoration: "none",
+  border: item.name === "Creator" ? "1.5px solid #5b3cff" : "none",
 
-            border: item.name === "Creator" ? "1.5px solid #5b3cff" : "none",
+  color:
+    item.name === "Creator"
+      ? "#5b3cff"
+      : isActive(item.href)
+        ? "#ef4444"
+        : "#111827",
 
-            color:
-              item.name === "Creator"
-                ? "#5b3cff"
-                : isActive(item.href)
-                  ? "#ef4444"
-                  : "#111827",
+  transition: "all 0.25s ease",
 
-            transition: "all 0.25s ease",
-
-            "&:hover": {
-              ...(item.name === "Creator"
-                ? {
-                    backgroundColor: "#2a07d6",
-                    color: "#fff",
-                    transform: "translateY(-1px)",
-                    boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
-                  }
-                : {
-                    color: "transparent",
-                    background: "linear-gradient(to right,#ef4444,#a855f7)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }),
-            },
-          }}
+  "&:hover": {
+    ...(item.name === "Creator"
+      ? {
+          backgroundColor: "#5b3cff",
+          color: "#fff",
+          transform: "translateY(-1px)",
+          boxShadow: `0 6px 16px ${alpha("#5b3cff", 0.3)}`,
+        }
+      : {
+          color: "transparent",
+          background: "linear-gradient(to right,#ef4444,#a855f7)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }),
+  },
+}}
         >
           {item.name}
         </NavLink>
@@ -535,40 +517,48 @@ const renderDesktopNavItem = (item: NavItem) => {
             onClick={() =>
               setOpenDropdown((prev) => (prev === item.name ? null : item.name))
             }
-            // sx={{
-            //   justifyContent: "space-between",
-            //   textTransform: "none",
-            //   fontWeight: 700,
-            //   p: "0.75rem 1rem",
-            //   borderRadius: 2,
-            //   color: "#0f172a",
-            // }}
-            sx={{
-              justifyContent: "space-between",
-              textTransform: "none",
-              fontWeight: 700,
+       
+           sx={{
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 0.4,
 
-              p: item.name === "Explore" ? "0.75rem 1.2rem" : "0.75rem 1rem",
+  width: 130,
+  minWidth: 130,
+  height: 36,
+  boxSizing: "border-box",
+  padding: "0 12px",
 
-              borderRadius: "10px",
+  fontWeight: 700,
+  fontSize: 15,
+  lineHeight: 1.2,
+  textTransform: "none",
 
-              border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
+  borderRadius: "8px",
 
-              color: item.name === "Explore" ? "#5b3cff" : "#0f172a",
+  border: item.name === "Explore" ? "1.5px solid #5b3cff" : "none",
+  color: item.name === "Explore" ? "#5b3cff" : "#111827",
+  backgroundColor: "transparent",
 
-              transition: "all 0.25s ease",
+  transition: "all 0.25s ease",
 
-              "&:hover": {
-                ...(item.name === "Explore"
-                  ? {
-                      backgroundColor: "#2a07d6",
-                      color: "#fff",
-                      transform: "translateY(-1px)",
-                      boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
-                    }
-                  : {}),
-              },
-            }}
+  "&:hover": {
+    ...(item.name === "Explore"
+      ? {
+          backgroundColor: "#5b3cff",
+          color: "#fff",
+          transform: "translateY(-1px)",
+          boxShadow: `0 6px 16px ${alpha("#5b3cff", 0.3)}`,
+        }
+      : {
+          color: "transparent",
+          background: "linear-gradient(to right,#ef4444,#a855f7)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }),
+  },
+}}
           >
             {item.name}
             <Box
@@ -587,64 +577,7 @@ const renderDesktopNavItem = (item: NavItem) => {
 
           {openDropdown === item.name && (
             <Box sx={{ pl: 2, mt: 1 }}>
-              {/* {item.dropdown!.map((drop) => (
-                <NavLink
-                  key={drop.name}
-                  to={drop.href}
-                  external={isExternal(drop.href)}
-                  onClick={closeMobileMenu}
-                  // sx={{
-                  //   display: "block",
-                  //   px: 1,
-                  //   py: 0.75,
-                  //   borderRadius: 1,
-                  //   background: isActive(drop.href)
-                  //     ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
-                  //     : "#f9fafb",
-                  //   mb: 1,
-                  // }}
-
-                  sx={{
-                    display: "block",
-
-                    padding:
-                      item.name === "Creator"
-                        ? "0.75rem 1.2rem"
-                        : "0.75rem 1rem",
-
-                    borderRadius: "10px",
-
-                    border:
-                      item.name === "Creator" ? "1.5px solid #5b3cff" : "none",
-
-                    color: item.name === "Creator" ? "#5b3cff" : "#111827",
-
-                    fontWeight: 700,
-
-                    transition: "all 0.25s ease",
-
-                    "&:hover": {
-                      ...(item.name === "Creator"
-                        ? {
-                            backgroundColor: "#2a07d6",
-                            color: "#fff",
-                            transform: "translateY(-1px)",
-                            boxShadow: `0 6px 18px ${alpha("#220a9b", 0.25)}`,
-                          }
-                        : {}),
-                    },
-                  }}
-                >
-                  <Typography sx={{ fontWeight: 600 }}>{drop.name}</Typography>
-                  {drop.desc && (
-                    <Typography variant="caption" sx={{ color: "#6b7280" }}>
-                      {drop.desc}
-                    </Typography>
-                  )}
-                </NavLink>
-              ))} */}
-
-
+    
               {item.dropdown.map((drop) => {
   const active = isActive(drop.href);
   return (
@@ -785,7 +718,7 @@ const renderDesktopNavItem = (item: NavItem) => {
 
   /* ========== JSX ========== */
   return (
-    <>
+    <>   
       <nav
         style={{
           position: "fixed",
