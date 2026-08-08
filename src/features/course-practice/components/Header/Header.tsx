@@ -231,8 +231,8 @@ const Header: React.FC<HeaderProps> = ({
                 sx={{
                   display: { xs: "none", sm: "inline-flex" },
                   background: "transparent !important",
-                  color: "#f97316 !important",
-                  border: "1.5px solid #f97316 !important",
+                  color: "#3131dc !important",
+                  border: "1.5px solid #1629f9 !important",
                   borderRadius: "10px !important",
                   textTransform: "none !important",
                   fontWeight: "600 !important",
@@ -242,7 +242,7 @@ const Header: React.FC<HeaderProps> = ({
                   py: 0.5,
                   "&:hover": {
                     background: "transparent !important",
-                    color: "#f97316 !important",
+                    color: "#0a32a9 !important",
                   },
                 }}
               >
@@ -266,7 +266,7 @@ const Header: React.FC<HeaderProps> = ({
                 onClick={() => setOpenRating(true)}
                 sx={{
                   display: { xs: "none", sm: "inline-flex" },
-                  backgroundColor: "#F97316 !important",
+                  backgroundColor: "# !important",
                   color: "#fff !important",
                   textTransform: "none",
                   fontWeight: 600,
@@ -276,13 +276,13 @@ const Header: React.FC<HeaderProps> = ({
                   fontSize: { xs: "12px", md: "14px" },
                   boxShadow: "0 2px 8px rgba(238,156,14,0.4) !important",
                   "&:hover": {
-                    backgroundColor: "#F97316 !important",
+                    backgroundColor: "#F97316 ",
                     boxShadow: "0 4px 12px rgba(217,119,6,0.5) !important",
                   },
                   "&:active": { backgroundColor: "#F97316 !important" },
                 }}
               >
-                Rate
+                Rate this Course 
               </Button>
             </>
           )}
