@@ -3,28 +3,18 @@ import { Box, Card, Typography, Avatar, Button, Chip, Divider, Stack } from '@mu
 import { Verified, Star, Message } from '@mui/icons-material';
 import { EducatorProfileData } from '../types/educator.types';
 import SocialLinksCard from './SocialLinksCard';
-import { Add , Language,
-  Public,} from "@mui/icons-material";
+import { Add, Public } from "@mui/icons-material";
 
-
-// interface ProfileSidebarProps {
-//   data: EducatorProfileData;
-// }
 interface ProfileSidebarProps {
   data: EducatorProfileData;
-  // onMessageClick?: () => void;
   language?: string;
   website?: string;
 }
 
-// export default function ProfileSidebar({ data }: ProfileSidebarProps) {
 export default function ProfileSidebar({
   data,
-  // onMessageClick,
-  language,
   website,
 }: ProfileSidebarProps) {
-  // const hasRating = data.reviewCount > 0;
 
   return (
     <>
@@ -68,140 +58,85 @@ export default function ProfileSidebar({
           </Stack>
         )}
 
-<Card
-  elevation={0}
-  sx={{
-    bgcolor: "#F8FAFC",
-    border: "1px solid #E5E7EB",
-    borderRadius: 3,
-    p: 2.5,
-    mb: 3,
-  }}
->
-  <Typography
-    variant="subtitle2"
-    sx={{
-      fontWeight: 700,
-      mb: 2,
-      color: "#111827",
-    }}
-  >
-    Quick Information
-  </Typography>
-
-  <Box
-    sx={{
-      display: "grid",
-      gridTemplateColumns: "repeat(2, 1fr)",
-      gap: 2,
-    }}
-  >
-    {/* Language */}
-    <Box
-      sx={{
-        p: 1.5,
-        borderRadius: 2,
-        bgcolor: "#fff",
-        border: "1px solid #E5E7EB",
-      }}
-    >
-      <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
-        <Language fontSize="small" color="primary" />
-        <Typography variant="caption" color="text.secondary">
-          Language
-        </Typography>
-      </Stack>
-
-      <Typography
-        variant="body2"
-        fontWeight={600}
-        color={language ? "text.primary" : "text.secondary"}
-      >
-        {/* {data.profile.language || "Not specified"} */}
-        {language || "Not specified"}
-      </Typography>
-    </Box>
-
-    {/* Website */}
-    <Box
-      sx={{
-        p: 1.5,
-        borderRadius: 2,
-        bgcolor: "#fff",
-        border: "1px solid #E5E7EB",
-      }}
-    >
-      <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
-        <Public fontSize="small" color="primary" />
-        <Typography variant="caption" color="text.secondary">
-          Website
-        </Typography>
-      </Stack>
-
-      {website ? (
-        <Typography
-          component="a"
-          href={
-            website.startsWith("http")
-              ? website
-              : `https://${website}`
-          }
-          target="_blank"
-          rel="noopener noreferrer"
+        <Card
+          elevation={0}
           sx={{
-            fontSize: "0.875rem",
-            fontWeight: 600,
-            color: "#4F46E5",
-            textDecoration: "none",
-            display: "block",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            "&:hover": {
-              textDecoration: "underline",
-            },
+            bgcolor: "#F8FAFC",
+            border: "1px solid #E5E7EB",
+            borderRadius: 3,
+            p: 2.5,
+            mb: 3,
           }}
         >
-          Visit
-        </Typography>
-      ) : (
-        <Typography variant="body2" color="text.secondary" fontWeight={600}>
-          No website
-        </Typography>
-      )}
-    </Box>
-  </Box>
-</Card>
-        {/* <Stack
-          direction="row"
-          spacing={3}
-          sx={{ bgcolor: '#F8FAFC', p: 1.5, borderRadius: 2, mb: 3, justifyContent: 'center' }}
-        >
-          
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Star sx={{ color: '#F59E0B', fontSize: 16 }} /> {hasRating ? data.rating : '—'}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {hasRating ? `(${data.reviewCount.toLocaleString()} Reviews)` : 'Coming soon'}
-            </Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: 700,
+              mb: 2,
+              color: "#111827",
+            }}
+          >
+            Quick Information
+          </Typography>
+
+          <Box
+            sx={{
+              p: 1.5,
+              borderRadius: 2,
+              bgcolor: "#fff",
+              border: "1px solid #E5E7EB",
+              textAlign: "left",
+            }}
+          >
+            <Stack direction="row" spacing={1} alignItems="center" mb={0.5}>
+              <Public fontSize="small" color="primary" />
+              <Typography variant="caption" color="text.secondary">
+                Website
+              </Typography>
+            </Stack>
+
+            {website ? (
+              <Typography
+  component="a"
+  href={
+    website.startsWith("http")
+      ? website
+      : `https://${website}`
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  sx={{
+    fontSize: "0.875rem",
+    fontWeight: 600,
+    color: "#4F46E5",
+    textDecoration: "none",
+    textAlign: "center",
+    display: "block",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    bgcolor: "#EEF2FF",
+    borderRadius: "6px",
+    px: 1.5,
+    py: 0.5,
+    mt: 0.5,
+    transition: "all 0.2s ease",
+  
+  }}
+>
+  {website}
+</Typography>
+            ) : (
+              <Typography variant="body2" color="text.secondary" fontWeight={600}>
+                No website
+              </Typography>
+            )}
           </Box>
-          <Divider orientation="vertical" flexItem />
-          <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-              {data.learnerCount || '—'}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {data.learnerCount ? 'Learners' : 'Coming soon'}
-            </Typography>
-          </Box>
-        </Stack> */}
+        </Card>
 
         <Button
           variant="contained"
-          // startIcon={<Message />}
           startIcon={<Add/>}
-          // onClick={onMessageClick}
           fullWidth
           sx={{
             bgcolor: '#4F46E5',
