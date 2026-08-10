@@ -271,22 +271,23 @@ sx={{
   display: "block",
   padding: "0.5rem 0.6rem",
   borderRadius: "8px",
-  borderBottom: "1px solid rgba(91, 60, 255, 0.15)",
+  borderBottom: "1px solid rgba(91, 60, 255, 0.15) !important ",
   background: active
     ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
     : "transparent",
   textDecoration: "none",
   transition: "background 0.2s ease, border-color 0.2s ease",
+  // borderBottom:"1px solid #7a7881",
   "&:hover": {
     background: active
       ? "linear-gradient(to right,#fef2f2,#fdf2f8)"
       : "linear-gradient(to right,#f5f3ff,#fdf2f8)",
-    borderBottom: "1px solid #3411b0",   // 👈 reddish line on hover
+    borderBottom: "1px solid #3411b0",   
   },
   "&:last-child": {
     borderBottom: "none",
     "&:hover": {
-      borderBottom: "1px solid #190dc4",   // last item pe bhi hover pe line aani chahiye
+      borderBottom: "1px solid #190dc4",   
     },
   },
 }}
