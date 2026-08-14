@@ -16,17 +16,16 @@ export const profileApiSlice = baseApi.injectEndpoints({
       transformResponse: (res: ProfileApiResponse) => res.data,
     }),
 
-
-    
-    getEducatorCourses: builder.query<any, string>({
-      query: (orgCode) => `/courses/educator/${orgCode}`,
+    // get instructor courses 
+    getCoursesByUsername : builder.query<any, string>({
+      query: (username) => `/course/instructor/${username}`,
       transformResponse: (res: any) => res.data.courses,
     }),
-
 
   }),
 });
 
 export const { useGetProfileByUsernameQuery ,
-    useGetEducatorCoursesQuery,
+ useGetCoursesByUsernameQuery
+    
 } = profileApiSlice;
