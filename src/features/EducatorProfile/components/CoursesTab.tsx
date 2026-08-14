@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -14,28 +14,25 @@ import {
 } from "@mui/material";
 import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
-import { useNavigate } from "react-router-dom";
+import { useGetEducatorCoursesQuery } from "../api/profileApiSlice";
 
-// Raw course shape as returned by getCoursesByUsername
-export interface RawCourse {
-  id: number | string;
+// ---------- Types ----------
+export interface Course {
+  id: number;
   title: string;
-  description?: string;
-  language?: string[];
-  level?: string;
-  image?: string | null;
-  isFree?: boolean;
-  price?: number;
-  totalChapters?: number;
-  averageRating?: number;
-  totalRatings?: number;
-  createdAt?: string;
-  createdBy?: string;
+  description: string;
+  language: string[];
+  level: string;
+  image: string;
+  isFree: boolean;
+  price: number;
+  totalChapters: number;
+  rating?: number;
+  createdBy: string;
 }
 
 interface CoursesTabProps {
-  courses?: RawCourse[];
-  isLoading?: boolean;
+  orgCode: string;
 }
 
 const levelColor: Record<string, "success" | "warning" | "error" | "default"> = {
@@ -43,11 +40,19 @@ const levelColor: Record<string, "success" | "warning" | "error" | "default"> = 
   Beginner: "success",
   Intermediate: "warning",
   Advanced: "error",
-  "Advance...": "error",
 };
 
-const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false }) => {
-  if (isLoading) {
+const CoursesTab: React.FC<CoursesTabProps> = ({ orgCode }) => {
+  const {
+  data: courses = [],
+  isLoading: loading,
+  isError,
+} = useGetEducatorCoursesQuery(orgCode, {
+  skip: !orgCode,
+});
+
+
+  if (loading) {
     return (
       <Box
         sx={{
@@ -73,6 +78,14 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
     );
   }
 
+//   if (error) {
+//     return (
+//       <Box sx={{ py: 8, textAlign: "center" }}>
+    
+//       </Box>
+//     );
+//   }
+
   if (!courses.length) {
     return (
       <Box sx={{ py: 8, textAlign: "center" }}>
@@ -84,7 +97,6 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
     );
   }
 
-  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -103,7 +115,6 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
         <Card
           key={course.id}
           elevation={0}
-          onClick={() => navigate(`/course-glossary/${course.id}`)}
           sx={{
             borderRadius: 3,
             border: "1px solid",
@@ -120,31 +131,12 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
           <CardActionArea>
             {/* Thumbnail */}
             <Box sx={{ position: "relative" }}>
-              {course.image ? (
-                <CardMedia
-                  component="img"
-                  image={course.image}
-                  alt={course.title}
-                  sx={{ height: 150, objectFit: "cover" }}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    height: 150,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    bgcolor: "#4F46E5",
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 14,
-                    textAlign: "center",
-                    px: 2,
-                  }}
-                >
-                  {course.title}
-                </Box>
-              )}
+              <CardMedia
+                component="img"
+                image={course.image}
+                alt={course.title}
+                sx={{ height: 150, objectFit: "cover" }}
+              />
               <Box
                 sx={{
                   position: "absolute",
@@ -163,7 +155,7 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
 
               {/* Price / Free badge */}
               <Chip
-                label={course.isFree ? "Free" : `₹${course.price ?? 0}`}
+                label={course.isFree ? "Free" : `₹${course.price}`}
                 size="small"
                 sx={{
                   position: "absolute",
@@ -210,11 +202,11 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
                 justifyContent="space-between"
                 mt={1}
               >
-                {course.averageRating ? (
+                {course.rating ? (
                   <Stack direction="row" spacing={0.5} alignItems="center">
-                    <Rating value={course.averageRating} precision={0.1} size="small" readOnly />
+                    <Rating value={course.rating} precision={0.1} size="small" readOnly />
                     <Typography variant="caption" color="text.secondary">
-                      {course.averageRating.toFixed(1)}
+                      {course.rating.toFixed(1)}
                     </Typography>
                   </Stack>
                 ) : (
@@ -223,20 +215,18 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
                   </Typography>
                 )}
                 <Typography variant="caption" color="text.secondary">
-                  {course.totalChapters ?? 0} chapters
+                  {course.totalChapters} chapters
                 </Typography>
               </Stack>
 
               {/* Level chip */}
-              {course.level && (
-                <Chip
-                  label={course.level}
-                  size="small"
-                  color={levelColor[course.level] || "default"}
-                  variant="outlined"
-                  sx={{ mt: 1.2, fontWeight: 600, fontSize: 11 }}
-                />
-              )}
+              <Chip
+                label={course.level}
+                size="small"
+                color={levelColor[course.level] || "default"}
+                variant="outlined"
+                sx={{ mt: 1.2, fontWeight: 600, fontSize: 11 }}
+              />
             </CardContent>
           </CardActionArea>
         </Card>

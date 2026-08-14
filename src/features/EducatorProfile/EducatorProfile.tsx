@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Container, CircularProgress, Typography } from '@mui/material';
+import { Box, Container, Grid, CircularProgress, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useGetProfileByUsernameQuery, useGetCoursesByUsernameQuery } from './api/profileApiSlice';
+import { useGetProfileByUsernameQuery } from './api/profileApiSlice';
 import { mapApiToEducatorProfileData } from './utils/mapEducatorProfile';
 
 import ProfileSidebar from './components/ProfileSidebar';
@@ -29,13 +29,6 @@ export default function EducatorProfile({ onMessageClick }: EducatorProfileProps
     skip: !username,
   });
 
-  const {
-    data: coursesData,
-    isLoading: isCoursesLoading,
-  } = useGetCoursesByUsernameQuery(username ?? '', {
-    skip: !username,
-  });
-
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
@@ -57,76 +50,72 @@ export default function EducatorProfile({ onMessageClick }: EducatorProfileProps
   }
 
   const data = mapApiToEducatorProfileData(apiUser);
-//  const courses = coursesData?.data?.courses ?? [];
-const courses = coursesData ?? [];
+
+  // return (
+  //   <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 8 }}>
+  //     <Container maxWidth="xl" sx={{ pt: 4 }}>
+  //       <Grid container spacing={3}>
+  //         <Grid item xs={12} md={9} order={{ xs: 1, md: 2 }}>
+  //           <HeroBanner data={data} />
+  //         </Grid>
+
+  //         <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
+  //           <ProfileSidebar data={data} language={apiUser.profile?.language} website={apiUser.profile?.website} />
+  //         </Grid>
+
+  //         <Grid item xs={12} md={9} order={{ xs: 3, md: 3 }} sx={{ ml: { md: "25%" } }}>
+  //           {/* <StatsRow stats={data.microStats} /> */}
+  //           <ProfileTabs value={tabValue} onChange={handleTabChange} />
+
+  //           {tabValue === 0 && <AboutTab data={data} />}
+  //           {tabValue === 1 && <ComingSoon/>}
+  //           {tabValue === 2 && <ComingSoon/>}
+  //           {tabValue === 3 && <ComingSoon/>}
+  //           {tabValue === 4 && <ComingSoon/>}
+  //           {tabValue === 5 && <ComingSoon/>}
+  //         </Grid>
+  //       </Grid>
+
+  //       {/* <AchievementsSection achievements={data.achievements} /> */}
+  //     </Container>
+  //   </Box>
+  // );
+
+
   return (
-    <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 8 }}>
-      <Container
-        maxWidth="xl"
-        sx={{
-          pt: { xs: 2, sm: 3, md: 4 },
-          px: { xs: 1.5, sm: 3 },
-          overflow: 'hidden',
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            alignItems: 'flex-start',
-            gap: { xs: 2, md: 3 },
-          }}
-        >
-          {/* Sidebar */}
-          <Box
-            sx={{
-              width: { xs: '100%', md: '25%' },
-              flexShrink: 0,
-              order: { xs: 2, md: 1 },
-            }}
-          >
-            <ProfileSidebar
-              data={data}
-              language={apiUser.profile?.language}
-              website={apiUser.profile?.website}
-            />
-          </Box>
+  <Box sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 8 }}>
+    <Container maxWidth="xl" sx={{ pt: 4 }}>
+      <Grid container spacing={3}>
+        {/* Sidebar - left column */}
+        <Grid item xs={12} md={3} order={{ xs: 2, md: 1 }}>
+          <ProfileSidebar
+            data={data}
+            language={apiUser.profile?.language}
+            website={apiUser.profile?.website}
+          />
+        </Grid>
 
-          {/* Right side: Hero + Tabs — stacked as own column on desktop, */}
-          {/* becomes "invisible" wrapper on mobile so its children can be */}
-          {/* independently ordered among the other top-level items */}
-          <Box
-            sx={{
-              width: { xs: '100%', md: '75%' },
-              display: { xs: 'contents', md: 'flex' },
-              flexDirection: 'column',
-              gap: 3,
-              order: { md: 2 },
-            }}
-          >
-            <Box sx={{ width: '100%', order: { xs: 1, md: 'unset' } }}>
-              <HeroBanner data={data} />
-            </Box>
+        {/* Right column - HeroBanner + Tabs stacked together */}
+        <Grid item xs={12} md={9} order={{ xs: 1, md: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <HeroBanner data={data} />
 
-            <Box sx={{ width: '100%', order: { xs: 3, md: 'unset' } }}>
+            <Box>
               <ProfileTabs value={tabValue} onChange={handleTabChange} />
 
-            {tabValue === 0 && (
-  <AboutTab data={data} courses={courses} isCoursesLoading={isCoursesLoading} />
-)}
-{tabValue === 1 && (
-  <CoursesTab courses={courses} isLoading={isCoursesLoading} />
-)}
+              {tabValue === 0 && <AboutTab data={data} />}
+              {tabValue === 1 && <ComingSoon />}
               {tabValue === 2 && <ComingSoon />}
               {tabValue === 3 && <ComingSoon />}
               {tabValue === 4 && <ComingSoon />}
               {tabValue === 5 && <ComingSoon />}
             </Box>
           </Box>
-        </Box>
+        </Grid>
+      </Grid>
 
-        {/* <AchievementsSection achievements={data.achievements} /> */}
-      </Container>
-    </Box>
-  );
+      {/* <AchievementsSection achievements={data.achievements} /> */}
+    </Container>
+  </Box>
+);
 }
