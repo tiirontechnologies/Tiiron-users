@@ -674,10 +674,11 @@ const renderDesktopNavItem = (item: NavItem) => {
           //    display: "block", py: 1 }}
           sx={{
   display: "block",
+    
 
   padding:
     item.name === "Creator"
-      ? "0.75rem 1.2rem"
+      ? "0.4rem 0.8rem " 
       : "0.75rem 1rem",
 
   borderRadius: "10px",
