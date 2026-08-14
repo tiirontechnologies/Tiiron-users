@@ -1,6 +1,6 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import { ICourse } from "../../../types/course.types";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface CourseGlossaryHeaderProps {
@@ -16,90 +16,53 @@ export default function CourseGlossaryHeader({
   averageRating,
   totalRatings,
 }: CourseGlossaryHeaderProps) {
-  const totalLessons = chapters?.length || 0;
+  const totalLessons =chapters?.length|| 0;
 
   const [isTruncated, setIsTruncated] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
 
-  const COLLAPSED_MAX_HEIGHT = 120;
+  useEffect(() => {
+    if (descriptionRef.current && course?.description) {
+      const maxHeight = 120;
+      const actualHeight = descriptionRef.current.scrollHeight;
 
-  const checkTruncation = useCallback(() => {
-    const el = descriptionRef.current;
-    if (!el || !course?.description) {
-      setIsTruncated(false);
-      return;
+      if (actualHeight > maxHeight) {
+        setIsTruncated(true);
+      } else {
+        setIsTruncated(false);
+      }
     }
-
-    // Temporarily remove the clamp to measure the natural height accurately,
-    // then restore it — avoids stale scrollHeight readings caused by the
-    // previous collapsed maxHeight still being applied.
-    const prevMaxHeight = el.style.maxHeight;
-    const prevOverflow = el.style.overflow;
-    el.style.maxHeight = "none";
-    el.style.overflow = "visible";
-
-    const actualHeight = el.scrollHeight;
-
-    el.style.maxHeight = prevMaxHeight;
-    el.style.overflow = prevOverflow;
-
-    setIsTruncated(actualHeight > COLLAPSED_MAX_HEIGHT);
-  }, [course?.description]);
-
-  useEffect(() => {
-    checkTruncation();
-  }, [checkTruncation]);
-
-  // Recheck on viewport resize/orientation change (mobile & tablet)
-  useEffect(() => {
-    window.addEventListener("resize", checkTruncation);
-    window.addEventListener("orientationchange", checkTruncation);
-    return () => {
-      window.removeEventListener("resize", checkTruncation);
-      window.removeEventListener("orientationchange", checkTruncation);
-    };
-  }, [checkTruncation]);
-
-  // If the description text changes, collapse back to default state
-  useEffect(() => {
-    setIsExpanded(false);
   }, [course?.description]);
 
   const DEFAULT_AVATAR = "/images/avatarUser.png";
   const instructorAvatar =
-    course?.createdByUser?.profile?.picture || DEFAULT_AVATAR;
+  course?.createdByUser?.profile?.picture || DEFAULT_AVATAR;
 
-  const handleToggleReadMore = () => {
-    const willExpand = !isExpanded;
-    setIsExpanded(willExpand);
+  const handleReadMore = () => {
+    const overviewElement = document.getElementById("course-overview");
 
-    // Only auto-scroll when collapsing back, so the heading stays in view
-    if (!willExpand) {
-      const overviewElement = document.getElementById("course-overview");
-      if (overviewElement) {
-        overviewElement.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
+    if (overviewElement) {
+      overviewElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   };
-
   const level =
     course?.level || course?.difficulty || course?.courseLevel || "All Levels";
 
-  const roundedRating = Number(averageRating ?? 0).toFixed(1);
-  const hasRating = Number(roundedRating) >= 1;
+const roundedRating = Number(averageRating ?? 0).toFixed(1);
+const hasRating = Number(roundedRating) >= 1;
 
-  const navigate = useNavigate();
 
-  const handleInstructorNavigate = (username?: string) => {
-    if (!username) return;
-    navigate(`/Instructor/${username}`);
-  };
 
-  const showClamp = isTruncated && !isExpanded;
+// naviagte 
+const navigate = useNavigate();
+
+const handleInstructorNavigate = (username: string) => {
+  if (!username) return;
+  navigate(`/Instructor/${username}`);
+};
 
   return (
     <Box
@@ -157,7 +120,7 @@ export default function CourseGlossaryHeader({
           </Typography>
         </Box>
 
-        {/* Description */}
+        {/* Description (UNCHANGED) */}
         <Box
           sx={{
             width: "100%",
@@ -195,10 +158,9 @@ export default function CourseGlossaryHeader({
               lineHeight: 1.75,
               fontWeight: 400,
               pl: { xs: 0, md: 3 },
-              overflow: showClamp ? "hidden" : "visible",
-              maxHeight: showClamp ? `${COLLAPSED_MAX_HEIGHT}px` : "none",
+              overflow: isTruncated ? "hidden" : "visible",
+              maxHeight: isTruncated ? "120px" : "none",
               position: "relative",
-              transition: "max-height 0.3s ease",
 
               /* ⭐ FIRST LETTER BIG */
               "&::first-letter": {
@@ -216,29 +178,19 @@ export default function CourseGlossaryHeader({
 
           {isTruncated && (
             <Typography
-              onClick={handleToggleReadMore}
+              onClick={handleReadMore}
               component="span"
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  handleToggleReadMore();
-                }
-              }}
               sx={{
                 mt: 1,
-                ml: { xs: 0, md: 4 },
+                ml: 4,
                 alignSelf: { xs: "center", md: "flex-start" },
                 color: "#4F39F6",
                 fontWeight: 700,
                 fontSize: { xs: "14px", md: "15px" },
                 cursor: "pointer",
-                userSelect: "none",
-                "&:hover": { textDecoration: "underline" },
               }}
             >
-              {isExpanded ? "Read Less" : "...Read More"}
+              ...Read More
             </Typography>
           )}
         </Box>
@@ -314,6 +266,7 @@ export default function CourseGlossaryHeader({
             </Box>
 
             <Box component="span" sx={{ color: "#64748B" }}>
+              {/* All levels */}
               {level}
             </Box>
           </Typography>
@@ -325,10 +278,10 @@ export default function CourseGlossaryHeader({
               alignItems: "center",
               gap: 1.5,
               flexWrap: "wrap",
-              cursor: "pointer",
             }}
-            onClick={() => handleInstructorNavigate(course?.createdBy)}
+              onClick={() => handleInstructorNavigate(course.createdBy)}
           >
+         
             <Avatar
               alt={course?.createdBy || "Instructor"}
               src={instructorAvatar}
@@ -352,7 +305,7 @@ export default function CourseGlossaryHeader({
               }}
             >
               Created by{" "}
-              <Box component="span" sx={{ fontWeight: 600, cursor: "pointer" }}>
+              <Box component="span" sx={{ fontWeight: 600 ,cursor:"pointer"}}>
                 {course?.createdBy || "Instructor"}
               </Box>
             </Typography>

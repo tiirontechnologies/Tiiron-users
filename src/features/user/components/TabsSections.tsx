@@ -13,19 +13,13 @@ const TabsSection: React.FC = () => {
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div
-        className="flex snap-x snap-mandatory gap-2 overflow-x-auto border-b border-slate-100 px-3 pt-3 text-sm [scrollbar-width:none] sm:gap-6 sm:px-6 [&::-webkit-scrollbar]:hidden"
-        role="tablist"
-        aria-label="Profile sections"
-      >
+      <div className="flex gap-5 overflow-x-auto border-b border-slate-100 px-4 pt-3 text-sm sm:gap-6 sm:px-6">
         {tabs.map((tab) => (
           <button
             type="button"
             key={tab}
             onClick={() => setActiveTab(tab)}
-            role="tab"
-            aria-selected={activeTab === tab}
-            className={`snap-start whitespace-nowrap border-b-2 px-1.5 pb-3 font-medium transition-colors sm:px-0 ${
+            className={`whitespace-nowrap border-b-2 pb-3 font-medium transition-colors ${
               activeTab === tab
                 ? "border-indigo-600 text-indigo-600"
                 : "border-transparent text-slate-500 hover:text-slate-700"
