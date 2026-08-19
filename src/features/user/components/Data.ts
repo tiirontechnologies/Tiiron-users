@@ -33,7 +33,6 @@ export const tabs: TabName[] = [
   "My Courses",
   "Certificates",
   "Quiz History",
-  "Achievements",
   "Wishlist",
   "Activity",
 ];
