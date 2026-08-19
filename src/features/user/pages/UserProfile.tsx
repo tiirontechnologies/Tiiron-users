@@ -206,7 +206,7 @@ const StudentProfile: React.FC = () => {
                 <InfoRow icon={MapPin} label="Location" value="Lucknow, India" />
                 <InfoRow icon={Mail} label="Email" value="rishabh.singh@email.com" />
                 <InfoRow icon={Calendar} label="Member Since" value="Jan 2024" />
-                <InfoRow icon={Globe} label="Language" value="English (US)" />
+                <InfoRow icon={Globe} label="Collage" value="Collage " />
               </div>
 
               <button

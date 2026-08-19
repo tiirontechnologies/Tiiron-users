@@ -1,3 +1,4 @@
+
 import {
   useCallback,
   useEffect,
@@ -37,12 +38,17 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import SchoolIcon from "@mui/icons-material/School";
+import LockIcon from "@mui/icons-material/Lock";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import axios from "axios";
 import { getEvaluationDataForUser, COURSE_CONFIG, COURSE_SKILLS } from "./data";
 import Mohar from "../../../assets/Mohar.png";
-import { useGetLoggedInUserQuery } from "../api/courseApi";
+import {
+  useGetLoggedInUserQuery,
+  useGetCourseCertificateQuery,
+  useGetCourseProgressQuery,
+} from "../api/courseApi";
 import { toPng } from "html-to-image";
 
 import SignatureAbhishek from "../../../assets/abhishek-sir-Photoroom.png";
@@ -78,6 +84,7 @@ interface CertificateData {
   duration: string;
   evaluationDate: string;
   mentorName: string;
+  mentorSignature?: string;
   batch: string;
   scores: { label: string; score: string; icon: ReactNode }[];
   overall: string;
@@ -85,7 +92,11 @@ interface CertificateData {
   verificationId: string;
   skills: string[];
   remarks: string;
+  programSummary: string;
 }
+
+const DEFAULT_PROGRAM_SUMMARY =
+  "This report certifies that the above-mentioned student successfully participated in the Inacademic Internship Program and completed the assigned learning modules, assessments, and practical tasks through the Tiiron LMS platform. The evaluation has been conducted based on the student's performance, participation, consistency, technical understanding, and completion of assigned work throughout the program.";
 
 // mentors signature
 const MENTOR_SIGNATURES: Record<string, string> = {
@@ -95,10 +106,10 @@ const MENTOR_SIGNATURES: Record<string, string> = {
 };
 
 
-// mock data for preview 
+// mock data for preview
 const TEST_CERT_DATA: CertificateData = {
   studentName: "Test Student",
-  enrollmentId: "INA-FSWD-0000",
+  enrollmentId: "TTINT000000",
   internshipTrack: "FULL STACK WEB DEVELOPMENT",
   college: "Sample College",
   duration: "8th June 2026 - 8th July 2026",
@@ -116,10 +127,11 @@ const TEST_CERT_DATA: CertificateData = {
   ],
   overall: "8.4 / 10",
   assessment: "EXCELLENT",
-  verificationId: "TIIRON-TEST-0000",
+  verificationId: "TTINT000000",
   skills: COURSE_SKILLS["1"] ?? [],
   remarks:
     "This is a sample preview. Log in to view and download your actual evaluation report.",
+  programSummary: DEFAULT_PROGRAM_SUMMARY,
 };
 
 
@@ -149,13 +161,34 @@ function formatOrdinalDate(date: Date): string {
   return `${day}${suffix(day)} ${month} ${year}`;
 }
 
+// 🆕 Enrollment ID ab locally generate hoti hai — backend ke certificateId (TTINT...) se
+// koi lena dena nahi. Format: TT + courseCode + year + zero-padded userId
+// e.g. TTFSWD2026000123
+function generateEnrollmentId(courseCode: string, userId: number, year: number): string {
+  return `TT${courseCode}${year}${String(userId).padStart(6, "0")}`;
+}
+
+interface CertificateApiData {
+  certificateId: string;
+  courseId: number;
+  startDate: string;
+  endDate: string;
+  instructorName: string;
+  batchId: string;
+  programSummary?: string;
+  mentorRemark?: string;
+  mentorSignature?: string;
+}
+
 function buildCertificateData(
   userId: number,
   studentName: string,
   courseId: string,
   courseName: string,
+  college: string,
+  apiCert?: CertificateApiData | null,
 ): CertificateData {
-  
+
   const evalData = getEvaluationDataForUser(userId, studentName);
   const courseConfig = COURSE_CONFIG[courseId] ?? {
     mentorName: "Priya Mehrotra",
@@ -163,20 +196,7 @@ function buildCertificateData(
     courseCode: "FSWD",
   };
   const skills = COURSE_SKILLS[courseId] ?? COURSE_SKILLS["1"];
-  // const skills = COURSE_SKILLS[courseId] ?? COURSE_SKILLS["1"];
 
-  const isCourse8 = String(courseId) === "8";
-  const duration = isCourse8
-    ? `${formatOrdinalDate(new Date(2026, 5, 25))} - ${formatOrdinalDate(new Date(2026, 6, 10))}`
-    : `${formatOrdinalDate(new Date(2026, 5, 8))} - ${formatOrdinalDate(new Date(2026, 6, 8))}`;
-  const evaluationDate = isCourse8
-    ? formatOrdinalDate(new Date(2026, 6, 11))
-    : formatOrdinalDate(new Date(2026, 6, 9));
-
-  const isSpecialCollegeUser = [30, 32, 27].includes(Number(userId));
-  const college = isSpecialCollegeUser ? "RBPU, Hoshiarpur" : "MM(DU)";
-
-  // const iconStyle = { fontSize: 18, color: COLORS.textSecondary };
   const iconStyle = { fontSize: 18, color: COLORS.textSecondary };
   const icons = [
     <EventNoteIcon sx={iconStyle} />,
@@ -188,18 +208,30 @@ function buildCertificateData(
     <AssignmentIcon sx={iconStyle} />,
   ];
 
+  // duration ab API ke startDate/endDate se, warna fallback static
+  const duration = apiCert
+    ? `${formatOrdinalDate(new Date(apiCert.startDate))} - ${formatOrdinalDate(new Date(apiCert.endDate))}`
+    : `${formatOrdinalDate(new Date(2026, 5, 8))} - ${formatOrdinalDate(new Date(2026, 6, 8))}`;
+
+  // evaluation date hamesha aaj ki date (now)
+  const evaluationDate = formatOrdinalDate(new Date());
+
+  // 🆕 enrollment ID ka year: agar apiCert hai to uske startDate ka year, warna current year
+  const enrollmentYear = apiCert
+    ? new Date(apiCert.startDate).getFullYear()
+    : new Date().getFullYear();
+
   return {
     studentName,
-    enrollmentId: `INA-${courseConfig.courseCode}-${String(userId).padStart(4, "0")}`,
+    // 🆕 enrollmentId ab locally generated — backend certificateId isse touch nahi karta
+    enrollmentId: generateEnrollmentId(courseConfig.courseCode, userId, enrollmentYear),
     internshipTrack: courseName.toLocaleUpperCase(),
-    // college: "Tiiron Technologies",
     college,
-    // duration: "3rd March 2025 - 3rd June 2025",
-    // evaluationDate: formatOrdinalDate(new Date(2025, 5, 4)),
-     duration,
+    duration,
     evaluationDate,
-    mentorName: courseConfig.mentorName,
-    batch: courseConfig.batch,
+    mentorName: apiCert?.instructorName ?? courseConfig.mentorName,
+    mentorSignature: apiCert?.mentorSignature,
+    batch: apiCert?.batchId ?? courseConfig.batch,
     scores: evalData.scores.map((score, index) => ({
       label: score.label,
       score: `${score.score.toFixed(1)} / 10`,
@@ -207,9 +239,11 @@ function buildCertificateData(
     })),
     overall: `${evalData.overall.toFixed(1)} / 10`,
     assessment: evalData.assessment.toUpperCase(),
-    verificationId: evalData.verificationId,
+    // verificationId hamesha backend ke certificateId se hi aata hai — ye untouched hai
+    verificationId: apiCert?.certificateId ?? evalData.verificationId,
     skills,
-    remarks: evalData.remarks,
+    remarks: apiCert?.mentorRemark ?? evalData.remarks,
+    programSummary: apiCert?.programSummary ?? DEFAULT_PROGRAM_SUMMARY,
   };
 }
 
@@ -466,7 +500,7 @@ const CertificateHeader = () => (
 
 function CertificateBody({ cert }: { cert: CertificateData }) {
 
-  const mentorSignature = getMentorSignature(cert.mentorName);
+  const mentorSignature = cert.mentorSignature || getMentorSignature(cert.mentorName);
   return (
     <Box
       sx={{
@@ -544,24 +578,6 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
             title="Student Information"
             icon={<PersonOutlineIcon sx={{ fontSize: 20, color: "#fff" }} />}
           />
-          {/* <Grid container sx={{ px: "16px", py: "8px" }}>
-            <Grid
-              item
-              xs={6}
-              sx={{ borderRight: `1px solid ${COLORS.border}`, pr: "18px" }}
-            >
-              <InfoRow label="Student Name" value={cert.studentName} />
-              <InfoRow label="Taining Program " value={cert.internshipTrack} />
-              <InfoRow label="College / University" value={cert.college} />
-              <InfoRow label="Duration" value={cert.duration} />
-            </Grid>
-            <Grid item xs={6} sx={{ pl: "28px" }}>
-              <InfoRow label="Enrollment ID" value={cert.enrollmentId} />
-              <InfoRow label="Evaluation Date" value="08 July 2026" />
-              <InfoRow label="Mentor Name" value={cert.mentorName} />
-              <InfoRow label="Batch" value={cert.batch} />
-            </Grid>
-          </Grid> */}
           <Grid container sx={{ px: "16px", py: "8px" }}>
             <Grid
               item
@@ -599,13 +615,7 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
               fontWeight: 500,
             }}
           >
-            This report certifies that the above-mentioned student successfully
-            participated in the Inacademic Internship Program and completed the
-            assigned learning modules, assessments, and practical tasks through
-            the Tiiron LMS platform. The evaluation has been conducted based on
-            the student's performance, participation, consistency, technical
-            understanding, and completion of assigned work throughout the
-            program.
+            {cert.programSummary}
           </Typography>
         </Card>
 
@@ -946,30 +956,21 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
           }}
         >
           <Box sx={{ textAlign: "center" }}>
-            {/* <Box
-              sx={{ borderTop: `2px solid ${COLORS.textPrimary}`, pt: "5px" }}
-            >
-              <Typography sx={{ fontSize: "0.72rem", fontWeight: 800 }}>
-                {cert.mentorName}
-              </Typography>
-              <Typography sx={{ fontSize: "0.68rem", fontWeight: 500 }}>
-                Mentor
-              </Typography>
-            </Box> */}
             <Box sx={{ textAlign: "center" }}>
-            {mentorSignature && (
-              <Box
-                component="img"
-                src={mentorSignature}
-                alt={`${cert.mentorName} Signature`}
-                sx={{ height: 62, width: "auto", maxWidth: 150, objectFit: "contain", mx: "auto", mb: "-6px" }}
-              />
-            )}
-            <Box sx={{ borderTop: `2px solid ${COLORS.textPrimary}`, pt: "5px" }}>
-              <Typography sx={{ fontSize: "0.72rem", fontWeight: 800 }}>{cert.mentorName}</Typography>
-              <Typography sx={{ fontSize: "0.68rem", fontWeight: 500 }}>Mentor</Typography>
+              {mentorSignature && (
+                <Box
+                  component="img"
+                  src={mentorSignature}
+                  crossOrigin="anonymous"
+                  alt={`${cert.mentorName} Signature`}
+                  sx={{ height: 62, width: "auto", maxWidth: 150, objectFit: "contain", mx: "auto", mb: "-6px" }}
+                />
+              )}
+              <Box sx={{ borderTop: `2px solid ${COLORS.textPrimary}`, pt: "5px" }}>
+                <Typography sx={{ fontSize: "0.72rem", fontWeight: 800 }}>{cert.mentorName}</Typography>
+                <Typography sx={{ fontSize: "0.68rem", fontWeight: 500 }}>Mentor</Typography>
+              </Box>
             </Box>
-          </Box>
           </Box>
           <Box sx={{ textAlign: "center" }}>
             <Box
@@ -998,18 +999,6 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
               This is a system generated report.
             </Typography>
           </Box>
-          {/* <Box sx={{ textAlign: "center" }}>
-            <Box
-              sx={{ borderTop: `2px solid ${COLORS.textPrimary}`, pt: "5px" }}
-            >
-              <Typography sx={{ fontSize: "0.72rem", fontWeight: 800 }}>
-                Program Coordinator
-              </Typography>
-              <Typography sx={{ fontSize: "0.68rem", fontWeight: 500 }}>
-                Inacademic
-              </Typography>
-            </Box>
-          </Box> */}
           <Box sx={{ textAlign: "center" }}>
             <Box
               component="img"
@@ -1085,17 +1074,19 @@ const DownloadButton = ({
   onClick,
   isGenerating,
   variant = "solid",
+  disabled = false,
 }: {
   onClick: () => void;
   isGenerating: boolean;
   variant?: "solid" | "compact";
+  disabled?: boolean;
 }) => {
   const compact = variant === "compact";
   return (
     <Button
-      startIcon={<DownloadIcon />}
+      startIcon={disabled ? <LockIcon /> : <DownloadIcon />}
       onClick={onClick}
-      disabled={isGenerating}
+      disabled={isGenerating || disabled}
       sx={{
         background: COLORS.primaryBlue,
         color: "#fff",
@@ -1114,9 +1105,11 @@ const DownloadButton = ({
     >
       {isGenerating
         ? "Generating..."
-        : compact
-          ? "Download PDF"
-          : "Download Report (PDF)"}
+        : disabled
+          ? "Locked"
+          : compact
+            ? "Download PDF"
+            : "Download Report (PDF)"}
     </Button>
   );
 };
@@ -1145,175 +1138,14 @@ const SkeletonBar = ({
   />
 );
 
-// const CertificatePreviewCard = ({ onView }: { onView: () => void }) => (
-//   <Paper
-//     elevation={0}
-//     onClick={onView}
-//     sx={{
-//       cursor: "pointer",
-//       border: `1px solid ${COLORS.border}`,
-//       borderRadius: "10px",
-//       p: { xs: "16px", sm: "28px" },
-//       bgcolor: COLORS.background,
-//       boxShadow: "0 1px 3px rgba(8,31,92,0.04)",
-//       "&:hover": { boxShadow: "0 4px 16px rgba(8,31,92,0.1)" },
-//     }}
-//   >
-//     <Box
-//       sx={{
-//         display: "flex",
-//         justifyContent: "space-between",
-//         alignItems: "center",
-//         mb: "16px",
-//       }}
-//     >
-//       <Box
-//         component="img"
-//         src="/Inacademic_Logo.png"
-//         alt="Inacademic Logo"
-//         crossOrigin="anonymous"
-//         sx={{ height: { xs: 36, sm: 54 }, width: "auto", objectFit: "contain" }}
-//       />
-//       <Box sx={{ textAlign: "center" }}>
-//         <SchoolIcon sx={{ color: COLORS.primaryBlue, fontSize: 20 }} />
-//         <Typography
-//           sx={{
-//             fontWeight: 950,
-//             fontSize: { xs: "1.1rem", sm: "1.7rem" },
-//             fontFamily: FONT_FAMILY,
-//           }}
-//         >
-//           <Box component="span" sx={{ color: COLORS.accentRed }}>
-//             IN
-//           </Box>
-//           <Box component="span" sx={{ color: COLORS.darkNavy }}>
-//             ACADEMIC
-//           </Box>
-//         </Typography>
-//         <Typography
-//           sx={{
-//             fontSize: { xs: "0.55rem", sm: "0.65rem" },
-//             letterSpacing: "1.8px",
-//             color: COLORS.textPrimary,
-//             fontWeight: 800,
-//           }}
-//         >
-//           INTERNAL EVALUATION REPORT
-//         </Typography>
-//       </Box>
-//       <Box
-//         component="img"
-//         src="/Tiiron_Technologies_Logo.png"
-//         alt="Tiiron Technologies Logo"
-//         crossOrigin="anonymous"
-//         sx={{ height: { xs: 36, sm: 54 }, width: "auto", objectFit: "contain" }}
-//       />
-//     </Box>
-//     <Box sx={{ height: 1, background: COLORS.border, mb: "22px" }} />
-//     <SkeletonBar height={60} />
-//     <Box sx={{ height: 14 }} />
-//     <SkeletonBar height={70} />
-//     <Box sx={{ height: 14 }} />
-//     <Grid container spacing={2}>
-//       <Grid item xs={7}>
-//         <SkeletonBar height={200} />
-//       </Grid>
-//       <Grid item xs={5}>
-//         <SkeletonBar height={200} />
-//       </Grid>
-//     </Grid>
-//     <Box sx={{ height: 14 }} />
-//     <SkeletonBar height={60} />
-//     <Box
-//       sx={{
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "center",
-//         mt: "22px",
-//         color: COLORS.textMuted,
-//       }}
-//     >
-//       <VisibilityIcon sx={{ fontSize: 16, mr: "8px" }} />
-//       <Typography sx={{ fontSize: "0.78rem", fontWeight: 700 }}>
-//         Click to view full report
-//       </Typography>
-//     </Box>
-//   </Paper>
-// );
-
-
-// const CertificatePreviewCard = ({
-//   cert,
-//   onView,
-// }: {
-//   cert: CertificateData;
-//   onView: () => void;
-// }) => (
-//   <Paper
-//     elevation={0}
-//     onClick={onView}
-//     sx={{
-//       cursor: "pointer",
-//       border: `1px solid ${COLORS.border}`,
-//       borderRadius: "10px",
-//       p: { xs: "10px", sm: "16px" },
-//       bgcolor: COLORS.background,
-//       boxShadow: "0 1px 3px rgba(8,31,92,0.04)",
-//       "&:hover": { boxShadow: "0 4px 16px rgba(8,31,92,0.1)" },
-//     }}
-//   >
-//     <Box
-//       sx={{
-//         width: "100%",
-//         overflow: "hidden",
-//         borderRadius: "8px",
-//         border: `1px solid ${COLORS.border}`,
-//       }}
-//     >
-//       <Box
-//         sx={{
-//           width: CERT_WIDTH,
-//           transformOrigin: "top left",
-//           pointerEvents: "none",
-//           transform: {
-//             xs: "scale(0.34)",
-//             sm: "scale(0.42)",
-//             md: "scale(0.5)",
-//           },
-//           mb: {
-//             xs: `-${CERT_HEIGHT * (1 - 0.34)}px`,
-//             sm: `-${CERT_HEIGHT * (1 - 0.42)}px`,
-//             md: `-${CERT_HEIGHT * (1 - 0.5)}px`,
-//           },
-//         }}
-//       >
-//         <CertificateBody cert={cert} />
-//       </Box>
-//     </Box>
-//     <Box
-//       sx={{
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "center",
-//         mt: "16px",
-//         color: COLORS.textMuted,
-//       }}
-//     >
-//       <VisibilityIcon sx={{ fontSize: 16, mr: "8px" }} />
-//       <Typography sx={{ fontSize: "0.78rem", fontWeight: 700 }}>
-//         Click to view full report
-//       </Typography>
-//     </Box>
-//   </Paper>
-// );
-
-
 const CertificatePreviewCard = ({
   cert,
   onView,
+  locked = false,
 }: {
   cert: CertificateData;
   onView: () => void;
+  locked?: boolean;
 }) => (
   <Paper
     elevation={0}
@@ -1354,13 +1186,8 @@ const CertificatePreviewCard = ({
             width: CERT_WIDTH,
             transformOrigin: "top left",
             pointerEvents: "none",
-            // transform: {
-            //   xs: "scale(0.2857)",
-            //   sm: "scale(0.3571)",
-            //   md: "scale(0.42)",
-            //   lg: "scale(0.5)",
-            // },
-             transform: {
+            filter: locked ? "blur(2.5px)" : "none",
+            transform: {
               xs: "scale(0.2143)",
               sm: "scale(0.2619)",
               md: "scale(0.3095)",
@@ -1370,6 +1197,46 @@ const CertificatePreviewCard = ({
         >
           <CertificateBody cert={cert} />
         </Box>
+        {locked && (
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              bgcolor: "rgba(255,255,255,0.55)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              px: "16px",
+            }}
+          >
+            <Box
+              sx={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                bgcolor: "rgba(8,31,92,0.9)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mb: "8px",
+              }}
+            >
+              <LockIcon sx={{ fontSize: 18, color: "#fff" }} />
+            </Box>
+            <Typography
+              sx={{
+                fontSize: "0.72rem",
+                fontWeight: 800,
+                color: COLORS.textPrimary,
+                lineHeight: 1.4,
+              }}
+            >
+              Complete your course to unlock this report
+            </Typography>
+          </Box>
+        )}
       </Box>
     </Box>
     <Box
@@ -1383,7 +1250,7 @@ const CertificatePreviewCard = ({
     >
       <VisibilityIcon sx={{ fontSize: 16, mr: "8px" }} />
       <Typography sx={{ fontSize: "0.78rem", fontWeight: 700 }}>
-        Click to view full report
+        {locked ? "Preview only — complete your course first" : "Click to view full report"}
       </Typography>
     </Box>
   </Paper>
@@ -1410,9 +1277,35 @@ export default function CourseCertificate({
     isError: isUserError,
   } = useGetLoggedInUserQuery(undefined);
   const userData = userResponse?.data;
-  const isAuthenticated = !isUserError && !!userData?.id;
+  const isAuthenticated = !isUserError && !!(userData?.profile?.userId ?? userData?.profile?.id);
 
+  const {
+    data: certResponse,
+  } = useGetCourseCertificateQuery(Number(courseId), {
+    skip: !isAuthenticated || !courseId,
+  });
 
+  // 🆕 Progress decides whether the certificate is unlocked (100% required)
+  const {
+    data: progressResponse,
+    isLoading: isProgressLoading,
+    isFetching: isProgressFetching,
+    isError: isProgressError,
+  } = useGetCourseProgressQuery(Number(courseId), {
+    skip: !isAuthenticated || !courseId,
+  });
+
+  // API response shape: { success, data: { courseId, progress: { totalUnits, completedUnits, percentage }, score, units } }
+  const progressPercent: number = progressResponse?.data?.progress?.percentage ?? 0;
+
+  const isProgressResolved = !isProgressLoading && !isProgressFetching;
+  const isCourseCompleted =
+    isProgressResolved && !isProgressError && progressPercent >= 100;
+  const isCourseLocked =
+    isAuthenticated && isProgressResolved && (isProgressError || !isCourseCompleted);
+
+  // 🆕 Ye sirf VERIFICATION ID (backend certificateId) fetch karta hai — enrollmentId isse ab kabhi
+  // touch nahi hoti. State ka naam bhi isi liye clear karne ke liye rakha hai.
   useEffect(() => {
     if (!isAuthenticated || !userData?.email) return;
     let cancelled = false;
@@ -1420,7 +1313,6 @@ export default function CourseCertificate({
     const fetchCertificateId = async () => {
       try {
         const res = await axios.get(
-          // `http://localhost:5000/api/certificates/search/${encodeURIComponent(userData?.email)}`
           `https://tiiron-verify.onrender.com/api/certificates/search/${encodeURIComponent(userData?.email)}`,
         );
         if (!cancelled) {
@@ -1441,20 +1333,28 @@ export default function CourseCertificate({
   }, [isAuthenticated, userData?.email]);
 
   const cert = useMemo(() => {
-    if (!isAuthenticated || !userData?.id) return null;
+    const userId = userData?.profile?.userId ?? userData?.profile?.id;
+    if (!isAuthenticated || !userId) return null;
     const studentName =
-      `${userData.firstName ?? ""} ${userData.lastName ?? ""}`.trim() ||
+      `${userData?.firstName ?? ""} ${userData?.lastName ?? ""}`.trim() ||
       "Student";
+    // college ab profile.collage se aata hai (backend spelling "collage")
+    const college = userData?.profile?.collage || "N/A";
     const data = buildCertificateData(
-      Number(userData.id),
+      Number(userId),
       studentName,
       String(courseId),
       courseName,
+      college,
+      certResponse?.certificate ?? null,
     );
+    // 🆕 FIX: apiEnrollmentId sirf verificationId ko update karega.
+    // enrollmentId hamesha buildCertificateData ke locally-generated format
+    // (TT + courseCode + year + userId) mein hi rahegi — kabhi backend
+    // certificateId se overwrite nahi hogi.
     return apiEnrollmentId
       ? {
           ...data,
-          enrollmentId: apiEnrollmentId,
           verificationId: apiEnrollmentId,
         }
       : data;
@@ -1463,9 +1363,12 @@ export default function CourseCertificate({
     courseName,
     isAuthenticated,
     userData?.firstName,
-    userData?.id,
     userData?.lastName,
+    userData?.profile?.userId,
+    userData?.profile?.id,
+    userData?.profile?.collage,
     apiEnrollmentId,
+    certResponse,
   ]);
 
   const displayCert = cert ?? TEST_CERT_DATA;
@@ -1479,6 +1382,7 @@ export default function CourseCertificate({
       redirectToLogin();
       return;
     }
+    // Locked hone par bhi preview dikhne do — sirf download block hai
     setFullPreviewOpen(true);
   };
 
@@ -1492,6 +1396,7 @@ export default function CourseCertificate({
       redirectToLogin();
       return;
     }
+    if (isCourseLocked) return;
     if (!cert) return;
     if (!fullPreviewOpen) {
       setIsGenerating(true);
@@ -1611,8 +1516,30 @@ export default function CourseCertificate({
             onClick={handleDownload}
             isGenerating={isGenerating}
             variant="compact"
+            disabled={isCourseLocked}
           />
         </Box>
+
+        {isCourseLocked && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              py: "10px",
+              px: 2,
+              bgcolor: "#FFF4E5",
+              color: "#7A4A00",
+              textAlign: "center",
+            }}
+          >
+            <LockIcon sx={{ fontSize: 16 }} />
+            <Typography sx={{ fontSize: "0.8rem", fontWeight: 700 }}>
+              This is just a preview — complete your course 100% to unlock and download your real report.
+            </Typography>
+          </Box>
+        )}
 
         <Box
           sx={{
@@ -1634,6 +1561,8 @@ export default function CourseCertificate({
               transform: `scale(${scale})`,
               transformOrigin: "top center",
               mb: scale < 1 ? `-${CERT_HEIGHT * (1 - scale)}px` : 0,
+              filter: isCourseLocked ? "blur(2.5px)" : "none",
+              pointerEvents: isCourseLocked ? "none" : "auto",
             }}
           >
             <Box ref={visiblePdfSourceRef}>
@@ -1649,8 +1578,11 @@ export default function CourseCertificate({
     <Box sx={{ py: 4, px: { xs: 1.5, sm: 3 }, background: "#F1F5F9" }}>
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12} lg={8}>
-          {/* <CertificatePreviewCard onView={handleViewFull} /> */}
-          <CertificatePreviewCard cert={displayCert} onView={handleViewFull} />
+          <CertificatePreviewCard
+            cert={displayCert}
+            onView={handleViewFull}
+            locked={isCourseLocked}
+          />
         </Grid>
         <Grid item xs={12} lg={4}>
           <Paper
@@ -1675,26 +1607,19 @@ export default function CourseCertificate({
             >
               Quick Summary
             </Typography>
-            {/* {cert ? (
-              <>
-                <InfoRow label="Student" value={cert.studentName} />
-                <InfoRow label="Overall Score" value={cert.overall} />
-              </>
-            ) : (
-              <>
-                <SkeletonBar height={14} />
-                <SkeletonBar height={14} />
-              </>
-            )} */}
-            {cert ? (
+            {isCourseLocked ? (
+              <Typography sx={{ fontSize: "0.8rem", color: COLORS.textMuted, lineHeight: 1.5 }}>
+                Complete your course 100% to unlock your evaluation report. Aap abhi bhi ek preview dekh sakte ho.
+              </Typography>
+            ) : cert && isCourseCompleted ? (
               <>
                 <InfoRow label="Student" value={displayCert.studentName} />
                 <InfoRow label="Overall Score" value={displayCert.overall} />
               </>
             ) : (
               <>
-                <InfoRow label="Student" value={displayCert.studentName} />
-                <InfoRow label="Overall Score" value={displayCert.overall} />
+                <SkeletonBar height={14} />
+                <SkeletonBar height={14} />
               </>
             )}
             <Button
@@ -1709,12 +1634,13 @@ export default function CourseCertificate({
                 fontWeight: 800,
               }}
             >
-              View Full Certificate
+              {isCourseLocked ? "Preview Certificate" : "View Full Certificate"}
             </Button>
             <DownloadButton
               onClick={handleDownload}
               isGenerating={isGenerating}
               variant="solid"
+              disabled={isCourseLocked}
             />
           </Paper>
         </Grid>
