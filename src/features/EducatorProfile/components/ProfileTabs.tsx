@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 
 const TAB_LABELS = ['Home', 'Courses', 'Achivements', 
-  'Certifications', 
+ 
   'Reviews', 'Community'];
 
 interface ProfileTabsProps {
