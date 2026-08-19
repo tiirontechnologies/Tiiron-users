@@ -141,8 +141,7 @@ export const courseApiSlice = baseApi.injectEndpoints({
       query: (courseId: number) => ({
         url: `/course/${courseId}/certificate`,
         method: "GET",
-      }),
-      providesTags: ["Certificate"],
+      })
     }),
 
     // 🆕 Get course progress (used to gate certificate visibility/download)
