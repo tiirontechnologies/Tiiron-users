@@ -1,401 +1,8 @@
-// import React from 'react';
-// import { Box, Grid, Card, Typography, Link, Rating, Stack, Chip, Skeleton } from '@mui/material';
-// import { Star, TrendingUp, NewReleases, LocalFireDepartment, EmojiEvents, MenuBook } from '@mui/icons-material';
-// import { EducatorProfileData } from '../types/educator.types';
-
-// // Raw course shape as returned by getCoursesByUsername
-// export interface RawCourse {
-//   id: number | string;
-//   title: string;
-//   description?: string;
-//   language?: string[];
-//   level?: string;
-//   image?: string | null;
-//   isFree?: boolean;
-//   price?: number;
-//   totalChapters?: number;
-//   averageRating?: number;
-//   totalRatings?: number;
-//   createdAt?: string;
-//   createdBy?: string;
-// }
-
-// interface AboutTabProps {
-//   data: EducatorProfileData;
-//   courses?: RawCourse[];
-//   isCoursesLoading?: boolean;
-// }
-
-// const COLORS = ['#4F46E5', '#0EA5E9', '#F59E0B', '#10B981', '#EC4899', '#8B5CF6'];
-// const colorForIndex = (i: number) => COLORS[i % COLORS.length];
-
-// const isRecentlyAdded = (createdAt?: string) => {
-//   if (!createdAt) return false;
-//   const days = (Date.now() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24);
-//   return days <= 14;
-// };
-
-// const initials = (title: string) =>
-//   title
-//     .trim()
-//     .split(' ')
-//     .slice(0, 2)
-//     .map((w) => w.charAt(0).toUpperCase())
-//     .join('');
-
-// function EmptyState({ icon, text }: { icon: React.ReactNode; text: string }) {
-//   return (
-//     <Box sx={{ py: 4, textAlign: 'center' }}>
-//       <Box sx={{ color: '#CBD5E1', mb: 1 }}>{icon}</Box>
-//       <Typography variant="body2" color="text.secondary">
-//         {text}
-//       </Typography>
-//     </Box>
-//   );
-// }
-
-// function SectionHeader({
-//   icon,
-//   title,
-//   action,
-// }: {
-//   icon: React.ReactNode;
-//   title: string;
-//   action?: React.ReactNode;
-// }) {
-//   return (
-//     <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2.5 }}>
-//       <Stack direction="row" alignItems="center" spacing={1.2}>
-//         <Box
-//           sx={{
-//             width: 34,
-//             height: 34,
-//             borderRadius: 2,
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//             bgcolor: '#EEF2FF',
-//           }}
-//         >
-//           {icon}
-//         </Box>
-//         <Typography variant="h6" sx={{ fontWeight: 800, fontSize: '1.05rem' }}>
-//           {title}
-//         </Typography>
-//       </Stack>
-//       {action}
-//     </Stack>
-//   );
-// }
-
-// function CourseRow({ course, index, isNew }: { course: RawCourse; index: number; isNew?: boolean }) {
-//   const rating = course.averageRating ?? 0;
-//   const ratingsLabel =
-//     course.totalRatings && course.totalRatings > 0
-//       ? `${course.totalRatings} rating${course.totalRatings > 1 ? 's' : ''}`
-//       : 'No ratings yet';
-
-//   return (
-//     <Box
-//       sx={{
-//         display: 'flex',
-//         gap: 2,
-//         alignItems: 'center',
-//         p: 1,
-//         borderRadius: 2.5,
-//         transition: 'background-color .15s ease',
-//         '&:hover': { bgcolor: '#F8FAFC' },
-//         '&:not(:last-of-type)': { mb: 0.5 },
-//       }}
-//     >
-//       <Box
-//         sx={{
-//           position: 'relative',
-//           width: 76,
-//           height: 56,
-//           borderRadius: 2,
-//           overflow: 'hidden',
-//           flexShrink: 0,
-//           bgcolor: colorForIndex(index),
-//           backgroundImage: course.image ? `url(${course.image})` : undefined,
-//           backgroundSize: 'cover',
-//           backgroundPosition: 'center',
-//           display: 'flex',
-//           alignItems: 'center',
-//           justifyContent: 'center',
-//           color: 'white',
-//           fontWeight: 800,
-//           fontSize: 14,
-//           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-//         }}
-//       >
-//         {!course.image && initials(course.title)}
-//         {isNew && (
-//           <Chip
-//             label="New"
-//             size="small"
-//             sx={{
-//               position: 'absolute',
-//               top: -6,
-//               right: -6,
-//               height: 18,
-//               fontSize: 9,
-//               fontWeight: 800,
-//               bgcolor: '#4F46E5',
-//               color: 'white',
-//               boxShadow: '0 2px 6px rgba(79,70,229,0.4)',
-//             }}
-//           />
-//         )}
-//       </Box>
-//       <Box sx={{ minWidth: 0, flex: 1 }}>
-//         <Typography variant="subtitle2" sx={{ fontWeight: 700, lineHeight: 1.3 }} noWrap>
-//           {course.title}
-//         </Typography>
-//         <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.2 }}>
-//           {ratingsLabel}
-//         </Typography>
-//         <Stack direction="row" alignItems="center" spacing={0.4} sx={{ mt: 0.3 }}>
-//           <Star sx={{ color: '#F59E0B', fontSize: 14 }} />
-//           <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827' }}>
-//             {rating.toFixed(1)}
-//           </Typography>
-//         </Stack>
-//       </Box>
-//       <Chip
-//         label={course.isFree ? 'Free' : `₹${course.price ?? 0}`}
-//         size="small"
-//         sx={{
-//           fontWeight: 700,
-//           fontSize: 11,
-//           bgcolor: course.isFree ? '#ECFDF5' : '#F1F5F9',
-//           color: course.isFree ? '#059669' : '#334155',
-//         }}
-//       />
-//     </Box>
-//   );
-// }
-
-// function CourseRowSkeleton() {
-//   return (
-//     <Box sx={{ display: 'flex', gap: 2, mb: 1.5, alignItems: 'center' }}>
-//       <Skeleton variant="rounded" width={76} height={56} sx={{ borderRadius: 2, flexShrink: 0 }} />
-//       <Box sx={{ flex: 1 }}>
-//         <Skeleton variant="text" width="70%" />
-//         <Skeleton variant="text" width="40%" />
-//         <Skeleton variant="text" width="30%" />
-//       </Box>
-//     </Box>
-//   );
-// }
-
-// const cardSx = {
-//   borderRadius: 4,
-//   p: { xs: 2, sm: 3 },
-//   border: '1px solid',
-//   borderColor: '#EEF0F4',
-//   boxShadow: '0 1px 3px rgba(15,23,42,0.04)',
-// };
-
-// export default function AboutTab({ data, courses = [], isCoursesLoading = false }: AboutTabProps) {
-//   // Sorted by rating (highest first) — this drives "Top Courses"
-//   const topCourses = [...courses].sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0));
-
-//   // Most reviewed → "Featured Courses"
-//   const featuredCourses = [...courses]
-//     .sort((a, b) => (b.totalRatings ?? 0) - (a.totalRatings ?? 0))
-//     .slice(0, 3);
-
-//   // Latest added → "Recent Courses"
-//   const recentCourses = [...courses]
-//     .sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime())
-//     .slice(0, 3);
-
-//   // Real rating data (no fabricated names/comments) → "Top Rated" panel
-//   const topRated = [...courses]
-//     .filter((c) => (c.averageRating ?? 0) > 0)
-//     .sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0))
-//     .slice(0, 4);
-
-//   return (
-//     <Grid container spacing={3} sx={{ mt: 0.5 }}>
-//       <Grid item xs={12} md={7}>
-//         <Card sx={{ ...cardSx, mb: 3, minHeight: '260px' }}>
-//           <SectionHeader icon={<TrendingUp sx={{ color: '#4F46E5', fontSize: 20 }} />} title="Top Courses" />
-
-//           {isCoursesLoading ? (
-//             <>
-//               <CourseRowSkeleton />
-//               <CourseRowSkeleton />
-//             </>
-//           ) : topCourses.length > 0 ? (
-//             topCourses.slice(0, 5).map((course, i) => <CourseRow key={course.id} course={course} index={i} />)
-//           ) : (
-//             <EmptyState icon={<MenuBook sx={{ fontSize: 40 }} />} text="No courses yet" />
-//           )}
-//         </Card>
-
-//         <Card sx={cardSx}>
-//           <SectionHeader icon={<NewReleases sx={{ color: '#4F46E5', fontSize: 20 }} />} title="Recent Courses" />
-
-//           {isCoursesLoading ? (
-//             <>
-//               <CourseRowSkeleton />
-//               <CourseRowSkeleton />
-//             </>
-//           ) : recentCourses.length > 0 ? (
-//             recentCourses.map((course, i) => (
-//               <CourseRow key={course.id} course={course} index={i} isNew={isRecentlyAdded(course.createdAt)} />
-//             ))
-//           ) : (
-//             <EmptyState icon={<NewReleases sx={{ fontSize: 40 }} />} text="No courses yet" />
-//           )}
-//         </Card>
-//       </Grid>
-
-//       <Grid item xs={12} md={5}>
-//         <Card sx={{ ...cardSx, mb: 3 }}>
-//           <SectionHeader
-//             icon={<LocalFireDepartment sx={{ color: '#F59E0B', fontSize: 20 }} />}
-//             title="Featured Courses"
-//             action={
-//               featuredCourses.length > 0 && (
-//                 <Link href="#" variant="body2" sx={{ color: '#4F46E5', fontWeight: 700, fontSize: 13 }}>
-//                   View all →
-//                 </Link>
-//               )
-//             }
-//           />
-
-//           {isCoursesLoading ? (
-//             <>
-//               <CourseRowSkeleton />
-//               <CourseRowSkeleton />
-//             </>
-//           ) : featuredCourses.length > 0 ? (
-//             featuredCourses.map((course, i) => (
-//               <Box
-//                 key={course.id}
-//                 sx={{
-//                   display: 'flex',
-//                   gap: 2,
-//                   alignItems: 'center',
-//                   p: 1,
-//                   borderRadius: 2.5,
-//                   transition: 'background-color .15s ease',
-//                   '&:hover': { bgcolor: '#F8FAFC' },
-//                   '&:not(:last-of-type)': { mb: 0.5 },
-//                 }}
-//               >
-//                 <Box
-//                   sx={{
-//                     width: 68,
-//                     height: 48,
-//                     borderRadius: 2,
-//                     overflow: 'hidden',
-//                     bgcolor: colorForIndex(i),
-//                     backgroundImage: course.image ? `url(${course.image})` : undefined,
-//                     backgroundSize: 'cover',
-//                     backgroundPosition: 'center',
-//                     display: 'flex',
-//                     alignItems: 'center',
-//                     justifyContent: 'center',
-//                     color: 'white',
-//                     fontWeight: 800,
-//                     fontSize: 12,
-//                     flexShrink: 0,
-//                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-//                   }}
-//                 >
-//                   {!course.image && initials(course.title)}
-//                 </Box>
-//                 <Box sx={{ minWidth: 0, flex: 1 }}>
-//                   <Typography variant="subtitle2" sx={{ fontWeight: 700, lineHeight: 1.2 }} noWrap>
-//                     {course.title}
-//                   </Typography>
-//                   <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.2 }}>
-//                     {course.isFree ? 'Free' : `₹${course.price ?? 0}`}
-//                   </Typography>
-//                   <Stack direction="row" alignItems="center" spacing={0.4} sx={{ mt: 0.2 }}>
-//                     <Star sx={{ color: '#F59E0B', fontSize: 13 }} />
-//                     <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827' }}>
-//                       {(course.averageRating ?? 0).toFixed(1)}
-//                     </Typography>
-//                   </Stack>
-//                 </Box>
-//               </Box>
-//             ))
-//           ) : (
-//             <EmptyState icon={<LocalFireDepartment sx={{ fontSize: 40 }} />} text="No courses yet" />
-//           )}
-//         </Card>
-
-//         <Card sx={cardSx}>
-//           <SectionHeader
-//             icon={<EmojiEvents sx={{ color: '#4F46E5', fontSize: 20 }} />}
-//             title="Top Rated"
-//             action={
-//               topRated.length > 0 && (
-//                 <Link href="#" variant="body2" sx={{ color: '#4F46E5', fontWeight: 700, fontSize: 13 }}>
-//                   View all →
-//                 </Link>
-//               )
-//             }
-//           />
-
-//           {isCoursesLoading ? (
-//             <>
-//               <CourseRowSkeleton />
-//               <CourseRowSkeleton />
-//             </>
-//           ) : topRated.length > 0 ? (
-//             <Stack spacing={1.5}>
-//               {topRated.map((course) => (
-//                 <Stack
-//                   key={course.id}
-//                   direction="row"
-//                   spacing={1.5}
-//                   alignItems="center"
-//                   sx={{
-//                     p: 1.5,
-//                     borderRadius: 2.5,
-//                     bgcolor: '#F8FAFC',
-//                     border: '1px solid #EEF0F4',
-//                   }}
-//                 >
-//                   <Box sx={{ minWidth: 0, flex: 1 }}>
-//                     <Typography variant="subtitle2" sx={{ fontWeight: 700 }} noWrap>
-//                       {course.title}
-//                     </Typography>
-//                     <Stack direction="row" alignItems="center" spacing={0.8} sx={{ mt: 0.3 }}>
-//                       <Rating value={course.averageRating ?? 0} readOnly size="small" precision={0.5} />
-//                       <Typography variant="caption" color="text.secondary">
-//                         ({course.totalRatings ?? 0})
-//                       </Typography>
-//                     </Stack>
-//                   </Box>
-//                   <Typography variant="h6" sx={{ fontWeight: 800, color: '#F59E0B', flexShrink: 0 }}>
-//                     {(course.averageRating ?? 0).toFixed(1)}
-//                   </Typography>
-//                 </Stack>
-//               ))}
-//             </Stack>
-//           ) : (
-//             <EmptyState icon={<Star sx={{ fontSize: 40 }} />} text="No ratings yet" />
-//           )}
-//         </Card>
-//       </Grid>
-//     </Grid>
-//   );
-// }
-
-
-import React from 'react';
-import { Box, Grid, Card, Typography, Link, Rating, Stack, Chip, Skeleton } from '@mui/material';
-import { Star, TrendingUp, NewReleases, LocalFireDepartment, EmojiEvents, MenuBook } from '@mui/icons-material';
+import React, { useMemo } from 'react';
+import { Box, Grid, Card, Typography, Stack, Chip, Skeleton, Avatar } from '@mui/material';
+import { Star, MenuBook, School, AutoAwesome, LocalOffer, Groups } from '@mui/icons-material';
 import { EducatorProfileData } from '../types/educator.types';
 
-// Raw course shape as returned by getCoursesByUsername
 export interface RawCourse {
   id: number | string;
   title: string;
@@ -418,375 +25,360 @@ interface AboutTabProps {
   isCoursesLoading?: boolean;
 }
 
-const COLORS = ['#4F46E5', '#0EA5E9', '#F59E0B', '#10B981', '#EC4899', '#8B5CF6'];
-const colorForIndex = (i: number) => COLORS[i % COLORS.length];
+const LIST_LIMIT = 3;
+const STATIC_SUBSCRIBERS = 245;
 
-const isRecentlyAdded = (createdAt?: string) => {
-  if (!createdAt) return false;
-  const days = (Date.now() - new Date(createdAt).getTime()) / (1000 * 60 * 60 * 24);
-  return days <= 14;
-};
-
-const initials = (title: string) =>
-  title
-    .trim()
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w.charAt(0).toUpperCase())
-    .join('');
-
-function EmptyState({ icon, text }: { icon: React.ReactNode; text: string }) {
+function TypeBadge({ course }: { course: RawCourse }) {
+  const free = course.isFree || Number(course.price) === 0;
   return (
-    <Box sx={{ py: 4, textAlign: 'center' }}>
-      <Box sx={{ color: '#CBD5E1', mb: 1 }}>{icon}</Box>
-      <Typography variant="body2" color="text.secondary">
-        {text}
-      </Typography>
-    </Box>
-  );
-}
-
-function SectionHeader({
-  icon,
-  title,
-  action,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  action?: React.ReactNode;
-}) {
-  return (
-    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2.5 }}>
-      <Stack direction="row" alignItems="center" spacing={1.2}>
-        <Box
-          sx={{
-            width: 34,
-            height: 34,
-            borderRadius: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            bgcolor: '#EEF2FF',
-          }}
-        >
-          {icon}
-        </Box>
-        <Typography variant="h6" sx={{ fontWeight: 800, fontSize: '1.05rem' }}>
-          {title}
-        </Typography>
-      </Stack>
-      {action}
-    </Stack>
-  );
-}
-
-function CourseRow({ course, index, isNew }: { course: RawCourse; index: number; isNew?: boolean }) {
-  const rating = course.averageRating ?? 0;
-  const ratingsLabel =
-    course.totalRatings && course.totalRatings > 0
-      ? `${course.totalRatings} rating${course.totalRatings > 1 ? 's' : ''}`
-      : 'No ratings yet';
-
-  return (
-    <Box
+    <Chip
+      size="small"
+      label={free ? 'Free' : `₹${course.price ?? 0}`}
       sx={{
-        display: 'flex',
-        gap: 2,
-        alignItems: 'center',
-        p: 1,
-        borderRadius: 2.5,
-        transition: 'background-color .15s ease',
-        '&:hover': { bgcolor: '#F8FAFC' },
-        '&:not(:last-of-type)': { mb: 0.5 },
+        height: 17,
+        fontSize: 9,
+        fontWeight: 700,
+        bgcolor: free ? '#ECFDF5' : '#EEF2FF',
+        color: free ? '#059669' : '#4338CA',
       }}
+    />
+  );
+}
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{ py: 2, textAlign: 'center', fontSize: 12.5, fontWeight: 500 }}
     >
-      <Box
-        sx={{
-          position: 'relative',
-          width: 76,
-          height: 56,
-          borderRadius: 2,
-          overflow: 'hidden',
-          flexShrink: 0,
-          bgcolor: colorForIndex(index),
-          backgroundImage: course.image ? `url(${course.image})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          fontWeight: 800,
-          fontSize: 14,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-        }}
-      >
-        {!course.image && initials(course.title)}
-        {isNew && (
-          <Chip
-            label="New"
-            size="small"
-            sx={{
-              position: 'absolute',
-              top: -6,
-              right: -6,
-              height: 18,
-              fontSize: 9,
-              fontWeight: 800,
-              bgcolor: '#4F46E5',
-              color: 'white',
-              boxShadow: '0 2px 6px rgba(79,70,229,0.4)',
-            }}
-          />
-        )}
-      </Box>
-      <Box sx={{ minWidth: 0, flex: 1 }}>
-        <Typography variant="subtitle2" sx={{ fontWeight: 700, lineHeight: 1.3 }} noWrap>
-          {course.title}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.2 }}>
-          {ratingsLabel}
-        </Typography>
-        <Stack direction="row" alignItems="center" spacing={0.4} sx={{ mt: 0.3 }}>
-          <Star sx={{ color: '#F59E0B', fontSize: 14 }} />
-          <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827' }}>
-            {rating.toFixed(1)}
-          </Typography>
-        </Stack>
-      </Box>
-      <Chip
-        label={course.isFree ? 'Free' : `₹${course.price ?? 0}`}
-        size="small"
-        sx={{
-          fontWeight: 700,
-          fontSize: 11,
-          bgcolor: course.isFree ? '#ECFDF5' : '#F1F5F9',
-          color: course.isFree ? '#059669' : '#334155',
-        }}
-      />
-    </Box>
+      {message}
+    </Typography>
   );
 }
 
 function CourseRowSkeleton() {
   return (
-    <Box sx={{ display: 'flex', gap: 2, mb: 1.5, alignItems: 'center' }}>
-      <Skeleton variant="rounded" width={76} height={56} sx={{ borderRadius: 2, flexShrink: 0 }} />
+    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', p: 0.9 }}>
+      <Skeleton variant="rounded" width={64} height={48} sx={{ borderRadius: 1.5, flexShrink: 0 }} />
       <Box sx={{ flex: 1 }}>
         <Skeleton variant="text" width="70%" />
         <Skeleton variant="text" width="40%" />
-        <Skeleton variant="text" width="30%" />
       </Box>
     </Box>
   );
 }
 
-const cardSx = {
-  borderRadius: 4,
-  p: { xs: 2, sm: 3 },
-  border: '1px solid',
-  borderColor: '#EEF0F4',
-  boxShadow: '0 1px 3px rgba(15,23,42,0.04)',
-};
-
-export default function AboutTab({ data, courses = [], isCoursesLoading = false }: AboutTabProps) {
-  // ✅ Each course appears in ONLY ONE section. Priority order:
-  // Top Courses → Featured Courses → Recent Courses → Top Rated
-  // Once a course is used in an earlier section, it's excluded from every section after it.
-  const usedIds = new Set<RawCourse['id']>();
-
-  // 1) Top Courses — highest rated first
-  const topCourses = [...courses]
-    .sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0))
-    .slice(0, 5);
-  topCourses.forEach((c) => usedIds.add(c.id));
-
-  // 2) Featured Courses — most reviewed, excluding anything already in Top Courses
-  const featuredCourses = [...courses]
-    .filter((c) => !usedIds.has(c.id))
-    .sort((a, b) => (b.totalRatings ?? 0) - (a.totalRatings ?? 0))
-    .slice(0, 3);
-  featuredCourses.forEach((c) => usedIds.add(c.id));
-
-  // 3) Recent Courses — latest added, excluding anything already shown above
-  const recentCourses = [...courses]
-    .filter((c) => !usedIds.has(c.id))
-    .sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime())
-    .slice(0, 3);
-  recentCourses.forEach((c) => usedIds.add(c.id));
-
-  // 4) Top Rated — remaining courses with a real rating, excluding anything already shown above
-  const topRated = [...courses]
-    .filter((c) => !usedIds.has(c.id) && (c.averageRating ?? 0) > 0)
-    .sort((a, b) => (b.averageRating ?? 0) - (a.averageRating ?? 0))
-    .slice(0, 4);
+function CourseRow({
+  course,
+  variant,
+}: {
+  course: RawCourse;
+  variant: 'recent' | 'top';
+}) {
+  const rating = Number(course.averageRating ?? 0);
+  const lessonCount = course.totalChapters ?? 0;
 
   return (
-    <Grid container spacing={3} sx={{ mt: 0.5 }}>
-      <Grid item xs={12} md={7}>
-        <Card sx={{ ...cardSx, mb: 3, minHeight: '260px' }}>
-          <SectionHeader icon={<TrendingUp sx={{ color: '#4F46E5', fontSize: 20 }} />} title="Top Courses" />
+    <Box
+      sx={{
+        display: 'flex',
+        gap: 1,
+        p: 0.9,
+        borderRadius: 2.5,
+        border: '1px solid #EEF2F7',
+        bgcolor: '#fff',
+        transition: 'all .2s',
+        '&:hover': {
+          borderColor: variant === 'recent' ? '#C7D2FE' : '#FDE68A',
+          boxShadow:
+            variant === 'recent'
+              ? '0 6px 16px rgba(79,70,229,.10)'
+              : '0 6px 16px rgba(245,158,11,.12)',
+          transform: 'translateY(-1px)',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          width: 64,
+          height: 48,
+          flexShrink: 0,
+          borderRadius: 1.5,
+          overflow: 'hidden',
+          bgcolor: '#EEF2FF',
+        }}
+      >
+        <Box
+          component="img"
+          src={course.image || '/Tiiron_logo.png'}
+          alt={course.title}
+          sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </Box>
 
-          {isCoursesLoading ? (
+      <Box minWidth={0} flex={1}>
+        <Typography fontWeight={700} fontSize={12.5} noWrap>
+          {course.title}
+        </Typography>
+        <Stack direction="row" spacing={0.6} alignItems="center" mt={0.3} flexWrap="wrap">
+          {variant === 'top' ? (
             <>
-              <CourseRowSkeleton />
-              <CourseRowSkeleton />
+              <Star sx={{ color: '#F59E0B', fontSize: 13 }} />
+              <Typography variant="caption" fontWeight={700} fontSize={11}>
+                {rating ? rating.toFixed(1) : 'New'}
+              </Typography>
+              <Typography variant="caption" color="text.secondary" fontSize={11}>
+                ({course.totalRatings ?? 0})
+              </Typography>
             </>
-          ) : topCourses.length > 0 ? (
-            topCourses.map((course, i) => <CourseRow key={course.id} course={course} index={i} />)
           ) : (
-            <EmptyState icon={<MenuBook sx={{ fontSize: 40 }} />} text="No courses yet" />
+            <Typography variant="caption" color="text.secondary" fontSize={11}>
+              {course.createdAt
+                ? new Date(course.createdAt).toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                  })
+                : '—'}
+            </Typography>
           )}
-        </Card>
+          <Typography variant="caption" color="text.secondary" fontSize={11}>
+            • {lessonCount} lesson{lessonCount === 1 ? '' : 's'}
+          </Typography>
+        </Stack>
+        <Box mt={0.5}>
+          <TypeBadge course={course} />
+        </Box>
+      </Box>
+    </Box>
+  );
+}
 
-        <Card sx={cardSx}>
-          <SectionHeader icon={<NewReleases sx={{ color: '#4F46E5', fontSize: 20 }} />} title="Recent Courses" />
+function StatTile({
+  icon,
+  value,
+  label,
+  bg,
+  color,
+}: {
+  icon: React.ReactNode;
+  value: string | number;
+  label: string;
+  bg: string;
+  color: string;
+}) {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1.25,
+        borderRadius: 2.5,
+        p: 1.1,
+        bgcolor: '#F8FAFC',
+        transition: 'all .2s',
+        '&:hover': { bgcolor: '#F1F5F9' },
+      }}
+    >
+      <Avatar sx={{ width: 34, height: 34, bgcolor: bg, color, flexShrink: 0 }}>{icon}</Avatar>
+      <Box minWidth={0}>
+        <Typography fontWeight={800} fontSize={15} color="#1E293B" lineHeight={1.2}>
+          {value}
+        </Typography>
+        <Typography fontSize={10.5} color="text.secondary" fontWeight={500}>
+          {label}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
-          {isCoursesLoading ? (
-            <>
-              <CourseRowSkeleton />
-              <CourseRowSkeleton />
-            </>
-          ) : recentCourses.length > 0 ? (
-            recentCourses.map((course, i) => (
-              <CourseRow key={course.id} course={course} index={i} isNew={isRecentlyAdded(course.createdAt)} />
-            ))
-          ) : (
-            <EmptyState icon={<NewReleases sx={{ fontSize: 40 }} />} text="No courses yet" />
-          )}
-        </Card>
+export default function AboutTab({ data, courses = [], isCoursesLoading = false }: AboutTabProps) {
+  const { recentCourses, topCourses } = useMemo(() => {
+    if (!courses.length) return { recentCourses: [], topCourses: [] };
+
+    const top = [...courses]
+      .filter((c) => Number(c.averageRating ?? 0) > 0)
+      .sort((a, b) => Number(b.averageRating ?? 0) - Number(a.averageRating ?? 0))
+      .slice(0, LIST_LIMIT);
+
+    const topIds = new Set(top.map((c) => c.id));
+
+    const recent = [...courses]
+      .filter((c) => !topIds.has(c.id))
+      .sort(
+        (a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime(),
+      )
+      .slice(0, LIST_LIMIT);
+
+    return { recentCourses: recent, topCourses: top };
+  }, [courses]);
+
+  const totalCourses = courses.length;
+  const ratedCourses = courses.filter((c) => Number(c.averageRating ?? 0) > 0);
+  const avgRating = ratedCourses.length
+    ? (
+        ratedCourses.reduce((sum, c) => sum + Number(c.averageRating ?? 0), 0) /
+        ratedCourses.length
+      ).toFixed(1)
+    : '—';
+  const totalLessons = courses.reduce((sum, c) => sum + Number(c.totalChapters ?? 0), 0);
+  const freeCourses = courses.filter((c) => c.isFree || Number(c.price) === 0).length;
+
+  return (
+    <Grid
+      container
+      spacing={{ xs: 2, md: 3 }}
+      sx={{ width: '100%', maxWidth: '100%', m: 0, minWidth: 0, overflowX: 'clip' }}
+    >
+      {/* Left — Recent + Top, side by side columns */}
+      <Grid item xs={12} md={8} sx={{ minWidth: 0 }}>
+        <Grid container spacing={{ xs: 2, sm: 2.5 }}>
+          <Grid item xs={12} sm={6}>
+            <Card
+              sx={{
+                borderRadius: '16px',
+                boxShadow: '0 2px 12px rgba(0,0,0,.06)',
+                p: { xs: 1.5, sm: 2.25 },
+                height: '100%',
+              }}
+            >
+              <Stack direction="row" alignItems="center" spacing={1} mb={1.25}>
+                <MenuBook sx={{ fontSize: 19, color: '#4F46E5' }} />
+                <Typography variant="subtitle1" fontWeight={700} fontSize={15}>
+                  Recent Courses
+                </Typography>
+              </Stack>
+              {isCoursesLoading ? (
+                <Stack spacing={1}>
+                  <CourseRowSkeleton />
+                  <CourseRowSkeleton />
+                </Stack>
+              ) : recentCourses.length ? (
+                <Stack spacing={1}>
+                  {recentCourses.map((c) => (
+                    <CourseRow key={c.id} course={c} variant="recent" />
+                  ))}
+                </Stack>
+              ) : (
+                <EmptyState message="Create your first course to see it here." />
+              )}
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Card
+              sx={{
+                borderRadius: '16px',
+                boxShadow: '0 2px 12px rgba(0,0,0,.06)',
+                p: { xs: 1.5, sm: 2.25 },
+                height: '100%',
+                background: 'linear-gradient(145deg, #FFFFFF 0%, #FFFBEB 100%)',
+              }}
+            >
+              <Stack direction="row" alignItems="center" spacing={1} mb={1.25}>
+                <Star sx={{ fontSize: 19, color: '#F59E0B' }} />
+                <Typography variant="subtitle1" fontWeight={700} fontSize={15}>
+                  Top Courses
+                </Typography>
+              </Stack>
+              {isCoursesLoading ? (
+                <Stack spacing={1}>
+                  <CourseRowSkeleton />
+                  <CourseRowSkeleton />
+                </Stack>
+              ) : topCourses.length ? (
+                <Stack spacing={1}>
+                  {topCourses.map((c) => (
+                    <CourseRow key={c.id} course={c} variant="top" />
+                  ))}
+                </Stack>
+              ) : (
+                <EmptyState message="No top rated course yet." />
+              )}
+            </Card>
+          </Grid>
+        </Grid>
       </Grid>
 
-      <Grid item xs={12} md={5}>
-        <Card sx={{ ...cardSx, mb: 3 }}>
-          <SectionHeader
-            icon={<LocalFireDepartment sx={{ color: '#F59E0B', fontSize: 20 }} />}
-            title="Featured Courses"
-            action={
-              featuredCourses.length > 0 && (
-                <Link href="#" variant="body2" sx={{ color: '#4F46E5', fontWeight: 700, fontSize: 13 }}>
-                  View all →
-                </Link>
-              )
-            }
-          />
+      {/* Right — Educator Snapshot */}
+      <Grid item xs={12} md={4} sx={{ minWidth: 0 }}>
+        <Card
+          sx={{
+            borderRadius: '16px',
+            boxShadow: '0 2px 12px rgba(0,0,0,.06)',
+            p: { xs: 1.75, sm: 2.5 },
+            height: '100%',
+            background: 'linear-gradient(150deg, #FFFFFF 0%, #F5F3FF 100%)',
+            border: '1px solid #EEF2FF',
+          }}
+        >
+          <Stack direction="row" alignItems="center" spacing={1} mb={0.4}>
+            <Box
+              sx={{
+                width: 30,
+                height: 30,
+                borderRadius: '50%',
+                bgcolor: '#EEF2FF',
+                color: '#4F46E5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <AutoAwesome sx={{ fontSize: 16 }} />
+            </Box>
+            <Typography variant="subtitle1" fontWeight={700} fontSize={15}>
+              Educator Snapshot
+            </Typography>
+          </Stack>
 
-          {isCoursesLoading ? (
-            <>
-              <CourseRowSkeleton />
-              <CourseRowSkeleton />
-            </>
-          ) : featuredCourses.length > 0 ? (
-            featuredCourses.map((course, i) => (
-              <Box
-                key={course.id}
-                sx={{
-                  display: 'flex',
-                  gap: 2,
-                  alignItems: 'center',
-                  p: 1,
-                  borderRadius: 2.5,
-                  transition: 'background-color .15s ease',
-                  '&:hover': { bgcolor: '#F8FAFC' },
-                  '&:not(:last-of-type)': { mb: 0.5 },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 68,
-                    height: 48,
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    bgcolor: colorForIndex(i),
-                    backgroundImage: course.image ? `url(${course.image})` : undefined,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 800,
-                    fontSize: 12,
-                    flexShrink: 0,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  }}
-                >
-                  {!course.image && initials(course.title)}
-                </Box>
-                <Box sx={{ minWidth: 0, flex: 1 }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700, lineHeight: 1.2 }} noWrap>
-                    {course.title}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.2 }}>
-                    {course.isFree ? 'Free' : `₹${course.price ?? 0}`}
-                  </Typography>
-                  <Stack direction="row" alignItems="center" spacing={0.4} sx={{ mt: 0.2 }}>
-                    <Star sx={{ color: '#F59E0B', fontSize: 13 }} />
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: '#111827' }}>
-                      {(course.averageRating ?? 0).toFixed(1)}
-                    </Typography>
-                  </Stack>
-                </Box>
-              </Box>
-            ))
-          ) : (
-            <EmptyState icon={<LocalFireDepartment sx={{ fontSize: 40 }} />} text="No courses yet" />
-          )}
-        </Card>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mb: 2, lineHeight: 1.5, fontSize: 12.5 }}
+          >
+            A quick look at your teaching journey on Tiiron.
+          </Typography>
 
-        <Card sx={cardSx}>
-          <SectionHeader
-            icon={<EmojiEvents sx={{ color: '#4F46E5', fontSize: 20 }} />}
-            title="Top Rated"
-            action={
-              topRated.length > 0 && (
-                <Link href="#" variant="body2" sx={{ color: '#4F46E5', fontWeight: 700, fontSize: 13 }}>
-                  View all →
-                </Link>
-              )
-            }
-          />
-
-          {isCoursesLoading ? (
-            <>
-              <CourseRowSkeleton />
-              <CourseRowSkeleton />
-            </>
-          ) : topRated.length > 0 ? (
-            <Stack spacing={1.5}>
-              {topRated.map((course) => (
-                <Stack
-                  key={course.id}
-                  direction="row"
-                  spacing={1.5}
-                  alignItems="center"
-                  sx={{
-                    p: 1.5,
-                    borderRadius: 2.5,
-                    bgcolor: '#F8FAFC',
-                    border: '1px solid #EEF0F4',
-                  }}
-                >
-                  <Box sx={{ minWidth: 0, flex: 1 }}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }} noWrap>
-                      {course.title}
-                    </Typography>
-                    <Stack direction="row" alignItems="center" spacing={0.8} sx={{ mt: 0.3 }}>
-                      <Rating value={course.averageRating ?? 0} readOnly size="small" precision={0.5} />
-                      <Typography variant="caption" color="text.secondary">
-                        ({course.totalRatings ?? 0})
-                      </Typography>
-                    </Stack>
-                  </Box>
-                  <Typography variant="h6" sx={{ fontWeight: 800, color: '#F59E0B', flexShrink: 0 }}>
-                    {(course.averageRating ?? 0).toFixed(1)}
-                  </Typography>
-                </Stack>
-              ))}
-            </Stack>
-          ) : (
-            <EmptyState icon={<Star sx={{ fontSize: 40 }} />} text="No ratings yet" />
-          )}
+          <Stack spacing={1}>
+            <StatTile
+              icon={<School sx={{ fontSize: 17 }} />}
+              value={isCoursesLoading ? '…' : totalCourses}
+              label="Total Courses"
+              bg="#EEF2FF"
+              color="#4F46E5"
+            />
+            <StatTile
+              icon={<MenuBook sx={{ fontSize: 17 }} />}
+              value={isCoursesLoading ? '…' : totalLessons}
+              label="Lessons Delivered"
+              bg="#ECFDF5"
+              color="#059669"
+            />
+            <StatTile
+              icon={<Star sx={{ fontSize: 17 }} />}
+              value={isCoursesLoading ? '…' : avgRating}
+              label="Average Rating"
+              bg="#FEF3C7"
+              color="#B45309"
+            />
+            <StatTile
+              icon={<LocalOffer sx={{ fontSize: 17 }} />}
+              value={isCoursesLoading ? '…' : freeCourses}
+              label="Free Courses"
+              bg="#EFF6FF"
+              color="#2563EB"
+            />
+            <StatTile
+              icon={<Groups sx={{ fontSize: 17 }} />}
+              value={STATIC_SUBSCRIBERS}
+              label="Subscribers"
+              bg="#FDF2F8"
+              color="#DB2777"
+            />
+          </Stack>
         </Card>
       </Grid>
     </Grid>
