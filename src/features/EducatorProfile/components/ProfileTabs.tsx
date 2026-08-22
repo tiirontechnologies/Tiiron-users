@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 
-const TAB_LABELS = ['Home', 'Courses', 'Achivements', 
+const TAB_LABELS = ['Overview', 'Courses', 'Achivements', 
  
   'Reviews', 'Community'];
 

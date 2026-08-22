@@ -25,7 +25,7 @@ const TabsSection: React.FC = () => {
             onClick={() => setActiveTab(tab)}
             role="tab"
             aria-selected={activeTab === tab}
-            className={`snap-start whitespace-nowrap border-b-2 px-1.5 pb-3 font-medium transition-colors sm:px-0 ${
+            className={`snap-start whitespace-nowrap border-b-2 px-1.5 cursor-pointer pb-3 font-medium transition-colors sm:px-0 ${
               activeTab === tab
                 ? "border-indigo-600 text-indigo-600"
                 : "border-transparent text-slate-500 hover:text-slate-700"
@@ -56,7 +56,7 @@ const TabsSection: React.FC = () => {
 
 
       {activeTab === "Overview" && (
-  <div className="grid grid-cols-1 gap-5 p-4 sm:p-6 lg:grid-cols-2">
+  <div className="grid grid-cols-1 gap-5 p-4 sm:p-6 lg:grid-cols-2 cursor-pointer">
     <CurrentlyLearningCard />
     <AchievementsCard />
     <LearningJourneyCard />
