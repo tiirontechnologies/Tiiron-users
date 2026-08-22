@@ -40,40 +40,39 @@ export default function ProfileSidebar({
           )}
         </Box>
 
-      <Typography
-  variant="h5"
-  sx={{
-    fontWeight: 700,
-    mt: 2,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 0.5,
-    wordBreak: 'break-word',
-    overflowWrap: 'break-word',
-    px: 1,
-  }}
->
-  {data.name || 'Coming soon'} {data.isVerified && <Verified color="primary" fontSize="small" />}
-</Typography>
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+            mt: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 0.5,
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            px: 1,
+          }}
+        >
+          {data.name || 'Educator Profile'} {data.isVerified && <Verified color="primary" fontSize="small" />}
+        </Typography>
 
-<Typography
-  variant="body2"
-  color="text.secondary"
-  sx={{
-    mb: 2,
-    wordBreak: 'break-word',
-    overflowWrap: 'break-word',
-    px: 1,
-    // optional: limit to 2 lines with ellipsis instead of wrapping fully
-    display: '-webkit-box',
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden',
-  }}
->
-  {data.title || 'Coming soon'}
-</Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mb: 2,
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            px: 1,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
+          {data.title || 'This educator is still setting up their profile'}
+        </Typography>
 
         {data.tags?.length > 0 && (
           <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" sx={{ mb: 2, rowGap: 1 }}>
@@ -122,38 +121,38 @@ export default function ProfileSidebar({
 
             {website ? (
               <Typography
-  component="a"
-  href={
-    website.startsWith("http")
-      ? website
-      : `https://${website}`
-  }
-  target="_blank"
-  rel="noopener noreferrer"
-sx={{
-  fontSize: "0.875rem",
-  fontWeight: 600,
-  color: "#4F46E5",
-  textDecoration: "none",
-  textAlign: "left",
-  display: "block",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-  bgcolor: "#EEF2FF",
-  borderRadius: "6px",
-  px: 1.5,
-  py: 0.5,
-  mt: 0.5,
-  transition: "all 0.2s ease",
-  '&:hover': { bgcolor: '#E0E7FF' },
-}}
->
-  {website}
-</Typography>
+                component="a"
+                href={
+                  website.startsWith("http")
+                    ? website
+                    : `https://${website}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  color: "#4F46E5",
+                  textDecoration: "none",
+                  textAlign: "left",
+                  display: "block",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  bgcolor: "#EEF2FF",
+                  borderRadius: "6px",
+                  px: 1.5,
+                  py: 0.5,
+                  mt: 0.5,
+                  transition: "all 0.2s ease",
+                  '&:hover': { bgcolor: '#E0E7FF' },
+                }}
+              >
+                {website}
+              </Typography>
             ) : (
-              <Typography variant="body2" color="text.secondary" fontWeight={600}>
-                No website
+              <Typography variant="body2" color="text.secondary" fontWeight={600} sx={{ mt: 0.5 }}>
+                No website added yet
               </Typography>
             )}
           </Box>
@@ -161,7 +160,7 @@ sx={{
 
         <Button
           variant="contained"
-          startIcon={<Add/>}
+          startIcon={<Add />}
           fullWidth
           sx={{
             bgcolor: '#4F46E5',
