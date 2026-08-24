@@ -9,15 +9,15 @@ import {
   useUpdateCommentMutation,
   useDeleteCommentMutation,
 } from "./api/api";
-import CommentInput from "./components/CommentInput";
-import CommentCard from "./components/CommentCard";
-import CommentSkeleton from "./components/CommentSkeleton";
-import EmptyComment from "./components/EmptyComment";
+import CommentInput from "./Components/CommentInput";
+import CommentCard from "./Components/CommentCard";
+import CommentSkeleton from "./Components/CommentSkeleton";
+import EmptyComment from "./Components/EmptyComment";
 
 interface CommentProps {
   courseId: number;
-  currentUserId: number;
-  currentUserAvatar: string;
+  currentUserId?: number;
+  currentUserAvatar?: string;
 }
 
 const SORT_OPTIONS: { label: string; value: SortOption }[] = [

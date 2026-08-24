@@ -36,19 +36,21 @@ const ReplyCard: React.FC<ReplyCardProps> = ({ reply, currentUserAvatar, onReply
   return (
     <Box sx={{ pl: { xs: 3, sm: 6.5 } }}>
       <Stack
-        direction="row"
-        spacing={1.5}
-        sx={{
-          pt: 2,
-          ...(isMentor && {
-            bgcolor: commentTheme.colors.mentorBg,
-            borderLeft: `3px solid ${commentTheme.colors.mentorBorder}`,
-            borderRadius: "10px",
-            py: 1.5,
-            pr: 1.5,
-          }),
-        }}
-      >
+  direction="row"
+  spacing={1.5}
+  sx={{
+    pt: 2,
+    ...(isMentor
+      ? {
+          bgcolor: commentTheme.colors.mentorBg,
+          borderLeft: `3px solid ${commentTheme.colors.mentorBorder}`,
+          borderRadius: "10px",
+          py: 1.5,
+          pr: 1.5,
+        }
+      : {}),
+  }}
+>
         <Avatar
           src={reply.user.avatar || undefined}
           sx={{
