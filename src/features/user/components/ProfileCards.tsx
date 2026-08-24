@@ -222,7 +222,7 @@ const ProfileCard: React.FC = () => {
     return (
       <form
         onSubmit={handleSubmit(onSave)}
-        className="w-full max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
+        className="w-full max-w-full cursor-pointer  overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
       >
         <div className="relative mx-auto w-fit">
           <img

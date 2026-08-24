@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Avatar, Box, Typography } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
+import StarRoundedIcon from "@mui/icons-material/StarRounded";
 
 interface UserTestimonialProps {
   name?: string;
@@ -12,149 +13,125 @@ interface UserTestimonialProps {
 export default function UserTestimonial({
   name = "Mark Doe",
   rating = 5,
-  date = "22nd March, 2024",
-  review = "I was initially apprehensive, having no prior design experience. But the instructor, John Doe, did an amazing job of breaking down complex concepts into easily digestible modules. The video lectures were engaging, and the real-world examples really helped solidify my understanding.",
-  avatar = "https://storage.googleapis.com/a1aa/image/5147a9f3-030f-476c-1cb6-9f5e4c04e342.jpg",
+  date = "22 Mar 2026",
+  review = "",
+  avatar,
 }: UserTestimonialProps) {
+  const [expanded, setExpanded] = useState(false);
+  const isLongText = review.length > 180;
+
   return (
     <Box
       sx={{
-        maxWidth: "100%",
         width: "100%",
-        bgcolor: "white",
-        border: "1px solid #E2E8F0",
-        borderRadius: 3,
-        p: { xs: 2.5, md: 3 },
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        gap: { xs: 2, md: 3 },
-        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
-        transition: "all 0.2s ease",
+        bgcolor: "#fff",
+        border: "1px solid #E5E7EB",
+        borderRadius: 2.5,
+        p: 2,
+        transition: "all .2s ease",
         "&:hover": {
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          borderColor: "#4F39F6",
+          borderColor: "#4F46E5",
+          boxShadow: "0 8px 20px rgba(79,70,229,.08)",
         },
-        wordBreak: "break-word",
       }}
     >
-      <Box
-        sx={{
-          minWidth: 0,
-          width: { xs: "100%", md: "auto" },
-          display: "flex",
-          alignItems: { xs: "flex-start", md: "center" },
-          gap: 1.5,
-        }}
-      >
+      <Box sx={{ display: "flex", gap: 1.5 }}>
         <Avatar
           src={avatar}
           alt={name}
           sx={{
-            width: { xs: 56, md: 60 },
-            height: { xs: 56, md: 60 },
-            flexShrink: 0,
-            border: "2px solid #E2E8F0",
+            width: 44,
+            height: 44,
+            bgcolor: "#EEF2FF",
+            color: "#4338CA",
+            fontWeight: 700,
+            fontSize: 16,
           }}
-        />
-        <Box sx={{ display: { xs: "block", md: "none" } }}>
-          <Typography
-            fontWeight={600}
-            color="text.primary"
-            fontSize={16}
-            sx={{ mb: 0.5 }}
-          >
-            {name}
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.25 }}>
-              {[...Array(5)].map((_, i) => (
-                <StarIcon
-                  key={i}
-                  sx={{
-                    fontSize: 16,
-                    color: i < rating ? "#FBBF24" : "#E2E8F0",
-                  }}
-                />
-              ))}
-            </Box>
-            <Typography
-              fontWeight={600}
-              sx={{ color: "#0F172A", fontSize: 14 }}
-            >
-              {rating}
-            </Typography>
-          </Box>
-          <Typography color="text.secondary" fontSize={12} sx={{ color: "#64748B" }}>
-            Reviewed on {date}
-          </Typography>
-        </Box>
-      </Box>
+        >
+          {name?.charAt(0)}
+        </Avatar>
 
-      {/* Review Section */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-          width: "100%",
-          gap: 1.5,
-        }}
-      >
-        <Box
-          sx={{
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            gap: 2,
-            mb: 0.5,
-            flexWrap: "wrap",
-          }}
-        >
-          <Typography
-            fontWeight={600}
-            color="text.primary"
-            fontSize={16}
-            sx={{ display: { xs: "none", md: "block" } }}
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          {/* Name + Rating + Date */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              gap: 1,
+              mb: 0.8,
+            }}
           >
-            {name}
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            {[...Array(5)].map((_, i) => (
-              <StarIcon
-                key={i}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography
                 sx={{
-                  fontSize: 16,
-                  color: i < rating ? "#FBBF24" : "#E2E8F0",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "#111827",
                 }}
-              />
-            ))}
+              >
+                {name}
+              </Typography>
+
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
+                <StarRoundedIcon sx={{ fontSize: 15, color: "#F59E0B" }} />
+                <Typography
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#6B7280",
+                  }}
+                >
+                  {rating}.0
+                </Typography>
+              </Box>
+            </Box>
+
             <Typography
-              fontWeight={700}
-              sx={{ color: "#0F172A", fontSize: 16, ml: 0.5 }}
+              sx={{
+                fontSize: 11,
+                color: "#9CA3AF",
+                whiteSpace: "nowrap",
+              }}
             >
-              {rating}
+              {date}
             </Typography>
           </Box>
+
+          {/* Review Text */}
           <Typography
-            color="text.secondary"
-            fontSize={14}
-            sx={{ color: "#64748B" }}
+            sx={{
+              fontSize: 13.5,
+              color: "#4B5563",
+              lineHeight: 1.7,
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: expanded ? "unset" : 3,
+              overflow: "hidden",
+              wordBreak: "break-word",
+            }}
           >
-            Reviewed on {date}
+            {review || "No written review provided."}
           </Typography>
+
+          {isLongText && (
+            <Typography
+              onClick={() => setExpanded(!expanded)}
+              sx={{
+                mt: 0.75,
+                fontSize: 12,
+                fontWeight: 600,
+                color: "#4F46E5",
+                cursor: "pointer",
+                width: "fit-content",
+                "&:hover": { textDecoration: "underline" },
+              }}
+            >
+              {expanded ? "Read less" : "Read more"}
+            </Typography>
+          )}
         </Box>
-        <Typography
-          color="text.primary"
-          fontSize={16}
-          lineHeight={1.7}
-          sx={{
-            wordBreak: "break-word",
-            color: "#475569",
-          }}
-        >
-          {review}
-        </Typography>
       </Box>
     </Box>
   );
 }
-

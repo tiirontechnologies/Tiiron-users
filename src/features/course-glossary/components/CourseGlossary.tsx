@@ -11,6 +11,7 @@ import CourseOverview from "./CourseOverview";
 import CourseLessons from "./CourseLessons";
 import CourseReviews from "./CourseReviews";
 import CourseCertificate from "./CourseCertificates";
+import Comment from "@features/Comments";
 
 export default function CourseGlossary() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -241,6 +242,10 @@ export default function CourseGlossary() {
                 )}
 
                 {activeTab === 3 && (
+                  <Comment courseId={numericCourseId} />
+                )}
+
+                {activeTab === 4 && (
                   <CourseReviews courseId={numericCourseId} />
                 )}
               </Box>
