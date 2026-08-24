@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ENV } from '../config/env';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { ENV } from "../config/env";
 
 // Base query with authentication and error handling
 // Cookies are automatically sent by the browser, no need to manually set Authorization header
 const baseQuery = fetchBaseQuery({
   baseUrl: ENV.SERVER_URL,
-  credentials: 'include', // Include cookies in requests
+  credentials: "include", // Include cookies in requests
 });
 
 // Enhanced base query with error handling
@@ -51,34 +51,46 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
 // Base API configuration
 export const baseApi = createApi({
-  reducerPath: 'baseApi',
+  reducerPath: "baseApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Course', 'Chapter', 'Question', 'QuestionBank', 'Unit', 'Auth', 'Cart', 'Enrollment', 'PracticeSession', 'Progress', 'Rating', 'Profile'],
+  tagTypes: [
+    "Course",
+    "Chapter",
+    "Question",
+    "QuestionBank",
+    "Unit",
+    "Auth",
+    "Cart",
+    "Enrollment",
+    "PracticeSession",
+    "Progress",
+    "Rating",
+    "Profile",
+    "Comment",
+  ],
   endpoints: (builder) => ({
     // Check authentication status
     checkAuth: builder.query<{ success: boolean }, void>({
       query: () => ({
-        url: '/profile/me',
-        method: 'GET',
+        url: "/profile/me",
+        method: "GET",
       }),
-      providesTags: ['Auth'],
+      providesTags: ["Auth"],
     }),
   }),
 });
 
 // Export hooks for usage in components
-export const {
-  useCheckAuthQuery,
-} = baseApi;
+export const { useCheckAuthQuery } = baseApi;
 
 // Auth API configuration
 // Cookies are automatically sent by the browser, no need to manually set Authorization header
 export const authApi = createApi({
-  reducerPath: 'authApi',
+  reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: ENV.AUTH_URL,
-    credentials: 'include', // Include cookies in requests
+    credentials: "include", // Include cookies in requests
   }),
-  tagTypes: ['Auth'],
+  tagTypes: ["Auth"],
   endpoints: () => ({}),
 });

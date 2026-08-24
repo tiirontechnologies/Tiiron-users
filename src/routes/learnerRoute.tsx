@@ -3,7 +3,7 @@ import LocalLibraryIcon from "@icons/LocalLibraryIcon";
 import AutoStoriesIcon from "@icons/AutoStoriesIcon";
 import Courses from "../features/course-browse/pages/Courses";
 import MyCourses from "../features/my-course/pages/Courses";
-import ViewProfile from "../features/user/pages/ViewProfile";
+// import ViewProfile from "../features/user/pages/ViewProfile";
 import PrivateRoute from "@layouts/PrivateRoute";
 import ContactForm from "@pages/Contact";
 import EducatorProfile from "@features/EducatorProfile";
