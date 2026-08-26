@@ -28,6 +28,7 @@ interface CourseCardWrapperProps extends ICourseCardProps {
   onFavorite?: (courseId: number) => void;
   onArchive?: (courseId: number) => void;
   isFavorite?: boolean;
+   categories?: string;
 }
 
 export default function CourseCardWrapper({
@@ -38,6 +39,7 @@ export default function CourseCardWrapper({
   rating,
   id,
   price = 0,
+  categories,
   navigatePath,
   DeleteModalComponent,
   isCourseInCart = false,
@@ -189,6 +191,8 @@ export default function CourseCardWrapper({
         onFavorite={onFavorite}
         onArchive={onArchive}
         isFavorite={isFavorite}
+         categories={categories}
+         
       />
       {DeleteModalComponent && (
         <DeleteModalComponent

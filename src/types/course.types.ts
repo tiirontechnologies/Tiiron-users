@@ -42,11 +42,14 @@ interface ICourse {
 
   difficulty?: string;
   courseLevel?: string;
-  createdByUser?:{
-    profile?:{
-    picture:string;
-  }
-}}
+createdByUser?: {
+  firstName?: string;
+  lastName?: string;
+  profile?: {
+    picture?: string;
+  };
+}
+}
 
 interface ICourseCardProps {
   id: number;
