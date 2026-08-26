@@ -26,7 +26,7 @@ interface AboutTabProps {
 }
 
 const LIST_LIMIT = 3;
-const STATIC_SUBSCRIBERS = 245;
+const STATIC_SUBSCRIBERS = 0;
 
 function TypeBadge({ course }: { course: RawCourse }) {
   const free = course.isFree || Number(course.price) === 0;
@@ -71,7 +71,7 @@ function CourseRowSkeleton() {
 
 function CourseRow({
   course,
-  variant,
+  variant,ḥ
 }: {
   course: RawCourse;
   variant: 'recent' | 'top';
@@ -350,13 +350,13 @@ export default function AboutTab({ data, courses = [], isCoursesLoading = false 
               bg="#EEF2FF"
               color="#4F46E5"
             />
-            <StatTile
+            {/* <StatTile
               icon={<MenuBook sx={{ fontSize: 17 }} />}
               value={isCoursesLoading ? '…' : totalLessons}
               label="Lessons Delivered"
               bg="#ECFDF5"
               color="#059669"
-            />
+            /> */}
             <StatTile
               icon={<Star sx={{ fontSize: 17 }} />}
               value={isCoursesLoading ? '…' : avgRating}

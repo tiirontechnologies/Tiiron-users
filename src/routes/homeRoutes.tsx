@@ -10,6 +10,8 @@ import About from "@pages/About";
 import TermsAndConditions from "@pages/Term&Con";;
 import RefundPolicy from "@pages/Refund";
 import PrivacyPolicy from "@pages/PrivacyPage";
+import AutoStoriesIcon from "@icons/AutoStoriesIcon";
+import Courses from "../features/course-browse/pages/Courses";
 
 // Home routes for the landing page
 export const homeRoutes: Route[] = [
@@ -17,6 +19,17 @@ export const homeRoutes: Route[] = [
     element: <Layout />,
     children: [
       { path: "/", element: <Landing /> },
+         {
+        label: "Browse Courses",
+        path: "/browse-courses",
+        icon: <AutoStoriesIcon />,
+        element: (
+          // <PrivateRoute >
+            <Courses />
+          // </PrivateRoute>
+        ) ,
+    },
+
       {path: "/generate-quiz", element : <QuizDashboard/>},
       { path: "/course-glossary/:courseId", element: <CourseGlossary /> },
       { path: "/browse-course/free", element: <FreeCourses /> },

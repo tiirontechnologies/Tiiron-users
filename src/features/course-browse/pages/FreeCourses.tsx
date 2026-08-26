@@ -18,6 +18,7 @@ const PAGE_LAYOUT_SX = {
   py: { xs: 3, md: 4 },
 };
 
+
 const CourseCardWithRating = ({
   course,
   isCourseInCart,
@@ -172,6 +173,8 @@ export default function FreeCourses() {
       key={course.id}
       course={course}
       isCourseInCart={isCourseInCart}
+
+      
       handleAddToCart={handleAddToCart}
       isAddingToCart={isAddingToCart}
     />
@@ -183,4 +186,3 @@ export default function FreeCourses() {
     </Box>
   );
 }
-
