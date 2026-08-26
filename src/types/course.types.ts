@@ -6,16 +6,27 @@ interface ICreateCourse {
   price: number;
 }
 
+interface ICreateCourse {
+  title: string;
+  description: string;
+  tags?: string[];
+  image?: File;
+  price: number;
+}
+
 interface ICourse {
   id: number;
   title: string;
   description: string;
-  permaLink: string;
+
+  permaLink: string | null;
 
   tags?: string[];
-  image: string;
 
-  duration: number;
+  image: string | null;
+
+  duration: number | null;
+
   price: number;
 
   createdAt: string;
@@ -23,6 +34,9 @@ interface ICourse {
 
   orgCode: string;
   createdBy: string;
+
+  instructor: string;
+  categories: string;
 
   _count: {
     chapters: number;
@@ -40,11 +54,16 @@ interface ICourse {
 
   difficulty?: string;
   courseLevel?: string;
-  createdByUser?:{
-    profile?:{
-    picture:string;
-  }
-}}
+
+  createdByUser?: {
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+  };
+
+  isFree?: boolean;
+  active?: boolean;
+}
 
 interface ICourseCardProps {
   id: number;
