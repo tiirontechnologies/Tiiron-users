@@ -5,7 +5,6 @@ import {
   CircularProgress,
   Stack,
   Typography,
-  Link,
 } from "@mui/material";
 
 import TelegramIcon from "@mui/icons-material/Telegram";
@@ -19,13 +18,10 @@ interface Props {
   educatorId: number;
 }
 
-export default function EducatorCommunity({
-  educatorId,
-}: Props) {
-  const { data, isLoading } =
-    useGetCommunityByUserIdQuery(educatorId, {
-      skip: !educatorId,
-    });
+export default function EducatorCommunity({ educatorId }: Props) {
+  const { data, isLoading } = useGetCommunityByUserIdQuery(educatorId, {
+    skip: !educatorId,
+  });
 
   if (isLoading) {
     return (
@@ -35,9 +31,7 @@ export default function EducatorCommunity({
     );
   }
 
-  if (!data) {
-    return null;
-  }
+  if (!data) return null;
 
   const communities = [
     {
@@ -60,9 +54,11 @@ export default function EducatorCommunity({
     },
   ].filter((item) => item.value);
 
-  if (communities.length === 0) {
-    return null;
-  }
+  if (communities.length === 0) return null;
+
+  const handleRedirect = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <Card
@@ -80,62 +76,53 @@ export default function EducatorCommunity({
               Join Community
             </Typography>
 
-            <Typography
-              variant="body2"
-              color="text.secondary"
-            >
+            <Typography variant="body2" color="text.secondary">
               Connect with this educator through their official community links.
             </Typography>
           </Box>
 
           <Stack spacing={2}>
             {communities.map((item) => (
-              <Link
+              <Box
                 key={item.label}
-                href={item.value!}
-                target="_blank"
-                underline="none"
-                color="inherit"
+                onClick={() => handleRedirect(item.value!)}
+                sx={{
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: 2,
+                  p: 2,
+                  cursor: "pointer",
+                  transition: "0.2s",
+                  "&:hover": {
+                    borderColor: item.color,
+                    bgcolor: "action.hover",
+                  },
+                }}
               >
-                <Box
-                  sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: 2,
-                    p: 2,
-                    transition: "0.2s",
-                    cursor: "pointer",
-                    "&:hover": {
-                      borderColor: item.color,
-                      bgcolor: "action.hover",
-                    },
-                  }}
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={2}
                 >
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={2}
-                  >
-                    {item.icon}
+                  {item.icon}
 
-                    <Box flex={1}>
-                      <Typography fontWeight={600}>
-                        {item.label}
-                      </Typography>
+                  <Box flex={1}>
+                    <Typography fontWeight={600}>
+                      {item.label}
+                    </Typography>
 
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        noWrap
-                      >
-                        {item.value}
-                      </Typography>
-                    </Box>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      noWrap
+                    >
+                      {item.value}
+                    </Typography>
+                  </Box>
 
-                    <LaunchIcon fontSize="small" />
-                  </Stack>
-                </Box>
-              </Link>
+                  <LaunchIcon fontSize="small" />
+                </Stack>
+              </Box>
             ))}
           </Stack>
         </Stack>
