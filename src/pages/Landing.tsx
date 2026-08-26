@@ -614,332 +614,264 @@ const Landing = () => {
         </Container>
       </Box>
 
-      {/* ================= TRENDING COURSES SECTION ================= */}
-      <Box
-        component="section"
-        sx={{ py: 6, bgcolor: alpha(theme.palette.grey[50], 0.5) }}
+      {/* ================= TRENDING COURSES SECTION ================= */}{(() => {
+  const allCourses = featuredCoursesData || [];
+
+  // helper: org / creator name
+  const getOrgName = (course) => {
+    const u = course.createdByUser;
+    if (u && (u.firstName || u.lastName)) {
+      return `${u.firstName || ""} ${u.lastName || ""}`.trim();
+    }
+    return course.createdBy || "Tiiron";
+  };
+
+  const getRating = (course) =>
+    Number(course.averageRating ?? course.rating) || 0;
+
+  // Sort ALL courses by rating (desc), then by totalRatings (desc) as tiebreaker
+  const sortedByRating = [...allCourses].sort((a, b) => {
+    const ratingDiff = getRating(b) - getRating(a);
+    if (ratingDiff !== 0) return ratingDiff;
+    return (Number(b.totalRatings) || 0) - (Number(a.totalRatings) || 0);
+  });
+
+  const usedIds = new Set();
+
+  // 1) Most popular -> top 3 rated
+  const mostPopular = sortedByRating.slice(0, 3);
+  mostPopular.forEach((c) => usedIds.add(c.id));
+
+  // 2) In-demand AI skills -> try categories filter first, fallback to next top-rated
+  const remainingAfterPopular = sortedByRating.filter((c) => !usedIds.has(c.id));
+
+  const aiSkillCourses = remainingAfterPopular.filter((c) =>
+    (c.categories || "").toLowerCase().includes("ai"),
+  );
+
+  const inDemandAI =
+    aiSkillCourses.length >= 3
+      ? aiSkillCourses.slice(0, 3)
+      : [
+          ...aiSkillCourses,
+          ...remainingAfterPopular
+            .filter((c) => !aiSkillCourses.includes(c))
+            .slice(0, 3 - aiSkillCourses.length),
+        ];
+  inDemandAI.forEach((c) => usedIds.add(c.id));
+
+  // 3) Weekly spotlight -> next top-rated courses (not used above)
+  const weeklySpotlight = sortedByRating
+    .filter((c) => !usedIds.has(c.id))
+    .slice(0, 3);
+  weeklySpotlight.forEach((c) => usedIds.add(c.id));
+
+  // ---------- reusable card ----------
+  const CourseCard = ({ course, badgeColor }) => {
+    const rating = getRating(course);
+    const orgName = getOrgName(course);
+
+    return (
+      <Card
+        key={course.id}
+        elevation={0}
+        sx={{
+          bgcolor: "#ffffff",
+          borderRadius: 2,
+          overflow: "hidden",
+          cursor: "pointer",
+          mb: 2,
+          transition: "all 0.3s ease",
+          border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+          "&:hover": {
+            boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
+            transform: "translateY(-2px)",
+          },
+        }}
+        onClick={() => navigate(`/course-glossary/${course.id}`)}
       >
-        <Container maxWidth="lg">
-          <Typography
-            variant="h5"
-            fontWeight={700}
+        <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
+          {/* IMAGE */}
+          <Box
             sx={{
-              fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
-              color: "#0f1724",
-              mb: 4,
+              width: 80,
+              height: 80,
+              borderRadius: 1.5,
+              overflow: "hidden",
+              flexShrink: 0,
+              bgcolor: theme.palette.grey[200],
             }}
           >
-            Trending courses
+            {course.image ? (
+              <CardMedia
+                component="img"
+                image={course.image}
+                alt={course.title}
+                sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: theme.palette.text.secondary,
+                  fontSize: "0.75rem",
+                }}
+              >
+                No Image
+              </Box>
+            )}
+          </Box>
+
+          {/* CONTENT */}
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            {/* ORG NAME */}
+            <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+              <Box
+                sx={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: "50%",
+                  bgcolor: badgeColor,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "0.625rem",
+                  color: "#ffffff",
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}
+              >
+                {orgName?.[0]?.toUpperCase() || "T"}
+              </Box>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: "#556080",
+                  fontSize: "0.75rem",
+                  fontWeight: 500,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {orgName}
+              </Typography>
+            </Stack>
+
+            {/* TITLE + INSTRUCTOR */}
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: 600,
+                color: "#0f1724",
+                fontSize: "0.875rem",
+                mb: 0.5,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                lineHeight: 1.3,
+              }}
+            >
+              {course.title}
+              {course.instructor && (
+                <Typography
+                  component="span"
+                  sx={{ fontWeight: 500, color: "#556080", fontSize: "0.8125rem" }}
+                >
+                  {" | "}
+                  {course.instructor}
+                </Typography>
+              )}
+            </Typography>
+
+            {/* CATEGORY */}
+            <Typography
+              variant="caption"
+              sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
+            >
+              {course.categories || course.tags?.[0] || "Course"}
+            </Typography>
+
+            {/* RATING */}
+            <Stack direction="row" alignItems="center" spacing={0.5}>
+              <Rating
+                value={rating}
+                precision={0.1}
+                readOnly
+                size="small"
+                sx={{
+                  "& .MuiRating-iconFilled": { color: "#FFB400" },
+                  "& .MuiRating-iconEmpty": { color: "#E2E8F0" },
+                  "& .MuiRating-icon": { fontSize: "0.875rem" },
+                }}
+              />
+              <Typography
+                variant="caption"
+                sx={{ color: "#556080", fontSize: "0.75rem", fontWeight: 600 }}
+              >
+                {rating.toFixed(1)}
+              </Typography>
+            </Stack>
+          </Box>
+        </Stack>
+      </Card>
+    );
+  };
+
+  const ColumnBox = ({ title, courses, badgeColor }) => (
+    <Grid item xs={12} md={4}>
+      <Box
+        sx={{
+          bgcolor: alpha(theme.palette.primary.main, 0.04),
+          borderRadius: 3,
+          p: 3,
+          height: "100%",
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+        }}
+      >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+          <Typography variant="h6" fontWeight={700} sx={{ color: "#0f1724", fontSize: "1.125rem" }}>
+            {title}
           </Typography>
+          <ArrowForwardIcon
+            sx={{
+              fontSize: "1.25rem",
+              color: theme.palette.primary.main,
+              cursor: "pointer",
+              "&:hover": { transform: "translateX(4px)" },
+              transition: "transform 0.3s ease",
+            }}
+          />
+        </Stack>
 
-          {(() => {
-            const allCourses = featuredCoursesData || [];
-
-            // helper: org / creator name
-            const getOrgName = (course) => {
-              const u = course.createdByUser;
-              if (u && (u.firstName || u.lastName)) {
-                return `${u.firstName || ""} ${u.lastName || ""}`.trim();
-              }
-              return course.createdBy || "Tiiron";
-            };
-
-            const getRating = (course) =>
-              Number(course.averageRating ?? course.rating) || 0;
-
-            // 1) Sort by rating desc -> Most Popular
-            const sortedByRating = [...allCourses].sort(
-              (a, b) => getRating(b) - getRating(a),
-            );
-
-            const usedIds = new Set();
-
-            const mostPopular = sortedByRating.slice(0, 3);
-            mostPopular.forEach((c) => usedIds.add(c.id));
-
-            // 2) In-demand AI skills -> filter by `categories` field (not tags/title)
-            const remainingAfterPopular = allCourses.filter(
-              (c) => !usedIds.has(c.id),
-            );
-
-            const aiSkillCourses = remainingAfterPopular.filter((c) =>
-              (c.categories || "").toLowerCase().includes("ai"),
-            );
-
-            const inDemandAI =
-              aiSkillCourses.length >= 3
-                ? aiSkillCourses.slice(0, 3)
-                : [
-                    ...aiSkillCourses,
-                    ...remainingAfterPopular
-                      .filter((c) => !aiSkillCourses.includes(c))
-                      .slice(0, 3 - aiSkillCourses.length),
-                  ];
-            inDemandAI.forEach((c) => usedIds.add(c.id));
-
-            // 3) Weekly spotlight -> whatever is left, newest first
-            const weeklySpotlight = allCourses
-              .filter((c) => !usedIds.has(c.id))
-              .sort(
-                (a, b) =>
-                  new Date(b.createdAt).getTime() -
-                  new Date(a.createdAt).getTime(),
-              )
-              .slice(0, 3);
-
-            // ---------- reusable card ----------
-            const CourseCard = ({ course, badgeColor }) => {
-              const rating = getRating(course);
-              const orgName = getOrgName(course);
-
-              return (
-                <Card
-                  key={course.id}
-                  elevation={0}
-                  sx={{
-                    bgcolor: "#ffffff",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    cursor: "pointer",
-                    mb: 2,
-                    transition: "all 0.3s ease",
-                    border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
-                    "&:hover": {
-                      boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
-                      transform: "translateY(-2px)",
-                    },
-                  }}
-                  onClick={() => navigate(`/course-glossary/${course.id}`)}
-                >
-                  <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
-                    {/* IMAGE */}
-                    <Box
-                      sx={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: 1.5,
-                        overflow: "hidden",
-                        flexShrink: 0,
-                        bgcolor: theme.palette.grey[200],
-                      }}
-                    >
-                      {course.image ? (
-                        <CardMedia
-                          component="img"
-                          image={course.image}
-                          alt={course.title}
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                      ) : (
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: theme.palette.text.secondary,
-                            fontSize: "0.75rem",
-                          }}
-                        >
-                          No Image
-                        </Box>
-                      )}
-                    </Box>
-
-                    {/* CONTENT */}
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      {/* ORG NAME */}
-                      <Stack
-                        direction="row"
-                        alignItems="center"
-                        spacing={0.5}
-                        sx={{ mb: 0.5 }}
-                      >
-                        <Box
-                          sx={{
-                            width: 16,
-                            height: 16,
-                            borderRadius: "50%",
-                            bgcolor: badgeColor,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "0.625rem",
-                            color: "#ffffff",
-                            fontWeight: 700,
-                            flexShrink: 0,
-                          }}
-                        >
-                          {orgName?.[0]?.toUpperCase() || "T"}
-                        </Box>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: "#556080",
-                            fontSize: "0.75rem",
-                            fontWeight: 500,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {orgName}
-                        </Typography>
-                      </Stack>
-                      {/* TITLE + INSTRUCTOR */}
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          color: "#0f1724",
-                          fontSize: "0.875rem",
-                          mb: 0.5,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          lineHeight: 1.3,
-                        }}
-                      >
-                        {course.title}
-                        {course.instructor && (
-                          <Typography
-                            component="span"
-                            sx={{
-                              fontWeight: 500,
-                              color: "#556080",
-                              fontSize: "0.8125rem",
-                            }}
-                          >
-                            {" | "}
-                            {course.instructor}
-                          </Typography>
-                        )}
-                      </Typography>
-
-                      {/* CATEGORY */}
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: "#556080",
-                          fontSize: "0.6875rem",
-                          mb: 0.5,
-                          display: "block",
-                        }}
-                      >
-                        {course.categories || course.tags?.[0] || "Course"}
-                      </Typography>
-
-                      {/* RATING */}
-                      <Stack direction="row" alignItems="center" spacing={0.5}>
-                        <Rating
-                          value={rating}
-                          precision={0.1}
-                          readOnly
-                          size="small"
-                          sx={{
-                            "& .MuiRating-iconFilled": { color: "#FFB400" },
-                            "& .MuiRating-iconEmpty": { color: "#E2E8F0" },
-                            "& .MuiRating-icon": { fontSize: "0.875rem" },
-                          }}
-                        />
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: "#556080",
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                          }}
-                        >
-                          {rating.toFixed(1)}
-                        </Typography>
-                      </Stack>
-                    </Box>
-                  </Stack>
-                </Card>
-              );
-            };
-
-            const ColumnBox = ({ title, courses, badgeColor }) => (
-              <Grid item xs={12} md={4}>
-                <Box
-                  sx={{
-                    bgcolor: alpha(theme.palette.primary.main, 0.04),
-                    borderRadius: 3,
-                    p: 3,
-                    height: "100%",
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-                  }}
-                >
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    sx={{ mb: 3 }}
-                  >
-                    <Typography
-                      variant="h6"
-                      fontWeight={700}
-                      sx={{ color: "#0f1724", fontSize: "1.125rem" }}
-                    >
-                      {title}
-                    </Typography>
-                    <ArrowForwardIcon
-                      sx={{
-                        fontSize: "1.25rem",
-                        color: theme.palette.primary.main,
-                        cursor: "pointer",
-                        "&:hover": { transform: "translateX(4px)" },
-                        transition: "transform 0.3s ease",
-                      }}
-                    />
-                  </Stack>
-
-                  {courses.length === 0 ? (
-                    <Typography variant="caption" color="text.secondary">
-                      No courses available
-                    </Typography>
-                  ) : (
-                    courses.map((course) => (
-                      <CourseCard
-                        key={course.id}
-                        course={course}
-                        badgeColor={badgeColor}
-                      />
-                    ))
-                  )}
-                </Box>
-              </Grid>
-            );
-
-            return (
-              <Grid container spacing={3}>
-                <ColumnBox
-                  title="Most popular"
-                  courses={mostPopular}
-                  badgeColor="#2563EB"
-                />
-                <ColumnBox
-                  title="Weekly spotlight"
-                  courses={weeklySpotlight}
-                  badgeColor="#16A34A"
-                />
-                <ColumnBox
-                  title="In-demand AI skills"
-                  courses={inDemandAI}
-                  badgeColor="#9333EA"
-                />
-              </Grid>
-            );
-          })()}
-        </Container>
+        {courses.length === 0 ? (
+          <Typography variant="caption" color="text.secondary">
+            No courses available
+          </Typography>
+        ) : (
+          courses.map((course) => (
+            <CourseCard key={course.id} course={course} badgeColor={badgeColor} />
+          ))
+        )}
       </Box>
+    </Grid>
+  );
+
+  return (
+    <Grid container spacing={3}>
+      <ColumnBox title="Most popular" courses={mostPopular} badgeColor="#2563EB" />
+      <ColumnBox title="Weekly spotlight" courses={weeklySpotlight} badgeColor="#16A34A" />
+      <ColumnBox title="In-demand AI skills" courses={inDemandAI} badgeColor="#9333EA" />
+    </Grid>
+  );
+})()}
+     
 
       {/* -------------------------------------- */}
       {/* LEARNING PATHS */}
