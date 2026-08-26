@@ -10,7 +10,8 @@ import {
 import TelegramIcon from "@mui/icons-material/Telegram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LaunchIcon from "@mui/icons-material/Launch";
-import GroupOffIcon from "@mui/icons-material/GroupOff";
+// import GroupOffIcon from "@mui/icons-material/GroupOff";
+import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import { FaDiscord } from "react-icons/fa";
 
 import { useGetCommunityByUserIdQuery } from "../api/profileApiSlice";
@@ -82,7 +83,8 @@ export default function EducatorCommunity({ educatorId }: Props) {
 
           {communities.length === 0 ? (
             <Box py={4} textAlign="center">
-              <GroupOffIcon sx={{ fontSize: 40, color: "text.disabled", mb: 1 }} />
+              {/* <GroupOffIcon sx={{ fontSize: 40, color: "text.disabled", mb: 1 }} /> */}
+              <PeopleOutlineIcon sx={{ fontSize: 40, color: "text.disabled", mb: 1 }} />
               <Typography variant="body2" color="text.secondary">
                 Community not available
               </Typography>
