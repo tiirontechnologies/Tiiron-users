@@ -18,7 +18,9 @@ export default function UserTestimonial({
   avatar,
 }: UserTestimonialProps) {
   const [expanded, setExpanded] = useState(false);
-  const isLongText = review.length > 180;
+  // const isLongText = review.length > 180;
+  const safeReview = review ?? "";
+const isLongText = safeReview.length > 180;
 
   return (
     <Box
