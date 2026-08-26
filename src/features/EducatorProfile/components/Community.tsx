@@ -130,3 +130,5 @@ export default function EducatorCommunity({ educatorId }: Props) {
     </Card>
   );
 }
+
+// checked 
