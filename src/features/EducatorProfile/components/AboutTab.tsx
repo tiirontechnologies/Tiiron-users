@@ -71,7 +71,7 @@ function CourseRowSkeleton() {
 
 function CourseRow({
   course,
-  variant,ḥ
+  variant,
 }: {
   course: RawCourse;
   variant: 'recent' | 'top';

@@ -567,47 +567,48 @@ const Landing = () => {
               }}
               style={{ paddingBottom: 40 }}
             >
-           {sortedFeaturedCourses?.map((course) => {
-  const rating = Number(course.averageRating) || 0;
-  const reviewCount = Number(course.totalRatings) || 0;
+              {sortedFeaturedCourses?.map((course) => {
+                const rating = Number(course.averageRating) || 0;
+                const reviewCount = Number(course.totalRatings) || 0;
 
-  const isCourseInCart =
-    cartData?.data?.items?.some(
-      (item) => item.courseId === Number(course.id),
-    ) || false;
+                const isCourseInCart =
+                  cartData?.data?.items?.some(
+                    (item) => item.courseId === Number(course.id),
+                  ) || false;
 
-  // ORG NAME (createdByUser se, warna createdBy fallback)
-  const orgName =
-    course.createdByUser?.firstName || course.createdByUser?.lastName
-      ? `${course.createdByUser?.firstName || ''} ${course.createdByUser?.lastName || ''}`.trim()
-      : course.createdBy || 'Tiiron';
+                // ORG NAME (createdByUser se, warna createdBy fallback)
+                const orgName =
+                  course.createdByUser?.firstName ||
+                  course.createdByUser?.lastName
+                    ? `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim()
+                    : course.createdBy || "Tiiron";
 
-  // ORG | INSTRUCTOR
-  const orgWithInstructor = course.instructor
-    ? `${orgName} | ${course.instructor}`
-    : orgName;
+                // ORG | INSTRUCTOR
+                const orgWithInstructor = course.instructor
+                  ? `${orgName} | ${course.instructor}`
+                  : orgName;
 
-  return (
-    <SwiperSlide key={course.id}>
-      <CourseCardWrapper
-        id={course.id}
-        thumbnailSrc={course.image}
-        tags={course.tags}
-        title={course.title}
-        chapters={course.totalChapters}
-        rating={rating}
-        reviewCount={reviewCount}
-        instructor={orgWithInstructor}
-        category={course.categories}
-        price={course.price}
-        navigatePath={(id) => `/course-glossary/${id}`}
-        isCourseInCart={isCourseInCart}
-        onAddToCart={handleAddToCart}
-        isLoadingCart={isAddingToCart}
-      />
-    </SwiperSlide>
-  );
-})}
+                return (
+                  <SwiperSlide key={course.id}>
+                    <CourseCardWrapper
+                      id={course.id}
+                      thumbnailSrc={course.image}
+                      tags={course.tags}
+                      title={course.title}
+                      chapters={course.totalChapters}
+                      rating={rating}
+                      reviewCount={reviewCount}
+                      instructor={orgWithInstructor}
+                      categories={course.categories}
+                      price={course.price}
+                      navigatePath={(id) => `/course-glossary/${id}`}
+                      isCourseInCart={isCourseInCart}
+                      onAddToCart={handleAddToCart}
+                      isLoadingCart={isAddingToCart}
+                    />
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
           )}
         </Container>
@@ -679,7 +680,11 @@ const Landing = () => {
             // 3) Weekly spotlight -> whatever is left, newest first
             const weeklySpotlight = allCourses
               .filter((c) => !usedIds.has(c.id))
-              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime(),
+              )
               .slice(0, 3);
 
             // ---------- reusable card ----------
