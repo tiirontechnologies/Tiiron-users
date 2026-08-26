@@ -32,7 +32,7 @@ interface ReusableCourseCardProps extends ICourseCardProps {
   onFavorite?: (courseId: number) => void;
   onArchive?: (courseId: number) => void;
   isFavorite?: boolean;
-
+ categories?: string;
   onCardClick?: () => void;
   onDeleteClick?: () => void;
   onAddToCartClick?: (e: React.MouseEvent) => void;
@@ -52,6 +52,7 @@ export default function CourseCard({
   reviewCount = 0,
   progress = 0,
   learnerRating = 0,
+  categories,
   variant = "browse",
   onStartCourse,
   onShare,
