@@ -16,21 +16,41 @@ import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import { useNavigate } from "react-router-dom";
 
-// Raw course shape as returned by getCoursesByUsername
+// ---------- Types ----------
 export interface RawCourse {
   id: number | string;
   title: string;
   description?: string;
   language?: string[];
+  objective?: string[];
   level?: string;
   image?: string | null;
+  duration?: string | null;
+
   isFree?: boolean;
   price?: number;
+
   totalChapters?: number;
   averageRating?: number;
   totalRatings?: number;
+
   createdAt?: string;
+  updatedAt?: string;
+
+  orgCode?: string;
+  tags?: string[];
+
+  // Organization name
   createdBy?: string;
+
+  // Instructor name
+  instructor?: string;
+
+  categories?: string;
+  active?: boolean;
+
+  // Future backend support
+  organizationLogo?: string | null;
 }
 
 interface CoursesTabProps {
@@ -38,20 +58,48 @@ interface CoursesTabProps {
   isLoading?: boolean;
 }
 
-const levelColor: Record<string, "success" | "warning" | "error" | "default"> = {
-  Begginer: "success",
-  Beginner: "success",
-  Intermediate: "warning",
-  Advanced: "error",
-  "Advance...": "error",
+// ---------- Level Colors ----------
+const getLevelColor = (
+  level?: string
+): "success" | "warning" | "error" | "default" => {
+  const normalizedLevel = level?.trim().toLowerCase();
+
+  if (
+    normalizedLevel === "begginer" ||
+    normalizedLevel === "beginners" ||
+    normalizedLevel === "beginner"
+  ) {
+    return "success";
+  }
+
+  if (normalizedLevel === "intermediate") {
+    return "warning";
+  }
+
+  if (
+    normalizedLevel === "advanced" ||
+    normalizedLevel === "advance"
+  ) {
+    return "error";
+  }
+
+  return "default";
 };
 
-const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false }) => {
+// ---------- Component ----------
+const CoursesTab: React.FC<CoursesTabProps> = ({
+  courses = [],
+  isLoading = false,
+}) => {
+  const navigate = useNavigate();
+
+  // ---------- Loading ----------
   if (isLoading) {
     return (
       <Box
         sx={{
           display: "grid",
+          width: "100%",
           gridTemplateColumns: {
             xs: "1fr",
             sm: "repeat(2, 1fr)",
@@ -59,36 +107,70 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
             lg: "repeat(4, 1fr)",
           },
           gap: 2.5,
-          py: 3,
+          py: 2,
         }}
       >
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Box key={i}>
-            <Skeleton variant="rounded" height={150} sx={{ borderRadius: 3 }} />
-            <Skeleton variant="text" height={28} sx={{ mt: 1 }} />
-            <Skeleton variant="text" width="60%" />
+        {Array.from({ length: 8 }).map((_, index) => (
+          <Box key={index}>
+            <Skeleton
+              variant="rounded"
+              height={150}
+              sx={{ borderRadius: 3 }}
+            />
+            <Skeleton
+              variant="text"
+              height={28}
+              sx={{ mt: 1 }}
+            />
+            <Skeleton
+              variant="text"
+              width="60%"
+            />
           </Box>
         ))}
       </Box>
     );
   }
 
+  // ---------- Empty ----------
   if (!courses.length) {
     return (
-      <Box sx={{ py: 8, textAlign: "center" }}>
-        <MenuBookRoundedIcon sx={{ fontSize: 48, color: "grey.300", mb: 1 }} />
-        <Typography variant="body1" color="text.secondary">
+      <Box
+        sx={{
+          py: 6,
+          textAlign: "center",
+        }}
+      >
+        <MenuBookRoundedIcon
+          sx={{
+            fontSize: 48,
+            color: "grey.300",
+            mb: 1,
+          }}
+        />
+
+        <Typography
+          variant="body1"
+          color="text.secondary"
+        >
           No courses uploaded yet.
         </Typography>
       </Box>
     );
   }
 
-  const navigate = useNavigate();
+  // ---------- Highest Rating First ----------
+  const sortedCourses = [...courses].sort(
+    (a, b) =>
+      (b.averageRating ?? 0) -
+      (a.averageRating ?? 0)
+  );
+
   return (
     <Box
       sx={{
         display: "grid",
+        width: "100%",
         gridTemplateColumns: {
           xs: "1fr",
           sm: "repeat(2, 1fr)",
@@ -96,151 +178,366 @@ const CoursesTab: React.FC<CoursesTabProps> = ({ courses = [], isLoading = false
           lg: "repeat(4, 1fr)",
         },
         gap: 2.5,
-        py: 3,
+        py: 2,
       }}
     >
-      {courses.map((course) => (
-        <Card
-          key={course.id}
-          elevation={0}
-          onClick={() => navigate(`/course-glossary/${course.id}`)}
-          sx={{
-            borderRadius: 3,
-            border: "1px solid",
-            borderColor: "divider",
-            overflow: "hidden",
-            transition: "transform .2s ease, box-shadow .2s ease",
-            "&:hover": {
-              transform: "translateY(-4px)",
-              boxShadow: "0 12px 24px rgba(79,70,229,0.15)",
-              borderColor: "transparent",
-            },
-          }}
-        >
-          <CardActionArea>
-            {/* Thumbnail */}
-            <Box sx={{ position: "relative" }}>
-              {course.image ? (
-                <CardMedia
-                  component="img"
-                  image={course.image}
-                  alt={course.title}
-                  sx={{ height: 150, objectFit: "cover" }}
-                />
-              ) : (
+      {sortedCourses.map((course) => {
+        const organizationName =
+          course.createdBy?.trim() || "Organization";
+
+        const instructorName =
+          course.instructor?.trim() || "Instructor";
+
+        const level = course.level?.trim() || "";
+
+        return (
+          <Card
+            key={course.id}
+            elevation={0}
+            onClick={() =>
+              navigate(`/course-glossary/${course.id}`)
+            }
+            sx={{
+              minWidth: 0,
+              borderRadius: 3,
+              border: "1px solid",
+              borderColor: "divider",
+              overflow: "hidden",
+              transition:
+                "transform .2s ease, box-shadow .2s ease",
+
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow:
+                  "0 12px 24px rgba(79,70,229,0.15)",
+                borderColor: "transparent",
+              },
+            }}
+          >
+            <CardActionArea>
+              {/* ================= THUMBNAIL ================= */}
+              <Box
+                sx={{
+                  position: "relative",
+                }}
+              >
+                {course.image ? (
+                  <CardMedia
+                    component="img"
+                    image={course.image}
+                    alt={course.title}
+                    sx={{
+                      height: 150,
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      height: 150,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      bgcolor: "#4F46E5",
+                      color: "#fff",
+                      fontWeight: 700,
+                      fontSize: 14,
+                      textAlign: "center",
+                      px: 2,
+                    }}
+                  >
+                    {course.title}
+                  </Box>
+                )}
+
+                {/* Hover Overlay */}
                 <Box
                   sx={{
-                    height: 150,
+                    position: "absolute",
+                    inset: 0,
+                    bgcolor: "rgba(15,10,40,0.15)",
+                    opacity: 0,
+                    transition: "opacity .2s ease",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    bgcolor: "#4F46E5",
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 14,
-                    textAlign: "center",
-                    px: 2,
+
+                    ".MuiCardActionArea-root:hover &": {
+                      opacity: 1,
+                    },
                   }}
                 >
-                  {course.title}
+                  <PlayCircleRoundedIcon
+                    sx={{
+                      fontSize: 44,
+                      color: "#fff",
+                    }}
+                  />
                 </Box>
-              )}
-              <Box
-                sx={{
-                  position: "absolute",
-                  inset: 0,
-                  bgcolor: "rgba(15,10,40,0.15)",
-                  opacity: 0,
-                  transition: "opacity .2s ease",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  ".MuiCardActionArea-root:hover &": { opacity: 1 },
-                }}
-              >
-                <PlayCircleRoundedIcon sx={{ fontSize: 44, color: "#fff" }} />
+
+                {/* ================= FREE / PAID ================= */}
+                <Chip
+                  label={
+                    course.isFree
+                      ? "FREE"
+                      : `₹${course.price ?? 0}`
+                  }
+                  size="small"
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    height: 24,
+                    fontSize: 11,
+                    fontWeight: 700,
+
+                    bgcolor: course.isFree
+                      ? "#EEF2FF"
+                      : "#DC2626",
+
+                    color: course.isFree
+                      ? "#4338CA"
+                      : "#FFFFFF",
+
+                    border: course.isFree
+                      ? "1px solid #C7D2FE"
+                      : "none",
+
+                    borderRadius: "7px",
+                  }}
+                />
               </Box>
 
-              {/* Price / Free badge */}
-              <Chip
-                label={course.isFree ? "Free" : `₹${course.price ?? 0}`}
-                size="small"
+              {/* ================= CONTENT ================= */}
+              <CardContent
                 sx={{
-                  position: "absolute",
-                  top: 8,
-                  right: 8,
-                  fontWeight: 700,
-                  bgcolor: course.isFree ? "success.main" : "rgba(0,0,0,0.7)",
-                  color: "#fff",
-                }}
-              />
-            </Box>
+                  p: 2,
 
-            <CardContent sx={{ p: 2 }}>
-              {/* Title */}
-              <Typography
-                variant="subtitle1"
-                fontWeight={700}
-                sx={{
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  minHeight: 48,
-                  lineHeight: 1.3,
+                  // Bottom spacing kam
+                  "&:last-child": {
+                    pb: 1.5,
+                  },
                 }}
               >
-                {course.title}
-              </Typography>
+                {/* ================= TITLE + STATUS ================= */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    gap: 1,
+                    mb: 1,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      flex: 1,
+                      minWidth: 0,
+                      fontSize: 15,
+                      fontWeight: 700,
+                      lineHeight: 1.3,
 
-              {/* Instructor row, YT-channel style */}
-              <Stack direction="row" spacing={1} alignItems="center" mt={1}>
-                <Avatar sx={{ width: 20, height: 20, fontSize: 11, bgcolor: "#4f46e5" }}>
-                  {course.createdBy?.charAt(0) || "T"}
-                </Avatar>
-                <Typography variant="caption" color="text.secondary" noWrap>
-                  {course.createdBy}
-                </Typography>
-              </Stack>
-
-              {/* Rating + chapters */}
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                mt={1}
-              >
-                {course.averageRating ? (
-                  <Stack direction="row" spacing={0.5} alignItems="center">
-                    <Rating value={course.averageRating} precision={0.1} size="small" readOnly />
-                    <Typography variant="caption" color="text.secondary">
-                      {course.averageRating.toFixed(1)}
-                    </Typography>
-                  </Stack>
-                ) : (
-                  <Typography variant="caption" color="text.disabled">
-                    No ratings
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {course.title}
                   </Typography>
-                )}
-                <Typography variant="caption" color="text.secondary">
-                  {course.totalChapters ?? 0} chapters
-                </Typography>
-              </Stack>
 
-              {/* Level chip */}
-              {course.level && (
-                <Chip
-                  label={course.level}
-                  size="small"
-                  color={levelColor[course.level] || "default"}
-                  variant="outlined"
-                  sx={{ mt: 1.2, fontWeight: 600, fontSize: 11 }}
-                />
-              )}
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      ))}
+                  {/* Active / Inactive */}
+                  <Chip
+                    label={
+                      course.active
+                        ? "Active"
+                        : "Inactive"
+                    }
+                    size="small"
+                    sx={{
+                      flexShrink: 0,
+                      height: 22,
+                      fontSize: 10,
+                      fontWeight: 700,
+
+                      bgcolor: course.active
+                        ? "#DCFCE7"
+                        : "#F1F5F9",
+
+                      color: course.active
+                        ? "#15803D"
+                        : "#64748B",
+
+                      border: course.active
+                        ? "1px solid #BBF7D0"
+                        : "1px solid #E2E8F0",
+                    }}
+                  />
+                </Box>
+
+                {/* ================= CATEGORY ================= */}
+                {course.categories && (
+                  <Chip
+                    label={course.categories}
+                    size="small"
+                    sx={{
+                      mb: 1,
+                      height: 22,
+                      bgcolor: "#EEF2FF",
+                      color: "#4338CA",
+                      fontWeight: 600,
+                      fontSize: 11,
+                      borderRadius: "6px",
+                    }}
+                  />
+                )}
+
+                {/* ================= ORGANIZATION + INSTRUCTOR ================= */}
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  alignItems="center"
+                  mb={1.2}
+                >
+                  <Avatar
+                    src={
+                      course.organizationLogo ||
+                      undefined
+                    }
+                    sx={{
+                      width: 30,
+                      height: 30,
+                      bgcolor: "#4F46E5",
+                      fontSize: 12,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {organizationName
+                      .charAt(0)
+                      .toUpperCase()}
+                  </Avatar>
+
+                  <Box
+                    sx={{
+                      minWidth: 0,
+                      flex: 1,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: 10,
+                        color: "text.secondary",
+                        lineHeight: 1.2,
+                        mb: 0.2,
+                      }}
+                    >
+                          {organizationName}
+                      {" | "}
+                      {instructorName}
+                      {/* Organization
+                       */}
+                    </Typography>
+
+                  </Box>
+                </Stack>
+
+                {/* ================= RATING + CHAPTERS ================= */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 1,
+                    mb: 1.1,
+                  }}
+                >
+                  {/* Rating */}
+                  {course.averageRating &&
+                  course.averageRating > 0 ? (
+                    <Stack
+                      direction="row"
+                      spacing={0.5}
+                      alignItems="center"
+                    >
+                      <Rating
+                        value={
+                          course.averageRating
+                        }
+                        precision={0.5}
+                        size="small"
+                        readOnly
+                      />
+
+                      <Typography
+                        sx={{
+                          fontSize: 12,
+                          fontWeight: 600,
+                          color: "#475569",
+                        }}
+                      >
+                        {course.averageRating.toFixed(
+                          1
+                        )}
+                      </Typography>
+
+                      {course.totalRatings !==
+                        undefined &&
+                        course.totalRatings > 0 && (
+                          <Typography
+                            sx={{
+                              fontSize: 11,
+                              color: "#94A3B8",
+                            }}
+                          >
+                            ({course.totalRatings})
+                          </Typography>
+                        )}
+                    </Stack>
+                  ) : (
+                    <Typography
+                      sx={{
+                        fontSize: 11,
+                        color: "#94A3B8",
+                      }}
+                    >
+                      No ratings
+                    </Typography>
+                  )}
+
+                  {/* Chapters */}
+                  <Typography
+                    sx={{
+                      fontSize: 11,
+                      color: "#64748B",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {course.totalChapters ?? 0}{" "}
+                    {course.totalChapters === 1
+                      ? "Chapter"
+                      : "Chapters"}
+                  </Typography>
+                </Box>
+
+                {/* ================= LEVEL ================= */}
+                {level && (
+                  <Chip
+                    label={level}
+                    size="small"
+                    color={getLevelColor(level)}
+                    variant="outlined"
+                    sx={{
+                      height: 23,
+                      fontSize: 11,
+                      fontWeight: 600,
+                    }}
+                  />
+                )}
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        );
+      })}
     </Box>
   );
 };
