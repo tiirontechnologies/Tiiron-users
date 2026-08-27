@@ -55,7 +55,8 @@ const menuItems = [
     icon: <EditNoteIcon />,
     color: "#FF5722",
     onClick: (_navigate: NavigateFunction) => {
-      window.location.href = "https://creator.tiiron.com/";
+      // window.location.href = "https://creator.tiiron.com/";
+      window.open("https://creator.tiiron.com/", "_blank", "noopener,noreferrer");
     }
   },
   { text: "Help and Support", icon: <HelpOutlineIcon />, color: "#00BCD4",  onClick: (navigate: NavigateFunction) => {
