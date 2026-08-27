@@ -131,12 +131,12 @@ const Landing = () => {
   const [addToCartServer, { isLoading: isAddingToCart }] =
     useAddToCartServerMutation();
 
-  // 🔹 Categories
+  // 🔹 Categories  "AI/ML", "Web Development", "Data Science", "More Skills"
   const CATEGORIES = [
-    { id: "data-science", title: "Data Science", count: 3 },
-    { id: "web-developement", title: "Web Development", count: 5 },
+    { id: "DataScience", title: "Data Science", count: 3 },
+    { id: "WebDevelopment", title: "Web Development", count: 5 },
     { id: "AI/ML", title: "AI & Machine Learning", count: 2 },
-    { id: "Other", title: "Other", count: 1 },
+    { id: "MoreSkills", title: "More Skills ", count: 1 },
   ];
 
   // 🔹 Learning Paths
@@ -768,13 +768,19 @@ const Landing = () => {
                 >
                   {course.title}
                 </Typography>
+                   <Typography
+                  variant="caption"
+                  sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
+                >
+                  {course.instructor}
+                </Typography>
 
                 {/* CATEGORY */}
                 <Typography
                   variant="caption"
                   sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
                 >
-                  {course.categories || course.tags?.[0] || "Course"}
+                  {course.categories || course.tags?.[0] || course.instructor}
                 </Typography>
 
                 {/* RATING */}
