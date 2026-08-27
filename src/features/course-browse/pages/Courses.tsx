@@ -1,4 +1,3 @@
-
 import { Box, Typography } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 
@@ -24,6 +23,29 @@ const PAGE_LAYOUT_SX = {
   py: { xs: 3, md: 4 },
 };
 
+// =====================================================
+// CATEGORY NORMALIZE HELPERS
+// =====================================================
+
+const normalizeCategory = (value: unknown): string => {
+  if (Array.isArray(value)) {
+    return value
+      .map((v) => normalizeCategory(v))
+      .filter(Boolean)
+      .join(",");
+  }
+
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ");
+};
+
+// Strict key used ONLY for matching (removes all spaces too)
+const categoryKey = (value: string): string =>
+  value.replace(/\s+/g, "");
+
 const CourseCardWithRating = ({
   course,
   isCourseInCart,
@@ -31,6 +53,15 @@ const CourseCardWithRating = ({
   isAddingToCart,
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
+
+  const organizationName =
+    `${course.createdByUser?.firstName || ""} ${
+      course.createdByUser?.lastName || ""
+    }`.trim() || course.createdBy || "";
+
+  const instructorWithOrg = organizationName
+    ? `${course.instructor || "Instructor"} | ${organizationName}`
+    : course.instructor || "Instructor";
 
   return (
     <CourseCardWrapper
@@ -41,7 +72,7 @@ const CourseCardWithRating = ({
       chapters={course.totalChapters}
       rating={ratingData?.data?.averageRating || 0}
       reviewCount={ratingData?.data?.totalRatings || 0}
-      instructor={course.createdBy || "Instructor"}
+      instructor={instructorWithOrg}
       price={course.price}
       navigatePath={(id) => `/course-glossary/${id}`}
       isCourseInCart={isCourseInCart}
@@ -59,10 +90,12 @@ export default function Courses() {
   // =====================================================
 
   const searchQuery = searchParams.get("q") || "";
-  const category = searchParams.get("category") || "";
+
+  const category = normalizeCategory(searchParams.get("category") || "");
+
+  const hasCategoryFilter = category !== "";
 
   const hasSearchQuery = !!searchQuery.trim();
-  const hasCategoryFilter = !!category.trim();
 
   // =====================================================
   // SEARCH COURSES API
@@ -203,27 +236,16 @@ export default function Courses() {
 
   // =====================================================
   // CATEGORY FILTER
-  //
-  // API response:
-  //
-  // "categories": "UI/UX"
-  //
-  // So categories is a STRING.
   // =====================================================
 
   const courses: ICourse[] = hasCategoryFilter
     ? allCourses.filter((course) => {
-        const courseCategory = String(
-          course.categories || ""
-        )
-          .trim()
-          .toLowerCase();
+        const backendCategory = normalizeCategory(course.categories);
 
-        const selectedCategory = category
-          .trim()
-          .toLowerCase();
-
-        return courseCategory === selectedCategory;
+        return backendCategory
+          .split(",")
+          .map((c) => categoryKey(c.trim()))
+          .includes(categoryKey(category));
       })
     : allCourses;
 

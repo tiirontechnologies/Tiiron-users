@@ -131,12 +131,12 @@ const Landing = () => {
   const [addToCartServer, { isLoading: isAddingToCart }] =
     useAddToCartServerMutation();
 
-  // 🔹 Categories
+  // 🔹 Categories  "AI/ML", "Web Development", "Data Science", "More Skills"
   const CATEGORIES = [
-    { id: "data-science", title: "Data Science", count: 3 },
-    { id: "web-developement", title: "Web Development", count: 5 },
+    { id: "DataScience", title: "Data Science", count: 3 },
+    { id: "WebDevelopment", title: "Web Development", count: 5 },
     { id: "AI/ML", title: "AI & Machine Learning", count: 2 },
-    { id: "Other", title: "Other", count: 1 },
+    { id: "MoreSkills", title: "More Skills ", count: 1 },
   ];
 
   // 🔹 Learning Paths
@@ -614,7 +614,7 @@ const Landing = () => {
       </Box>
 
       {/* ================= TRENDING COURSES SECTION ================= */}
-     <Box
+  <Box
   component="section"
   sx={{ py: 6, bgcolor: alpha(theme.palette.grey[50], 0.5) }}
 >
@@ -642,22 +642,49 @@ const Landing = () => {
         return course.createdBy || "Tiiron";
       };
 
+      const getOrgPicture = (course) =>
+        course.createdByUser?.profile?.picture || null;
+
       const getRating = (course) =>
         Number(course.averageRating ?? course.rating) || 0;
 
-      // Most popular -> sirf rating ke hisaab se sorted
+      // ----- Most popular -> rating ke hisaab se sorted -----
       const mostPopular = [...allCourses]
         .sort((a, b) => getRating(b) - getRating(a))
         .slice(0, 3);
 
-      // Baaki dono -> simple, bina kisi filter ke, seedha allCourses se
-      const weeklySpotlight = allCourses.slice(0, 3);
-      const inDemandAI = allCourses.slice(0, 3);
+      // ----- Weekly spotlight -> sabse recent bane hue courses -----
+      const weeklySpotlight = [...allCourses]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 3);
+
+      // ----- In-demand AI skills -> jinki category/tags me AI/ML ho -----
+      const isAIRelated = (course) => {
+        const haystack = [
+          course.categories,
+          course.instructor,
+          ...(course.tags || []),
+          course.title,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        return (
+          haystack.includes("ai") ||
+          haystack.includes("ml") ||
+          haystack.includes("artificial intelligence") ||
+          haystack.includes("machine learning")
+        );
+      };
+
+      const inDemandAI = allCourses.filter(isAIRelated).slice(0, 3);
 
       // ---------- reusable card ----------
       const CourseCard = ({ course, badgeColor }) => {
         const rating = getRating(course);
         const orgName = getOrgName(course);
+        const orgPicture = getOrgPicture(course);
 
         return (
           <Card
@@ -718,23 +745,38 @@ const Landing = () => {
               <Box sx={{ flex: 1, minWidth: 0 }}>
                 {/* ORG NAME */}
                 <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
-                  <Box
-                    sx={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: "50%",
-                      bgcolor: badgeColor,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "0.625rem",
-                      color: "#ffffff",
-                      fontWeight: 700,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {orgName?.[0]?.toUpperCase() || "T"}
-                  </Box>
+                  {orgPicture ? (
+                    <Box
+                      component="img"
+                      src={orgPicture}
+                      alt={orgName}
+                      sx={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        flexShrink: 0,
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: "50%",
+                        bgcolor: badgeColor,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.625rem",
+                        color: "#ffffff",
+                        fontWeight: 700,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {orgName?.[0]?.toUpperCase() || "T"}
+                    </Box>
+                  )}
                   <Typography
                     variant="caption"
                     sx={{
@@ -750,7 +792,7 @@ const Landing = () => {
                   </Typography>
                 </Stack>
 
-                {/* TITLE (instructor hata diya) */}
+                {/* TITLE */}
                 <Typography
                   variant="body2"
                   sx={{
@@ -768,13 +810,19 @@ const Landing = () => {
                 >
                   {course.title}
                 </Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
+                >
+                  {course.instructor}
+                </Typography>
 
                 {/* CATEGORY */}
                 <Typography
                   variant="caption"
                   sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
                 >
-                  {course.categories || course.tags?.[0] || "Course"}
+                  {course.categories || course.tags?.[0] || course.instructor}
                 </Typography>
 
                 {/* RATING */}
