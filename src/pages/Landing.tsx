@@ -654,9 +654,12 @@ const Landing = () => {
         .slice(0, 3);
 
       // ----- Weekly spotlight -> sabse recent bane hue courses -----
-      const weeklySpotlight = [...allCourses]
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 3);
+   const weeklySpotlight = [...allCourses]
+  .sort(
+    (a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+  .slice(0, 3);
 
       // ----- In-demand AI skills -> jinki category/tags me AI/ML ho -----
       const isAIRelated = (course) => {
