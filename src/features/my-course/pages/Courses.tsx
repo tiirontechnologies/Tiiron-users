@@ -155,29 +155,40 @@ export default function Courses({ onCourseClick }: CoursesProps) {
               // Mock learner rating - in production, this should come from API
               const mockLearnerRating = course.averageRating ?? 0;
               // Get instructor/organization name - prefer createdBy, fallback to orgCode
-              const instructorName = course.createdBy || course.orgCode || "";
+              // const instructorName = course.createdBy || course.orgCode || "";
+              // Org First Name | Instructor Name
+const orgFirstName =
+  course.createdByUser?.firstName ||
+  course.createdBy?.split(" ")?.[0] ||
+  "Tiiron";
+
+const instructorWithOrg = course.instructor
+  ? `${course.createdBy} | ${course.instructor}`
+  : orgFirstName;
+
+
 
               return (
-                <CourseCardWrapper
-                  key={course.id}
-                  id={courseId}
-                  thumbnailSrc={course.image}
-                  tags={course.tags}
-                  title={course.title}
-                  chapters={course.totalChapters}
-                  rating={0}
-                  price={course.price}
-                  instructor={instructorName}
-                  progress={mockProgress}
-                  learnerRating={mockLearnerRating}
-                  variant="my-course"
-                  navigatePath={(id) => `/course-practice/${id}`}
-                  onStartCourse={handleStartCourse}
-                  onShare={handleShare}
-                  onFavorite={handleFavorite}
-                  onArchive={handleArchive}
-                  isFavorite={favorites.has(courseId)}
-                />
+              <CourseCardWrapper
+  key={course.id}
+  id={courseId}
+  thumbnailSrc={course.image}
+  tags={course.tags}
+  title={course.title}
+  chapters={course.totalChapters}
+  rating={0}
+  price={course.price}
+  instructor={instructorWithOrg}
+  progress={mockProgress}
+  learnerRating={mockLearnerRating}
+  variant="my-course"
+  navigatePath={(id) => `/course-practice/${id}`}
+  onStartCourse={handleStartCourse}
+  onShare={handleShare}
+  onFavorite={handleFavorite}
+  onArchive={handleArchive}
+  isFavorite={favorites.has(courseId)}
+/>
               );
             })}
           </Box>
