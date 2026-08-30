@@ -1609,7 +1609,7 @@ export default function CourseCertificate({
             </Typography>
             {isCourseLocked ? (
               <Typography sx={{ fontSize: "0.8rem", color: COLORS.textMuted, lineHeight: 1.5 }}>
-                Complete your course 100% to unlock your evaluation report. Aap abhi bhi ek preview dekh sakte ho.
+                Complete your course 100% to unlock your evaluation report.
               </Typography>
             ) : cert && isCourseCompleted ? (
               <>

@@ -19,6 +19,34 @@ const PAGE_LAYOUT_SX = {
 };
 
 
+// const CourseCardWithRating = ({
+//   course,
+//   isCourseInCart,
+//   handleAddToCart,
+//   isAddingToCart,
+// }: any) => {
+//   const { data: ratingData } = useGetCourseRatingQuery(course.id);
+
+//   return (
+//     <CourseCardWrapper
+//       id={Number(course.id)}
+//       thumbnailSrc={course.image}
+//       tags={course.tags}
+//       title={course.title}
+//       chapters={course.totalChapters}
+//       rating={ratingData?.data?.averageRating || 0}
+//       reviewCount={ratingData?.data?.totalRatings || 0}
+//       instructor={course.createdBy || "Instructor"}
+//       price={course.price}
+//       navigatePath={(id) => `/course-glossary/${id}`}
+//       isCourseInCart={isCourseInCart}
+//       onAddToCart={handleAddToCart}
+//       isLoadingCart={isAddingToCart}
+//     />
+//   );
+// };
+
+
 const CourseCardWithRating = ({
   course,
   isCourseInCart,
@@ -26,6 +54,19 @@ const CourseCardWithRating = ({
   isAddingToCart,
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
+
+  // Org Name
+  const orgName =
+    course.createdByUser?.firstName || course.createdByUser?.lastName
+      ? `${course.createdByUser?.firstName || ""} ${
+          course.createdByUser?.lastName || ""
+        }`.trim()
+      : course.createdBy || "Tiiron";
+
+  // Instructor | Org
+  const instructorWithOrg = course.instructor
+    ? `${course.instructor} | ${orgName}`
+    : orgName;
 
   return (
     <CourseCardWrapper
@@ -36,7 +77,7 @@ const CourseCardWithRating = ({
       chapters={course.totalChapters}
       rating={ratingData?.data?.averageRating || 0}
       reviewCount={ratingData?.data?.totalRatings || 0}
-      instructor={course.createdBy || "Instructor"}
+      instructor={instructorWithOrg}
       price={course.price}
       navigatePath={(id) => `/course-glossary/${id}`}
       isCourseInCart={isCourseInCart}
@@ -45,7 +86,6 @@ const CourseCardWithRating = ({
     />
   );
 };
-
 export default function FreeCourses() {
   const {
     data: freeCoursesData,
