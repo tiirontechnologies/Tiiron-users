@@ -584,7 +584,7 @@ const Landing = () => {
 
   // ORG | INSTRUCTOR
   const orgWithInstructor = course.instructor
-    ? `${orgName} | ${course.instructor}`
+    ? `${course.instructor} | ${orgName} `
     : orgName;
 
   return (
@@ -648,12 +648,12 @@ const Landing = () => {
       const getRating = (course) =>
         Number(course.averageRating ?? course.rating) || 0;
 
-      // ----- Most popular -> rating ke hisaab se sorted -----
+      // ----- Most popular ->
       const mostPopular = [...allCourses]
         .sort((a, b) => getRating(b) - getRating(a))
         .slice(0, 3);
 
-      // ----- Weekly spotlight -> sabse recent bane hue courses -----
+      // ----- Weekly spotlight -> 
    const weeklySpotlight = [...allCourses]
   .sort(
     (a, b) =>
@@ -661,7 +661,7 @@ const Landing = () => {
   )
   .slice(0, 3);
 
-      // ----- In-demand AI skills -> jinki category/tags me AI/ML ho -----
+      // ----- In-demand AI skills ->
       const isAIRelated = (course) => {
         const haystack = [
           course.categories,
@@ -825,7 +825,7 @@ const Landing = () => {
                   variant="caption"
                   sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
                 >
-                  {course.categories || course.tags?.[0] || course.instructor}
+                  {course.categories || course.tags?.[0] || "More Skills "}
                 </Typography>
 
                 {/* RATING */}
