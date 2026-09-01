@@ -1,5 +1,5 @@
 import { Box, Container, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useGetChaptersQuery, useGetCourseByIdQuery } from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
@@ -10,40 +10,24 @@ import CourseGlossaryTabs from "./CourseGlossaryTabs";
 import CourseOverview from "./CourseOverview";
 import CourseLessons from "./CourseLessons";
 import CourseReviews from "./CourseReviews";
-import CourseCertificate from "./CourseCertificates";
+import { CourseCertificate } from "@features/course-certificate";
 import Comment from "@features/Comments";
 
 export default function CourseGlossary() {
   const { courseId } = useParams<{ courseId: string }>();
-  const [activeTab, setActiveTab] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(() =>
+    searchParams.get("tab") === "certificates" ? 2 : 0,
+  );
 
-  if (!courseId || courseId === "undefined") {
-    return (
-      <Box sx={{ p: 4, textAlign: "center" }}>
-        <Typography variant="h6" color="error">
-          No Course Found or Invalid Course Id
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          The URL you're trying to access doesn't have a valid course ID.
-        </Typography>
-      </Box>
-    );
-  }
+  const handleTabChange = (tab: number) => {
+    setActiveTab(tab);
+    setSearchParams(tab === 2 ? { tab: "certificates" } : {});
+  };
 
   const numericCourseId = Number(courseId);
-
-  if (isNaN(numericCourseId) || numericCourseId <= 0) {
-    return (
-      <Box sx={{ p: 4, textAlign: "center" }}>
-        <Typography variant="h6" color="error">
-          Invalid Course ID
-        </Typography>
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          The course ID must be a valid positive number.
-        </Typography>
-      </Box>
-    );
-  }
+  const isValidCourseId =
+    !!courseId && courseId !== "undefined" && Number.isFinite(numericCourseId) && numericCourseId > 0;
 
   // Course API
   const {
@@ -53,7 +37,7 @@ export default function CourseGlossary() {
     error: courseApiError,
   } = useGetCourseByIdQuery(
     { id: numericCourseId },
-    { skip: !courseId || isNaN(numericCourseId) },
+    { skip: !isValidCourseId },
   );
 
   // Chapters API
@@ -68,8 +52,17 @@ export default function CourseGlossary() {
       page: 1,
       limit: 100,
     },
-    { skip: !courseId || isNaN(numericCourseId) },
+    { skip: !isValidCourseId },
   );
+
+  if (!isValidCourseId) {
+    return (
+      <Box sx={{ p: 4, textAlign: "center" }}>
+        <Typography variant="h6" color="error">No Course Found or Invalid Course Id</Typography>
+        <Typography variant="body2" sx={{ mt: 2 }}>The URL you're trying to access doesn't have a valid course ID.</Typography>
+      </Box>
+    );
+  }
 
   const course = courseData?.data;
   const chapters = chaptersData?.data?.chapters;
@@ -218,7 +211,7 @@ export default function CourseGlossary() {
               <Box sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
                 <CourseGlossaryTabs
                   activeTab={activeTab}
-                  onTabChange={setActiveTab}
+                  onTabChange={handleTabChange}
                   courseId={String(numericCourseId)}
                   courseName={course?.title ?? ""}
                 />

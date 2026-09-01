@@ -67,6 +67,7 @@ export const baseApi = createApi({
     "Rating",
     "Profile",
     "Comment",
+    "Certificate",
   ],
   endpoints: (builder) => ({
     // Check authentication status
