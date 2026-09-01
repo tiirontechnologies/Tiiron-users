@@ -40,21 +40,21 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import SchoolIcon from "@mui/icons-material/School";
 import LockIcon from "@mui/icons-material/Lock";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import axios from "axios";
-import { getEvaluationDataForUser, COURSE_CONFIG, COURSE_SKILLS } from "./data";
-import Mohar from "../../../assets/Mohar.png";
+import CertificateUnavailableState from "./CertificateUnavailableState";
+import CertificateLoadingState from "./CertificateLoadingState";
 import {
+  useGetCourseByIdQuery,
   useGetLoggedInUserQuery,
-  useGetCourseCertificateQuery,
   useGetCourseProgressQuery,
-} from "../api/courseApi";
+} from "@features/course-glossary/api/courseApi";
+import {
+  useGenerateCourseCertificateMutation,
+  useGetCourseCertificateTemplateQuery,
+  useGetGeneratedCourseCertificateQuery,
+} from "../api/certificateApi";
+import type { CertificateTemplate, CourseCertificateProps, GeneratedCertificate } from "../types/certificate.types";
 import { toPng } from "html-to-image";
 
-import SignatureAbhishek from "../../../assets/abhishek-sir-Photoroom.png";
-import SignatureVishal from "../../../assets/vishal-sir-Photoroom.png";
-import SignatureAkash from "../../../assets/akash-sir-Photoroom.png";
-import SignatureCoordinator from "../../../assets/cordinator.png";
 const COLORS = {
   primaryBlue: "#081F5C",
   darkNavy: "#001529",
@@ -70,11 +70,15 @@ const COLORS = {
 const FONT_FAMILY = "Arial, Helvetica, sans-serif";
 const CERT_WIDTH = 840;
 const CERT_HEIGHT = 1188;
-
-interface CourseCertificateProps {
-  courseId: string;
-  courseName: string;
-}
+const STATIC_SKILLS = [
+  "Technical Skills",
+  "UI Implementation",
+  "Responsive Design",
+  "Component Architecture",
+  "Problem Solving",
+  "Team Collaboration",
+  "Communication",
+];
 
 interface CertificateData {
   studentName: string;
@@ -85,6 +89,13 @@ interface CertificateData {
   evaluationDate: string;
   mentorName: string;
   mentorSignature?: string;
+  directorSignature?: string;
+  stamp?: string;
+  email?: string;
+  website?: string;
+  address?: string;
+  organizationName?: string;
+  organizationLogo?: string;
   batch: string;
   scores: { label: string; score: string; icon: ReactNode }[];
   overall: string;
@@ -95,107 +106,67 @@ interface CertificateData {
   programSummary: string;
 }
 
-const DEFAULT_PROGRAM_SUMMARY =
-  "This report certifies that the above-mentioned student successfully participated in the Inacademic Internship Program and completed the assigned learning modules, assessments, and practical tasks through the Tiiron LMS platform. The evaluation has been conducted based on the student's performance, participation, consistency, technical understanding, and completion of assigned work throughout the program.";
-
-// mentors signature
-const MENTOR_SIGNATURES: Record<string, string> = {
-  abhishek: SignatureAbhishek,
-  vishal: SignatureVishal,
-  akash: SignatureAkash,
-};
-
-
-// mock data for preview
-const TEST_CERT_DATA: CertificateData = {
-  studentName: "Test Student",
-  enrollmentId: "TTINT000000",
-  internshipTrack: "FULL STACK WEB DEVELOPMENT",
-  college: "Sample College",
-  duration: "8th June 2026 - 8th July 2026",
-  evaluationDate: "9th July 2026",
-  mentorName: "Priya Mehrotra",
-  batch: "FSWD-MAR25-B1",
-  scores: [
-    { label: "Attendance & Punctuality", score: "8.5 / 10", icon: <EventNoteIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
-    { label: "Task Completion", score: "8.0 / 10", icon: <AssignmentTurnedInIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
-    { label: "Technical Skills", score: "8.7 / 10", icon: <MemoryIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
-    { label: "Problem Solving", score: "8.2 / 10", icon: <LightbulbIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
-    { label: "Code Quality", score: "8.4 / 10", icon: <CodeIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
-    { label: "Communication", score: "8.1 / 10", icon: <ForumIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
-    { label: "Overall Discipline", score: "8.6 / 10", icon: <AssignmentIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> },
-  ],
-  overall: "8.4 / 10",
-  assessment: "EXCELLENT",
-  verificationId: "TTINT000000",
-  skills: COURSE_SKILLS["1"] ?? [],
-  remarks:
-    "This is a sample preview. Log in to view and download your actual evaluation report.",
-  programSummary: DEFAULT_PROGRAM_SUMMARY,
-};
-
-
-function getMentorSignature(mentorName: string): string | undefined {
-  const key = Object.keys(MENTOR_SIGNATURES).find((name) =>
-    mentorName.toLowerCase().includes(name),
-  );
-  return key ? MENTOR_SIGNATURES[key] : undefined;
-}
 function formatOrdinalDate(date: Date): string {
-  const day = date.getDate();
+  const day = String(date.getDate()).padStart(2, "0");
   const month = date.toLocaleString("en-US", { month: "long" });
   const year = date.getFullYear();
-  const suffix = (d: number) => {
-    if (d > 3 && d < 21) return "th";
-    switch (d % 10) {
-      case 1:
-        return "st";
-      case 2:
-        return "nd";
-      case 3:
-        return "rd";
-      default:
-        return "th";
-    }
-  };
-  return `${day}${suffix(day)} ${month} ${year}`;
+  return `${day}-${month}-${year}`;
 }
 
 // 🆕 Enrollment ID ab locally generate hoti hai — backend ke certificateId (TTINT...) se
 // koi lena dena nahi. Format: TT + courseCode + year + zero-padded userId
 // e.g. TTFSWD2026000123
-function generateEnrollmentId(courseCode: string, userId: number, year: number): string {
-  return `TT${courseCode}${year}${String(userId).padStart(6, "0")}`;
+function scoreLabel(key: string) {
+  return key.replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase());
 }
 
-interface CertificateApiData {
-  certificateId: string;
-  courseId: number;
-  startDate: string;
-  endDate: string;
-  instructorName: string;
-  batchId: string;
-  programSummary?: string;
-  mentorRemark?: string;
-  mentorSignature?: string;
+function getAssessment(overallScore: string) {
+  const score = Number(overallScore);
+  if (!Number.isFinite(score)) return { label: "", stars: 0 };
+  if (score >= 8.5) return { label: "EXCELLENT", stars: 5 };
+  if (score >= 7) return { label: "VERY GOOD", stars: 3 };
+  return { label: "GOOD", stars: 2 };
 }
 
-function buildCertificateData(
-  userId: number,
-  studentName: string,
-  courseId: string,
-  courseName: string,
-  college: string,
-  apiCert?: CertificateApiData | null,
-): CertificateData {
+function getApiErrorStatus(error: unknown): number | undefined {
+  return typeof error === "object" && error !== null && "status" in error && typeof error.status === "number"
+    ? error.status
+    : undefined;
+}
 
-  const evalData = getEvaluationDataForUser(userId, studentName);
-  const courseConfig = COURSE_CONFIG[courseId] ?? {
-    mentorName: "Priya Mehrotra",
-    batch: "FSWD-MAR25-B1",
-    courseCode: "FSWD",
+function formatEnrollmentId(record: GeneratedCertificate): string {
+  const organization = record.course?.createdBy?.trim() || record.course?.orgCode?.trim() || record.student?.orgCode?.trim();
+  const courseTitle = record.course?.title?.trim();
+  const enrollmentId = record.enrollmentId;
+
+  if (!organization || !courseTitle || enrollmentId === undefined || enrollmentId === null) return "";
+
+  return `${organization.slice(0, 3).toUpperCase()}-${courseTitle.slice(0, 2).toUpperCase()}-${String(enrollmentId).padStart(4, "0")}`;
+}
+
+function buildLockedPreview(template: CertificateTemplate, course: any): CertificateData {
+  const duration = template.startDate && template.endDate
+    ? `${formatOrdinalDate(new Date(template.startDate))} - ${formatOrdinalDate(new Date(template.endDate))}`
+    : "";
+  return {
+    studentName: "", enrollmentId: "", internshipTrack: course?.title?.toLocaleUpperCase() ?? "",
+    college: "", duration, evaluationDate: "", mentorName: course?.instructor ?? "",
+    mentorSignature: template.mentorSignature ?? undefined,
+    directorSignature: template.directorSignature ?? undefined,
+    stamp: template.stamp ?? undefined,
+    email: template.email ?? undefined, website: template.website ?? undefined,
+    address: template.address ?? undefined, batch: template.batchId ?? "", scores: [],
+    overall: "", assessment: "", verificationId: "",
+    skills: STATIC_SKILLS,
+    remarks: template.mentorRemark ?? "", programSummary: template.programSummary ?? "",
+    organizationName: course?.createdBy?.trim() || undefined,
+    organizationLogo: course?.createdByUser?.profile?.picture || undefined,
   };
-  const skills = COURSE_SKILLS[courseId] ?? COURSE_SKILLS["1"];
+}
+
+function buildCertificateData(record: GeneratedCertificate): CertificateData {
+  const template = record.templateDetails ?? record.template;
+  const student = record.studentDetails ?? record.student;
 
   const iconStyle = { fontSize: 18, color: COLORS.textSecondary };
   const icons = [
@@ -209,41 +180,43 @@ function buildCertificateData(
   ];
 
   // duration ab API ke startDate/endDate se, warna fallback static
-  const duration = apiCert
-    ? `${formatOrdinalDate(new Date(apiCert.startDate))} - ${formatOrdinalDate(new Date(apiCert.endDate))}`
-    : `${formatOrdinalDate(new Date(2026, 5, 8))} - ${formatOrdinalDate(new Date(2026, 6, 8))}`;
+  const duration = template?.startDate && template?.endDate
+    ? `${formatOrdinalDate(new Date(template.startDate))} - ${formatOrdinalDate(new Date(template.endDate))}`
+    : "";
+  const scoreEntries = Object.entries(record.scorecard ?? {});
 
   // evaluation date hamesha aaj ki date (now)
-  const evaluationDate = formatOrdinalDate(new Date());
-
   // 🆕 enrollment ID ka year: agar apiCert hai to uske startDate ka year, warna current year
-  const enrollmentYear = apiCert
-    ? new Date(apiCert.startDate).getFullYear()
-    : new Date().getFullYear();
-
   return {
-    studentName,
+    studentName: `${student?.firstName ?? ""} ${student?.lastName ?? ""}`.trim(),
     // 🆕 enrollmentId ab locally generated — backend certificateId isse touch nahi karta
-    enrollmentId: generateEnrollmentId(courseConfig.courseCode, userId, enrollmentYear),
-    internshipTrack: courseName.toLocaleUpperCase(),
-    college,
+    enrollmentId: formatEnrollmentId(record),
+    internshipTrack: record.course?.title?.toLocaleUpperCase() ?? "",
+    college: record.studentDetails?.collegeName ?? record.student?.profile?.collage ?? "",
     duration,
-    evaluationDate,
-    mentorName: apiCert?.instructorName ?? courseConfig.mentorName,
-    mentorSignature: apiCert?.mentorSignature,
-    batch: apiCert?.batchId ?? courseConfig.batch,
-    scores: evalData.scores.map((score, index) => ({
-      label: score.label,
-      score: `${score.score.toFixed(1)} / 10`,
+    evaluationDate: record.issuedAt ? formatOrdinalDate(new Date(record.issuedAt)) : "",
+    mentorName: record.course?.instructor ?? "",
+    mentorSignature: template?.mentorSignature ?? undefined,
+    directorSignature: template?.directorSignature ?? undefined,
+    stamp: template?.stamp ?? undefined,
+    email: template?.email || undefined,
+    website: template?.website || undefined,
+    address: template?.address || undefined,
+    organizationName: record.course?.createdBy?.trim() || undefined,
+    organizationLogo: record.course?.organizationLogo || record.course?.orgLogo || undefined,
+    batch: template?.batchId ?? "",
+    scores: scoreEntries.map(([label, score], index) => ({
+      label: scoreLabel(label),
+      score: score === null ? "" : String(score),
       icon: icons[index] ?? <AssignmentIcon sx={iconStyle} />,
     })),
-    overall: `${evalData.overall.toFixed(1)} / 10`,
-    assessment: evalData.assessment.toUpperCase(),
+    overall: record.overallScore === undefined ? "" : String(record.overallScore),
+    assessment: record.grade ?? "",
     // verificationId hamesha backend ke certificateId se hi aata hai — ye untouched hai
-    verificationId: apiCert?.certificateId ?? evalData.verificationId,
-    skills,
-    remarks: apiCert?.mentorRemark ?? evalData.remarks,
-    programSummary: apiCert?.programSummary ?? DEFAULT_PROGRAM_SUMMARY,
+    verificationId: record.verificationId ?? "",
+    skills: STATIC_SKILLS,
+    remarks: template?.mentorRemark ?? "",
+    programSummary: template?.programSummary ?? "",
   };
 }
 
@@ -269,7 +242,11 @@ async function preloadImage(src: string) {
 
 async function generatePDFFromNode(node: HTMLElement, cert: CertificateData) {
   await document.fonts.ready;
-  await preloadImage(Mohar);
+  await Promise.all(
+    [cert.mentorSignature, cert.directorSignature, cert.stamp]
+      .filter((src): src is string => Boolean(src))
+      .map(preloadImage),
+  );
   await waitForImages(node);
   await new Promise((resolve) => requestAnimationFrame(resolve));
 
@@ -419,7 +396,7 @@ const Card = ({ children, sx = {} }: { children: ReactNode; sx?: object }) => (
   </Box>
 );
 
-const CertificateHeader = () => (
+const CertificateHeader = ({ cert }: { cert: CertificateData }) => (
   <Box sx={{ mb: "8px" }}>
     <Box
       sx={{
@@ -428,18 +405,9 @@ const CertificateHeader = () => (
         alignItems: "center",
       }}
     >
-      <Box
-        component="img"
-        src="/inac_nobg.png"
-        alt="Inacademic Logo"
-        crossOrigin="anonymous"
-        sx={{
-          height: 98,
-          width: 170,
-          objectFit: "contain",
-          objectPosition: "left center",
-        }}
-      />
+      <Box sx={{ height: 98, width: 170 }}>
+        {cert.organizationLogo && <Box component="img" src={cert.organizationLogo} alt={`${cert.organizationName ?? "Organization"} Logo`} crossOrigin="anonymous" sx={{ height: 98, width: 170, objectFit: "contain", objectPosition: "left center" }} />}
+      </Box>
       <Box sx={{ textAlign: "center", flex: 1 }}>
         <SchoolIcon
           sx={{ color: COLORS.primaryBlue, fontSize: 22, mb: "-3px" }}
@@ -450,57 +418,25 @@ const CertificateHeader = () => (
             fontSize: "2.05rem",
             letterSpacing: "0.5px",
             lineHeight: 0.95,
+            color: `${COLORS.primaryBlue} !important`,
+            WebkitTextFillColor: COLORS.primaryBlue,
+            mt: "8px",
           }}
         >
-          <Box component="span" sx={{ color: COLORS.accentRed }}>
-            IN
-          </Box>
-          <Box component="span" sx={{ color: COLORS.darkNavy }}>
-            ACADEMIC
-          </Box>
+          INTERNAL EVALUATION REPORT
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-            mt: "1px",
-          }}
-        >
-          <Box sx={{ height: 1, width: 34, bgcolor: COLORS.darkNavy }} />
-          <Typography
-            sx={{
-              fontSize: "0.72rem",
-              letterSpacing: "2px",
-              color: COLORS.textPrimary,
-              fontWeight: 700,
-            }}
-          >
-            INTERNAL EVALUATION REPORT
-          </Typography>
-          <Box sx={{ height: 1, width: 34, bgcolor: COLORS.darkNavy }} />
-        </Box>
       </Box>
-      <Box
-        component="img"
-        src="/Tiiron_Technologies_Logo.png"
-        alt="Tiiron Technologies Logo"
-        crossOrigin="anonymous"
-        sx={{
-          height: 108,
-          width: 170,
-          objectFit: "contain",
-          objectPosition: "right center",
-        }}
-      />
+      <Box component="img" src="/Tiiron_logo.png" alt="Tiiron LMS Logo" crossOrigin="anonymous" sx={{ height: 98, width: 170, objectFit: "contain", objectPosition: "right center" }} />
     </Box>
   </Box>
 );
 
 function CertificateBody({ cert }: { cert: CertificateData }) {
 
-  const mentorSignature = cert.mentorSignature || getMentorSignature(cert.mentorName);
+  const mentorSignature = cert.mentorSignature;
+  const officialStamp = cert.stamp;
+  const directorSignature = cert.directorSignature;
+  const assessment = getAssessment(cert.overall);
   return (
     <Box
       sx={{
@@ -571,7 +507,7 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
           pb: "48px",
         }}
       >
-        <CertificateHeader />
+        <CertificateHeader cert={cert} />
 
         <Card sx={{ p: 0, mb: "10px" }}>
           <PillSectionHeader
@@ -820,7 +756,7 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
                     lineHeight: 1,
                   }}
                 >
-                  {cert.assessment}
+                  {assessment.label}
                 </Box>
                 <Typography
                   sx={{
@@ -840,9 +776,9 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
                   gap: "18px",
                 }}
               >
-                <StarIcon sx={{ fontSize: 14 }} />
-                <StarIcon sx={{ fontSize: 14 }} />
-                <StarIcon sx={{ fontSize: 14 }} />
+                {Array.from({ length: assessment.stars }, (_, index) => (
+                  <StarIcon key={index} sx={{ fontSize: 14, color: "#FACC15" }} />
+                ))}
               </Box>
             </Card>
           </Grid>
@@ -973,21 +909,24 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
             </Box>
           </Box>
           <Box sx={{ textAlign: "center" }}>
-            <Box
-              component="img"
-              src={Mohar}
-              alt="Official Stamp"
-              loading="eager"
-              decoding="sync"
-              sx={{
-                width: 62,
-                height: 62,
-                objectFit: "contain",
-                display: "block",
-                mx: "auto",
-                mb: "2px",
-              }}
-            />
+            {officialStamp && (
+              <Box
+                component="img"
+                src={officialStamp}
+                crossOrigin="anonymous"
+                alt="Official Stamp"
+                loading="eager"
+                decoding="sync"
+                sx={{
+                  width: 62,
+                  height: 62,
+                  objectFit: "contain",
+                  display: "block",
+                  mx: "auto",
+                  mb: "2px",
+                }}
+              />
+            )}
             <Typography
               sx={{
                 fontSize: "0.62rem",
@@ -1000,15 +939,18 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
             </Typography>
           </Box>
           <Box sx={{ textAlign: "center" }}>
-            <Box
-              component="img"
-              src={SignatureCoordinator}
-              alt="Program Coordinator Signature"
-              sx={{ height: 62, width: "auto", maxWidth: 150, objectFit: "contain", mx: "auto", mb: "-6px" }}
-            />
+            {directorSignature && (
+              <Box
+                component="img"
+                src={directorSignature}
+                crossOrigin="anonymous"
+                alt="Director Signature"
+                sx={{ height: 62, width: "auto", maxWidth: 150, objectFit: "contain", mx: "auto", mb: "-6px" }}
+              />
+            )}
             <Box sx={{ borderTop: `2px solid ${COLORS.textPrimary}`, pt: "5px" }}>
-              <Typography sx={{ fontSize: "0.72rem", fontWeight: 800 }}>Program Coordinator</Typography>
-              <Typography sx={{ fontSize: "0.68rem", fontWeight: 500 }}>Inacademic</Typography>
+              <Typography sx={{ fontSize: "0.72rem", fontWeight: 800 }}>Academic Director</Typography>
+              <Typography sx={{ fontSize: "0.68rem", fontWeight: 500 }}>{cert.organizationName ?? ""}</Typography>
             </Box>
           </Box>
         </Box>
@@ -1032,38 +974,14 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
           gap: "18px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-          }}
-        >
-          <LanguageIcon sx={{ fontSize: 16 }} />
-          www.tiirontechnologies.com
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+          {cert.website && <><LanguageIcon sx={{ fontSize: 16 }} />{cert.website}</>}
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-          }}
-        >
-          <EmailIcon sx={{ fontSize: 16 }} />
-          contact@tiirontechnologies.com
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+          {cert.email && <><EmailIcon sx={{ fontSize: 16 }} />{cert.email}</>}
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-          }}
-        >
-          <LocationOnIcon sx={{ fontSize: 17 }} />
-          Lucknow, Uttar Pradesh, India
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+          {cert.address && <><LocationOnIcon sx={{ fontSize: 17 }} />{cert.address}</>}
         </Box>
       </Box>
     </Box>
@@ -1268,8 +1186,8 @@ export default function CourseCertificate({
   const [fullPreviewOpen, setFullPreviewOpen] = useState(false);
   const [downloadAfterPreviewOpen, setDownloadAfterPreviewOpen] =
     useState(false);
-  const [apiEnrollmentId, setApiEnrollmentId] = useState<string | null>(null);
   const visiblePdfSourceRef = useRef<HTMLDivElement>(null);
+  const generatedForRef = useRef<string | null>(null);
 
   const {
     data: userResponse,
@@ -1278,12 +1196,21 @@ export default function CourseCertificate({
   } = useGetLoggedInUserQuery(undefined);
   const userData = userResponse?.data;
   const isAuthenticated = !isUserError && !!(userData?.profile?.userId ?? userData?.profile?.id);
-
+  const { data: courseResponse } = useGetCourseByIdQuery(
+    { id: Number(courseId) },
+    { skip: !courseId },
+  );
+  const courseData = courseResponse?.data;
   const {
-    data: certResponse,
-  } = useGetCourseCertificateQuery(Number(courseId), {
-    skip: !isAuthenticated || !courseId,
+    data: templateResponse,
+    error: templateError,
+    isLoading: isTemplateLoading,
+  } = useGetCourseCertificateTemplateQuery(Number(courseId), {
+    skip: !courseId,
   });
+  const certificateTemplate =
+    templateResponse?.data ?? templateResponse?.certificate ?? null;
+  const isTemplateAvailable = Boolean(certificateTemplate);
 
   // 🆕 Progress decides whether the certificate is unlocked (100% required)
   const {
@@ -1302,76 +1229,78 @@ export default function CourseCertificate({
   const isCourseCompleted =
     isProgressResolved && !isProgressError && progressPercent >= 100;
   const isCourseLocked =
-    isAuthenticated && isProgressResolved && (isProgressError || !isCourseCompleted);
+    !isAuthenticated || (isAuthenticated && isProgressResolved && (isProgressError || !isCourseCompleted));
 
-  // 🆕 Ye sirf VERIFICATION ID (backend certificateId) fetch karta hai — enrollmentId isse ab kabhi
-  // touch nahi hoti. State ka naam bhi isi liye clear karne ke liye rakha hai.
+  const {
+    data: certResponse,
+    error: certificateError,
+    isLoading: isCertificateLoading,
+    isFetching: isCertificateFetching,
+  } = useGetGeneratedCourseCertificateQuery(Number(courseId), {
+    skip: !isAuthenticated || !isTemplateAvailable || !isCourseCompleted || !courseId,
+  });
+  const [generateCourseCertificate, {
+    data: generatedCertificateResponse,
+    isError: isGenerateCertificateError,
+  }] = useGenerateCourseCertificateMutation();
+  const certificateRecord = generatedCertificateResponse?.data ?? certResponse?.data ?? null;
+  const certificateErrorStatus = getApiErrorStatus(certificateError);
+  const isUnauthorized = getApiErrorStatus(isUserError) === 401 || certificateErrorStatus === 401 || getApiErrorStatus(templateError) === 401;
+  const isNotEnrolled = certificateErrorStatus === 400;
+  const isGeneratedCertificateMissing = certificateErrorStatus === 404;
+  const isWaitingForGeneration = isGeneratedCertificateMissing && !certificateRecord && !isGenerateCertificateError;
+  const isCertificateUnavailable =
+    isAuthenticated && isCourseCompleted && !isCertificateLoading && !isCertificateFetching &&
+    !isWaitingForGeneration && isTemplateAvailable && !certificateRecord;
+
+  // If no issued certificate exists, create it once for the logged-in student.
   useEffect(() => {
-    if (!isAuthenticated || !userData?.email) return;
-    let cancelled = false;
+    const generationKey = `${userData?.profile?.userId ?? userData?.profile?.id ?? ""}:${courseId}`;
+    if (
+      !isAuthenticated ||
+      !isTemplateAvailable ||
+      !isCourseCompleted ||
+      !isGeneratedCertificateMissing ||
+      generatedForRef.current === generationKey
+    ) {
+      return;
+    }
 
-    const fetchCertificateId = async () => {
-      try {
-        const res = await axios.get(
-          `https://tiiron-verify.onrender.com/api/certificates/search/${encodeURIComponent(userData?.email)}`,
-        );
-        if (!cancelled) {
-          setApiEnrollmentId(res.data?.data?.certificateId ?? null);
-        }
-      } catch (err) {
-        console.error("Failed to fetch certificateId:", err);
-        if (!cancelled) {
-          setApiEnrollmentId(null);
-        }
-      }
-    };
-
-    fetchCertificateId();
-    return () => {
-      cancelled = true;
-    };
-  }, [isAuthenticated, userData?.email]);
-
-  const cert = useMemo(() => {
-    const userId = userData?.profile?.userId ?? userData?.profile?.id;
-    if (!isAuthenticated || !userId) return null;
-    const studentName =
-      `${userData?.firstName ?? ""} ${userData?.lastName ?? ""}`.trim() ||
-      "Student";
-    // college ab profile.collage se aata hai (backend spelling "collage")
-    const college = userData?.profile?.collage || "N/A";
-    const data = buildCertificateData(
-      Number(userId),
-      studentName,
-      String(courseId),
-      courseName,
-      college,
-      certResponse?.certificate ?? null,
-    );
-    // 🆕 FIX: apiEnrollmentId sirf verificationId ko update karega.
-    // enrollmentId hamesha buildCertificateData ke locally-generated format
-    // (TT + courseCode + year + userId) mein hi rahegi — kabhi backend
-    // certificateId se overwrite nahi hogi.
-    return apiEnrollmentId
-      ? {
-          ...data,
-          verificationId: apiEnrollmentId,
-        }
-      : data;
+    generatedForRef.current = generationKey;
+    void generateCourseCertificate(Number(courseId));
   }, [
     courseId,
-    courseName,
+    generateCourseCertificate,
     isAuthenticated,
-    userData?.firstName,
-    userData?.lastName,
-    userData?.profile?.userId,
+    isCourseCompleted,
+    isGeneratedCertificateMissing,
+    isTemplateAvailable,
     userData?.profile?.id,
-    userData?.profile?.collage,
-    apiEnrollmentId,
-    certResponse,
+    userData?.profile?.userId,
   ]);
 
-  const displayCert = cert ?? TEST_CERT_DATA;
+  const cert = useMemo(() => {
+    if (!certificateRecord) return null;
+    const data = buildCertificateData(certificateRecord);
+    return {
+      ...data,
+      organizationName: courseData?.createdBy?.trim() || data.organizationName,
+      organizationLogo: courseData?.createdByUser?.profile?.picture || data.organizationLogo,
+    };
+  }, [
+    certificateRecord,
+    courseData?.createdBy,
+    courseData?.createdByUser?.profile?.picture,
+  ]);
+  const previewCert = useMemo(() => {
+    if (!certificateTemplate) return null;
+    return buildLockedPreview(certificateTemplate, courseData);
+  }, [certificateTemplate, courseData]);
+  const loginPreviewCert = useMemo(() => {
+    if (!isUnauthorized) return null;
+    return buildLockedPreview({ courseId: Number(courseId) }, courseData);
+  }, [isUnauthorized, courseId, courseData]);
+  const displayCert = cert ?? previewCert ?? loginPreviewCert;
 
   const redirectToLogin = () => {
     window.location.href = "/login";
@@ -1379,7 +1308,7 @@ export default function CourseCertificate({
 
   const handleViewFull = () => {
     if (!isAuthenticated) {
-      redirectToLogin();
+      setFullPreviewOpen(true);
       return;
     }
     // Locked hone par bhi preview dikhne do — sirf download block hai
@@ -1439,42 +1368,19 @@ export default function CourseCertificate({
     downloadVisibleCertificate,
   ]);
 
-  if (isUserLoading) {
-    return (
-      <Box sx={{ py: 4, px: { xs: 1.5, sm: 3 }, background: "#F1F5F9" }}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} lg={8}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: "28px",
-                borderRadius: "10px",
-                border: `1px solid ${COLORS.border}`,
-              }}
-            >
-              <SkeletonBar height={60} />
-              <Box sx={{ height: 14 }} />
-              <SkeletonBar height={120} />
-            </Paper>
-          </Grid>
-          <Grid item xs={12} lg={4}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 3,
-                borderRadius: "10px",
-                border: `1px solid ${COLORS.border}`,
-              }}
-            >
-              <SkeletonBar height={100} />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
-    );
+  if (isUserLoading || isTemplateLoading || (isAuthenticated && isCourseCompleted && isCertificateLoading) || isWaitingForGeneration) {
+    return <CertificateLoadingState />;
   }
 
-  if (fullPreviewOpen && cert) {
+  if (isNotEnrolled) {
+    return <CertificateUnavailableState courseName={courseName} title="You are not enrolled in this course" description="Enroll in this course and complete its practice to unlock your certificate." />;
+  }
+
+  if ((isCertificateUnavailable || !displayCert) && !isUnauthorized) {
+    return <CertificateUnavailableState courseName={courseName} />;
+  }
+
+  if (fullPreviewOpen && displayCert) {
     const scale = isMobile ? 0.42 : isTablet ? 0.65 : isLaptop ? 0.85 : 1;
     return (
       <Box sx={{ minHeight: "100vh", background: "#EEF2F6" }}>
@@ -1566,7 +1472,7 @@ export default function CourseCertificate({
             }}
           >
             <Box ref={visiblePdfSourceRef}>
-              <CertificateBody cert={cert} />
+              <CertificateBody cert={displayCert} />
             </Box>
           </Paper>
         </Box>
@@ -1609,18 +1515,12 @@ export default function CourseCertificate({
             </Typography>
             {isCourseLocked ? (
               <Typography sx={{ fontSize: "0.8rem", color: COLORS.textMuted, lineHeight: 1.5 }}>
-                Complete your course 100% to unlock your evaluation report.
+                {isAuthenticated ? "Evaluation certificate locked. Complete your course to unlock your certificate." : "Log in to generate and unlock your certificate."}
               </Typography>
-            ) : cert && isCourseCompleted ? (
-              <>
-                <InfoRow label="Student" value={displayCert.studentName} />
-                <InfoRow label="Overall Score" value={displayCert.overall} />
-              </>
             ) : (
-              <>
-                <SkeletonBar height={14} />
-                <SkeletonBar height={14} />
-              </>
+              <Typography sx={{ fontSize: "0.8rem", color: COLORS.textMuted, lineHeight: 1.5 }}>
+                Your issued certificate is ready to view and download.
+              </Typography>
             )}
             <Button
               variant="outlined"

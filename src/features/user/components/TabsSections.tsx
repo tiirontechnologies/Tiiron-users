@@ -7,6 +7,7 @@ import LearningJourneyCard from "./LearningJourneyCard";
 import SkillsCard from "./SkillsCards";
 import ComingSoon from "./CoomingSoon";
 import MyCoursesTab from "./CoursesTab";
+import CertificatesTab from "./CertificatesTab";
 
 const TabsSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
@@ -66,7 +67,9 @@ const TabsSection: React.FC = () => {
 
 {activeTab === "My Courses" && <MyCoursesTab />}
 
-{activeTab !== "Overview" && activeTab !== "My Courses" && (
+{activeTab === "Certificates" && <CertificatesTab />}
+
+{activeTab !== "Overview" && activeTab !== "My Courses" && activeTab !== "Certificates" && (
   <ComingSoon />
 )}
     </div>

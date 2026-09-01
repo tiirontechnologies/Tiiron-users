@@ -136,14 +136,6 @@ export const courseApiSlice = baseApi.injectEndpoints({
   }),
 }),
 
-    // Get course certificate (dynamic certificate data)
-    getCourseCertificate: builder.query({
-      query: (courseId: number) => ({
-        url: `/course/${courseId}/certificate`,
-        method: "GET",
-      })
-    }),
-
     // 🆕 Get course progress (used to gate certificate visibility/download)
     getCourseProgress: builder.query({
       query: (courseId: number) => ({
@@ -206,7 +198,6 @@ export const {
   useGetCoursesQuery,
   useGetCourseByIdQuery,
   useGetCourseRatingQuery,
-  useGetCourseCertificateQuery,
   useGetCourseProgressQuery,
   useCreateCourseMutation,
   useDeleteCourseMutation,
