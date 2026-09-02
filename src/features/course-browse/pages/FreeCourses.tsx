@@ -57,16 +57,12 @@ const CourseCardWithRating = ({
 
   // Org Name
   const orgName =
-    course.createdByUser?.firstName || course.createdByUser?.lastName
-      ? `${course.createdByUser?.firstName || ""} ${
-          course.createdByUser?.lastName || ""
-        }`.trim()
-      : course.createdBy || "Tiiron";
+    course.createdBy?.trim() ||
+    `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
+    "Organization";
 
   // Instructor | Org
-  const instructorWithOrg = course.instructor
-    ? `${course.instructor} | ${orgName}`
-    : orgName;
+  const instructorWithOrg = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
 
   return (
     <CourseCardWrapper

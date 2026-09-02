@@ -431,9 +431,9 @@ const CoursesTab: React.FC<CoursesTabProps> = ({
                         mb: 0.2,
                       }}
                     >
-                          {organizationName}
-                      {" | "}
                       {instructorName}
+                      {" | "}
+                      {organizationName}
                       {/* Organization
                        */}
                     </Typography>

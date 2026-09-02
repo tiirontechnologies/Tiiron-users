@@ -115,7 +115,7 @@ export default function SearchResults() {
                   chapters={course.totalChapters}
                   rating={parseFloat(mockRating)}
                   reviewCount={mockReviewCount}
-                  instructor={course.createdBy || "Instructor"}
+                  instructor={`${course.instructor?.trim() || "Instructor"} | ${course.createdBy?.trim() || course.orgCode?.trim() || "Organization"}`}
                   price={course.price}
                   navigatePath={(id) => `/course-glossary/${id}`}
                   isCourseInCart={isCourseInCart}

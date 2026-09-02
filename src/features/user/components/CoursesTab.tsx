@@ -31,6 +31,7 @@ export interface EnrolledCourse {
   duration: string | null;
   orgCode: string;
   createdBy: string;
+  instructor?: string | null;
   _count: { chapters: number };
   averageRating: number;
   totalRatings: number;
@@ -334,7 +335,7 @@ const enrollments: Enrollment[] = data?.data || [];
                     {course.createdBy?.charAt(0)?.toUpperCase() || "T"}
                   </Avatar>
                   <Typography variant="caption" color="text.secondary" noWrap>
-                    {course.createdBy}
+                    {`${course.instructor?.trim() || "Instructor"} | ${course.createdBy?.trim() || course.orgCode?.trim() || "Organization"}`}
                   </Typography>
                 </Stack>
 

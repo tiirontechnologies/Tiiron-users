@@ -14,6 +14,7 @@ export interface EnrolledCourse {
   duration: string | null;
   orgCode: string;
   createdBy: string;
+  instructor?: string | null;
   _count: { chapters: number };
   averageRating: number;
   totalRatings: number;
@@ -74,6 +75,7 @@ const CurrentlyLearningCard: React.FC = () => {
   const { course } = current;
   const lessonCount = course._count?.chapters ?? 0;
   const isFree = current.payment_status === "free" || Number(course.price) === 0;
+  const instructorWithOrg = `${course.instructor?.trim() || "Instructor"} | ${course.createdBy?.trim() || course.orgCode?.trim() || "Organization"}`;
 
   return (
     <Card title="Currently Learning" cta="View all">
@@ -92,7 +94,7 @@ const CurrentlyLearningCard: React.FC = () => {
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-bold text-slate-900">{course.title}</p>
           <p className="truncate text-xs text-slate-500">
-            By {course.createdBy || "Instructor"}
+            By {instructorWithOrg}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
             <span className="rounded-full bg-slate-100 px-2 py-0.5 font-semibold text-slate-600">

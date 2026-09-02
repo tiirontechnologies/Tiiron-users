@@ -4,7 +4,7 @@ import WorkspacePremiumRoundedIcon from "@mui/icons-material/WorkspacePremiumRou
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { useNavigate } from "react-router-dom";
-import { useGetGeneratedCourseCertificateQuery } from "@features/course-certificate";
+import { useGetCourseCertificateTemplateQuery, useGetGeneratedCourseCertificateQuery } from "@features/course-certificate";
 import { useGetCourseProgressQuery } from "@features/course-glossary/api/courseApi";
 
 export interface ProfileEnrollment {
@@ -16,7 +16,7 @@ export interface ProfileEnrollment {
 
 interface ProfileCertificateCardProps {
   enrollment: ProfileEnrollment;
-  onStatusResolved: (courseId: number, earned: boolean) => void;
+  onStatusResolved: (courseId: number, available: boolean, earned: boolean) => void;
 }
 
 function getCertificatePayload(response: any) {
@@ -32,23 +32,30 @@ function getOverallScore(certificate: any): string | null {
 export default function ProfileCertificateCard({ enrollment, onStatusResolved }: ProfileCertificateCardProps) {
   const navigate = useNavigate();
   const { data: progressResponse, isLoading: isProgressLoading } = useGetCourseProgressQuery(enrollment.courseId);
+  const { data: templateResponse, isLoading: isTemplateLoading, error: templateError } = useGetCourseCertificateTemplateQuery(enrollment.courseId);
   const progress = Number(progressResponse?.data?.progress?.percentage ?? 0);
   const { data: certificateResponse, isLoading: isCertificateLoading, error: certificateError } = useGetGeneratedCourseCertificateQuery(enrollment.courseId, {
     skip: isProgressLoading || progress < 100,
   });
   const certificate = getCertificatePayload(certificateResponse);
+  const template = templateResponse?.data ?? templateResponse?.certificate ?? null;
+  const certificateAvailable = Boolean(template) && !templateError;
   // A failed certificate request cannot be shown as an in-progress certificate.
   const templateUnavailable = Boolean(certificateError);
-  const isResolved = !isProgressLoading && (progress < 100 || !isCertificateLoading);
-  const earned = isResolved && !templateUnavailable && !!certificate && progress >= 100;
+  const isResolved = !isProgressLoading && !isTemplateLoading && (progress < 100 || !isCertificateLoading);
+  const earned = isResolved && certificateAvailable && !templateUnavailable && !!certificate && progress >= 100;
   const score = getOverallScore(certificate);
 
   useEffect(() => {
-    if (isResolved) onStatusResolved(enrollment.courseId, earned);
-  }, [earned, enrollment.courseId, isResolved, onStatusResolved]);
+    if (isResolved) onStatusResolved(enrollment.courseId, certificateAvailable, earned);
+  }, [certificateAvailable, earned, enrollment.courseId, isResolved, onStatusResolved]);
 
-  if (!isResolved) {
+  if (!isResolved || isTemplateLoading) {
     return <Card elevation={0} sx={{ minHeight: 170, borderRadius: 3, bgcolor: "#F8FAFC", border: "1px solid #E2E8F0" }} />;
+  }
+
+  if (!certificateAvailable) {
+    return null;
   }
 
   return (

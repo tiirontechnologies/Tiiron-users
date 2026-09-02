@@ -578,14 +578,12 @@ const Landing = () => {
 
   // ORG NAME (createdByUser se, warna createdBy fallback)
   const orgName =
-    course.createdByUser?.firstName || course.createdByUser?.lastName
-      ? `${course.createdByUser?.firstName || ''} ${course.createdByUser?.lastName || ''}`.trim()
-      : course.createdBy || 'Tiiron';
+    course.createdBy?.trim() ||
+    `${course.createdByUser?.firstName || ''} ${course.createdByUser?.lastName || ''}`.trim() ||
+    'Organization';
 
   // ORG | INSTRUCTOR
-  const orgWithInstructor = course.instructor
-    ? `${course.instructor} | ${orgName} `
-    : orgName;
+  const orgWithInstructor = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
 
   return (
     <SwiperSlide key={course.id}>
@@ -817,7 +815,7 @@ const Landing = () => {
                   variant="caption"
                   sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
                 >
-                  {course.instructor}
+                  {course.instructor?.trim() || "Instructor"}
                 </Typography>
 
                 {/* CATEGORY */}
