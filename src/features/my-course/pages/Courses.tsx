@@ -154,17 +154,9 @@ export default function Courses({ onCourseClick }: CoursesProps) {
 
               // Mock learner rating - in production, this should come from API
               const mockLearnerRating = course.averageRating ?? 0;
-              // Get instructor/organization name - prefer createdBy, fallback to orgCode
-              // const instructorName = course.createdBy || course.orgCode || "";
-              // Org First Name | Instructor Name
-const orgFirstName =
-  course.createdByUser?.firstName ||
-  course.createdBy?.split(" ")?.[0] ||
-  "Tiiron";
-
-const instructorWithOrg = course.instructor
-  ? `${course.createdBy} | ${course.instructor}`
-  : orgFirstName;
+              const organizationName = course.createdBy?.trim() || course.orgCode?.trim() || "Organization";
+              const instructorName = course.instructor?.trim() || "Instructor";
+              const instructorWithOrg = `${instructorName} | ${organizationName}`;
 
 
 

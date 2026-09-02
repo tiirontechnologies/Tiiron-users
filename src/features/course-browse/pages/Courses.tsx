@@ -55,13 +55,11 @@ const CourseCardWithRating = ({
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
 
   const organizationName =
-    `${course.createdByUser?.firstName || ""} ${
-      course.createdByUser?.lastName || ""
-    }`.trim() || course.createdBy || "";
+    course.createdBy?.trim() ||
+    `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
+    "Organization";
 
-  const instructorWithOrg = organizationName
-    ? `${course.instructor || "Instructor"} | ${organizationName}`
-    : course.instructor || "Instructor";
+  const instructorWithOrg = `${course.instructor?.trim() || "Instructor"} | ${organizationName}`;
 
   return (
     <CourseCardWrapper

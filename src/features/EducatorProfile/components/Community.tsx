@@ -2,6 +2,7 @@ import {
   Box,
   Card,
   CardContent,
+  Chip,
   CircularProgress,
   Stack,
   Typography,
@@ -10,8 +11,8 @@ import {
 import TelegramIcon from "@mui/icons-material/Telegram";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LaunchIcon from "@mui/icons-material/Launch";
-// import GroupOffIcon from "@mui/icons-material/GroupOff";
-import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import Groups2RoundedIcon from "@mui/icons-material/Groups2Rounded";
+import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import { FaDiscord } from "react-icons/fa";
 
 import { useGetCommunityByUserIdQuery } from "../api/profileApiSlice";
@@ -82,11 +83,57 @@ export default function EducatorCommunity({ educatorId }: Props) {
           </Box>
 
           {communities.length === 0 ? (
-            <Box py={4} textAlign="center">
-              {/* <GroupOffIcon sx={{ fontSize: 40, color: "text.disabled", mb: 1 }} /> */}
-              <PeopleOutlineIcon sx={{ fontSize: 40, color: "text.disabled", mb: 1 }} />
-              <Typography variant="body2" color="text.secondary">
-                Community not available
+            <Box
+              sx={{
+                py: 5,
+                px: 3,
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: 3,
+                background: "linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.12), rgba(251,191,36,0.12))",
+                border: "1px solid rgba(99,102,241,0.18)",
+              }}
+            >
+              <Box
+                sx={{
+                  width: 82,
+                  height: 82,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "linear-gradient(135deg, #4f46e5 0%, #8b5cf6 50%, #f59e0b 100%)",
+                  boxShadow: "0 14px 32px rgba(99,102,241,0.28)",
+                  mb: 2,
+                }}
+              >
+                <Groups2RoundedIcon sx={{ fontSize: 38, color: "#fff" }} />
+              </Box>
+
+              <Chip
+                icon={<AutoAwesomeRoundedIcon sx={{ fontSize: 16 }} />}
+                label="Coming Soon"
+                sx={{
+                  mb: 1.5,
+                  fontWeight: 700,
+                  bgcolor: "rgba(79,70,229,0.12)",
+                  color: "#4f46e5",
+                  border: "1px solid rgba(79,70,229,0.22)",
+                }}
+              />
+
+              <Typography variant="h6" fontWeight={800} gutterBottom>
+                Community is on the way
+              </Typography>
+
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ maxWidth: 420, lineHeight: 1.7 }}
+              >
+                This educator community space is being prepared. We will share updates and links here soon.
               </Typography>
             </Box>
           ) : (
