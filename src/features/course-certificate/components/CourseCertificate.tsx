@@ -403,30 +403,33 @@ const CertificateHeader = ({ cert }: { cert: CertificateData }) => (
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        gap: "12px",
       }}
     >
-      <Box sx={{ height: 98, width: 170 }}>
-        {cert.organizationLogo && <Box component="img" src={cert.organizationLogo} alt={`${cert.organizationName ?? "Organization"} Logo`} crossOrigin="anonymous" sx={{ height: 98, width: 170, objectFit: "contain", objectPosition: "left center" }} />}
+      <Box sx={{ height: 82, width: 150, flexShrink: 0 }}>
+        {cert.organizationLogo && <Box component="img" src={cert.organizationLogo} alt={`${cert.organizationName ?? "Organization"} Logo`} crossOrigin="anonymous" sx={{ height: 82, width: 150, objectFit: "contain", objectPosition: "left center" }} />}
       </Box>
-      <Box sx={{ textAlign: "center", flex: 1 }}>
+      <Box sx={{ textAlign: "center", flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <SchoolIcon
-          sx={{ color: COLORS.primaryBlue, fontSize: 22, mb: "-3px" }}
+          sx={{ color: COLORS.primaryBlue, fontSize: 18, mb: "2px" }}
         />
         <Typography
           sx={{
-            fontWeight: 950,
-            fontSize: "2.05rem",
-            letterSpacing: "0.5px",
-            lineHeight: 0.95,
+            fontWeight: 900,
+            fontSize: "1.35rem",
+            letterSpacing: "0.22px",
+            lineHeight: 1.12,
             color: `${COLORS.primaryBlue} !important`,
             WebkitTextFillColor: COLORS.primaryBlue,
-            mt: "8px",
+            maxWidth: "420px",
+            wordBreak: "break-word",
+            textTransform: "uppercase",
           }}
         >
-          INTERNAL EVALUATION REPORT
+          Internal Evaluation Report
         </Typography>
       </Box>
-      <Box component="img" src="/Tiiron_logo.png" alt="Tiiron LMS Logo" crossOrigin="anonymous" sx={{ height: 98, width: 170, objectFit: "contain", objectPosition: "right center" }} />
+      <Box component="img" src="/Tiiron_logo.png" alt="Tiiron LMS Logo" crossOrigin="anonymous" sx={{ height: 82, width: 150, objectFit: "contain", objectPosition: "right center", flexShrink: 0 }} />
     </Box>
   </Box>
 );
