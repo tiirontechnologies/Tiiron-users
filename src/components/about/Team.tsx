@@ -1,20 +1,31 @@
 import {   Linkedin, Twitter } from "lucide-react";
 import profile1 from "../../assets/profile/rishabh_profile.jpg";
+import Krishna_Reddy from "../../assets/profile/krishna_reddy_sir.jpg.jpeg";
+import Ummed_Singh from "../../assets/profile/Ummed_Singh.png";
+import Director_2 from "../../assets/profile/Director_02.png";
+import Akash_Madheshiya from "../../assets/profile/akash-sir.jpg.jpeg";
+import Nitesh_Gupta from "../../assets/profile/NiteshGupta.png"
 
 
 const teamMembers = [
   {
     name: "Rishabh Singh",
-    role: "Co-Founder",
+    role: "Founder",
     image: profile1,
     socials: { linkedin: "https://www.linkedin.com/in/itsindrajput/", twitter: "https://twitter.com/itsindrajput", profile: "https://itsindrajput.netlify.app/" },
   },
-  {
-    name: "Tarun Pandey",
-    role: "Co-Founder",
-    image: "/tarun_Profile.png",
-    socials: { linkedin: "https://in.linkedin.com/in/tpandey495", twitter: "https://x.com/tpandey495", profile: "https://tarunpandey.netlify.app/" },
+    {
+    name: "Vinod Singh",
+    role: "Director",
+    image: Director_2,
+    // socials: { linkedin: "https://www.linkedin.com/in/itsindrajput/", twitter: "https://twitter.com/itsindrajput", profile: "https://itsindrajput.netlify.app/" },
   },
+  // {
+  //   name: "Tarun Pandey",
+  //   role: "Co-Founder",
+  //   image: "/tarun_Profile.png",
+  //   socials: { linkedin: "https://in.linkedin.com/in/tpandey495", twitter: "https://x.com/tpandey495", profile: "https://tarunpandey.netlify.app/" },
+  // },
   {
     name: "Mrs. Kiran Devi",
     role: "Director",
@@ -25,6 +36,34 @@ const teamMembers = [
     name: "Devendra Kumar Singh",
     role: "Academic Director",
       image:"/Academic_Director.png",
+    socials: { linkedin: " ", twitter: " ", profile: " " },
+    // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
+  },
+  {
+    name: "Ummed Singh",
+    role: "Advisor",
+      image:Ummed_Singh,
+    socials: { linkedin: " ", twitter: " ", profile: " " },
+    // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
+  },
+  {
+    name: "Akash Madheshiya ",
+    role: "Advisor",
+      image:Akash_Madheshiya,
+    socials: { linkedin: " ", twitter: " ", profile: " " },
+    // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
+  },
+  {
+    name: "Krishna Reddy ",
+    role: "Advisor",
+      image:Krishna_Reddy,
+    socials: { linkedin: " ", twitter: " ", profile: " " },
+    // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
+  },
+  {
+    name: "Nitesh Gupta",
+    role: "Software Engineer",
+      image:Nitesh_Gupta,
     socials: { linkedin: " ", twitter: " ", profile: " " },
     // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
   },
