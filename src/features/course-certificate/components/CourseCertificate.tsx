@@ -148,6 +148,15 @@ function buildLockedPreview(template: CertificateTemplate, course: any): Certifi
   const duration = template.startDate && template.endDate
     ? `${formatOrdinalDate(new Date(template.startDate))} - ${formatOrdinalDate(new Date(template.endDate))}`
     : "";
+  const previewScores = [
+    ["Technical Skills", "8.5"],
+    ["UI Implementation", "8.0"],
+    ["Responsive Design", "8.5"],
+    ["Component Architecture", "8.0"],
+    ["Problem Solving", "9.0"],
+    ["Team Collaboration", "8.5"],
+    ["Communication", "8.0"],
+  ];
   return {
     studentName: "", enrollmentId: "", internshipTrack: course?.title?.toLocaleUpperCase() ?? "",
     college: "", duration, evaluationDate: "", mentorName: course?.instructor ?? "",
@@ -155,8 +164,9 @@ function buildLockedPreview(template: CertificateTemplate, course: any): Certifi
     directorSignature: template.directorSignature ?? undefined,
     stamp: template.stamp ?? undefined,
     email: template.email ?? undefined, website: template.website ?? undefined,
-    address: template.address ?? undefined, batch: template.batchId ?? "", scores: [],
-    overall: "", assessment: "", verificationId: "",
+    address: template.address ?? undefined, batch: template.batchId ?? "",
+    scores: previewScores.map(([label, score]) => ({ label, score, icon: <AssignmentIcon sx={{ fontSize: 18, color: COLORS.textSecondary }} /> })),
+    overall: "8.4", assessment: "VERY GOOD", verificationId: "",
     skills: STATIC_SKILLS,
     remarks: template.mentorRemark ?? "", programSummary: template.programSummary ?? "",
     organizationName: course?.createdBy?.trim() || undefined,
@@ -1206,7 +1216,6 @@ export default function CourseCertificate({
   const courseData = courseResponse?.data;
   const {
     data: templateResponse,
-    error: templateError,
     isLoading: isTemplateLoading,
   } = useGetCourseCertificateTemplateQuery(Number(courseId), {
     skip: !courseId,
@@ -1248,7 +1257,6 @@ export default function CourseCertificate({
   }] = useGenerateCourseCertificateMutation();
   const certificateRecord = generatedCertificateResponse?.data ?? certResponse?.data ?? null;
   const certificateErrorStatus = getApiErrorStatus(certificateError);
-  const isUnauthorized = getApiErrorStatus(isUserError) === 401 || certificateErrorStatus === 401 || getApiErrorStatus(templateError) === 401;
   const isNotEnrolled = certificateErrorStatus === 400;
   const isGeneratedCertificateMissing = certificateErrorStatus === 404;
   const isWaitingForGeneration = isGeneratedCertificateMissing && !certificateRecord && !isGenerateCertificateError;
@@ -1299,11 +1307,7 @@ export default function CourseCertificate({
     if (!certificateTemplate) return null;
     return buildLockedPreview(certificateTemplate, courseData);
   }, [certificateTemplate, courseData]);
-  const loginPreviewCert = useMemo(() => {
-    if (!isUnauthorized) return null;
-    return buildLockedPreview({ courseId: Number(courseId) }, courseData);
-  }, [isUnauthorized, courseId, courseData]);
-  const displayCert = cert ?? previewCert ?? loginPreviewCert;
+  const displayCert = cert ?? previewCert;
 
   const redirectToLogin = () => {
     window.location.href = "/login";
@@ -1379,7 +1383,7 @@ export default function CourseCertificate({
     return <CertificateUnavailableState courseName={courseName} title="You are not enrolled in this course" description="Enroll in this course and complete its practice to unlock your certificate." />;
   }
 
-  if ((isCertificateUnavailable || !displayCert) && !isUnauthorized) {
+  if (isCertificateUnavailable || !displayCert) {
     return <CertificateUnavailableState courseName={courseName} />;
   }
 
