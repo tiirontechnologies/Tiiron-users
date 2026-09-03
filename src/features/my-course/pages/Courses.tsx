@@ -4,8 +4,13 @@ import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import { useGetMyEnrolledCoursesQuery } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import {
+  useAddToWishlistMutation,
+  useGetWishlistQuery,
+  useRemoveFromWishlistMutation,
+} from "../../course-browse/api/courseApi";
 
 interface CoursesProps {
   onCourseClick?: (courseId: number) => void;
@@ -22,7 +27,6 @@ const PAGE_LAYOUT_SX = {
 
 export default function Courses({ onCourseClick }: CoursesProps) {
   const navigate = useNavigate();
-  const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -34,8 +38,15 @@ export default function Courses({ onCourseClick }: CoursesProps) {
     isFetching: fetchingEnrollments,
     isError: errorEnrollments,
   } = useGetMyEnrolledCoursesQuery();
+  const { data: wishlistData } = useGetWishlistQuery();
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
   const enrolledCourses = enrollmentData?.data || [];
+  const wishlistItems = Array.isArray(wishlistData?.data)
+    ? wishlistData.data
+    : wishlistData?.data?.items ?? [];
+  const favoriteCourseIds = new Set(wishlistItems.map((item) => Number(item.courseId)));
 
   const courses: ICourse[] = enrolledCourses
     .filter((enrollment) => enrollment.course)
@@ -97,17 +108,12 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   };
 
   // Handler for favorite
-  const handleFavorite = (courseId: number) => {
-    setFavorites((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(courseId)) {
-        newSet.delete(courseId);
-      } else {
-        newSet.add(courseId);
-      }
-      return newSet;
-    });
-    // TODO: Implement API call to save favorite
+  const handleFavorite = async (courseId: number) => {
+    if (favoriteCourseIds.has(courseId)) {
+      await removeFromWishlist({ courseId });
+    } else {
+      await addToWishlist({ courseId });
+    }
   };
 
   // Handler for archive
@@ -179,7 +185,7 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   onShare={handleShare}
   onFavorite={handleFavorite}
   onArchive={handleArchive}
-  isFavorite={favorites.has(courseId)}
+  isFavorite={favoriteCourseIds.has(courseId)}
 />
               );
             })}

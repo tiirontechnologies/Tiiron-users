@@ -5,7 +5,10 @@ import {
   useGetFreeCoursesQuery,
   useGetCartQuery,
   useAddToCartServerMutation,
-  useGetCourseRatingQuery
+  useGetCourseRatingQuery,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation
 } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
@@ -52,6 +55,8 @@ const CourseCardWithRating = ({
   isCourseInCart,
   handleAddToCart,
   isAddingToCart,
+  handleFavorite,
+  isFavorite,
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
 
@@ -79,6 +84,8 @@ const CourseCardWithRating = ({
       isCourseInCart={isCourseInCart}
       onAddToCart={handleAddToCart}
       isLoadingCart={isAddingToCart}
+      onFavorite={handleFavorite}
+      isFavorite={isFavorite}
     />
   );
 };
@@ -99,10 +106,25 @@ export default function FreeCourses() {
 
   const [addToCartServer, { isLoading: isAddingToCart }] =
     useAddToCartServerMutation();
+  const { data: wishlistData } = useGetWishlistQuery();
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+  const wishlistItems = Array.isArray(wishlistData?.data)
+    ? wishlistData.data
+    : wishlistData?.data?.items ?? [];
+  const wishlistCourseIds = new Set(wishlistItems.map((item) => Number(item.courseId)));
 
   // Handler for adding to cart - passed to reusable component
   const handleAddToCart = async (courseId: number) => {
     await addToCartServer({ courseId }).unwrap();
+  };
+
+  const handleFavorite = async (courseId: number) => {
+    if (wishlistCourseIds.has(courseId)) {
+      await removeFromWishlist({ courseId }).unwrap();
+    } else {
+      await addToWishlist({ courseId }).unwrap();
+    }
   };
 
   // Extract courses from the API response - handle different possible structures
@@ -209,10 +231,10 @@ export default function FreeCourses() {
       key={course.id}
       course={course}
       isCourseInCart={isCourseInCart}
-
-      
       handleAddToCart={handleAddToCart}
       isAddingToCart={isAddingToCart}
+      handleFavorite={handleFavorite}
+      isFavorite={wishlistCourseIds.has(courseId)}
     />
   );
 })}

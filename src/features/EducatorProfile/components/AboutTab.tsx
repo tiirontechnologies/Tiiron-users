@@ -23,10 +23,10 @@ interface AboutTabProps {
   data: EducatorProfileData;
   courses?: RawCourse[];
   isCoursesLoading?: boolean;
+  subscriberCount?: number;
 }
 
 const LIST_LIMIT = 3;
-const STATIC_SUBSCRIBERS = 0;
 
 function TypeBadge({ course }: { course: RawCourse }) {
   const free = course.isFree || Number(course.price) === 0;
@@ -193,7 +193,7 @@ function StatTile({
   );
 }
 
-export default function AboutTab({ data, courses = [], isCoursesLoading = false }: AboutTabProps) {
+export default function AboutTab({ data, courses = [], isCoursesLoading = false, subscriberCount = 0 }: AboutTabProps) {
   const { recentCourses, topCourses } = useMemo(() => {
     if (!courses.length) return { recentCourses: [], topCourses: [] };
 
@@ -373,7 +373,7 @@ export default function AboutTab({ data, courses = [], isCoursesLoading = false 
             />
             <StatTile
               icon={<Groups sx={{ fontSize: 17 }} />}
-              value={STATIC_SUBSCRIBERS}
+              value={subscriberCount}
               label="Subscribers"
               bg="#FDF2F8"
               color="#DB2777"
