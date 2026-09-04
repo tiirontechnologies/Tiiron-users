@@ -1377,7 +1377,13 @@ export default function CourseCertificate({
     downloadVisibleCertificate,
   ]);
 
-  if (isUserLoading || isTemplateLoading || (isAuthenticated && isCourseCompleted && isCertificateLoading) || isWaitingForGeneration) {
+  if (
+    isUserLoading ||
+    isTemplateLoading ||
+    (isAuthenticated && !isProgressResolved) ||
+    (isAuthenticated && isCourseCompleted && isCertificateLoading) ||
+    isWaitingForGeneration
+  ) {
     return <CertificateLoadingState />;
   }
 
