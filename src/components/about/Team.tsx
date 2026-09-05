@@ -1,6 +1,6 @@
 import {   Linkedin, Twitter } from "lucide-react";
 import profile1 from "../../assets/profile/rishabh_profile.jpg";
-import Krishna_Reddy from "../../assets/profile/krishna_reddy_sir.jpg.jpeg";
+import Krishna_Reddy from "../../assets/profile/krishna_reddy_sir.jpg";
 import Ummed_Singh from "../../assets/profile/Ummed_Singh.png";
 import Director_2 from "../../assets/profile/Director_02.png";
 import Akash_Madheshiya from "../../assets/profile/akash-sir.jpg.jpeg";
@@ -18,7 +18,6 @@ const teamMembers = [
     name: "Vinod Singh",
     role: "Director",
     image: Director_2,
-    socials: { linkedin: " ", twitter: " ", profile: " " },
     // socials: { linkedin: "https://www.linkedin.com/in/itsindrajput/", twitter: "https://twitter.com/itsindrajput", profile: "https://itsindrajput.netlify.app/" },
   },
   // {
@@ -42,21 +41,21 @@ const teamMembers = [
   },
   {
     name: "Ummed Singh",
-    role: "Advisor",
+    role: "Learning & Technology Advisor ",
       image:Ummed_Singh,
     socials: { linkedin: " ", twitter: " ", profile: " " },
     // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
   },
   {
     name: "Akash Madheshiya ",
-    role: "Advisor",
+    role: "Advisor & Industry Expert ",
       image:Akash_Madheshiya,
     socials: { linkedin: " ", twitter: " ", profile: " " },
     // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
   },
   {
-    name: "Krishna Reddy ",
-    role: "Advisor",
+    name: " Dr. Krishna Reddy ",
+    role: "Advisor & Mentor",
       image:Krishna_Reddy,
     socials: { linkedin: " ", twitter: " ", profile: " " },
     // socials: { linkedin: "https://www.linkedin.com/in/ramanuj-giri-5b49bb237/", twitter: "#", profile: "#" },
@@ -84,7 +83,7 @@ const MemberCard = ({ member }: any) => {
           src={image}
           alt={`${name} — ${role}`}
           loading="lazy"
-          className="w-full h-60 object-cover"
+          className="w-full aspect-square object-cover"
         />
 
         {/* Overlay Bio */}
@@ -103,7 +102,7 @@ const MemberCard = ({ member }: any) => {
         >
           {name}
         </h3>
-        <p className="mt-1 text-sm text-gray-600">{role}</p>
+        <p className="mt-1 text-sm text-gray-600 ">{role}</p>
 
         {/* Socials */}
         <div className="mt-4 flex items-center justify-between">
