@@ -120,6 +120,7 @@ export default function EducatorProfile({
                   data={data}
                   courses={courses}
                   isCoursesLoading={isCoursesLoading}
+                  subscriberCount={apiUser._count?.subscribers ?? 0}
                 />
               )}
 

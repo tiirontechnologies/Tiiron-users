@@ -61,6 +61,7 @@ export const baseApi = createApi({
     "Unit",
     "Auth",
     "Cart",
+    "Wishlist",
     "Enrollment",
     "PracticeSession",
     "Progress",
