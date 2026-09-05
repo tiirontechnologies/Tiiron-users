@@ -9,6 +9,7 @@ import ComingSoon from "./CoomingSoon";
 import MyCoursesTab from "./CoursesTab";
 import CertificatesTab from "./CertificatesTab";
 import WishlistTab from "./WishlistTab";
+import ActivityTab from "./ActivityTab";
 
 const TabsSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
@@ -72,7 +73,9 @@ const TabsSection: React.FC = () => {
 
 {activeTab === "Wishlist" && <WishlistTab />}
 
-{activeTab !== "Overview" && activeTab !== "My Courses" && activeTab !== "Certificates" && activeTab !== "Wishlist" && (
+{activeTab === "Activity" && <ActivityTab />}
+
+{activeTab !== "Overview" && activeTab !== "My Courses" && activeTab !== "Certificates" && activeTab !== "Wishlist" && activeTab !== "Activity" && (
   <ComingSoon />
 )}
     </div>

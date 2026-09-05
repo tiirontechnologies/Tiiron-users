@@ -1,3 +1,4 @@
+
 import {
   Box,
   Typography,
@@ -12,7 +13,6 @@ import DeleteIcon from "@icons/DeleteIcon";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ShareIcon from "@mui/icons-material/Share";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import { ENV } from "../../../config/env";
 import { ICourseCardProps } from "types/course.types";
@@ -82,10 +82,20 @@ export default function CourseCard({
     }
   };
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onShare && id) {
+    if (!id) return;
+
+    if (onShare) {
       onShare(id);
+      return;
+    }
+
+    const courseUrl = `${window.location.origin}/course-glossary/${id}`;
+    if (navigator.share) {
+      await navigator.share({ title, url: courseUrl }).catch(() => undefined);
+    } else {
+      await navigator.clipboard?.writeText(courseUrl);
     }
   };
 
@@ -272,7 +282,7 @@ export default function CourseCard({
               variant="contained"
               onClick={handleStartCourse}
               sx={{
-                width: "54%", // slightly reduced width
+                width: "54%",
                 backgroundColor: "#4F39F6",
                 color: "#fff",
                 textTransform: "none",
@@ -342,37 +352,8 @@ export default function CourseCard({
               </Typography>
             )}
 
-            {/* Actions */}
+            {/* Archive */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.4 }}>
-              <ShareIcon
-                onClick={handleShare}
-                sx={{
-                  fontSize: 18,
-                  color: "#64748b",
-                  cursor: "pointer",
-                  "&:hover": { color: "#6366f1" },
-                }}
-              />
-              {isFavorite ? (
-                <FavoriteIcon
-                  onClick={handleFavorite}
-                  sx={{
-                    fontSize: 18,
-                    color: "#e11d48",
-                    cursor: "pointer",
-                  }}
-                />
-              ) : (
-                <FavoriteBorderIcon
-                  onClick={handleFavorite}
-                  sx={{
-                    fontSize: 18,
-                    color: "#64748b",
-                    cursor: "pointer",
-                    "&:hover": { color: "#6366f1" },
-                  }}
-                />
-              )}
               <ArchiveIcon
                 onClick={handleArchive}
                 sx={{
@@ -388,9 +369,6 @@ export default function CourseCard({
       </Box>
     );
   }
-
-
-
 
   return (
     <Box
@@ -454,6 +432,53 @@ export default function CourseCard({
             No Image
           </Box>
         )}
+
+        <Box
+          sx={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            display: "flex",
+            gap: 0.75,
+            zIndex: 1,
+          }}
+        >
+          {/* Share button (ab pehle) */}
+          <IconButton
+            size="small"
+            aria-label="Share course"
+            onClick={handleShare}
+            sx={{
+              width: 34,
+              height: 34,
+              color: "#475569",
+              bgcolor: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(8px)",
+              boxShadow: "0 2px 8px rgba(15,23,42,0.12)",
+              "&:hover": { bgcolor: "#fff", color: "#4F46E5" },
+            }}
+          >
+            <ShareIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+
+          {/* Favorite button (ab baad me, hamesha filled heart) */}
+          <IconButton
+            size="small"
+            aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
+            onClick={handleFavorite}
+            sx={{
+              width: 34,
+              height: 34,
+              color: isFavorite ? "#E11D48" : "#94A3B8",
+              bgcolor: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(8px)",
+              boxShadow: "0 2px 8px rgba(15,23,42,0.12)",
+              "&:hover": { bgcolor: "#fff", color: "#E11D48" },
+            }}
+          >
+            <FavoriteIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+        </Box>
 
         {/* Delete Button */}
         {allowDelete && (
@@ -687,5 +712,4 @@ export default function CourseCard({
       </Box>
     </Box>
   );
-
 }

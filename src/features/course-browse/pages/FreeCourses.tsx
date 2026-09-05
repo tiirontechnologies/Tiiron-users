@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography,Alert ,Snackbar } from "@mui/material";
+import { useState } from "react";
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import {
@@ -60,6 +61,7 @@ const CourseCardWithRating = ({
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
 
+
   // Org Name
   const orgName =
     course.createdBy?.trim() ||
@@ -99,6 +101,11 @@ export default function FreeCourses() {
     { skip: false }
   );
 
+  const [snackbar, setSnackbar] = useState({
+  open: false,
+  message: "",
+  severity: "success" as "success" | "error",
+});
   // Cart data for checking if course is in cart
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,
@@ -119,13 +126,46 @@ export default function FreeCourses() {
     await addToCartServer({ courseId }).unwrap();
   };
 
+  // const handleFavorite = async (courseId: number) => {
+  //   if (wishlistCourseIds.has(courseId)) {
+  //     await removeFromWishlist({ courseId }).unwrap();
+  //   } else {
+  //     await addToWishlist({ courseId }).unwrap();
+  //   }
+  // };
   const handleFavorite = async (courseId: number) => {
+  try {
     if (wishlistCourseIds.has(courseId)) {
       await removeFromWishlist({ courseId }).unwrap();
+
+      setSnackbar({
+        open: true,
+        message: "Removed from wishlist",
+        severity: "success",
+      });
     } else {
       await addToWishlist({ courseId }).unwrap();
+
+      setSnackbar({
+        open: true,
+        message: "Added to wishlist",
+        severity: "success",
+      });
     }
-  };
+  } catch (err: any) {
+    const message =
+      err?.data?.errors?.[0]?.message ||
+      err?.data?.message ||
+      "Something went wrong";
+
+    setSnackbar({
+      open: true,
+      message,
+      severity: "error",
+    });
+  }
+};
+
 
   // Extract courses from the API response - handle different possible structures
   let courses: ICourse[] = [];
@@ -240,7 +280,23 @@ export default function FreeCourses() {
 })}
           </Box>
         )}
-      </PageToolbarLayout>
+      
+      <Snackbar
+  open={snackbar.open}
+  autoHideDuration={3000}
+  onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+  <Alert
+    severity={snackbar.severity}
+    variant="filled"
+    onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+  >
+    {snackbar.message}
+  </Alert>
+</Snackbar>
+</PageToolbarLayout>
+      
     </Box>
   );
 }

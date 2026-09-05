@@ -6,11 +6,6 @@ import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  useAddToWishlistMutation,
-  useGetWishlistQuery,
-  useRemoveFromWishlistMutation,
-} from "../../course-browse/api/courseApi";
 
 interface CoursesProps {
   onCourseClick?: (courseId: number) => void;
@@ -38,15 +33,8 @@ export default function Courses({ onCourseClick }: CoursesProps) {
     isFetching: fetchingEnrollments,
     isError: errorEnrollments,
   } = useGetMyEnrolledCoursesQuery();
-  const { data: wishlistData } = useGetWishlistQuery();
-  const [addToWishlist] = useAddToWishlistMutation();
-  const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
   const enrolledCourses = enrollmentData?.data || [];
-  const wishlistItems = Array.isArray(wishlistData?.data)
-    ? wishlistData.data
-    : wishlistData?.data?.items ?? [];
-  const favoriteCourseIds = new Set(wishlistItems.map((item) => Number(item.courseId)));
 
   const courses: ICourse[] = enrolledCourses
     .filter((enrollment) => enrollment.course)
@@ -105,15 +93,6 @@ export default function Courses({ onCourseClick }: CoursesProps) {
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
-  };
-
-  // Handler for favorite
-  const handleFavorite = async (courseId: number) => {
-    if (favoriteCourseIds.has(courseId)) {
-      await removeFromWishlist({ courseId });
-    } else {
-      await addToWishlist({ courseId });
-    }
   };
 
   // Handler for archive
@@ -183,9 +162,7 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   navigatePath={(id) => `/course-practice/${id}`}
   onStartCourse={handleStartCourse}
   onShare={handleShare}
-  onFavorite={handleFavorite}
   onArchive={handleArchive}
-  isFavorite={favoriteCourseIds.has(courseId)}
 />
               );
             })}
