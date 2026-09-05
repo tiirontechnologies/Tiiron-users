@@ -428,15 +428,21 @@ const CertificateHeader = ({ cert }: { cert: CertificateData }) => (
             fontWeight: 900,
             fontSize: "1.35rem",
             letterSpacing: "0.22px",
-            lineHeight: 1.12,
+            lineHeight: 0.98,
             color: `${COLORS.primaryBlue} !important`,
             WebkitTextFillColor: COLORS.primaryBlue,
             maxWidth: "420px",
             wordBreak: "break-word",
             textTransform: "uppercase",
+            m: 0,
           }}
         >
-          Internal Evaluation Report
+          <Box component="span" sx={{ display: "block" }}>
+            Internal
+          </Box>
+          <Box component="span" sx={{ display: "block" }}>
+            Evaluation Report
+          </Box>
         </Typography>
       </Box>
       <Box component="img" src="/Tiiron_logo.png" alt="Tiiron LMS Logo" crossOrigin="anonymous" sx={{ height: 82, width: 150, objectFit: "contain", objectPosition: "right center", flexShrink: 0 }} />
@@ -1375,7 +1381,13 @@ export default function CourseCertificate({
     downloadVisibleCertificate,
   ]);
 
-  if (isUserLoading || isTemplateLoading || (isAuthenticated && isCourseCompleted && isCertificateLoading) || isWaitingForGeneration) {
+  if (
+    isUserLoading ||
+    isTemplateLoading ||
+    (isAuthenticated && !isProgressResolved) ||
+    (isAuthenticated && isCourseCompleted && isCertificateLoading) ||
+    isWaitingForGeneration
+  ) {
     return <CertificateLoadingState />;
   }
 

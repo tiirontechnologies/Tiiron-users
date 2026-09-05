@@ -8,6 +8,8 @@ import SkillsCard from "./SkillsCards";
 import ComingSoon from "./CoomingSoon";
 import MyCoursesTab from "./CoursesTab";
 import CertificatesTab from "./CertificatesTab";
+import WishlistTab from "./WishlistTab";
+import ActivityTab from "./ActivityTab";
 
 const TabsSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
@@ -69,7 +71,11 @@ const TabsSection: React.FC = () => {
 
 {activeTab === "Certificates" && <CertificatesTab />}
 
-{activeTab !== "Overview" && activeTab !== "My Courses" && activeTab !== "Certificates" && (
+{activeTab === "Wishlist" && <WishlistTab />}
+
+{activeTab === "Activity" && <ActivityTab />}
+
+{activeTab !== "Overview" && activeTab !== "My Courses" && activeTab !== "Certificates" && activeTab !== "Wishlist" && activeTab !== "Activity" && (
   <ComingSoon />
 )}
     </div>
