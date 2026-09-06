@@ -1,20 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Card, Typography, Avatar, Button, Chip, Divider, Stack } from '@mui/material';
-import { Verified, Star, Message } from '@mui/icons-material';
+import { Check, Verified } from '@mui/icons-material';
 import { EducatorProfileData } from '../types/educator.types';
 import SocialLinksCard from './SocialLinksCard';
 import { Add, Public } from "@mui/icons-material";
+import {
+  useSubscribeToEducatorMutation,
+  useUnsubscribeFromEducatorMutation,
+} from "../api/profileApiSlice";
 
 interface ProfileSidebarProps {
   data: EducatorProfileData;
+  educatorId: number;
   language?: string;
   website?: string;
 }
 
 export default function ProfileSidebar({
   data,
+  educatorId,
   website,
 }: ProfileSidebarProps) {
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscribeToEducator, { isLoading: isSubscribing }] = useSubscribeToEducatorMutation();
+  const [unsubscribeFromEducator, { isLoading: isUnsubscribing }] = useUnsubscribeFromEducatorMutation();
+
+  const handleSubscription = async () => {
+    try {
+      if (isSubscribed) {
+        await unsubscribeFromEducator(educatorId).unwrap();
+      } else {
+        await subscribeToEducator(educatorId).unwrap();
+      }
+      setIsSubscribed((current) => !current);
+    } catch (error) {
+      console.error("Could not update educator subscription", error);
+    }
+  };
 
   return (
     <>
@@ -160,17 +182,19 @@ export default function ProfileSidebar({
 
         <Button
           variant="contained"
-          startIcon={<Add />}
+          startIcon={isSubscribed ? <Check /> : <Add />}
           fullWidth
+          disabled={isSubscribing || isUnsubscribing}
+          onClick={() => void handleSubscription()}
           sx={{
-            bgcolor: '#4F46E5',
+            bgcolor: isSubscribed ? '#475569' : '#4F46E5',
             borderRadius: 2,
             textTransform: 'none',
             py: 1,
-            '&:hover': { bgcolor: '#4338CA' },
+            '&:hover': { bgcolor: isSubscribed ? '#334155' : '#4338CA' },
           }}
         >
-          Subscribe
+          {isSubscribing || isUnsubscribing ? "Please wait..." : isSubscribed ? "Subscribed" : "Subscribe"}
         </Button>
       </Card>
 

@@ -443,25 +443,7 @@ export default function CourseCard({
             zIndex: 1,
           }}
         >
-          {/* Share button (ab pehle) */}
-          <IconButton
-            size="small"
-            aria-label="Share course"
-            onClick={handleShare}
-            sx={{
-              width: 34,
-              height: 34,
-              color: "#475569",
-              bgcolor: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(8px)",
-              boxShadow: "0 2px 8px rgba(15,23,42,0.12)",
-              "&:hover": { bgcolor: "#fff", color: "#4F46E5" },
-            }}
-          >
-            <ShareIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-
-          {/* Favorite button (ab baad me, hamesha filled heart) */}
+          {/* Wishlist comes first, share comes second. */}
           <IconButton
             size="small"
             aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
@@ -477,6 +459,23 @@ export default function CourseCard({
             }}
           >
             <FavoriteIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+
+          <IconButton
+            size="small"
+            aria-label="Share course"
+            onClick={handleShare}
+            sx={{
+              width: 34,
+              height: 34,
+              color: "#475569",
+              bgcolor: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(8px)",
+              boxShadow: "0 2px 8px rgba(15,23,42,0.12)",
+              "&:hover": { bgcolor: "#fff", color: "#4F46E5" },
+            }}
+          >
+            <ShareIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Box>
 
