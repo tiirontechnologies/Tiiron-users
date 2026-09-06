@@ -13,6 +13,19 @@ export interface CheckoutResponse {
   message: string;
 }
 
+// export interface ICartItem {
+//   id: number;
+//   courseId: number;
+//   userId: number;
+//   createdAt: string;
+
+//   course: {
+//     id: number;
+//     title: string;
+//     price: number;
+//     image: string | null;
+//   };
+// }
 export interface ICartItem {
   id: number;
   courseId: number;
@@ -24,9 +37,14 @@ export interface ICartItem {
     title: string;
     price: number;
     image: string | null;
+    description?: string;
+    isFree?: boolean;
+    instructor?: string;
+    createdBy?: string;
+    level?: string;
+    categories?: string;
   };
 }
-
 export interface CartResponse {
   data: {
     items: ICartItem[];
