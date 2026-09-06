@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material";
+import { Alert, Box, Snackbar, Typography } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
@@ -88,6 +89,11 @@ const CourseCardWithRating = ({
 };
 
 export default function Courses() {
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "info" | "error";
+  }>({ open: false, message: "", severity: "success" });
   const [searchParams] = useSearchParams();
 
   // =====================================================
@@ -166,10 +172,30 @@ export default function Courses() {
   };
 
   const handleFavorite = async (courseId: number) => {
-    if (wishlistCourseIds.has(courseId)) {
-      await removeFromWishlist({ courseId }).unwrap();
-    } else {
-      await addToWishlist({ courseId }).unwrap();
+    const course = courses.find((item) => Number(item.id) === courseId);
+    if (Number(course?.price ?? 0) === 0) {
+      setSnackbar({
+        open: true,
+        message: "Free courses cannot be added to your wishlist.",
+        severity: "info",
+      });
+      return;
+    }
+
+    try {
+      if (wishlistCourseIds.has(courseId)) {
+        await removeFromWishlist({ courseId }).unwrap();
+        setSnackbar({ open: true, message: "Removed from wishlist", severity: "success" });
+      } else {
+        await addToWishlist({ courseId }).unwrap();
+        setSnackbar({ open: true, message: "Added to wishlist", severity: "success" });
+      }
+    } catch (error: any) {
+      setSnackbar({
+        open: true,
+        message: error?.data?.message || "Could not update wishlist.",
+        severity: "error",
+      });
     }
   };
 
@@ -381,6 +407,20 @@ export default function Courses() {
           </Box>
         )}
       </PageToolbarLayout>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar((current) => ({ ...current, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          severity={snackbar.severity}
+          variant="filled"
+          onClose={() => setSnackbar((current) => ({ ...current, open: false }))}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

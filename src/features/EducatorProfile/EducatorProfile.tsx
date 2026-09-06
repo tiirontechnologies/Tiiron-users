@@ -91,6 +91,7 @@ export default function EducatorProfile({
           >
             <ProfileSidebar
               data={data}
+              educatorId={apiUser.id}
               language={apiUser.profile?.language}
               website={apiUser.profile?.website}
             />
