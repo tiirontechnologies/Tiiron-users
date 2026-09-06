@@ -1,71 +1,3 @@
-// import { useState } from "react";
-// import { Alert, Box, Skeleton, Snackbar, Typography } from "@mui/material";
-// import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
-// import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
-// import {
-//   useGetWishlistQuery,
-//   useRemoveFromWishlistMutation,
-//   type ICartItem,
-// } from "../../course-browse/api/courseApi";
-
-// function getWishlistItems(data: { data: ICartItem[] | { items: ICartItem[] } } | undefined) {
-//   return Array.isArray(data?.data) ? data.data : data?.data?.items ?? [];
-// }
-
-// export default function WishlistTab() {
-//   const { data, isLoading, isError } = useGetWishlistQuery();
-//   const [removeFromWishlist] = useRemoveFromWishlistMutation();
-//   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" as "success" | "error" });
-//   const items = getWishlistItems(data);
-
-//   const handleRemove = async (courseId: number) => {
-//     try {
-//       await removeFromWishlist({ courseId }).unwrap();
-//       setSnackbar({ open: true, message: "Removed from wishlist", severity: "success" });
-//     } catch (error: any) {
-//       setSnackbar({ open: true, message: error?.data?.message || "Could not remove this course.", severity: "error" });
-//     }
-//   };
-
-//   if (isLoading) {
-//     return <Box sx={{ p: { xs: 2, sm: 3 }, display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" }, gap: 2 }}><Skeleton variant="rounded" height={400} /><Skeleton variant="rounded" height={400} /></Box>;
-//   }
-
-//   if (isError) {
-//     return <Box sx={{ p: 6, textAlign: "center" }}><Typography fontWeight={800}>Wishlist could not be loaded</Typography><Typography variant="body2" color="text.secondary" mt={1}>Please refresh and try again.</Typography></Box>;
-//   }
-
-//   if (!items.length) {
-//     return <Box sx={{ p: { xs: 5, sm: 7 }, textAlign: "center" }}><FavoriteBorderRoundedIcon sx={{ fontSize: 48, color: "#FDA4AF" }} /><Typography fontWeight={800} mt={1}>Your wishlist is empty</Typography><Typography variant="body2" color="text.secondary" mt={0.5}>Save courses you want to explore later.</Typography></Box>;
-//   }
-
-//   return (
-//     <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
-//       <Typography fontWeight={800} mb={3}>My Wishlist</Typography>
-//       <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, minmax(260px, 1fr))", lg: "repeat(3, minmax(260px, 1fr))" }, gap: { xs: 2, md: 3 }, justifyItems: "center" }}>
-//         {items.map((item) => (
-//           <CourseCardWrapper
-//             key={item.id}
-//             id={item.courseId}
-//             thumbnailSrc={item.course?.image ?? undefined}
-//             title={item.course?.title || "Saved course"}
-//             price={Number(item.course?.price ?? 0)}
-//             rating={0}
-//             navigatePath={(id) => `/course-glossary/${id}`}
-//             onFavorite={(courseId) => void handleRemove(courseId)}
-//             isFavorite
-//           />
-//         ))}
-//       </Box>
-//       <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar((current) => ({ ...current, open: false }))} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-//         <Alert severity={snackbar.severity} variant="filled" onClose={() => setSnackbar((current) => ({ ...current, open: false }))}>{snackbar.message}</Alert>
-//       </Snackbar>
-//     </Box>
-//   );
-// }
-
-
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -75,7 +7,6 @@ import {
   Chip,
   CircularProgress,
   Paper,
-  Rating,
   Skeleton,
   Snackbar,
   Typography,
@@ -203,9 +134,8 @@ export default function WishlistTab() {
           const course = item.course;
           const title = course?.title || "Saved course";
           const price = Number(course?.price ?? 0);
-          const rating = Number(course?.rating ?? 0);
-          const ratingCount = Number(course?.ratingCount ?? 0);
-          const instructor = course?.instructorName || "HeroAcademy";
+          const isFree = course?.isFree ?? price === 0;
+          const instructor = course?.instructor || course?.createdBy || "HeroAcademy";
           const isRemoving = removingId === item.courseId;
 
           return (
@@ -245,7 +175,7 @@ export default function WishlistTab() {
                   }}
                 />
                 <Chip
-                  label={price > 0 ? `₹${price}` : "Free"}
+                  label={isFree ? "Free" : `₹${price}`}
                   size="small"
                   sx={{
                     position: "absolute",
@@ -299,13 +229,13 @@ export default function WishlistTab() {
                     WebkitLineClamp: 1,
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
-                    mb: 1,
+                    mb: 1.5,
                   }}
                 >
                   {course?.description || "check course"}
                 </Typography>
 
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
                   <Box
                     sx={{
                       width: 22,
@@ -326,19 +256,6 @@ export default function WishlistTab() {
                     Instructor | {instructor}
                   </Typography>
                 </Box>
-
-                {ratingCount > 0 ? (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 1.5 }}>
-                    <Rating value={rating} precision={0.5} readOnly size="small" />
-                    <Typography variant="caption" color="text.secondary">
-                      {rating.toFixed(1)} ({ratingCount})
-                    </Typography>
-                  </Box>
-                ) : (
-                  <Typography variant="caption" color="text.secondary" mb={1.5}>
-                    No ratings yet
-                  </Typography>
-                )}
 
                 <Box sx={{ flexGrow: 1 }} />
 
