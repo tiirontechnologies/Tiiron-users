@@ -6,7 +6,7 @@ import { useSubmitPracticeSingleMutation } from '../../api/practiceApi';
 
 declare global {
   interface Window {
-    YT: any;  
+    YT: any; 
     onYouTubeIframeAPIReady: () => void;
   }
 }

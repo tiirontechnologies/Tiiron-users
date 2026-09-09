@@ -72,7 +72,7 @@ export const baseApi = createApi({
   ],
   endpoints: (builder) => ({
     // Check authentication status
-    checkAuth: builder.query<{ success: boolean }, void>({
+    checkAuth: builder.query<{ success: boolean; data?: { picture?: string | null; firstName?: string | null; lastName?: string | null; username?: string; email?: string } }, void>({
       query: () => ({
         url: "/profile/me",
         method: "GET",

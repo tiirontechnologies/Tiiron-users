@@ -129,9 +129,9 @@ export default function EducatorProfile({
                 <CoursesTab courses={courses} isLoading={isCoursesLoading} />
               )}
 
-              {tabValue === 2 && <ComingSoon />}
+             {tabValue === 3 && <ComingSoon headerTitle="Reviews" headerSubtitle="See what learners are saying about this educator." />}
 
-              {tabValue === 3 && <ComingSoon />}
+{tabValue === 2 && <ComingSoon headerTitle="Achievements" headerSubtitle="Milestones and recognitions earned by this educator." />}
 
               {tabValue === 4 && apiUser?.id && (
                 <EducatorCommunity educatorId={apiUser.id} />
