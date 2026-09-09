@@ -18,6 +18,7 @@ const teamMembers = [
     name: "Vinod Singh",
     role: "Director",
     image: Director_2,
+     socials: { linkedin: " ", twitter: " ", profile: " " },
     // socials: { linkedin: "https://www.linkedin.com/in/itsindrajput/", twitter: "https://twitter.com/itsindrajput", profile: "https://itsindrajput.netlify.app/" },
   },
   // {
