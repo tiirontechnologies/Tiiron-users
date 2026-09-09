@@ -194,7 +194,7 @@ export default function ProfileSidebar({
             '&:hover': { bgcolor: isSubscribed ? '#334155' : '#4338CA' },
           }}
         >
-          {isSubscribing || isUnsubscribing ? "Please wait..." : isSubscribed ? "Subscribed" : "Subscribe"}
+          {isSubscribing || isUnsubscribing ? "Please wait..." : isSubscribed ? "Unsubscribe" : "Subscribe"}
         </Button>
       </Card>
 

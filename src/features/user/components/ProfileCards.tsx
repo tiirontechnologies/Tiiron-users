@@ -1,7 +1,7 @@
 
 
 
-import React, { useEffect, useRef, useState, type ComponentType } from "react";
+import React, { useEffect, useRef, useState, type ComponentType, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import {
   Camera,
@@ -89,6 +89,50 @@ interface EditFormValues {
   leetcode: string;
   hackerrank: string;
 }
+
+const AVATAR_COLORS = [
+  "#4f46e5", "#0891b2", "#059669", "#d97706", "#dc2626",
+  "#7c3aed", "#db2777", "#ea580c", "#16a34a", "#2563eb",
+];
+
+function getAvatarColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+interface AvatarProps {
+  picture?: string | null;
+  name: string;
+  size?: "sm" | "lg";
+}
+
+const ProfileAvatar: React.FC<AvatarProps> = ({ picture, name, size = "lg" }) => {
+  const [imgError, setImgError] = useState(false);
+  const initial = name?.trim()?.[0]?.toUpperCase() || "?";
+  const color = useMemo(() => getAvatarColor(name || "user"), [name]);
+  const dim = size === "lg" ? "h-20 w-20 sm:h-28 sm:w-28" : "h-16 w-16";
+  const fontSize = size === "lg" ? "text-3xl sm:text-4xl" : "text-2xl";
+
+  if (picture && !imgError) {
+    return (
+      <img
+        src={picture}
+        alt="Profile"
+        onError={() => setImgError(true)}
+        className={`${dim} rounded-full object-cover ring-4 ring-white`}
+      />
+    );
+  }
+  return (
+    <div
+      className={`${dim} rounded-full ring-4 ring-white flex items-center justify-center font-bold text-white`}
+      style={{ backgroundColor: color }}
+    >
+      <span className={fontSize}>{initial}</span>
+    </div>
+  );
+};
 
 const ProfileCard: React.FC = () => {
   const { data, isLoading, isError } = useGetProfilesQuery();
@@ -225,11 +269,7 @@ const ProfileCard: React.FC = () => {
         className="w-full max-w-full cursor-pointer  overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
       >
         <div className="relative mx-auto w-fit">
-          <img
-            src={profile?.picture || "https://i.pravatar.cc/160?img=12"}
-            alt="Profile"
-            className="h-20 w-20 rounded-full object-cover ring-4 ring-white sm:h-28 sm:w-28"
-          />
+          <ProfileAvatar picture={profile?.picture} name={fullName} />
           <button
             type="button"
             onClick={handleAvatarClick}
@@ -322,11 +362,7 @@ const ProfileCard: React.FC = () => {
   return (
     <div className="w-full max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="relative mx-auto w-fit">
-        <img
-          src={profile?.picture || "https://i.pravatar.cc/160?img=12"}
-          alt="Profile"
-          className="h-20 w-20 rounded-full object-cover ring-4 ring-white sm:h-28 sm:w-28"
-        />
+        <ProfileAvatar picture={profile?.picture} name={fullName} />
         <button
           type="button"
           onClick={handleAvatarClick}

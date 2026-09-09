@@ -1,77 +1,125 @@
 import React from "react";
-import { Box, Typography, Chip, Stack } from "@mui/material";
+import { Box, Typography, Chip, Stack, Paper } from "@mui/material";
 import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
-import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 
-const ComingSoon: React.FC = () => {
+interface ComingSoonProps {
+  headerTitle?: string;
+  headerSubtitle?: string;
+}
+
+const ComingSoon: React.FC<ComingSoonProps> = ({
+  headerTitle = "Coming Soon",
+  headerSubtitle = "This section will be available soon.",
+}) => {
   return (
-    <Box
+    <Paper
+      elevation={0}
       sx={{
-        py: 8,
-        px: 3,
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        borderRadius: 3,
+        border: "1px solid #eef0f3",
+        overflow: "hidden",
+        bgcolor: "#fff",
       }}
     >
-      {/* Icon badge */}
-      <Box
-        sx={{
-          width: 88,
-          height: 88,
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
-          boxShadow: "0 10px 30px rgba(79,70,229,0.35)",
-          mb: 3,
-        }}
-      >
-        <MenuBookRoundedIcon sx={{ fontSize: 42, color: "#fff" }} />
+      {/* White header */}
+      <Box sx={{ px: 3, pt: 3, pb: 2 }}>
+        <Typography variant="h6" fontWeight={700}>
+          {headerTitle}
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5 }}>
+          {headerSubtitle}
+        </Typography>
       </Box>
 
-      <Chip
-        icon={<AutoAwesomeRoundedIcon sx={{ fontSize: 16 }} />}
-        label="Coming Soon"
+      {/* Colored gradient box */}
+      <Box
         sx={{
-          mb: 2,
-          fontWeight: 700,
-          bgcolor: "rgba(79,70,229,0.1)",
-          color: "#4f46e5",
-          border: "1px solid rgba(79,70,229,0.25)",
+          mx: 3,
+          mb: 3,
+          borderRadius: 3,
+          py: 4,
+          px: 3,
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          background:
+            "linear-gradient(135deg, rgba(124,58,237,0.10) 0%, rgba(236,72,153,0.10) 50%, rgba(251,191,36,0.10) 100%)",
         }}
-      />
-<Typography variant="h6" fontWeight={700} gutterBottom>
-  Stay tuned
-</Typography>
+      >
+        {/* Header inside colored box - same headerTitle prop */}
+        <Typography
+          variant="subtitle2"
+          fontWeight={700}
+          sx={{
+            mb: 1.5,
+            color: "#7c3aed",
+            textTransform: "uppercase",
+            letterSpacing: 0.5,
+          }}
+        >
+          {headerTitle}
+        </Typography>
 
-<Typography
-  variant="body2"
-  color="text.secondary"
-  sx={{ maxWidth: 380, lineHeight: 1.7 }}
->
-  This section is currently being prepared. We're working to bring you fresh
-  content and it will be available very soon.
-</Typography>
+        {/* Icon badge - fixed, same everywhere */}
+        <Box
+          sx={{
+            width: 56,
+            height: 56,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+            boxShadow: "0 10px 30px rgba(124,58,237,0.35)",
+            mb: 2,
+          }}
+        >
+          <AutoAwesomeRoundedIcon sx={{ fontSize: 26, color: "#fff" }} />
+        </Box>
 
-      {/* Decorative dots */}
-      <Stack direction="row" spacing={1} mt={4}>
-        {[0, 1, 2].map((i) => (
-          <Box
-            key={i}
-            sx={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              bgcolor: "#4f46e5",
-              opacity: i === 1 ? 1 : 0.3,
-            }}
-          />
-        ))}
-      </Stack>
-    </Box>
+        <Chip
+          icon={<AutoAwesomeRoundedIcon sx={{ fontSize: 14 }} />}
+          label="Coming Soon"
+          size="small"
+          sx={{
+            mb: 1.5,
+            fontWeight: 700,
+            bgcolor: "rgba(124,58,237,0.1)",
+            color: "#7c3aed",
+            border: "1px solid rgba(124,58,237,0.25)",
+          }}
+        />
+
+        {/* Fixed title/description - same everywhere */}
+        <Typography variant="subtitle1" fontWeight={700} gutterBottom>
+          We're working on it
+        </Typography>
+
+        <Typography
+          variant="body2"
+          sx={{ maxWidth: 380, lineHeight: 1.7, color: "#6b7280" }}
+        >
+          This section is being prepared. We will share updates here soon.
+        </Typography>
+
+        {/* Decorative dots */}
+        <Stack direction="row" spacing={1} mt={2}>
+          {[0, 1, 2].map((i) => (
+            <Box
+              key={i}
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                bgcolor: "#7c3aed",
+                opacity: i === 1 ? 1 : 0.3,
+              }}
+            />
+          ))}
+        </Stack>
+      </Box>
+    </Paper>
   );
 };
 

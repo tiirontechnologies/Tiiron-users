@@ -25,6 +25,17 @@ import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
+const AVATAR_COLORS = [
+  "#4f46e5", "#0891b2", "#059669", "#d97706", "#dc2626",
+  "#7c3aed", "#db2777", "#ea580c", "#16a34a", "#2563eb",
+];
+
+function getAvatarColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
 const menuItems = [
   {
     text: "View Profile",
@@ -104,15 +115,17 @@ const ProfileCenterPopup = () => {
       return {
         id: user.id,
         email: user.email || "",
-        firstName: null,
-        lastName: null,
+        firstName: user.firstName || null,
+        lastName: user.lastName || null,
         displayName: user.username || "User",
-        picture: null,
+        picture: user.picture || null,
         photoURL: null,
       };
     }
     return null;
   }, [user]);
+
+  const avatarColor = useMemo(() => getAvatarColor(userData?.displayName || userData?.email || "user"), [userData]);
 
   // Get profile image or initials - check if image failed to load
   const profileImage = useMemo(() => {
@@ -139,6 +152,12 @@ const ProfileCenterPopup = () => {
       return userData.displayName[0].toUpperCase();
     }
     return "U";
+  }, [userData]);
+
+  const fullName = useMemo(() => {
+    if (!userData) return "";
+    const parts = [userData.firstName, userData.lastName].filter(Boolean);
+    return parts.length > 0 ? parts.join(" ") : userData.displayName;
   }, [userData]);
 
   const getListItemStyles = (color: string, isSelected: boolean) => ({
@@ -172,17 +191,13 @@ const ProfileCenterPopup = () => {
           cursor: "pointer",
           width: 42,
           height: 42,
-          background: profileImage && !imageError
-            ? "transparent"
-            : "linear-gradient(to right, #ef4444, #ec4899)",
+          bgcolor: profileImage && !imageError ? "transparent" : avatarColor,
           color: "#fff",
           fontWeight: 600,
           fontSize: "1rem",
           transition: "all 0.2s ease",
           "&:hover": {
-            background: profileImage && !imageError
-              ? "transparent"
-              : "linear-gradient(to right, #dc2626, #db2777)",
+            opacity: 0.9,
             transform: "scale(1.05)",
           },
         }}
@@ -242,9 +257,7 @@ const ProfileCenterPopup = () => {
               sx={{
                 width: 70,
                 height: 70,
-                background: profileImage && !imageError
-                  ? "transparent"
-                  : "linear-gradient(to right, #ef4444, #ec4899)",
+                bgcolor: profileImage && !imageError ? "transparent" : avatarColor,
                 color: "#fff",
                 fontSize: "1.5rem",
                 fontWeight: 600,
@@ -255,7 +268,7 @@ const ProfileCenterPopup = () => {
             </Avatar>
 
             <Typography variant="h6" fontWeight={600}>
-              {userData?.displayName || "User"}
+              {fullName || userData?.displayName || "User"}
             </Typography>
             {userData?.email && (
               <Typography variant="body2" color="text.secondary">

@@ -7,7 +7,7 @@ const ComingSoon: React.FC = () => {
   return (
     <Box
       sx={{
-        py: 8,
+        py: 4,
         px: 3,
         textAlign: "center",
         display: "flex",

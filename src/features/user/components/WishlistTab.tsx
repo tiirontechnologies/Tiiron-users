@@ -100,21 +100,70 @@ export default function WishlistTab() {
   }
 
   if (!items.length) {
-    return (
-      <Box sx={{ p: { xs: 5, sm: 7 }, textAlign: "center" }}>
-        <FavoriteBorderRoundedIcon sx={{ fontSize: 48, color: "#FDA4AF" }} />
-        <Typography fontWeight={800} mt={1}>
-          Your wishlist is empty
-        </Typography>
-        <Typography variant="body2" color="text.secondary" mt={0.5}>
-          Save courses you want to explore later.
-        </Typography>
+  return (
+    <Box
+      sx={{
+        minHeight: 360,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        px: 3,
+      }}
+    >
+      <Box
+        sx={{
+          width: 64,
+          height: 64,
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "rgba(239,20,46,0.08)",
+          border: "1px solid rgba(239,20,46,0.15)",
+          mb: 2.5,
+        }}
+      >
+        <FavoriteBorderRoundedIcon sx={{ fontSize: 28, color: "#ef142e" }} />
       </Box>
-    );
-  }
+
+      <Typography fontWeight={700} sx={{ fontSize: "16px", color: "#374151", mb: 0.5 }}>
+        Your wishlist is empty
+      </Typography>
+
+      <Typography variant="body2" sx={{ color: "#9ca3af", maxWidth: 320 }}>
+        Save courses you want to explore later.
+      </Typography>
+
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={() => navigate("/course-glossary")}
+        sx={{
+          mt: 3,
+          mb:3,
+          textTransform: "none",
+          fontWeight: 600,
+          fontSize: "13px",
+          borderRadius: "10px",
+          borderColor: "#4F39F6",
+          color: "#4F39F6",
+          "&:hover": {
+            borderColor: "#3E2DC4",
+            bgcolor: "#3E2DC4",
+            color: "#fff",
+          },
+        }}
+      >
+        Browse Courses
+      </Button>
+    </Box>
+  );
+}
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+    <Box sx={{ p: { xs: 1.5, sm: 2, md: 3} }}>
       <Typography fontWeight={800} mb={3}>
         My Wishlist
       </Typography>
@@ -122,11 +171,17 @@ export default function WishlistTab() {
       <Box
         sx={{
           display: "grid",
+          // gridTemplateColumns: {
+          //   xs: "1fr",
+          //   sm: "repeat(2, minmax(260px, 1fr))",
+          //   lg: "repeat(3, minmax(260px, 1fr))",
+          // },
           gridTemplateColumns: {
-            xs: "1fr",
-            sm: "repeat(2, minmax(260px, 1fr))",
-            lg: "repeat(3, minmax(260px, 1fr))",
-          },
+  xs: "1fr",
+  sm: "repeat(2, minmax(200px, 240px))",
+  lg: "repeat(3, minmax(220px, 260px))",
+},
+
           gap: { xs: 2, md: 3 },
         }}
       >
@@ -143,12 +198,14 @@ export default function WishlistTab() {
               key={item.id}
               elevation={0}
               sx={{
+                widht:280,
                 borderRadius: 3,
                 overflow: "hidden",
                 border: "1px solid #eef0f3",
                 display: "flex",
                 flexDirection: "column",
                 bgcolor: "#fff",
+                p:0,
               }}
             >
               {/* Gradient thumbnail */}

@@ -5,6 +5,9 @@ import {
   Button,
   Skeleton,
   Divider,
+  Paper,
+  Chip,
+  Stack
 } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -69,30 +72,94 @@ const NotesSection: React.FC<NotesSectionProps> = ({ unitId }) => {
   }
 
   // Empty state
-  if (!notes.length) {
-    return (
-      <Box sx={{ py: 8, textAlign: "center" }}>
-        {/* <PictureAsPdfIcon sx={{ fontSize: 70, color: "#1358e1", mb: 2 }} /> */}
 
-   
-
-<DescriptionOutlined sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
-
-<Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-  Study Materials Coming Soon
-</Typography>
-
-<Typography variant="body2" color="text.secondary">
-  Your instructor is preparing helpful notes and PDFs to support your learning.
-
-</Typography>
-<Typography variant="body2" color="text.secondary">
-    They'll appear here as soon as they're ready.
-
-</Typography>
+if (!notes.length) {
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        borderRadius: 3,
+        border: "1px solid #eef0f3",
+        overflow: "hidden",
+        bgcolor: "#fff",
+      }}
+    >
+      {/* Header */}
+      <Box sx={{ px: 3, pt: 3, pb: 2 }}>
+        <Typography variant="h6" fontWeight={700} sx={{ color: "#1f2937" }}>
+          Study Notes
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5 }}>
+          Access downloadable PDF materials for this unit
+        </Typography>
       </Box>
-    );
-  }
+
+      {/* Minimal empty-state box */}
+      <Box
+        sx={{
+          mx: 3,
+          mb: 3,
+          borderRadius: 3,
+          py: 5,
+          px: 3,
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          bgcolor: "#fafafa",
+          border: "1px dashed #e5e7eb",
+        }}
+      >
+        {/* Icon badge - subtle, no heavy shadow/gradient */}
+        <Box
+          sx={{
+            width: 52,
+            height: 52,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "rgba(124,58,237,0.08)",
+            border: "1px solid rgba(124,58,237,0.15)",
+            mb: 2,
+          }}
+        >
+          <DescriptionOutlined sx={{ fontSize: 24, color: "#7c3aed" }} />
+        </Box>
+
+        <Chip
+          icon={<PictureAsPdfIcon sx={{ fontSize: "13px !important" }} />}
+          label="Coming Soon"
+          size="small"
+          sx={{
+            mb: 1.5,
+            fontWeight: 600,
+            fontSize: "0.7rem",
+            bgcolor: "rgba(124,58,237,0.08)",
+            color: "#7c3aed",
+            border: "none",
+          }}
+        />
+
+        <Typography
+          variant="subtitle1"
+          fontWeight={600}
+          sx={{ color: "#374151", mb: 0.5 }}
+        >
+          Study Materials Coming Soon
+        </Typography>
+
+        <Typography
+          variant="body2"
+          sx={{ maxWidth: 360, lineHeight: 1.6, color: "#9ca3af" }}
+        >
+          Your instructor is preparing helpful notes and PDFs to support your
+          learning. They'll appear here as soon as they're ready.
+        </Typography>
+      </Box>
+    </Paper>
+  );
+}
 
   return (
     <Box sx={{ p: 2 }}>
