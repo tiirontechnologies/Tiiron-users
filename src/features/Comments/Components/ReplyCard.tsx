@@ -3,16 +3,19 @@ import { Box, Stack, Typography, Avatar, Chip } from "@mui/material";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import { commentTheme } from "../theme";
-import type { ReplyType } from "../api/api";
+import type { ReplyWithMeta } from "../Comment";
 import CommentInput from "./CommentInput";
-
 import { timeAgo } from "../utils/timeAgo";
 
 interface ReplyCardProps {
-  reply: ReplyType;
-  currentUserAvatar: string;
+  reply: ReplyWithMeta;
+  currentUserAvatar?: string;
   onReply: (targetId: number, text: string) => void;
+  onLike: (replyId: number) => void;
 }
+
+const fullNameOf = (firstName: string, lastName: string) =>
+  `${firstName ?? ""} ${lastName ?? ""}`.trim();
 
 const initialsOf = (fullName: string) =>
   fullName
@@ -22,37 +25,41 @@ const initialsOf = (fullName: string) =>
     .map((p) => p[0]?.toUpperCase())
     .join("") || "U";
 
-const ReplyCard: React.FC<ReplyCardProps> = ({ reply, currentUserAvatar, onReply }) => {
-  const [liked, setLiked] = useState(reply.liked);
-  const [likes, setLikes] = useState(reply.likes);
+const ReplyCard: React.FC<ReplyCardProps> = ({ reply, currentUserAvatar, onReply, onLike }) => {
+  const [liked, setLiked] = useState(reply.isLiked);
+  const [likes, setLikes] = useState(reply.likesCount);
   const [showReplyBox, setShowReplyBox] = useState(false);
-  const isMentor = false; // backend abhi mentor flag nahi bhejta
+  const isMentor = false;
+
+  const fullName = fullNameOf(reply.user.firstName, reply.user.lastName);
+  const avatarUrl = reply.user.profile?.picture || undefined;
 
   const toggleLike = () => {
     setLiked((prev) => !prev);
     setLikes((prev) => (liked ? prev - 1 : prev + 1));
+    onLike(reply.id);
   };
 
   return (
     <Box sx={{ pl: { xs: 3, sm: 6.5 } }}>
       <Stack
-  direction="row"
-  spacing={1.5}
-  sx={{
-    pt: 2,
-    ...(isMentor
-      ? {
-          bgcolor: commentTheme.colors.mentorBg,
-          borderLeft: `3px solid ${commentTheme.colors.mentorBorder}`,
-          borderRadius: "10px",
-          py: 1.5,
-          pr: 1.5,
-        }
-      : {}),
-  }}
->
+        direction="row"
+        spacing={1.5}
+        sx={{
+          pt: 2,
+          ...(isMentor
+            ? {
+                bgcolor: commentTheme.colors.mentorBg,
+                borderLeft: `3px solid ${commentTheme.colors.mentorBorder}`,
+                borderRadius: "10px",
+                py: 1.5,
+                pr: 1.5,
+              }
+            : {}),
+        }}
+      >
         <Avatar
-          src={reply.user.avatar || undefined}
+          src={avatarUrl}
           sx={{
             width: { xs: 28, sm: 32 },
             height: { xs: 28, sm: 32 },
@@ -61,12 +68,12 @@ const ReplyCard: React.FC<ReplyCardProps> = ({ reply, currentUserAvatar, onReply
             fontWeight: 700,
           }}
         >
-          {!reply.user.avatar && initialsOf(reply.user.fullName)}
+          {!avatarUrl && initialsOf(fullName)}
         </Avatar>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Stack direction="row" alignItems="baseline" spacing={0.8} flexWrap="wrap">
             <Typography sx={{ ...commentTheme.typography.name, fontSize: 13.5, fontWeight: 700 }}>
-              {reply.user.fullName}
+              {fullName}
             </Typography>
             <Typography sx={{ fontSize: 12, color: commentTheme.colors.textSecondary }}>
               @{reply.user.username}
@@ -85,8 +92,6 @@ const ReplyCard: React.FC<ReplyCardProps> = ({ reply, currentUserAvatar, onReply
               />
             )}
             <Typography sx={{ ...commentTheme.typography.meta, color: commentTheme.colors.textSecondary }}>
-              {/* · {reply.createdAt} */}
-
               · {timeAgo(reply.createdAt)}
             </Typography>
           </Stack>
@@ -100,7 +105,7 @@ const ReplyCard: React.FC<ReplyCardProps> = ({ reply, currentUserAvatar, onReply
                 @{reply.replyingToUsername}
               </Box>
             )}
-            {reply.text}
+            {reply.content}
           </Typography>
 
           <Stack direction="row" spacing={2.5} alignItems="center" sx={{ mt: 0.6 }}>

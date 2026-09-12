@@ -223,7 +223,7 @@ function buildCertificateData(record: GeneratedCertificate): CertificateData {
     overall: record.overallScore === undefined ? "" : String(record.overallScore),
     assessment: record.grade ?? "",
     // verificationId hamesha backend ke certificateId se hi aata hai — ye untouched hai
-    verificationId: record.verificationId ?? "",
+    verificationId: record.certificateId ?? "",
     skills: STATIC_SKILLS,
     remarks: template?.mentorRemark ?? "",
     programSummary: template?.programSummary ?? "",
