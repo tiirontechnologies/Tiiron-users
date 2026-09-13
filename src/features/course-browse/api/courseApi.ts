@@ -13,6 +13,19 @@ export interface CheckoutResponse {
   message: string;
 }
 
+// export interface ICartItem {
+//   id: number;
+//   courseId: number;
+//   userId: number;
+//   createdAt: string;
+
+//   course: {
+//     id: number;
+//     title: string;
+//     price: number;
+//     image: string | null;
+//   };
+// }
 export interface ICartItem {
   id: number;
   courseId: number;
@@ -24,14 +37,25 @@ export interface ICartItem {
     title: string;
     price: number;
     image: string | null;
+    description?: string;
+    isFree?: boolean;
+    instructor?: string;
+    createdBy?: string;
+    level?: string;
+    categories?: string;
   };
 }
-
 export interface CartResponse {
   data: {
     items: ICartItem[];
     total: number;
   };
+}
+
+export interface WishlistResponse {
+  success?: boolean;
+  message?: string;
+  data: ICartItem[] | { items: ICartItem[] };
 }
 
 
@@ -121,6 +145,28 @@ export const courseBrowseApiSlice = baseApi.injectEndpoints({
       invalidatesTags: ["Cart"],
     }),
 
+    getWishlist: builder.query<WishlistResponse, void>({
+      query: () => ({ url: "cart/wishlist", method: "GET" }),
+      providesTags: ["Wishlist"],
+    }),
+
+    addToWishlist: builder.mutation<void, { courseId: number }>({
+      query: ({ courseId }) => ({
+        url: "cart/wishlist",
+        method: "POST",
+        body: { courseId },
+      }),
+      invalidatesTags: ["Wishlist"],
+    }),
+
+    removeFromWishlist: builder.mutation<void, { courseId: number }>({
+      query: ({ courseId }) => ({
+        url: `cart/wishlist/${courseId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Wishlist"],
+    }),
+
     // 4. INITIATE CHECKOUT
     initiateCheckout: builder.mutation<
       CheckoutResponse,
@@ -145,5 +191,8 @@ export const {
   useGetCartQuery,
   useAddToCartServerMutation,
   useRemoveFromCartServerMutation,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
   useGetCourseRatingQuery, 
 } = courseBrowseApiSlice;

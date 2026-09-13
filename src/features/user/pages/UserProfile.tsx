@@ -1,4 +1,4 @@
-import React, { useState, type ComponentType } from "react";
+import React, { useState, useMemo, type ComponentType } from "react";
 import {
   Camera,
   Share2,
@@ -146,6 +146,17 @@ const quickLinks: QuickLink[] = [
   { icon: Award, label: "Achievements" },
 ];
 
+const AVATAR_COLORS = [
+  "#4f46e5", "#0891b2", "#059669", "#d97706", "#dc2626",
+  "#7c3aed", "#db2777", "#ea580c", "#16a34a", "#2563eb",
+];
+
+function getAvatarColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
 const StudentProfile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabName>("Overview");
 
@@ -164,11 +175,7 @@ const StudentProfile: React.FC = () => {
           <aside className="space-y-4">
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="relative mx-auto w-fit">
-                <img
-                  src="https://i.pravatar.cc/160?img=12"
-                  alt="Profile"
-                  className="h-28 w-28 rounded-full object-cover ring-4 ring-white"
-                />
+                <AvatarDisplay name="Rishabh Singh" picture={null} />
                 <button
                   type="button"
                   className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white shadow-md hover:bg-indigo-700"
@@ -423,6 +430,36 @@ const StudentProfile: React.FC = () => {
           </main>
         </div>
       </div>
+    </div>
+  );
+};
+
+interface AvatarDisplayProps {
+  name: string;
+  picture?: string | null;
+}
+
+const AvatarDisplay: React.FC<AvatarDisplayProps> = ({ name, picture }) => {
+  const [imgError, setImgError] = useState(false);
+  const initial = name?.trim()?.[0]?.toUpperCase() || "?";
+  const color = useMemo(() => getAvatarColor(name || "user"), [name]);
+
+  if (picture && !imgError) {
+    return (
+      <img
+        src={picture}
+        alt="Profile"
+        onError={() => setImgError(true)}
+        className="h-28 w-28 rounded-full object-cover ring-4 ring-white"
+      />
+    );
+  }
+  return (
+    <div
+      className="h-28 w-28 rounded-full ring-4 ring-white flex items-center justify-center font-bold text-white text-4xl"
+      style={{ backgroundColor: color }}
+    >
+      {initial}
     </div>
   );
 };

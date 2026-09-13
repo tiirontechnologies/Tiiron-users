@@ -6,6 +6,9 @@ interface AuthUser {
   email: string;
   roleId?: "admin" | "user";
   orgCode?: string;
+  picture?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
 }
 
 export const useAuth = () => {
@@ -14,9 +17,16 @@ export const useAuth = () => {
 
   return {
     token: null,
-    user: null,
+    user: data?.data ? {
+      id: 0,
+      username: data.data.username || "",
+      email: data.data.email || "",
+      picture: data.data.picture || null,
+      firstName: data.data.firstName || null,
+      lastName: data.data.lastName || null,
+    } : null,
     isAdmin: false,
     isLoggedIn,
-    isLoading, 
+    isLoading,
   };
 };

@@ -1,11 +1,15 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography,Alert ,Snackbar } from "@mui/material";
+import { useState } from "react";
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import {
   useGetFreeCoursesQuery,
   useGetCartQuery,
   useAddToCartServerMutation,
-  useGetCourseRatingQuery
+  useGetCourseRatingQuery,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation
 } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
@@ -52,8 +56,11 @@ const CourseCardWithRating = ({
   isCourseInCart,
   handleAddToCart,
   isAddingToCart,
+  handleFavorite,
+  isFavorite,
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
+
 
   // Org Name
   const orgName =
@@ -79,6 +86,8 @@ const CourseCardWithRating = ({
       isCourseInCart={isCourseInCart}
       onAddToCart={handleAddToCart}
       isLoadingCart={isAddingToCart}
+      onFavorite={handleFavorite}
+      isFavorite={isFavorite}
     />
   );
 };
@@ -92,6 +101,11 @@ export default function FreeCourses() {
     { skip: false }
   );
 
+  const [snackbar, setSnackbar] = useState({
+  open: false,
+  message: "",
+  severity: "success" as "success" | "error",
+});
   // Cart data for checking if course is in cart
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,
@@ -99,11 +113,59 @@ export default function FreeCourses() {
 
   const [addToCartServer, { isLoading: isAddingToCart }] =
     useAddToCartServerMutation();
+  const { data: wishlistData } = useGetWishlistQuery();
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+  const wishlistItems = Array.isArray(wishlistData?.data)
+    ? wishlistData.data
+    : wishlistData?.data?.items ?? [];
+  const wishlistCourseIds = new Set(wishlistItems.map((item) => Number(item.courseId)));
 
   // Handler for adding to cart - passed to reusable component
   const handleAddToCart = async (courseId: number) => {
     await addToCartServer({ courseId }).unwrap();
   };
+
+  // const handleFavorite = async (courseId: number) => {
+  //   if (wishlistCourseIds.has(courseId)) {
+  //     await removeFromWishlist({ courseId }).unwrap();
+  //   } else {
+  //     await addToWishlist({ courseId }).unwrap();
+  //   }
+  // };
+  const handleFavorite = async (courseId: number) => {
+  try {
+    if (wishlistCourseIds.has(courseId)) {
+      await removeFromWishlist({ courseId }).unwrap();
+
+      setSnackbar({
+        open: true,
+        message: "Removed from wishlist",
+        severity: "success",
+      });
+    } else {
+      await addToWishlist({ courseId }).unwrap();
+
+      setSnackbar({
+        open: true,
+        message: "Added to wishlist",
+        severity: "success",
+      });
+    }
+  } catch (err: any) {
+    const message =
+      err?.data?.errors?.[0]?.message ||
+      err?.data?.message ||
+      "Something went wrong";
+
+    setSnackbar({
+      open: true,
+      message,
+      severity: "error",
+    });
+  }
+};
+
 
   // Extract courses from the API response - handle different possible structures
   let courses: ICourse[] = [];
@@ -209,16 +271,32 @@ export default function FreeCourses() {
       key={course.id}
       course={course}
       isCourseInCart={isCourseInCart}
-
-      
       handleAddToCart={handleAddToCart}
       isAddingToCart={isAddingToCart}
+      handleFavorite={handleFavorite}
+      isFavorite={wishlistCourseIds.has(courseId)}
     />
   );
 })}
           </Box>
         )}
-      </PageToolbarLayout>
+      
+      <Snackbar
+  open={snackbar.open}
+  autoHideDuration={3000}
+  onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+  <Alert
+    severity={snackbar.severity}
+    variant="filled"
+    onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+  >
+    {snackbar.message}
+  </Alert>
+</Snackbar>
+</PageToolbarLayout>
+      
     </Box>
   );
 }

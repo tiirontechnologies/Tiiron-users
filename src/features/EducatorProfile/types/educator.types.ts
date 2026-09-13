@@ -189,5 +189,8 @@ export interface RawApiUser {
   roleId: string;
   createdAt: string;
   profile: RawApiProfile;
+  _count?: {
+    subscribers?: number;
+  };
 }
 export type LucideIcon = ComponentType<IconProps>;

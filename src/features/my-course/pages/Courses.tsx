@@ -4,7 +4,7 @@ import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import { useGetMyEnrolledCoursesQuery } from "../api/courseApi";
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface CoursesProps {
@@ -22,7 +22,6 @@ const PAGE_LAYOUT_SX = {
 
 export default function Courses({ onCourseClick }: CoursesProps) {
   const navigate = useNavigate();
-  const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -96,20 +95,6 @@ export default function Courses({ onCourseClick }: CoursesProps) {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  // Handler for favorite
-  const handleFavorite = (courseId: number) => {
-    setFavorites((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(courseId)) {
-        newSet.delete(courseId);
-      } else {
-        newSet.add(courseId);
-      }
-      return newSet;
-    });
-    // TODO: Implement API call to save favorite
-  };
-
   // Handler for archive
   const handleArchive = (courseId: number) => {
     // TODO: Implement archive functionality
@@ -177,9 +162,7 @@ export default function Courses({ onCourseClick }: CoursesProps) {
   navigatePath={(id) => `/course-practice/${id}`}
   onStartCourse={handleStartCourse}
   onShare={handleShare}
-  onFavorite={handleFavorite}
   onArchive={handleArchive}
-  isFavorite={favorites.has(courseId)}
 />
               );
             })}

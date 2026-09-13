@@ -91,6 +91,7 @@ export default function EducatorProfile({
           >
             <ProfileSidebar
               data={data}
+              educatorId={apiUser.id}
               language={apiUser.profile?.language}
               website={apiUser.profile?.website}
             />
@@ -120,6 +121,7 @@ export default function EducatorProfile({
                   data={data}
                   courses={courses}
                   isCoursesLoading={isCoursesLoading}
+                  subscriberCount={apiUser._count?.subscribers ?? 0}
                 />
               )}
 
@@ -127,9 +129,9 @@ export default function EducatorProfile({
                 <CoursesTab courses={courses} isLoading={isCoursesLoading} />
               )}
 
-              {tabValue === 2 && <ComingSoon />}
+             {tabValue === 3 && <ComingSoon headerTitle="Reviews" headerSubtitle="See what learners are saying about this educator." />}
 
-              {tabValue === 3 && <ComingSoon />}
+{tabValue === 2 && <ComingSoon headerTitle="Achievements" headerSubtitle="Milestones and recognitions earned by this educator." />}
 
               {tabValue === 4 && apiUser?.id && (
                 <EducatorCommunity educatorId={apiUser.id} />

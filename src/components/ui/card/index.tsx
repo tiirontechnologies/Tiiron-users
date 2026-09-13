@@ -12,7 +12,6 @@ import DeleteIcon from "@icons/DeleteIcon";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ShareIcon from "@mui/icons-material/Share";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import { ENV } from "../../../config/env";
 import { ICourseCardProps } from "types/course.types";
@@ -32,7 +31,7 @@ interface ReusableCourseCardProps extends ICourseCardProps {
   onFavorite?: (courseId: number) => void;
   onArchive?: (courseId: number) => void;
   isFavorite?: boolean;
- categories?: string;
+  categories?: string;
   onCardClick?: () => void;
   onDeleteClick?: () => void;
   onAddToCartClick?: (e: React.MouseEvent) => void;
@@ -82,10 +81,20 @@ export default function CourseCard({
     }
   };
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onShare && id) {
+    if (!id) return;
+
+    if (onShare) {
       onShare(id);
+      return;
+    }
+
+    const courseUrl = `${window.location.origin}/course-glossary/${id}`;
+    if (navigator.share) {
+      await navigator.share({ title, url: courseUrl }).catch(() => undefined);
+    } else {
+      await navigator.clipboard?.writeText(courseUrl);
     }
   };
 
@@ -272,7 +281,7 @@ export default function CourseCard({
               variant="contained"
               onClick={handleStartCourse}
               sx={{
-                width: "54%", // slightly reduced width
+                width: "54%",
                 backgroundColor: "#4F39F6",
                 color: "#fff",
                 textTransform: "none",
@@ -342,37 +351,8 @@ export default function CourseCard({
               </Typography>
             )}
 
-            {/* Actions */}
+            {/* Archive */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.4 }}>
-              <ShareIcon
-                onClick={handleShare}
-                sx={{
-                  fontSize: 18,
-                  color: "#64748b",
-                  cursor: "pointer",
-                  "&:hover": { color: "#6366f1" },
-                }}
-              />
-              {isFavorite ? (
-                <FavoriteIcon
-                  onClick={handleFavorite}
-                  sx={{
-                    fontSize: 18,
-                    color: "#e11d48",
-                    cursor: "pointer",
-                  }}
-                />
-              ) : (
-                <FavoriteBorderIcon
-                  onClick={handleFavorite}
-                  sx={{
-                    fontSize: 18,
-                    color: "#64748b",
-                    cursor: "pointer",
-                    "&:hover": { color: "#6366f1" },
-                  }}
-                />
-              )}
               <ArchiveIcon
                 onClick={handleArchive}
                 sx={{
@@ -388,9 +368,6 @@ export default function CourseCard({
       </Box>
     );
   }
-
-
-
 
   return (
     <Box
@@ -518,23 +495,49 @@ export default function CourseCard({
           </Box>
         )}
 
-        {/* Title */}
-        <Typography
-          variant="h6"
+        {/* Title + Share */}
+        <Box
           sx={{
-            fontWeight: 700,
-            fontSize: "16px",
-            lineHeight: 1.4,
-            color: "#0f172a",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 1,
             mb: 0.6,
           }}
         >
-          {title}
-        </Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              fontSize: "16px",
+              lineHeight: 1.6,
+              color: "#0f172a",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {title}
+          </Typography>
+
+         <IconButton
+  onClick={handleShare}
+  size="small"
+  sx={{
+    flexShrink: 0,
+    width: 30,
+    height: 30,
+    p:0,
+    color: "#1e3a8a",
+    "&:hover": {
+      color: "#4F39F6",
+    },
+  }}
+>
+  <ShareIcon sx={{ fontSize: 24 }} />
+</IconButton>
+        </Box>
 
         {/* Instructor */}
         {instructor && (
@@ -608,7 +611,7 @@ export default function CourseCard({
           </Box>
         )}
 
-        {/* Price + Cart */}
+        {/* Price + Wishlist + Cart */}
         <Box
           sx={{
             mt: "auto",
@@ -630,62 +633,85 @@ export default function CourseCard({
             {price === 0 ? "FREE" : `$${price.toFixed(0)}`}
           </Typography>
 
-          {onAddToCartClick && (
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={
-                !isLoadingCart && (
-                  <ShoppingCartIcon
-                    sx={{
-                      color: isInCart ? "#94A3B8" : "#FFFFFF",
-                      transition: "color 0.2s ease",
-                    }}
-                  />
-                )
-              }
-              disabled={isInCart || isLoadingCart}
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddToCartClick(e);
-              }}
-              sx={{
-                textTransform: "none",
-                borderRadius: "10px",
-                px: 2.4,
-                py: 0.8,
-                fontSize: "13.5px",
-                fontWeight: 600,
-                color: isInCart ? "#94A3B8" : "#FFFFFF",
-                backgroundColor: "#4F39F6",
-                border: "1px solid #4F39F6",
-                boxShadow: "0 6px 16px rgba(79,57,246,0.25)",
-                transition:
-                  "background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease",
-                "&:hover": {
-                  backgroundColor: "#3E2DC4",
-                  borderColor: "#3E2DC4",
-                  color: "#FFFFFF",
-                  boxShadow: "0 8px 20px rgba(79,57,246,0.35)",
-                },
-                "&:disabled": {
-                  backgroundColor: "#F1F5F9",
-                  borderColor: "rgba(148,163,184,0.4)",
-                  color: "#94A3B8",
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* Wishlist - Paid courses only */}
+            {price > 0 && (
+              <IconButton
+                onClick={handleFavorite}
+                size="small"
+               sx={{
+  width: 34,
+  height: 34,
+  border: "1px solid",
+  borderColor: isFavorite ? "#ef142e" : "rgba(148,163,184,0.3)",
+  color: isFavorite ? "#ef142e" : "#94a3b8",
+  borderRadius: "8px",
+  "&:hover": {
+    borderColor: "#ef142e",
+    color: "#ed1c1c",
+    bgcolor: "rgba(239,20,46,0.06)",
+  },
+}}
+              >
+                <FavoriteIcon sx={{ fontSize: 16 }} />
+              </IconButton>
+            )}
+
+            {onAddToCartClick && (
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={
+                  !isLoadingCart && (
+                    <ShoppingCartIcon
+                      sx={{
+                        color: isInCart ? "#94A3B8" : "#FFFFFF",
+                        transition: "color 0.2s ease",
+                      }}
+                    />
+                  )
+                }
+                disabled={isInCart || isLoadingCart}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddToCartClick(e);
+                }}
+                sx={{
+                  textTransform: "none",
+                  borderRadius: "10px",
+                  px: 2.4,
+                  py: 0.8,
+                  fontSize: "13.5px",
+                  fontWeight: 600,
+                  color: isInCart ? "#94A3B8" : "#FFFFFF",
+                  backgroundColor: "#4F39F6",
+                  border: "1px solid #4F39F6",
                   boxShadow: "none",
-                },
-              }}
-            >
-              {isLoadingCart
-                ? "Adding..."
-                : isInCart
-                  ? "In Cart"
-                  : "Add to Cart"}
-            </Button>
-          )}
+                  transition:
+                    "background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease",
+                  "&:hover": {
+                    backgroundColor: "#3E2DC4",
+                    borderColor: "#3E2DC4",
+                    color: "#FFFFFF",
+                  },
+                  "&:disabled": {
+                    backgroundColor: "#F1F5F9",
+                    borderColor: "rgba(148,163,184,0.4)",
+                    color: "#94A3B8",
+                    boxShadow: "none",
+                  },
+                }}
+              >
+                {isLoadingCart
+                  ? "Adding..."
+                  : isInCart
+                    ? "In Cart"
+                    : "Add to Cart"}
+              </Button>
+            )}
+          </Box>
         </Box>
       </Box>
     </Box>
   );
-
 }

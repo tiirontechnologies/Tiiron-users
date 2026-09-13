@@ -416,7 +416,7 @@ const CertificateHeader = ({ cert }: { cert: CertificateData }) => (
         gap: "12px",
       }}
     >
-      <Box sx={{ height: 82, width: 150, flexShrink: 0 }}>
+      <Box sx={{ height: 80, width: 160, flexShrink: 0 }}>
         {cert.organizationLogo && <Box component="img" src={cert.organizationLogo} alt={`${cert.organizationName ?? "Organization"} Logo`} crossOrigin="anonymous" sx={{ height: 82, width: 150, objectFit: "contain", objectPosition: "left center" }} />}
       </Box>
       <Box sx={{ textAlign: "center", flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
@@ -428,18 +428,25 @@ const CertificateHeader = ({ cert }: { cert: CertificateData }) => (
             fontWeight: 900,
             fontSize: "1.35rem",
             letterSpacing: "0.22px",
-            lineHeight: 1.12,
+            lineHeight: 0.98,
             color: `${COLORS.primaryBlue} !important`,
             WebkitTextFillColor: COLORS.primaryBlue,
             maxWidth: "420px",
             wordBreak: "break-word",
             textTransform: "uppercase",
+            m: 0,
           }}
         >
-          Internal Evaluation Report
+          <Box component="span" sx={{ display: "block" }}>
+            Internal
+          </Box>
+          <Box component="span" sx={{ display: "block" }}>
+            Evaluation Report
+          </Box>
         </Typography>
       </Box>
-      <Box component="img" src="/Tiiron_logo.png" alt="Tiiron LMS Logo" crossOrigin="anonymous" sx={{ height: 82, width: 150, objectFit: "contain", objectPosition: "right center", flexShrink: 0 }} />
+      <Box component="img" src="/Tiiron_logo.png" alt="Tiiron LMS Logo" crossOrigin="anonymous" 
+      sx={{ height: 80, width: 160, objectFit: "contain", objectPosition: "right center", flexShrink: 0 }} />
     </Box>
   </Box>
 );
@@ -535,7 +542,7 @@ function CertificateBody({ cert }: { cert: CertificateData }) {
             >
               <InfoRow label="Student Name" value={cert.studentName} />
               <InfoRow label="Training Program" value={cert.internshipTrack} />
-              <InfoRow label="College / University" value={cert.college} />
+              <InfoRow label="College / University" value={cert.college  || "N/A"}  />
               <InfoRow label="Duration" value={cert.duration} />
             </Grid>
             <Grid item xs={6} sx={{ pl: "28px" }}>
@@ -1375,7 +1382,13 @@ export default function CourseCertificate({
     downloadVisibleCertificate,
   ]);
 
-  if (isUserLoading || isTemplateLoading || (isAuthenticated && isCourseCompleted && isCertificateLoading) || isWaitingForGeneration) {
+  if (
+    isUserLoading ||
+    isTemplateLoading ||
+    (isAuthenticated && !isProgressResolved) ||
+    (isAuthenticated && isCourseCompleted && isCertificateLoading) ||
+    isWaitingForGeneration
+  ) {
     return <CertificateLoadingState />;
   }
 
