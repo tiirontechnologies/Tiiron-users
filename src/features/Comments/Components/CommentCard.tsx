@@ -4,22 +4,25 @@ import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { commentTheme } from "../theme";
-import type { CommentType } from "../api/api";
+import type { GroupedComment } from "../Comment";
 import CommentInput from "./CommentInput";
 import ReplyCard from "./ReplyCard";
-import { CommentRounded } from "@mui/icons-material";
 import { timeAgo } from "../utils/timeAgo";
 
 interface CommentCardProps {
-  comment: CommentType;
-  currentUserId: number;
-  currentUserAvatar: string;
+  comment: GroupedComment;
+  currentUserId?: number;
+  currentUserAvatar?: string;
   onReply: (targetId: number, text: string) => void;
   onEdit: (commentId: number, text: string) => void;
   onDelete: (commentId: number) => void;
+  onLike: (commentId: number) => void;
 }
 
 const REPLIES_PREVIEW_COUNT = 2;
+
+const fullNameOf = (firstName: string, lastName: string) =>
+  `${firstName ?? ""} ${lastName ?? ""}`.trim();
 
 const initialsOf = (fullName: string) =>
   fullName
@@ -36,16 +39,21 @@ const CommentCard: React.FC<CommentCardProps> = ({
   onReply,
   onEdit,
   onDelete,
+  onLike,
 }) => {
-  const [liked, setLiked] = useState(comment.liked);
-  const [likes, setLikes] = useState(comment.likes);
+  const [liked, setLiked] = useState(comment.isLiked);
+  const [likes, setLikes] = useState(comment.likesCount);
+
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(comment.text);
+  const [editText, setEditText] = useState(comment.content);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showAllReplies, setShowAllReplies] = useState(false);
   const menuOpen = Boolean(anchorEl);
   const isOwner = comment.user.id === currentUserId || comment.userId === currentUserId;
+
+  const fullName = fullNameOf(comment.user.firstName, comment.user.lastName);
+  const avatarUrl = comment.user.profile?.picture || undefined;
 
   const visibleReplies = showAllReplies
     ? comment.replies
@@ -55,6 +63,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
   const toggleLike = () => {
     setLiked((prev) => !prev);
     setLikes((prev) => (liked ? prev - 1 : prev + 1));
+    onLike(comment.id);
   };
 
   const handleEditSave = () => {
@@ -80,7 +89,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
     >
       <Stack direction="row" spacing={1.5}>
         <Avatar
-          src={comment.user.avatar || undefined}
+          src={avatarUrl}
           sx={{
             width: { xs: 36, sm: 40 },
             height: { xs: 36, sm: 40 },
@@ -90,19 +99,18 @@ const CommentCard: React.FC<CommentCardProps> = ({
             fontWeight: 700,
           }}
         >
-          {!comment.user.avatar && initialsOf(comment.user.fullName)}
+          {!avatarUrl && initialsOf(fullName)}
         </Avatar>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="baseline" spacing={0.8} flexWrap="wrap">
               <Typography sx={{ ...commentTheme.typography.name, fontWeight: 700 }}>
-                {comment.user.fullName}
+                {fullName}
               </Typography>
               <Typography sx={{ fontSize: 12.5, color: commentTheme.colors.textSecondary }}>
                 @{comment.user.username}
               </Typography>
               <Typography sx={{ ...commentTheme.typography.meta, color: commentTheme.colors.textSecondary }}>
-                {/* · {comment.createdAt} */}
                 {timeAgo(comment.createdAt)}
               </Typography>
             </Stack>
@@ -157,7 +165,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
                   size="small"
                   onClick={() => {
                     setIsEditing(false);
-                    setEditText(comment.text);
+                    setEditText(comment.content);
                   }}
                   sx={{ textTransform: "none", borderRadius: commentTheme.radius.button }}
                 >
@@ -180,7 +188,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
             </Box>
           ) : (
             <Typography sx={{ ...commentTheme.typography.body, color: commentTheme.colors.textPrimary, mt: 0.4 }}>
-              {comment.text}
+              {comment.content}
             </Typography>
           )}
 
@@ -236,6 +244,7 @@ const CommentCard: React.FC<CommentCardProps> = ({
               reply={reply}
               currentUserAvatar={currentUserAvatar}
               onReply={onReply}
+              onLike={onLike}
             />
           ))}
 
