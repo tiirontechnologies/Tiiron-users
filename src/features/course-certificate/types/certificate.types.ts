@@ -22,7 +22,8 @@ export interface CertificateTemplate {
 
 export interface GeneratedCertificate {
   id: number;
-  verificationId?: string;
+  // verificationId?: string;
+  certificateId?: string;
   enrollmentId?: number | string;
   studentId?: number;
   courseId: number;

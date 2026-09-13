@@ -33,6 +33,12 @@ export const profileApiSlice = baseApi.injectEndpoints({
       transformResponse: (res: any) => res.data.courses,
     }),
 
+    isSubscribed: builder.query<boolean, number>({
+      query: (adminId) => `/profile/is-subscribe/${adminId}`,
+      transformResponse: (res: { data: { isSubscriber: boolean } }) => res.data.isSubscriber,
+      providesTags: ["Profile"],
+    }),
+
     subscribeToEducator: builder.mutation<void, number>({
       query: (adminId) => ({ url: `/profile/subscribe/${adminId}`, method: "POST" }),
       invalidatesTags: ["Profile"],
@@ -55,8 +61,7 @@ export const {
   useGetProfileByUsernameQuery,
   useGetCoursesByUsernameQuery,
   useGetCommunityByUserIdQuery,
+  useIsSubscribedQuery,
   useSubscribeToEducatorMutation,
   useUnsubscribeFromEducatorMutation,
 } = profileApiSlice;
-
-

@@ -89,8 +89,9 @@ const enrollments: Enrollment[] = data?.data || [];
             lg: "repeat(4, 1fr)",
           },
           gap: 2.5,
-          px: { xs: 2, sm: 3, md: 4 },
-          py: { xs: 2, sm: 3 },
+          py: 3,
+          // px:1,
+          // p:2,
         }}
       >
         {Array.from({ length: 8 }).map((_, i) => (
@@ -216,8 +217,8 @@ const enrollments: Enrollment[] = data?.data || [];
           lg: "repeat(4, 1fr)",
         },
         gap: 2.5,
-        px: { xs: 2, sm: 3, md: 4 },
-        py: { xs: 2, sm: 3 },
+        py: 3,
+        p:2,
       }}
     >
       {enrollments.map((enrollment) => {
