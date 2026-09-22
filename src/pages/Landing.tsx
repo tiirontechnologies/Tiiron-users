@@ -576,18 +576,19 @@ const Landing = () => {
       (item) => item.courseId === Number(course.id),
     ) || false;
 
-  // ORG NAME (createdByUser se, warna createdBy fallback)
- const rawOrgName =
+const rawOrgName =
   course.createdBy?.trim() ||
   `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
   "Organization";
 
-const orgName =
-  rawOrgName.charAt(0).toUpperCase() + rawOrgName.slice(1);
+const orgName = rawOrgName.replace(/^./, (c) => c.toUpperCase());
+
+
 
   // ORG | INSTRUCTOR
   const orgWithInstructor = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
 
+  console.log(orgWithInstructor)
   return (
     <SwiperSlide key={course.id}>
       <CourseCardWrapper
