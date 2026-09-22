@@ -577,10 +577,13 @@ const Landing = () => {
     ) || false;
 
   // ORG NAME (createdByUser se, warna createdBy fallback)
-  const orgName =
-    course.createdBy?.trim() ||
-    `${course.createdByUser?.firstName || ''} ${course.createdByUser?.lastName || ''}`.trim() ||
-    'Organization';
+ const rawOrgName =
+  course.createdBy?.trim() ||
+  `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
+  "Organization";
+
+const orgName =
+  rawOrgName.charAt(0).toUpperCase() + rawOrgName.slice(1);
 
   // ORG | INSTRUCTOR
   const orgWithInstructor = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
