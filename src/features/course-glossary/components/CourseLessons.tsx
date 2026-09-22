@@ -5,6 +5,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate, useParams } from "react-router-dom";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 
 interface CourseLessonsProps {
   chapters: any[] | undefined;
@@ -15,7 +16,6 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
   const { courseId } = useParams<{ courseId: string }>();
 
   const handleStartLesson = (unitId: string) => {
-    // Navigate to course practice page
     navigate(`/course-practice/${courseId}`);
   };
 
@@ -23,12 +23,43 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
     return (
       <Box
         sx={{
-          width: "100%",
-          pt: { xs: 2, md: 3 },
+          background: "#fafbfc",
+          border: "1.5px dashed #d0d5dd",
+          borderRadius: 3,
+          py: { xs: 6, md: 8 },
+          px: 3,
+          mt: { xs: 2, md: 3 },
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Typography variant="body2" color="text.secondary">
-          No lessons available for this course.
+        <Box
+          sx={{
+            width: 56,
+            height: 56,
+            borderRadius: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "1.5px solid #cbd5e1",
+            bgcolor: "#fff",
+            mb: 2.5,
+          }}
+        >
+          <MenuBookOutlinedIcon sx={{ fontSize: 26, color: "#94a3b8" }} />
+        </Box>
+
+        <Typography sx={{ fontWeight: 700, fontSize: "17px", color: "#475569", mb: 0.75 }}>
+          No Lessons Yet
+        </Typography>
+
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", maxWidth: 380 }}
+        >
+          Lessons for this course haven't been added yet. Check back soon.
         </Typography>
       </Box>
     );
@@ -223,4 +254,3 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
     </Box>
   );
 }
-

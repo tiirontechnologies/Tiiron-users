@@ -65,6 +65,14 @@ export default function CourseCardWrapper({
   >("success");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+
+  const capitalizeFirstLetter = (value?: string) => {
+  if (!value) return value;
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+};
+
+
+
   // Card click handler - use parent's handler or navigatePath
   const handleCardClick = () => {
     if (variant === "my-course" && onStartCourse) {
@@ -181,7 +189,8 @@ export default function CourseCardWrapper({
         onCardClick={handleCardClick}
         onDeleteClick={handleDeleteClick}
         onAddToCartClick={onAddToCart ? handleAddToCart : undefined}
-        instructor={instructor}
+        // instructor={instructor}
+        instructor={capitalizeFirstLetter(instructor)}
         reviewCount={reviewCount}
         progress={progress}
         learnerRating={learnerRating}

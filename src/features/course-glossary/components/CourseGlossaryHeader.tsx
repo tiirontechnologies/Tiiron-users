@@ -297,13 +297,13 @@ export default function CourseGlossaryHeader({
               </>
             )}
 
-            <Box component="span" sx={{ color: "#64748B" }}>
+            {/* <Box component="span" sx={{ color: "#64748B" }}>
               22 Total Hours
             </Box>
 
             <Box component="span" sx={{ color: "#64748B" }}>
               |
-            </Box>
+            </Box> */}
 
             <Box component="span" sx={{ color: "#64748B" }}>
               {totalLessons} Lessons
