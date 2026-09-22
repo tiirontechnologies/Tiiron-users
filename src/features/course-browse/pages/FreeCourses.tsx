@@ -63,10 +63,13 @@ const CourseCardWithRating = ({
 
 
   // Org Name
-  const orgName =
-    course.createdBy?.trim() ||
-    `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
-    "Organization";
+ const rawOrgName =
+  course.createdBy?.trim() ||
+  `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
+  "Organization";
+
+const orgName =
+  rawOrgName.charAt(0).toUpperCase() + rawOrgName.slice(1);
 
   // Instructor | Org
   const instructorWithOrg = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
