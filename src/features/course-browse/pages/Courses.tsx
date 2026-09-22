@@ -60,10 +60,15 @@ const CourseCardWithRating = ({
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
 
-  const organizationName =
-    course.createdBy?.trim() ||
-    `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
-    "Organization";
+  
+
+    const rawOrgName =
+  course.createdBy?.trim() ||
+  `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
+  "Organization";
+
+const organizationName =
+  rawOrgName.charAt(0).toUpperCase() + rawOrgName.slice(1);
 
   const instructorWithOrg = `${course.instructor?.trim() || "Instructor"} | ${organizationName}`;
 
