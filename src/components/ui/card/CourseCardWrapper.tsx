@@ -66,10 +66,11 @@ export default function CourseCardWrapper({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
 
-  const capitalizeFirstLetter = (value?: string) => {
+const capitalizeFirstLetter = (value?: string) => {
   if (!value) return value;
-  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+  return value.charAt(0).toUpperCase() + value.slice(1);
 };
+
 
 
 
