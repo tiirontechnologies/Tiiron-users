@@ -1,5 +1,3 @@
-
-
 import { baseApi } from '../../../api/api.routes';
 
 // =========================
@@ -42,12 +40,14 @@ export interface ProfileDetails {
   twitter: string | null;
   youtube: string | null;
   github: string | null;
-  leetcode: string | null;
-  hackerrank: string | null;
+  leetcode?: string | null;
+  hackerrank?: string | null;
+  Leetcode?: string | null;
+  HackerRank?: string | null;
   collage: string | null;
   picture?: string | null;
-  program?: string | null;
-  adress?: string | null; 
+  Program?: string | null;
+  address?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -78,6 +78,8 @@ export interface UpdateProfileRequest {
   hackerrank?: string;
   collage?: string;
   language?: string;
+  address?: string; // ← add kiya
+  Program?: string; // ← add kiya (capital P, backend ke hisaab se)
 }
 
 export interface UploadImageResponse {
