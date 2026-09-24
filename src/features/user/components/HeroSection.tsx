@@ -191,7 +191,7 @@ const HeroSection: React.FC = () => {
       <div className="mt-5 flex flex-wrap gap-2.5">
         <Tag icon={Code2} text={profile?.headline || "Frontend Developer"} />
         <Tag icon={MapPin} text={profile?.address || "Location not set"} />
-        <Tag icon={BookOpen} text={profile?.program || "Program not set"} />
+        <Tag icon={BookOpen} text={profile?.Program || "Program not set"} />
       </div>
     </div>
   );

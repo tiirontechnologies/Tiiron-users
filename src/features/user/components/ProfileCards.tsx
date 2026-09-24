@@ -158,7 +158,7 @@ const ProfileCard: React.FC = () => {
       website: "",
       collage: "",
       address: "",
-      program: "",
+      Program: "",
       github: "",
       instagram: "",
       linkedin: "",
@@ -180,7 +180,7 @@ const ProfileCard: React.FC = () => {
         website: profile?.website ?? "",
         collage: profile?.collage ?? "",
         address: profile?.address ?? "",
-        program: profile?.program ?? "",
+        Program: profile?.program ?? "",
         github: profile?.github ?? "",
         instagram: profile?.instagram ?? "",
         linkedin: profile?.linkedin ?? "",
@@ -202,7 +202,7 @@ const ProfileCard: React.FC = () => {
       website: values.website,
       collage: values.collage,
       address: values.address,
-      program: values.program,
+      Program: values.program,
       github: values.github,
       instagram: values.instagram,
       linkedin: values.linkedin,
@@ -325,7 +325,7 @@ const ProfileCard: React.FC = () => {
 
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field label="Address" placeholder="e.g. Lucknow, India" {...register("address")} />
-          <Field label="Program" placeholder="e.g. Computer Science" {...register("program")} />
+          <Field label="Program" placeholder="e.g. Computer Science" {...register("Program")} />
         </div>
 
         <div className="mt-5 border-t border-slate-100 pt-4">
