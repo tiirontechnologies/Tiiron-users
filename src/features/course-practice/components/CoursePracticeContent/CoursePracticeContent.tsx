@@ -1,6 +1,9 @@
+import React, { useMemo, useState, useCallback, useEffect } from "react";
+
+import QuizOutlinedIcon from "@mui/icons-material/QuizOutlined";
+// import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 
-import React, { useMemo, useState, useCallback } from "react";
 import {
   Box,
   Typography,
@@ -32,6 +35,7 @@ import {
   useSubmitPracticeBulkMutation,
   PracticeSessionData
 } from "../../api/practiceApi";
+import { useGetUnitNotesQuery, useGetAssignmentQuery } from "../../api/courseProgressApi";
 import Footer from "../../components/Footer";
 import { CodeEditorContext } from "../../../coding-question/context/CodeEditorContext";
 import CodingQuestionPage from "../../../coding-question/CodingQuestion";
@@ -344,7 +348,9 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
 
   const [submitPracticeBulk] = useSubmitPracticeBulkMutation();
 
-  const [videoTab, setVideoTab] = useState(0);
+  const [activeSection, setActiveSection] = useState<
+    "practice" | "notes" | "assignment" | null
+  >(null);
 
   /* ========================
      ANSWER HANDLING
@@ -412,6 +418,41 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
   const completed = activeContentType
     ? getCompletedCount(activeContentType.id)
     : 0;
+
+  /* ========================
+     NOTES / ASSIGNMENT PRESENCE CHECK
+  ======================== */
+
+  const { data: notesResponse, isLoading: notesLoading } = useGetUnitNotesQuery(
+    Number(unitId),
+    { skip: !unitId }
+  );
+  const { data: assignmentResponse, isLoading: assignmentLoading } = useGetAssignmentQuery(
+    Number(unitId),
+    { skip: !unitId }
+  );
+
+  const hasNotes = ((notesResponse as any)?.data?.length ?? 0) > 0;
+  const hasAssignments = ((assignmentResponse as any)?.data?.length ?? 0) > 0;
+  const hasPractice = tabsData.some(
+    (tab) => (tab.contentType.questions?.length ?? 0) > 0
+  );
+
+  const isCheckingSections = notesLoading || assignmentLoading;
+
+  const sections = useMemo(() => {
+    const list: { key: "practice" | "notes" | "assignment"; label: string }[] = [];
+    if (hasPractice) list.push({ key: "practice", label: "Practice" });
+    if (hasNotes) list.push({ key: "notes", label: "Notes" });
+    if (hasAssignments) list.push({ key: "assignment", label: "Assignment" });
+    return list;
+  }, [hasPractice, hasNotes, hasAssignments]);
+
+  useEffect(() => {
+    if (!activeSection && sections.length > 0) {
+      setActiveSection(sections[0].key);
+    }
+  }, [sections, activeSection]);
 
   /* ========================
      SUBMIT HANDLER
@@ -490,42 +531,20 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
         }}
       />
 
-      {/* Responsive Tab Switcher */}
-      <Box sx={{ 
-        overflowX: "auto",
-        px: 0,
-        mb: { xs: 1, sm: 1.25, md: 1.5 },
-        scrollbarWidth: "none",
-        "&::-webkit-scrollbar": { display: "none" },
-      }}>
-        <Tabs
-          value={videoTab}
-          onChange={(_, val) => setVideoTab(val)}
-          sx={{ 
-            minWidth: "max-content",
-            "& .MuiTabs-indicator": {
-              height: { xs: "2px", sm: "2px", md: "3px" }
-            },
-            "& .MuiTabs-flexContainer": { gap: { xs: 0, sm: 0.5 } },
-          }}
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          <StyledTab label="Practice" />
-          <StyledTab label="Notes" />
-          <StyledTab label="Assignment" />
-        </Tabs>
-      </Box>
-
-      {/* Practice Tab Content */}
-      {/* {videoTab === 0 && (
-        <Box>
+      {/* Responsive Tab Switcher - only sections that actually have content */}
+      {!isCheckingSections && sections.length > 0 && (
+        <Box sx={{ 
+          overflowX: "auto",
+          px: 0,
+          mb: { xs: 1, sm: 1.25, md: 1.5 },
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": { display: "none" },
+        }}>
           <Tabs
-            value={activeTab}
-            onChange={(_, val) => setActiveTab(val)}
+            value={activeSection || false}
+            onChange={(_, val) => setActiveSection(val)}
             sx={{ 
               minWidth: "max-content",
-              mb: { xs: 1, sm: 1.25, md: 1.5 },
               "& .MuiTabs-indicator": {
                 height: { xs: "2px", sm: "2px", md: "3px" }
               },
@@ -534,152 +553,62 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
             variant="scrollable"
             scrollButtons="auto"
           >
-            {tabsData.map((tab, index) => (
-              <StyledTab
-                key={index}
-                label={tab.label}
-              />
+            {sections.map((s) => (
+              <StyledTab key={s.key} value={s.key} label={s.label} />
             ))}
           </Tabs>
-
-          {tabsData.map((tab, index) => (
-            <CustomTabPanel key={index} value={activeTab} index={index}>
-              <QuestionsPanel
-                questions={tab.contentType.questions}
-                contentTypeId={tab.contentType.id}
-                courseId={courseId}
-                navigate={(path: string, stateObj: any) => {
-                  if (stateObj?.state?.question) {
-                    setOverlayCodingQuestion(stateObj.state.question);
-                  } else {
-                    navigate(path, stateObj);
-                  }
-                }}
-                getUserAnswer={getUserAnswer}
-                handleAnswerChange={handleAnswerChange}
-              />
-            </CustomTabPanel>
-          ))}
         </Box>
-      )} */}
-{videoTab === 0 && (
-  <Box>
-    {tabsData.length > 0 ? (
-      <>
-        <Tabs
-          value={activeTab}
-          onChange={(_, val) => setActiveTab(val)}
-          sx={{ 
-            minWidth: "max-content",
-            mb: { xs: 1, sm: 1.25, md: 1.5 },
-            "& .MuiTabs-indicator": {
-              height: { xs: "2px", sm: "2px", md: "3px" }
-            },
-            "& .MuiTabs-flexContainer": { gap: { xs: 0, sm: 0.5 } },
-          }}
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          {tabsData.map((tab, index) => (
-            <StyledTab key={index} label={tab.label} />
-          ))}
-        </Tabs>
+      )}
 
-        {tabsData.map((tab, index) => (
-          <CustomTabPanel key={index} value={activeTab} index={index}>
-            <QuestionsPanel
-              questions={tab.contentType.questions}
-              contentTypeId={tab.contentType.id}
-              courseId={courseId}
-              navigate={(path: string, stateObj: any) => {
-                if (stateObj?.state?.question) {
-                  setOverlayCodingQuestion(stateObj.state.question);
-                } else {
-                  navigate(path, stateObj);
-                }
-              }}
-              getUserAnswer={getUserAnswer}
-              handleAnswerChange={handleAnswerChange}
-            />
-          </CustomTabPanel>
-        ))}
-      </>
-    ) : (
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      p: { xs: 4, sm: 5, md: 7 },
-      px: { xs: 3, sm: 4 },
-      background: "linear-gradient(180deg, #FFFFFF, #F9FAFB)",
-      border: "1px solid #EEF0F3",
-      borderRadius: "16px",
-    }}
-  >
-    <Box
-      sx={{
-        width: 72,
-        height: 72,
-        borderRadius: "50%",
-        bgcolor: "#E6F1FB",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        mb: 2.5,
-      }}
-    >
-      <RocketLaunchOutlinedIcon sx={{ fontSize: 32, color: "#0d1cc0" }} />
-    </Box>
+      {/* Practice Tab Content */}
+      {activeSection === "practice" && (
+        <Box>
+          {tabsData.length > 0 ? (
+            <>
+              <Tabs
+                value={activeTab}
+                onChange={(_, val) => setActiveTab(val)}
+                sx={{ 
+                  minWidth: "max-content",
+                  mb: { xs: 1, sm: 1.25, md: 1.5 },
+                  "& .MuiTabs-indicator": {
+                    height: { xs: "2px", sm: "2px", md: "3px" }
+                  },
+                  "& .MuiTabs-flexContainer": { gap: { xs: 0, sm: 0.5 } },
+                }}
+                variant="scrollable"
+                scrollButtons="auto"
+              >
+                {tabsData.map((tab, index) => (
+                  <StyledTab key={index} label={tab.label} />
+                ))}
+              </Tabs>
 
-    <Typography
-      sx={{
-        fontSize: { xs: "1.05rem", sm: "1.15rem", md: "1.2rem" },
-        fontWeight: 600,
-        color: "#0d5ac7",
-        mb: 1,
-      }}
-    >
-      Something exciting is on its way! 
-    </Typography>
+              {tabsData.map((tab, index) => (
+                <CustomTabPanel key={index} value={activeTab} index={index}>
+                  <QuestionsPanel
+                    questions={tab.contentType.questions}
+                    contentTypeId={tab.contentType.id}
+                    courseId={courseId}
+                    navigate={(path: string, stateObj: any) => {
+                      if (stateObj?.state?.question) {
+                        setOverlayCodingQuestion(stateObj.state.question);
+                      } else {
+                        navigate(path, stateObj);
+                      }
+                    }}
+                    getUserAnswer={getUserAnswer}
+                    handleAnswerChange={handleAnswerChange}
+                  />
+                </CustomTabPanel>
+              ))}
+            </>
+          ) : null}
+        </Box>
+      )}
 
-    <Typography
-      sx={{
-        fontSize: { xs: "0.85rem", sm: "0.9rem" },
-        color: "#6B7280",
-        maxWidth: 380,
-        lineHeight: 1.7,
-        mb: 2.5,
-      }}
-    >
-      We're crafting fresh practice questions for this section. Hang tight — they'll be ready for you very soon!
-    </Typography>
-
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 0.75,
-        px: 2,
-        py: 0.75,
-        bgcolor: "#e6e7fb",
-        borderRadius: "20px",
-      }}
-    >
-      <AutoAwesomeIcon sx={{ fontSize: 15, color: "#1512cc" }} />
-      <Typography sx={{ fontSize: "0.78rem", fontWeight: 600, color: "#185FA5" }}>
-        Coming soon
-      </Typography>
-    </Box>
-  </Box>
-
-    )}
-  </Box>
-)}
       {/* Notes Tab */}
-      {videoTab === 1 && (
+      {activeSection === "notes" && (
         <Box sx={{ 
           px: { xs: 1, sm: 2, md: 0 },
           py: { xs: 1.5, sm: 2, md: 3 }
@@ -691,7 +620,7 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
       )}
 
       {/* Assignment Tab */}
-      {videoTab === 2 && (
+      {activeSection === "assignment" && (
         <Box sx={{ 
           px: { xs: 1, sm: 2, md: 0 },
           py: { xs: 1.5, sm: 2, md: 3 }
@@ -703,7 +632,7 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
       )}
 
       {/* Footer only for Practice tab */}
-      {videoTab === 0 && (
+      {activeSection === "practice" && (
         <Footer
           activeContentType={activeContentType}
           completed={completed}

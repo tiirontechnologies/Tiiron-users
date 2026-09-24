@@ -139,31 +139,32 @@ export default function Courses({ onCourseClick }: CoursesProps) {
 
               // Mock learner rating - in production, this should come from API
               const mockLearnerRating = course.averageRating ?? 0;
-              const organizationName = course.createdBy?.trim() || course.orgCode?.trim() || "Organization";
+              const organizationName =
+                course.createdBy?.trim() ||
+                course.orgCode?.trim() ||
+                "Organization";
               const instructorName = course.instructor?.trim() || "Instructor";
               const instructorWithOrg = `${instructorName} | ${organizationName}`;
 
-
-
               return (
-              <CourseCardWrapper
-  key={course.id}
-  id={courseId}
-  thumbnailSrc={course.image}
-  tags={course.tags}
-  title={course.title}
-  chapters={course.totalChapters}
-  rating={0}
-  price={course.price}
-  instructor={instructorWithOrg}
-  progress={mockProgress}
-  learnerRating={mockLearnerRating}
-  variant="my-course"
-  navigatePath={(id) => `/course-practice/${id}`}
-  onStartCourse={handleStartCourse}
-  onShare={handleShare}
-  onArchive={handleArchive}
-/>
+                <CourseCardWrapper
+                  key={course.id}
+                  id={courseId}
+                  thumbnailSrc={course.image}
+                  tags={course.tags}
+                  title={course.title}
+                  chapters={course.totalChapters}
+                  rating={0}
+                  price={course.price}
+                  instructor={instructorWithOrg}
+                  progress={mockProgress}
+                  learnerRating={mockLearnerRating}
+                  variant="my-course"
+                  navigatePath={(id) => `/course-practice/${id}`}
+                  onStartCourse={handleStartCourse}
+                  onShare={handleShare}
+                  onArchive={handleArchive}
+                />
               );
             })}
           </Box>

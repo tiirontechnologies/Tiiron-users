@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useRef, useState, type ComponentType, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -19,6 +16,8 @@ import {
   Terminal,
   Loader2,
   Pencil,
+  MapPin,
+  BookOpen,
 } from "lucide-react";
 import InfoRow from "./InfoRow";
 import {
@@ -81,6 +80,8 @@ interface EditFormValues {
   biography: string;
   website: string;
   collage: string;
+  address: string;
+  program: string;
   github: string;
   instagram: string;
   linkedin: string;
@@ -156,6 +157,8 @@ const ProfileCard: React.FC = () => {
       biography: "",
       website: "",
       collage: "",
+      address: "",
+      Program: "",
       github: "",
       instagram: "",
       linkedin: "",
@@ -176,6 +179,8 @@ const ProfileCard: React.FC = () => {
         biography: profile?.biography ?? "",
         website: profile?.website ?? "",
         collage: profile?.collage ?? "",
+        address: profile?.address ?? "",
+        Program: profile?.program ?? "",
         github: profile?.github ?? "",
         instagram: profile?.instagram ?? "",
         linkedin: profile?.linkedin ?? "",
@@ -196,6 +201,8 @@ const ProfileCard: React.FC = () => {
       biography: values.biography,
       website: values.website,
       collage: values.collage,
+      address: values.address,
+      Program: values.program,
       github: values.github,
       instagram: values.instagram,
       linkedin: values.linkedin,
@@ -316,6 +323,11 @@ const ProfileCard: React.FC = () => {
           <Field label="Collage" placeholder="collage " {...register("collage")} />
         </div>
 
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Field label="Address" placeholder="e.g. Lucknow, India" {...register("address")} />
+          <Field label="Program" placeholder="e.g. Computer Science" {...register("Program")} />
+        </div>
+
         <div className="mt-5 border-t border-slate-100 pt-4">
           <p className="mb-3 text-xs font-bold uppercase tracking-wide text-slate-400">Social Accounts</p>
           <div className="space-y-2.5">
@@ -393,6 +405,8 @@ const ProfileCard: React.FC = () => {
       <div className="mt-5 min-w-0 space-y-3 border-t border-slate-100 pt-4 text-sm">
         {profile?.website && <InfoRow icon={Link2} label="Website" value={profile.website} />}
         <InfoRow icon={Globe} label="Collage" value={profile?.collage || "Enter Your Collage"} />
+        {/* <InfoRow icon={MapPin} label="Address" value={profile?.address || "Enter Your Address"} /> */}
+        {/* <InfoRow icon={BookOpen} label="Program" value={profile?.program || "Enter Your Program"} /> */}
         <InfoRow
           icon={Calendar}
           label="Member Since"

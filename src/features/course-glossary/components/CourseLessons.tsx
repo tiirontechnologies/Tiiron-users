@@ -52,14 +52,15 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
         </Box>
 
         <Typography sx={{ fontWeight: 700, fontSize: "17px", color: "#475569", mb: 0.75 }}>
-          No Lessons Yet
+          No lessons available for this course.  
         </Typography>
 
         <Typography
           variant="body2"
           sx={{ color: "text.secondary", maxWidth: 380 }}
         >
-          Lessons for this course haven't been added yet. Check back soon.
+
+          Lessons will appear here once they are added.                    
         </Typography>
       </Box>
     );
