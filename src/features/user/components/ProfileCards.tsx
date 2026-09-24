@@ -60,16 +60,18 @@ function toFullUrl(value: string, baseUrl: string): string {
   return `${baseUrl}${value}`;
 }
 
-// Backend "Leetcode" / "HackerRank" (capital) bhejta hai jabki frontend "leetcode" / "hackerrank"
-// (lowercase) use karta hai — case-sensitive JS keys ki wajah se ye 2 fields hamesha
-// undefined dikh rahe the. Yahan normalize kar diya taaki poore component mein
-// hamesha lowercase keys hi use ho.
+// Backend ye keys capital ke saath bhejta hai:
+//   "Leetcode", "HackerRank", "Program"
+// jabki frontend/form lowercase use karta hai (leetcode, hackerrank, program).
+// JS keys case-sensitive hote hain, isliye yahan ek baar normalize kar diya taaki
+// poore component mein hamesha lowercase keys hi use ho.
 function normalizeProfile<T extends Record<string, any>>(raw: T | undefined) {
   if (!raw) return raw;
   return {
     ...raw,
     leetcode: raw.leetcode ?? raw.Leetcode ?? "",
     hackerrank: raw.hackerrank ?? raw.HackerRank ?? "",
+    program: raw.program ?? raw.Program ?? "",
   };
 }
 
@@ -158,7 +160,7 @@ const ProfileCard: React.FC = () => {
       website: "",
       collage: "",
       address: "",
-      Program: "",
+      program: "",
       github: "",
       instagram: "",
       linkedin: "",
@@ -180,7 +182,7 @@ const ProfileCard: React.FC = () => {
         website: profile?.website ?? "",
         collage: profile?.collage ?? "",
         address: profile?.address ?? "",
-        Program: profile?.program ?? "",
+        program: profile?.Program ?? "",
         github: profile?.github ?? "",
         instagram: profile?.instagram ?? "",
         linkedin: profile?.linkedin ?? "",
@@ -202,7 +204,7 @@ const ProfileCard: React.FC = () => {
       website: values.website,
       collage: values.collage,
       address: values.address,
-      Program: values.program,
+      Program: values.program, // backend key capital "Program" hai
       github: values.github,
       instagram: values.instagram,
       linkedin: values.linkedin,
@@ -325,7 +327,7 @@ const ProfileCard: React.FC = () => {
 
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field label="Address" placeholder="e.g. Lucknow, India" {...register("address")} />
-          <Field label="Program" placeholder="e.g. Computer Science" {...register("Program")} />
+          <Field label="Program" placeholder="e.g. Computer Science" {...register("program")} />
         </div>
 
         <div className="mt-5 border-t border-slate-100 pt-4">
