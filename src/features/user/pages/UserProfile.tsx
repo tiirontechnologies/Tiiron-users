@@ -170,7 +170,8 @@ const StudentProfile: React.FC = () => {
           <span className="font-medium text-slate-700">My Profile</span>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_1fr]">
+        {/* items-start hi fix hai — isse sidebar bade hone pe right column niche shift nahi hota */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_1fr] items-start">
           {/* ------------------------ LEFT SIDEBAR ------------------------ */}
           <aside className="space-y-4">
             <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

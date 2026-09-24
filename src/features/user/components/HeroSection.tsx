@@ -1,5 +1,5 @@
-// import React from "react";
-// import { Share2, MoreVertical, Code2, MapPin, BookOpen } from "lucide-react";
+// import React, { useState } from "react";
+// import { Share2, MoreVertical, Code2, MapPin, BookOpen, Check } from "lucide-react";
 // import Tag from "../components/Tag";
 // import { useGetProfilesQuery } from "../api/userApi.ts";
 // // ^ adjust this import path to wherever userApi.slice.ts actually lives in your project
@@ -9,15 +9,44 @@
 
 // const HeroSection: React.FC = () => {
 //   const { data, isLoading } = useGetProfilesQuery();
+//   const [copied, setCopied] = useState(false);
 
 //   const profile = data?.data?.profile;
 //   const firstName = data?.data?.firstName ?? "";
 //   const lastName = data?.data?.lastName ?? "";
 //   const fullName = [firstName, lastName].filter(Boolean).join(" ") || "Your Name";
 
+//   const handleShare = async () => {
+//     const shareUrl = window.location.href;
+//     const shareData = {
+//       title: `${fullName}'s Profile`,
+//       text: `Check out ${fullName}'s profile`,
+//       url: shareUrl,
+//     };
+
+//     // Mobile / supported browsers: native share sheet
+//     if (navigator.share) {
+//       try {
+//         await navigator.share(shareData);
+//       } catch (err) {
+//         // user cancelled share — ignore
+//       }
+//       return;
+//     }
+
+//     // Fallback: copy link to clipboard
+//     try {
+//       await navigator.clipboard.writeText(shareUrl);
+//       setCopied(true);
+//       setTimeout(() => setCopied(false), 2000);
+//     } catch (err) {
+//       console.error("Failed to copy link:", err);
+//     }
+//   };
+
 //   return (
 //     <div
-//       className="relative overflow-hidden rounded-2xl px-5 py-8 text-white shadow-sm sm:px-8 sm:py-9"
+//       className="relative overflow-hidden rounded-2xl px-5 pb-8 pt-16 text-white shadow-sm sm:px-8 sm:py-9"
 //       style={{
 //         backgroundImage: `url(${ProfileBanner})`,
 //         backgroundSize: "cover",
@@ -27,9 +56,11 @@
 //       <div className="absolute right-4 top-4 flex gap-2 sm:right-6 sm:top-6">
 //         <button
 //           type="button"
+//           onClick={handleShare}
 //           className="flex cursor-pointer items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1.5 text-xs font-medium backdrop-blur hover:bg-white/20 sm:px-3"
 //         >
-//           <Share2 size={13} /> <span className="hidden sm:inline">Share Profile</span>
+//           {copied ? <Check size={13} /> : <Share2 size={13} />}
+//           <span className="hidden sm:inline">{copied ? "Link Copied!" : "Share Profile"}</span>
 //         </button>
 //         <button
 //           type="button"
@@ -57,15 +88,17 @@
 
 //       <div className="mt-5 flex flex-wrap gap-2.5">
 //         <Tag icon={Code2} text={profile?.headline || "Frontend Developer"} />
-//         <Tag icon={MapPin} text="Lucknow, India" />
-//         <Tag icon={BookOpen} text="Computer Science Student" />
+//         {/* <Tag icon={MapPin} text="Lucknow, India" />
+//         <Tag icon={BookOpen} text="Computer Science Student" /> */}
+//   <Tag icon={Code2} text={profile?.headline || "Frontend Developer"} />
+//   <Tag icon={MapPin} text={profile?.address || "Location not set"} />
+//   <Tag icon={BookOpen} text={profile?.program || "Program not set"} />
 //       </div>
 //     </div>
 //   );
 // };
 
 // export default HeroSection;
-
 
 import React, { useState } from "react";
 import { Share2, MoreVertical, Code2, MapPin, BookOpen, Check } from "lucide-react";
@@ -157,8 +190,8 @@ const HeroSection: React.FC = () => {
 
       <div className="mt-5 flex flex-wrap gap-2.5">
         <Tag icon={Code2} text={profile?.headline || "Frontend Developer"} />
-        <Tag icon={MapPin} text="Lucknow, India" />
-        <Tag icon={BookOpen} text="Computer Science Student" />
+        <Tag icon={MapPin} text={profile?.address || "Location not set"} />
+        <Tag icon={BookOpen} text={profile?.program || "Program not set"} />
       </div>
     </div>
   );
