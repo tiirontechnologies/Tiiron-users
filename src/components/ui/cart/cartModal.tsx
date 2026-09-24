@@ -158,7 +158,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
             mt: 0.5,
           }}
         >
-          ${price.toFixed(2)}
+          ₹{price.toFixed(2)}
         </Typography>
       </Box>
 
@@ -531,7 +531,7 @@ export const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose }) => {
                   color: cartTotal > 0 ? "#4F39F6" : "#10b981",
                 }}
               >
-                {cartTotal === 0 ? "FREE" : `$${cartTotal.toFixed(2)}`}
+                {cartTotal === 0 ? "FREE" : `₹${cartTotal.toFixed(2)}`}
               </Typography>
             </Box>
 

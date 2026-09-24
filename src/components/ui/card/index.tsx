@@ -630,7 +630,7 @@ export default function CourseCard({
               color: price > 0 ? "#1e293b" : "#64748b",
             }}
           >
-            {price === 0 ? "FREE" : `$${price.toFixed(0)}`}
+            {price === 0 ? "FREE" : `₹${price.toFixed(0)}`}
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

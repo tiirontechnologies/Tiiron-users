@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
+
+import { SiReact, SiNodedotjs, SiOpenai, SiLeetcode } from "react-icons/si";
+import { FaJava, FaPython, FaDatabase, FaGithub } from "react-icons/fa";
 import {
   Box,
   Container,
@@ -99,6 +102,38 @@ const CourseCardSkeleton = () => (
     </Box>
   </Card>
 );
+
+// Hexagon badge for C / C++
+const HexLetter = ({ label, bg }: { label: string; bg: string }) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 1.5 21.1 6.75v10.5L12 22.5 2.9 17.25V6.75z" fill={bg} />
+    <text
+      x="12"
+      y={label === "C" ? 16 : 14.5}
+      textAnchor="middle"
+      fontSize={label === "C" ? 11 : 7.5}
+      fontWeight="700"
+      fill="#ffffff"
+      fontFamily="Arial, sans-serif"
+    >
+      {label}
+    </text>
+  </svg>
+);
+
+// Skills strip data (hero section)
+const skillChips: { label: string; icon: React.ReactNode }[] = [
+  { label: "C", icon: <HexLetter label="C" bg="#283593" /> },
+  { label: "C++", icon: <HexLetter label="C++" bg="#00599C" /> },
+  { label: "Java", icon: <FaJava size={16} color="#E76F00" /> },
+  { label: "Python", icon: <FaPython size={16} color="#3776AB" /> },
+  { label: "DSA", icon: <SiLeetcode size={16} color="#FFA116" /> },
+  { label: "Web Development", icon: <SiReact size={16} color="#00B8D9" /> },
+  { label: "MERN", icon: <SiNodedotjs size={16} color="#3C873A" /> },
+  { label: "AI / ML", icon: <SiOpenai size={16} color="#111827" /> },
+  { label: "Databases", icon: <FaDatabase size={16} color="#2563EB" /> },
+  { label: "Git & GitHub", icon: <FaGithub size={16} color="#111827" /> },
+];
 
 const Landing = () => {
   const theme = useTheme();
@@ -312,6 +347,19 @@ const Landing = () => {
             {/* LEFT */}
             <Grid item xs={12} md={7}>
               <Typography
+                sx={{
+                  mb: 1.5,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#5b3cff",
+                }}
+              >
+                Built for the next generation of learners
+              </Typography>
+
+              <Typography
                 variant="h2"
                 sx={{
                   fontWeight: 800,
@@ -320,15 +368,17 @@ const Landing = () => {
                   color: "#0f1724",
                 }}
               >
-                Master skills faster with
+                Master Skills Faster With
                 <Box component="span" display="block" sx={{ color: "#0b56ff" }}>
-                  AI-powered learning
+                  AI-powered Learning
                 </Box>
               </Typography>
 
               <Typography sx={{ mt: 2, color: "#556080", maxWidth: 620 }}>
-                Personalized courses, smart quizzes, and real-time practice that
-                help you learn by doing — not by memorizing.
+                Learn with personalized courses, intelligent quizzes, practical
+                assignments, and hands-on practice — all in one learning
+                platform designed to help you learn by doing, not by
+                memorizing.
               </Typography>
 
               <Stack direction="row" spacing={2} mt={4}>
@@ -422,12 +472,108 @@ const Landing = () => {
                 sx={{
                   width: "100%",
                   maxWidth: "700px",
-                  mixBlendMode: "multiply", // ← yeh magic hai
-                  // borderRadius, boxShadow — hata diya
+                  mixBlendMode: "multiply",
                 }}
               />
             </Grid>
           </Grid>
+
+          {/* SKILLS STRIP */}
+          <Box sx={{ mt: { xs: 5, md: 7 } }}>
+            <Typography
+              component="h3"
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: 16, md: 18 },
+                color: "#0f1724 !important",
+                mb: 2,
+              }}
+            >
+              Everything You Need to Become a Better Developer
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: { xs: "wrap", lg: "nowrap" },
+                columnGap: "6px",
+                rowGap: 1.5,
+              }}
+            >
+              {skillChips.map(({ label, icon }) => (
+                <Box
+                  key={label}
+                  component="button"
+                  type="button"
+                  onClick={() => onSearch(label)}
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    px: "10px",
+                    py: "9px",
+                    flexShrink: 0,
+                    bgcolor: "#f8f9ff",
+                    border: "1px solid",
+                    borderColor: alpha("#5b3cff", 0.1),
+                    borderRadius: "12px",
+                    fontFamily: "inherit",
+                    fontSize: 12.5,
+                    fontWeight: 500,
+                    lineHeight: 1,
+                    color: "#0f1724",
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      bgcolor: "#ffffff",
+                      borderColor: "#5b3cff",
+                      boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.15)}`,
+                      transform: "translateY(-2px)",
+                    },
+                    "&:focus-visible": {
+                      outline: "2px solid #5b3cff",
+                      outlineOffset: 2,
+                    },
+                  }}
+                >
+                  {icon}
+                  {label}
+                </Box>
+              ))}
+
+              {/* Plain button: MUI <Button> ka theme style ise purple fill kar raha tha */}
+              <Box
+                component="button"
+                type="button"
+                onClick={() => navigate("/browse-courses")}
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  flexShrink: 0,
+                  ml: { xs: 0, lg: "auto" },
+                  p: 0,
+                  bgcolor: "transparent",
+                  border: 0,
+                  fontFamily: "inherit",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "#5b3cff",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  "&:hover .arrow": { transform: "translateX(4px)" },
+                }}
+              >
+                Explore All Courses
+                <ArrowForwardIcon
+                  className="arrow"
+                  sx={{ fontSize: 18, transition: "transform 0.2s ease" }}
+                />
+              </Box>
+            </Box>
+          </Box>
         </Container>
       </Box>
 
@@ -458,6 +604,7 @@ const Landing = () => {
               </Grid>
             ))}
           </Grid>
+          
         </Container>
       </Box>
 
@@ -587,8 +734,6 @@ const orgName = rawOrgName.replace(/^./, (c) => c.toUpperCase());
 
   // ORG | INSTRUCTOR
   const orgWithInstructor = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
-
-  console.log(orgWithInstructor)
   return (
     <SwiperSlide key={course.id}>
       <CourseCardWrapper
