@@ -171,8 +171,8 @@ function buildLockedPreview(template: CertificateTemplate, course: any): Certifi
     remarks: template.mentorRemark ?? "", programSummary: template.programSummary ?? "",
     organizationName: course?.createdBy?.trim() || undefined,
     // organizationLogo: course?.createdByUser?.profile?.picture || undefined,
-  // organizationLogo: template.certificateLogo || undefined,
-  organizationLogo: template?.certificateLogo || record.template?.certificateLogo || undefined,
+  organizationLogo: template.certificateLogo || undefined,
+  
   };
 }
 
