@@ -24,7 +24,7 @@ function getWishlistItems(data: { data: ICartItem[] | { items: ICartItem[] } } |
   return Array.isArray(data?.data) ? data.data : data?.data?.items ?? [];
 }
 
-// Card thumbnail ke liye gradient set (letter ke hisaab se rotate hoga)
+// Card thumbnail ke liye gradient set (letter ke hisaab se rotate hoga) - fallback jab image na ho
 const GRADIENTS = [
   "linear-gradient(135deg, #34d399, #10b981)",
   "linear-gradient(135deg, #60a5fa, #2563eb)",
@@ -100,70 +100,70 @@ export default function WishlistTab() {
   }
 
   if (!items.length) {
-  return (
-    <Box
-      sx={{
-        minHeight: 360,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
-        px: 3,
-      }}
-    >
+    return (
       <Box
         sx={{
-          width: 64,
-          height: 64,
-          borderRadius: "50%",
+          minHeight: 360,
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          bgcolor: "rgba(239,20,46,0.08)",
-          border: "1px solid rgba(239,20,46,0.15)",
-          mb: 2.5,
+          textAlign: "center",
+          px: 3,
         }}
       >
-        <FavoriteBorderRoundedIcon sx={{ fontSize: 28, color: "#ef142e" }} />
+        <Box
+          sx={{
+            width: 64,
+            height: 64,
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "rgba(239,20,46,0.08)",
+            border: "1px solid rgba(239,20,46,0.15)",
+            mb: 2.5,
+          }}
+        >
+          <FavoriteBorderRoundedIcon sx={{ fontSize: 28, color: "#ef142e" }} />
+        </Box>
+
+        <Typography fontWeight={700} sx={{ fontSize: "16px", color: "#374151", mb: 0.5 }}>
+          Your wishlist is empty
+        </Typography>
+
+        <Typography variant="body2" sx={{ color: "#9ca3af", maxWidth: 320 }}>
+          Save courses you want to explore later.
+        </Typography>
+
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => navigate("/course-glossary")}
+          sx={{
+            mt: 3,
+            mb: 3,
+            textTransform: "none",
+            fontWeight: 600,
+            fontSize: "13px",
+            borderRadius: "10px",
+            borderColor: "#4F39F6",
+            color: "#4F39F6",
+            "&:hover": {
+              borderColor: "#3E2DC4",
+              bgcolor: "#3E2DC4",
+              color: "#fff",
+            },
+          }}
+        >
+          Browse Courses
+        </Button>
       </Box>
-
-      <Typography fontWeight={700} sx={{ fontSize: "16px", color: "#374151", mb: 0.5 }}>
-        Your wishlist is empty
-      </Typography>
-
-      <Typography variant="body2" sx={{ color: "#9ca3af", maxWidth: 320 }}>
-        Save courses you want to explore later.
-      </Typography>
-
-      <Button
-        variant="outlined"
-        size="small"
-        onClick={() => navigate("/course-glossary")}
-        sx={{
-          mt: 3,
-          mb:3,
-          textTransform: "none",
-          fontWeight: 600,
-          fontSize: "13px",
-          borderRadius: "10px",
-          borderColor: "#4F39F6",
-          color: "#4F39F6",
-          "&:hover": {
-            borderColor: "#3E2DC4",
-            bgcolor: "#3E2DC4",
-            color: "#fff",
-          },
-        }}
-      >
-        Browse Courses
-      </Button>
-    </Box>
-  );
-}
+    );
+  }
 
   return (
-    <Box sx={{ p: { xs: 1.5, sm: 2, md: 3} }}>
+    <Box sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
       <Typography fontWeight={800} mb={3}>
         My Wishlist
       </Typography>
@@ -171,17 +171,11 @@ export default function WishlistTab() {
       <Box
         sx={{
           display: "grid",
-          // gridTemplateColumns: {
-          //   xs: "1fr",
-          //   sm: "repeat(2, minmax(260px, 1fr))",
-          //   lg: "repeat(3, minmax(260px, 1fr))",
-          // },
           gridTemplateColumns: {
-  xs: "1fr",
-  sm: "repeat(2, minmax(200px, 240px))",
-  lg: "repeat(3, minmax(220px, 260px))",
-},
-
+            xs: "1fr",
+            sm: "repeat(2, minmax(200px, 240px))",
+            lg: "repeat(3, minmax(220px, 260px))",
+          },
           gap: { xs: 2, md: 3 },
         }}
       >
@@ -192,33 +186,56 @@ export default function WishlistTab() {
           const isFree = course?.isFree ?? price === 0;
           const instructor = course?.instructor || course?.createdBy || "HeroAcademy";
           const isRemoving = removingId === item.courseId;
+          const imageUrl = course?.image;
 
           return (
             <Paper
               key={item.id}
               elevation={0}
               sx={{
-                widht:280,
+                widht: 280,
                 borderRadius: 3,
                 overflow: "hidden",
                 border: "1px solid #eef0f3",
                 display: "flex",
                 flexDirection: "column",
                 bgcolor: "#fff",
-                p:0,
+                p: 0,
               }}
             >
-              {/* Gradient thumbnail */}
+              {/* Thumbnail: real image agar available ho, warna gradient+letter fallback */}
               <Box
                 sx={{
                   position: "relative",
                   height: 140,
-                  background: getGradient(title),
+                  background: imageUrl ? "#f3f4f6" : getGradient(title),
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  overflow: "hidden",
                 }}
               >
+                {imageUrl ? (
+                  <Box
+                    component="img"
+                    src={imageUrl}
+                    alt={title}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                    onError={(e) => {
+                      // image broken ho to hide kar do, letter fallback ka space dikh jayega
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <Typography sx={{ fontSize: 48, fontWeight: 800, color: "#fff" }}>
+                    {title.charAt(0).toUpperCase()}
+                  </Typography>
+                )}
+
                 <Chip
                   label="Wishlisted"
                   size="small"
@@ -260,6 +277,7 @@ export default function WishlistTab() {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
+                    zIndex: 2,
                   }}
                 >
                   {isRemoving ? (
@@ -268,9 +286,6 @@ export default function WishlistTab() {
                     <FavoriteRoundedIcon sx={{ fontSize: 18, color: "#ef4444" }} />
                   )}
                 </Box>
-                <Typography sx={{ fontSize: 48, fontWeight: 800, color: "#fff" }}>
-                  {title.charAt(0).toUpperCase()}
-                </Typography>
               </Box>
 
               {/* Content */}
@@ -355,3 +370,4 @@ export default function WishlistTab() {
     </Box>
   );
 }
+
