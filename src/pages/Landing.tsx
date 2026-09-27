@@ -42,6 +42,9 @@ import {
   useGetCartQuery,
   useAddToCartServerMutation,
   useGetCourseRatingQuery,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
 } from "../features/course-browse/api/courseApi";
 
 import { ICourse } from "types/course.types";
@@ -54,6 +57,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+
+
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import CloudQueueIcon from "@mui/icons-material/CloudQueue";
+import InsightsIcon from "@mui/icons-material/Insights";
+
+
 
 // student profiles
 import Alok from "../assets/students_images/Alok.jpg";
@@ -123,7 +136,7 @@ const HexLetter = ({ label, bg }: { label: string; bg: string }) => (
 
 // Skills strip data (hero section)
 const skillChips: { label: string; icon: React.ReactNode }[] = [
-  { label: "C", icon: <HexLetter label="C" bg="#283593" /> },
+  // { label: "C", icon: <HexLetter label="C" bg="#283593" /> },
   { label: "C++", icon: <HexLetter label="C++" bg="#00599C" /> },
   { label: "Java", icon: <FaJava size={16} color="#E76F00" /> },
   { label: "Python", icon: <FaPython size={16} color="#3776AB" /> },
@@ -133,6 +146,8 @@ const skillChips: { label: string; icon: React.ReactNode }[] = [
   { label: "AI / ML", icon: <SiOpenai size={16} color="#111827" /> },
   { label: "Databases", icon: <FaDatabase size={16} color="#2563EB" /> },
   { label: "Git & GitHub", icon: <FaGithub size={16} color="#111827" /> },
+  { label: "DevOps", icon: <CloudQueueIcon sx={{ fontSize: 16 }} /> },
+{ label: "Data Science", icon: <InsightsIcon sx={{ fontSize: 16 }} /> },
 ];
 
 const Landing = () => {
@@ -165,6 +180,18 @@ const Landing = () => {
 
   const [addToCartServer, { isLoading: isAddingToCart }] =
     useAddToCartServerMutation();
+
+  // 🔹 Wishlist
+  const { data: wishlistData } = useGetWishlistQuery();
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+
+  const wishlistItems = Array.isArray(wishlistData?.data)
+    ? wishlistData.data
+    : wishlistData?.data?.items ?? [];
+  const wishlistCourseIds = new Set(
+    wishlistItems.map((item: any) => Number(item.courseId)),
+  );
 
   // 🔹 Categories  "AI/ML", "Web Development", "Data Science", "More Skills"
   const CATEGORIES = [
@@ -327,6 +354,27 @@ const Landing = () => {
     }
   };
 
+  const handleFavorite = async (courseId: number) => {
+    if (!isLoggedIn) return navigate("/sign-up");
+
+    const course = featuredCoursesData.find(
+      (item) => Number(item.id) === courseId,
+    );
+    if (Number(course?.price ?? 0) === 0) {
+      return;
+    }
+
+    try {
+      if (wishlistCourseIds.has(courseId)) {
+        await removeFromWishlist({ courseId }).unwrap();
+      } else {
+        await addToWishlist({ courseId }).unwrap();
+      }
+    } catch (error) {
+      console.error("Failed to update wishlist:", error);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -339,243 +387,256 @@ const Landing = () => {
     >
       {/* HERO SECTION */}
       <Box
-        component="section"
-        sx={{ bgcolor: "rgb(229, 233, 247)", py: { xs: 6, md: 8 } }}
-      >
-        <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            {/* LEFT */}
-            <Grid item xs={12} md={7}>
-              <Typography
-                sx={{
-                  mb: 1.5,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  color: "#5b3cff",
-                }}
-              >
-                Built for the next generation of learners
-              </Typography>
+  component="section"
+  sx={{ bgcolor: "rgb(229, 233, 247)", py: { xs: 6, md: 8 } }}
+>
+  <Container maxWidth="lg">
+    <Grid container spacing={4} alignItems="center">
+      {/* LEFT */}
+      <Grid item xs={12} md={7}>
+        <Typography
+          sx={{
+            mb: 1.5,
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: "#5b3cff",
+          }}
+        >
+          Built for the next generation of learners
+        </Typography>
 
-              <Typography
-                variant="h2"
-                sx={{
-                  fontWeight: 800,
-                  lineHeight: 1.02,
-                  fontSize: { xs: "2rem", sm: "2.6rem", md: "3.25rem" },
-                  color: "#0f1724",
-                }}
-              >
-                Master Skills Faster With
-                <Box component="span" display="block" sx={{ color: "#0b56ff" }}>
-                  AI-powered Learning
-                </Box>
-              </Typography>
-
-              <Typography sx={{ mt: 2, color: "#556080", maxWidth: 620 }}>
-                Learn with personalized courses, intelligent quizzes, practical
-                assignments, and hands-on practice — all in one learning
-                platform designed to help you learn by doing, not by
-                memorizing.
-              </Typography>
-
-              <Stack direction="row" spacing={2} mt={4}>
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{ bgcolor: "#5b3cff" }}
-                  onClick={() => navigate("/browse-course/free")}
-                >
-                  Start Learning Free
-                </Button>
-
-                <Button
-                  variant="outlined"
-                  size="large"
-                  onClick={() => navigate("/browse-courses")}
-                >
-                  Explore Courses
-                </Button>
-              </Stack>
-
-              {/* Search */}
-              <Paper
-                component="form"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  onSearch(query);
-                }}
-                sx={{
-                  mt: 3,
-                  p: "6px 10px",
-                  display: "flex",
-                  alignItems: "center",
-                  width: { xs: "100%", sm: 520 },
-                }}
-              >
-                <IconButton type="submit" sx={{ p: "10px" }}>
-                  <SearchIcon />
-                </IconButton>
-                <InputBase
-                  sx={{ ml: 1, flex: 1 }}
-                  placeholder="Search courses, skills, topics..."
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-                <Button
-                  onClick={() => onSearch(query)}
-                  variant="contained"
-                  size="small"
-                >
-                  Search
-                </Button>
-              </Paper>
-
-              {/* Hero Stats */}
-              <Box
-                sx={{
-                  mt: 3,
-                  display: "flex",
-                  gap: 3,
-                  flexWrap: "wrap",
-                  color: "text.secondary",
-                }}
-              >
-                {stats.map((s, i) => (
-                  <Typography key={i} variant="body2">
-                    <strong style={{ color: theme.palette.primary.main }}>
-                      {s.value}
-                    </strong>{" "}
-                    {s.label}
-                  </Typography>
-                ))}
-              </Box>
-            </Grid>
-
-            {/* RIGHT - Image Section */}
-            <Grid
-              item
-              xs={12}
-              md={5}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Box
-                component="img"
-                src="/heroSetion.png"
-                alt="AI Learning"
-                sx={{
-                  width: "100%",
-                  maxWidth: "700px",
-                  mixBlendMode: "multiply",
-                }}
-              />
-            </Grid>
-          </Grid>
-
-          {/* SKILLS STRIP */}
-          <Box sx={{ mt: { xs: 5, md: 7 } }}>
-            <Typography
-              component="h3"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: 16, md: 18 },
-                color: "#0f1724 !important",
-                mb: 2,
-              }}
-            >
-              Everything You Need to Become a Better Developer
-            </Typography>
-
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                flexWrap: { xs: "wrap", lg: "nowrap" },
-                columnGap: "6px",
-                rowGap: 1.5,
-              }}
-            >
-              {skillChips.map(({ label, icon }) => (
-                <Box
-                  key={label}
-                  component="button"
-                  type="button"
-                  onClick={() => onSearch(label)}
-                  sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    px: "10px",
-                    py: "9px",
-                    flexShrink: 0,
-                    bgcolor: "#f8f9ff",
-                    border: "1px solid",
-                    borderColor: alpha("#5b3cff", 0.1),
-                    borderRadius: "12px",
-                    fontFamily: "inherit",
-                    fontSize: 12.5,
-                    fontWeight: 500,
-                    lineHeight: 1,
-                    color: "#0f1724",
-                    whiteSpace: "nowrap",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    "&:hover": {
-                      bgcolor: "#ffffff",
-                      borderColor: "#5b3cff",
-                      boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.15)}`,
-                      transform: "translateY(-2px)",
-                    },
-                    "&:focus-visible": {
-                      outline: "2px solid #5b3cff",
-                      outlineOffset: 2,
-                    },
-                  }}
-                >
-                  {icon}
-                  {label}
-                </Box>
-              ))}
-
-              {/* Plain button: MUI <Button> ka theme style ise purple fill kar raha tha */}
-              <Box
-                component="button"
-                type="button"
-                onClick={() => navigate("/browse-courses")}
-                sx={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  flexShrink: 0,
-                  ml: { xs: 0, lg: "auto" },
-                  p: 0,
-                  bgcolor: "transparent",
-                  border: 0,
-                  fontFamily: "inherit",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: "#5b3cff",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  "&:hover .arrow": { transform: "translateX(4px)" },
-                }}
-              >
-                Explore All Courses
-                <ArrowForwardIcon
-                  className="arrow"
-                  sx={{ fontSize: 18, transition: "transform 0.2s ease" }}
-                />
-              </Box>
-            </Box>
+        {/* HEADING - 3 LINES */}
+        <Typography
+          variant="h2"
+          sx={{
+            fontWeight: 800,
+            lineHeight: 1.15,
+            fontSize: { xs: "2rem", sm: "2.6rem", md: "3.25rem" },
+            color: "#0f1724",
+          }}
+        >
+          <Box component="span" display="block">
+            Master Skills Faster
           </Box>
-        </Container>
+          <Box component="span" display="block">
+            With AI
+          </Box>
+          <Box component="span" display="block" sx={{ color: "#0b56ff" }}>
+            Powered Learnings
+          </Box>
+        </Typography>
+
+        <Typography sx={{ mt: 2, color: "#556080", maxWidth: 620 }}>
+          Learn with personalized courses, intelligent quizzes, practical
+          assignments, and hands-on practice — all in one learning
+          platform designed to help you learn by doing, not by
+          memorizing.
+        </Typography>
+
+        <Stack direction="row" spacing={2} mt={4}>
+          <Button
+            variant="contained"
+            size="large"
+            sx={{ bgcolor: "#5b3cff" }}
+            onClick={() => navigate("/browse-course/free")}
+          >
+            Start Learning Free
+          </Button>
+
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={() => navigate("/browse-courses")}
+          >
+            Explore Courses
+          </Button>
+        </Stack>
+
+        {/* Search */}
+        <Paper
+          component="form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSearch(query);
+          }}
+          sx={{
+            mt: 3,
+            p: "6px 10px",
+            display: "flex",
+            alignItems: "center",
+            width: { xs: "100%", sm: 520 },
+          }}
+        >
+          <IconButton type="submit" sx={{ p: "10px" }}>
+            <SearchIcon />
+          </IconButton>
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search courses, skills, topics..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <Button
+            onClick={() => onSearch(query)}
+            variant="contained"
+            size="small"
+          >
+            Search
+          </Button>
+        </Paper>
+
+        {/* Hero Stats - UPDATED with icons */}
+        <Box
+          sx={{
+            mt: 3,
+            display: "flex",
+            gap: 3,
+            flexWrap: "wrap",
+            color: "text.secondary",
+          }}
+        >
+          {[
+            { icon: <AssignmentTurnedInIcon sx={{ fontSize: 18 }} />, label: "Practice" },
+            { icon: <RecordVoiceOverIcon sx={{ fontSize: 18 }} />, label: "Mock Interview" },
+            { icon: <BusinessCenterIcon sx={{ fontSize: 18 }} />, label: "Learn for Industries" },
+            { icon: <HelpOutlineIcon sx={{ fontSize: 18 }} />, label: "Ask When You're Stuck" },
+          ].map((s, i) => (
+            <Box
+              key={i}
+              sx={{ display: "flex", alignItems: "center", gap: 0.7 }}
+            >
+              <Box sx={{ color: theme.palette.primary.main, display: "flex" }}>
+                {s.icon}
+              </Box>
+              <Typography variant="body2">{s.label}</Typography>
+            </Box>
+          ))}
+        </Box>
+      </Grid>
+
+      {/* RIGHT - Image Section (BIGGER) */}
+      <Grid
+        item
+        xs={12}
+        md={5}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          component="img"
+          src="/heroSetion.png"
+          alt="AI Learning"
+          sx={{
+            width: "100%",
+            maxWidth: "900px",
+            mixBlendMode: "multiply",
+          }}
+        />
+      </Grid>
+    </Grid>
+
+    {/* SKILLS STRIP */}
+    <Box sx={{ mt: { xs: 5, md: 7 } }}>
+      <Typography
+        component="h3"
+        sx={{
+          fontWeight: 700,
+          fontSize: { xs: 16, md: 18 },
+          color: "#0f1724 !important",
+          mb: 2,
+        }}
+      >
+        Everything You Need to Become a Better Developer
+      </Typography>
+
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexWrap: { xs: "wrap", lg: "nowrap" },
+          columnGap: "6px",
+          rowGap: 1.5,
+        }}
+      >
+        {skillChips.map(({ label, icon }) => (
+          <Box
+            key={label}
+            component="button"
+            type="button"
+            onClick={() => onSearch(label)}
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              px: "10px",
+              py: "9px",
+              flexShrink: 0,
+              bgcolor: "#f8f9ff",
+              border: "1px solid",
+              borderColor: alpha("#5b3cff", 0.1),
+              borderRadius: "12px",
+              fontFamily: "inherit",
+              fontSize: 12.5,
+              fontWeight: 500,
+              lineHeight: 1,
+              color: "#0f1724",
+              whiteSpace: "nowrap",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                bgcolor: "#ffffff",
+                borderColor: "#5b3cff",
+                boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.15)}`,
+                transform: "translateY(-2px)",
+              },
+              "&:focus-visible": {
+                outline: "2px solid #5b3cff",
+                outlineOffset: 2,
+              },
+            }}
+          >
+            {icon}
+            {label}
+          </Box>
+        ))}
+
+        <Box
+          component="button"
+          type="button"
+          onClick={() => navigate("/browse-courses")}
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            flexShrink: 0,
+            ml: { xs: 0, lg: "auto" },
+            p: 0,
+            bgcolor: "transparent",
+            border: 0,
+            fontFamily: "inherit",
+            fontSize: 14,
+            fontWeight: 600,
+            color: "#5b3cff",
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+            "&:hover .arrow": { transform: "translateX(4px)" },
+          }}
+        >
+          Explore All Courses
+          <ArrowForwardIcon
+            className="arrow"
+            sx={{ fontSize: 18, transition: "transform 0.2s ease" }}
+          />
+        </Box>
       </Box>
+    </Box>
+  </Container>
+</Box>
 
       {/* -------------------------------------- */}
       {/* CATEGORIES */}
@@ -751,6 +812,8 @@ const orgName = rawOrgName.replace(/^./, (c) => c.toUpperCase());
         isCourseInCart={isCourseInCart}
         onAddToCart={handleAddToCart}
         isLoadingCart={isAddingToCart}
+        onFavorite={handleFavorite}
+        isFavorite={wishlistCourseIds.has(Number(course.id))}
       />
     </SwiperSlide>
   );

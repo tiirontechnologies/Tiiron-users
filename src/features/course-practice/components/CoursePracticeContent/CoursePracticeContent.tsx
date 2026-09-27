@@ -561,7 +561,7 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
       )}
 
       {/* Practice Tab Content */}
-      {activeSection === "practice" && (
+      {/* {activeSection === "practice" && (
         <Box>
           {tabsData.length > 0 ? (
             <>
@@ -605,7 +605,63 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
             </>
           ) : null}
         </Box>
-      )}
+      )} */}
+
+      {/* Practice Tab Content */}
+{activeSection === "practice" && (
+  <Box>
+    {tabsData.length > 0 ? (
+      <>
+        <Box sx={{ mb: { xs: 1, sm: 1.5 } , pt:3.75 }}>
+          <Typography variant="h6" fontWeight={800} sx={{ color: "#4F46E5" }}>
+            Practice
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5 }}>
+            Test your understanding with quiz questions for this unit
+          </Typography>
+        </Box>
+
+        <Tabs
+          value={activeTab}
+          onChange={(_, val) => setActiveTab(val)}
+          sx={{ 
+            minWidth: "max-content",
+            mb: { xs: 1, sm: 1.25, md: 1.5 },
+            "& .MuiTabs-indicator": {
+              height: { xs: "2px", sm: "2px", md: "3px" }
+            },
+            "& .MuiTabs-flexContainer": { gap: { xs: 0, sm: 0.5 } },
+          }}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {tabsData.map((tab, index) => (
+            <StyledTab key={index} label={tab.label} />
+          ))}
+        </Tabs>
+
+        {tabsData.map((tab, index) => (
+          <CustomTabPanel key={index} value={activeTab} index={index}>
+            <QuestionsPanel
+              questions={tab.contentType.questions}
+              contentTypeId={tab.contentType.id}
+              courseId={courseId}
+              navigate={(path: string, stateObj: any) => {
+                if (stateObj?.state?.question) {
+                  setOverlayCodingQuestion(stateObj.state.question);
+                } else {
+                  navigate(path, stateObj);
+                }
+              }}
+              getUserAnswer={getUserAnswer}
+              handleAnswerChange={handleAnswerChange}
+            />
+          </CustomTabPanel>
+        ))}
+      </>
+    ) : null}
+  </Box>
+)}
 
       {/* Notes Tab */}
       {activeSection === "notes" && (
