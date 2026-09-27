@@ -18,6 +18,7 @@ export interface CertificateTemplate {
   email?: string | null;
   website?: string | null;
   address?: string | null;
+  certificateLogo?: string | null;
 }
 
 export interface GeneratedCertificate {

@@ -5,8 +5,12 @@ import HeroSection from "./components/HeroSection";
 import StatsBar from "./components/StatsCard";
 import TabsSection from "./components/TabsSections";
 
+import { TabProvider } from "./components/TabContext";
+
+
 const StudentProfile: React.FC = () => {
   return (
+    <TabProvider>
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
       <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -30,6 +34,7 @@ const StudentProfile: React.FC = () => {
         </div>
       </div>
     </div>
+    </TabProvider>
   );
 };
 
