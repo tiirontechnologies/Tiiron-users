@@ -13,6 +13,9 @@ import {
   InputBase,
   IconButton,
   Card,
+    Snackbar,
+      // Snackbar,
+  Alert,
   Stack,
   Chip,
   Avatar,
@@ -155,6 +158,12 @@ const Landing = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [query, setQuery] = useState("");
+
+  const [snackbar, setSnackbar] = useState<{
+  open: boolean;
+  message: string;
+  severity: "success" | "info" | "error";
+}>({ open: false, message: "", severity: "success" });
 
   // 🔹 Featured courses
   const {
@@ -354,26 +363,37 @@ const Landing = () => {
     }
   };
 
-  const handleFavorite = async (courseId: number) => {
-    if (!isLoggedIn) return navigate("/sign-up");
+const handleFavorite = async (courseId: number) => {
+  if (!isLoggedIn) return navigate("/sign-up");
 
-    const course = featuredCoursesData.find(
-      (item) => Number(item.id) === courseId,
-    );
-    if (Number(course?.price ?? 0) === 0) {
-      return;
-    }
+  const course = featuredCoursesData.find(
+    (item) => Number(item.id) === courseId,
+  );
+  if (Number(course?.price ?? 0) === 0) {
+    setSnackbar({
+      open: true,
+      message: "Free courses cannot be added to your wishlist.",
+      severity: "info",
+    });
+    return;
+  }
 
-    try {
-      if (wishlistCourseIds.has(courseId)) {
-        await removeFromWishlist({ courseId }).unwrap();
-      } else {
-        await addToWishlist({ courseId }).unwrap();
-      }
-    } catch (error) {
-      console.error("Failed to update wishlist:", error);
+  try {
+    if (wishlistCourseIds.has(courseId)) {
+      await removeFromWishlist({ courseId }).unwrap();
+      setSnackbar({ open: true, message: "Removed from wishlist", severity: "error" });
+    } else {
+      await addToWishlist({ courseId }).unwrap();
+      setSnackbar({ open: true, message: "Added to wishlist", severity: "success" });
     }
-  };
+  } catch (error: any) {
+    setSnackbar({
+      open: true,
+      message: error?.data?.message || "Could not update wishlist.",
+      severity: "error",
+    });
+  }
+};
 
   return (
     <Box
@@ -1405,6 +1425,21 @@ const orgName = rawOrgName.replace(/^./, (c) => c.toUpperCase());
           </Stack>
         </Card>
       </Container>
+
+         <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar((current) => ({ ...current, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          severity={snackbar.severity}
+          variant="filled"
+          onClose={() => setSnackbar((current) => ({ ...current, open: false }))}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

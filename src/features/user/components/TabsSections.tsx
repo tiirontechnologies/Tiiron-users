@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { tabs } from "./Data";
-import type { TabName } from "../Types";
+import { useTabContext } from "./TabContext";
 import CurrentlyLearningCard from "./CurrentLearningCards";
 import AchievementsCard from "./AchivementCards";
 import LearningJourneyCard from "./LearningJourneyCard";
@@ -12,7 +12,7 @@ import WishlistTab from "./WishlistTab";
 import ActivityTab from "./ActivityTab";
 
 const TabsSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabName>("Overview");
+  const { activeTab, setActiveTab } = useTabContext();
 
   return (
     <div className="space-y-4">
