@@ -414,17 +414,17 @@ const Landing = () => {
             fontWeight: 800,
             lineHeight: 1.15,
             fontSize: { xs: "2rem", sm: "2.6rem", md: "3.25rem" },
-            color: "#0f1724",
+            color: "#104731",
           }}
         >
           <Box component="span" display="block">
             Master Skills Faster
           </Box>
           <Box component="span" display="block">
-            With AI
+            With AI Powered
           </Box>
           <Box component="span" display="block" sx={{ color: "#0b56ff" }}>
-            Powered Learnings
+             Learnings
           </Box>
         </Typography>
 
