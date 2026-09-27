@@ -85,7 +85,7 @@ if (!notes.length) {
       }}
     >
       {/* Header */}
-      <Box sx={{ px: 3, pt: 3, pb: 2 }}>
+      <Box sx={{ px: 3,pb: 2 }}>
         <Typography variant="h6" fontWeight={700} sx={{ color: "#1f2937" }}>
           Study Notes
         </Typography>
