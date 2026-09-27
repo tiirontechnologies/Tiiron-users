@@ -388,7 +388,7 @@ const Landing = () => {
       {/* HERO SECTION */}
       <Box
   component="section"
-  sx={{ bgcolor: "rgb(229, 233, 247)", py: { xs: 6, md: 8 } }}
+  sx={{ bgcolor: "rgb(229, 233, 247)", py: { xs: 3, md: 4 } }}
 >
   <Container maxWidth="lg">
     <Grid container spacing={4} alignItems="center">
