@@ -170,7 +170,9 @@ function buildLockedPreview(template: CertificateTemplate, course: any): Certifi
     skills: STATIC_SKILLS,
     remarks: template.mentorRemark ?? "", programSummary: template.programSummary ?? "",
     organizationName: course?.createdBy?.trim() || undefined,
-    organizationLogo: course?.createdByUser?.profile?.picture || undefined,
+    // organizationLogo: course?.createdByUser?.profile?.picture || undefined,
+  // organizationLogo: template.certificateLogo || undefined,
+  organizationLogo: template?.certificateLogo || record.template?.certificateLogo || undefined,
   };
 }
 
@@ -213,7 +215,8 @@ function buildCertificateData(record: GeneratedCertificate): CertificateData {
     website: template?.website || undefined,
     address: template?.address || undefined,
     organizationName: record.course?.createdBy?.trim() || undefined,
-    organizationLogo: record.course?.organizationLogo || record.course?.orgLogo || undefined,
+    // organizationLogo: record.course?.organizationLogo || record.course?.orgLogo || undefined,
+  organizationLogo: template?.certificateLogo || record.template?.certificateLogo || undefined,
     batch: template?.batchId ?? "",
     scores: scoreEntries.map(([label, score], index) => ({
       label: scoreLabel(label),
@@ -416,8 +419,8 @@ const CertificateHeader = ({ cert }: { cert: CertificateData }) => (
         gap: "12px",
       }}
     >
-      <Box sx={{ height: 80, width: 160, flexShrink: 0 }}>
-        {cert.organizationLogo && <Box component="img" src={cert.organizationLogo} alt={`${cert.organizationName ?? "Organization"} Logo`} crossOrigin="anonymous" sx={{ height: 82, width: 150, objectFit: "contain", objectPosition: "left center" }} />}
+      <Box sx={{ height: 80, width: 170, flexShrink: 0 }}>
+        {cert.organizationLogo && <Box component="img" src={cert.organizationLogo} alt={`${cert.organizationName ?? "Organization"} Logo`} crossOrigin="anonymous" sx={{ height: 82, width: 170, objectFit: "contain", objectPosition: "left center" }} />}
       </Box>
       <Box sx={{ textAlign: "center", flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <SchoolIcon
@@ -1303,13 +1306,12 @@ export default function CourseCertificate({
     return {
       ...data,
       organizationName: courseData?.createdBy?.trim() || data.organizationName,
-      organizationLogo: courseData?.createdByUser?.profile?.picture || data.organizationLogo,
     };
   }, [
     certificateRecord,
     courseData?.createdBy,
-    courseData?.createdByUser?.profile?.picture,
   ]);
+
   const previewCert = useMemo(() => {
     if (!certificateTemplate) return null;
     return buildLockedPreview(certificateTemplate, courseData);

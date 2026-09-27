@@ -188,7 +188,7 @@ export default function Courses() {
     try {
       if (wishlistCourseIds.has(courseId)) {
         await removeFromWishlist({ courseId }).unwrap();
-        setSnackbar({ open: true, message: "Removed from wishlist", severity: "success" });
+        setSnackbar({ open: true, message: "Removed from wishlist", severity: "error" });
       } else {
         await addToWishlist({ courseId }).unwrap();
         setSnackbar({ open: true, message: "Added to wishlist", severity: "success" });
