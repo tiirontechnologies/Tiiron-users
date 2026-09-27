@@ -440,7 +440,7 @@ const ProfileCard: React.FC = () => {
       <button
         type="button"
         onClick={() => setIsEditing(true)}
-        className="mt-5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-indigo-200 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50"
+        className="mt-5 flex w-full items-center cursor-pointer  justify-center gap-1.5 rounded-lg border border-indigo-200 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50"
       >
         <Pencil size={14} />
         Edit Profile
