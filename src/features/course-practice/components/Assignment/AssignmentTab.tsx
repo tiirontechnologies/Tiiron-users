@@ -413,103 +413,103 @@ const AssignmentTab: React.FC<{ unitId: number }> = ({ unitId }) => {
     );
   }
 
-   if (assignments.length === 0) {
-  return (
-    <Paper
-      elevation={0}
-      sx={{
-        borderRadius: 3,
-        border: "1px solid #eef0f3",
-        overflow: "hidden",
-        bgcolor: "#fff",
-      }}
-    >
-      {/* Header */}
-      <Box sx={{ px: 3, pt: 3, pb: 2 }}>
-        <Typography variant="h6" fontWeight={700} sx={{ color: "#1f2937" }}>
-          Assignments
-        </Typography>
-        <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5 }}>
-          Practice tasks assigned by your instructor will show up here.
-        </Typography>
-      </Box>
-
-      {/* Minimal empty-state box */}
-      <Box
+  if (assignments.length === 0) {
+    return (
+      <Paper
+        elevation={0}
         sx={{
-          mx: 3,
-          mb: 3,
           borderRadius: 3,
-          py: 5,
-          px: 3,
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          bgcolor: "#fafafa",
-          border: "1px dashed #e5e7eb",
+          border: "1px solid #eef0f3",
+          overflow: "hidden",
+          bgcolor: "#fff",
         }}
       >
-        {/* Icon badge - subtle, no heavy shadow/gradient */}
-        <Box
-          sx={{
-            width: 52,
-            height: 52,
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            bgcolor: "rgba(124,58,237,0.08)",
-            border: "1px solid rgba(124,58,237,0.15)",
-            mb: 2,
-          }}
-        >
-          <AssignmentIcon sx={{ fontSize: 24, color: "#7c3aed" }} />
+        {/* Header */}
+        <Box sx={{ px: 3, pt: 3, pb: 2 }}>
+          <Typography variant="h6" fontWeight={800} sx={{ color: "#4F46E5" }}>
+            Assignments
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5 }}>
+            Practice tasks assigned by your instructor will show up here.
+          </Typography>
         </Box>
 
-        <Chip
-          label="Coming Soon"
-          size="small"
+        {/* Minimal empty-state box */}
+        <Box
           sx={{
-            mb: 1.5,
-            fontWeight: 600,
-            fontSize: "0.7rem",
-            bgcolor: "rgba(124,58,237,0.08)",
-            color: "#7c3aed",
-            border: "none",
+            mx: 3,
+            mb: 3,
+            borderRadius: 3,
+            py: 5,
+            px: 3,
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            bgcolor: "#fafafa",
+            border: "1px dashed #e5e7eb",
           }}
-        />
-
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          sx={{ color: "#374151", mb: 0.5 }}
         >
-          Practice Tasks Are on the Way
-        </Typography>
+          {/* Icon badge - subtle, no heavy shadow/gradient */}
+          <Box
+            sx={{
+              width: 52,
+              height: 52,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "rgba(124,58,237,0.08)",
+              border: "1px solid rgba(124,58,237,0.15)",
+              mb: 2,
+            }}
+          >
+            <AssignmentIcon sx={{ fontSize: 24, color: "#7c3aed" }} />
+          </Box>
 
-        <Typography
-          variant="body2"
-          sx={{ maxWidth: 360, lineHeight: 1.6, color: "#9ca3af" }}
-        >
-          New assignments will appear here once they're published by your
-          instructor.
-        </Typography>
-      </Box>
-    </Paper>
-  );
-}
+          <Chip
+            label="Coming Soon"
+            size="small"
+            sx={{
+              mb: 1.5,
+              fontWeight: 600,
+              fontSize: "0.7rem",
+              bgcolor: "rgba(124,58,237,0.08)",
+              color: "#7c3aed",
+              border: "none",
+            }}
+          />
+
+          <Typography
+            variant="subtitle1"
+            fontWeight={600}
+            sx={{ color: "#374151", mb: 0.5 }}
+          >
+            Practice Tasks Are on the Way
+          </Typography>
+
+          <Typography
+            variant="body2"
+            sx={{ maxWidth: 360, lineHeight: 1.6, color: "#9ca3af" }}
+          >
+            New assignments will appear here once they're published by your
+            instructor.
+          </Typography>
+        </Box>
+      </Paper>
+    );
+  }
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography
-        variant="subtitle2"
-        color="text.secondary"
-        mb={2}
-        fontWeight={600}
-      >
-        {assignments.length} Assignment{assignments.length !== 1 ? "s" : ""}
-      </Typography>
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="h6" fontWeight={800} sx={{ color: "#4F46E5" }}>
+          Assignments
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5 }}>
+          {assignments.length} assignment{assignments.length !== 1 ? "s" : ""} for this unit
+        </Typography>
+      </Box>
 
       {assignments.map((assignment: any) => (
         <AssignmentCard
