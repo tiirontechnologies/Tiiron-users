@@ -13,8 +13,8 @@ import {
   InputBase,
   IconButton,
   Card,
-    Snackbar,
-      // Snackbar,
+  Snackbar,
+  // Snackbar,
   Alert,
   Stack,
   Chip,
@@ -61,15 +61,12 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import CloudQueueIcon from "@mui/icons-material/CloudQueue";
 import InsightsIcon from "@mui/icons-material/Insights";
-
-
 
 // student profiles
 import Alok from "../assets/students_images/Alok.jpg";
@@ -150,7 +147,7 @@ const skillChips: { label: string; icon: React.ReactNode }[] = [
   { label: "Databases", icon: <FaDatabase size={16} color="#2563EB" /> },
   { label: "Git & GitHub", icon: <FaGithub size={16} color="#111827" /> },
   { label: "DevOps", icon: <CloudQueueIcon sx={{ fontSize: 16 }} /> },
-{ label: "Data Science", icon: <InsightsIcon sx={{ fontSize: 16 }} /> },
+  { label: "Data Science", icon: <InsightsIcon sx={{ fontSize: 16 }} /> },
 ];
 
 const Landing = () => {
@@ -160,10 +157,10 @@ const Landing = () => {
   const [query, setQuery] = useState("");
 
   const [snackbar, setSnackbar] = useState<{
-  open: boolean;
-  message: string;
-  severity: "success" | "info" | "error";
-}>({ open: false, message: "", severity: "success" });
+    open: boolean;
+    message: string;
+    severity: "success" | "info" | "error";
+  }>({ open: false, message: "", severity: "success" });
 
   // 🔹 Featured courses
   const {
@@ -197,7 +194,7 @@ const Landing = () => {
 
   const wishlistItems = Array.isArray(wishlistData?.data)
     ? wishlistData.data
-    : wishlistData?.data?.items ?? [];
+    : (wishlistData?.data?.items ?? []);
   const wishlistCourseIds = new Set(
     wishlistItems.map((item: any) => Number(item.courseId)),
   );
@@ -363,37 +360,45 @@ const Landing = () => {
     }
   };
 
-const handleFavorite = async (courseId: number) => {
-  if (!isLoggedIn) return navigate("/sign-up");
+  const handleFavorite = async (courseId: number) => {
+    if (!isLoggedIn) return navigate("/sign-up");
 
-  const course = featuredCoursesData.find(
-    (item) => Number(item.id) === courseId,
-  );
-  if (Number(course?.price ?? 0) === 0) {
-    setSnackbar({
-      open: true,
-      message: "Free courses cannot be added to your wishlist.",
-      severity: "info",
-    });
-    return;
-  }
-
-  try {
-    if (wishlistCourseIds.has(courseId)) {
-      await removeFromWishlist({ courseId }).unwrap();
-      setSnackbar({ open: true, message: "Removed from wishlist", severity: "error" });
-    } else {
-      await addToWishlist({ courseId }).unwrap();
-      setSnackbar({ open: true, message: "Added to wishlist", severity: "success" });
+    const course = featuredCoursesData.find(
+      (item) => Number(item.id) === courseId,
+    );
+    if (Number(course?.price ?? 0) === 0) {
+      setSnackbar({
+        open: true,
+        message: "Free courses cannot be added to your wishlist.",
+        severity: "info",
+      });
+      return;
     }
-  } catch (error: any) {
-    setSnackbar({
-      open: true,
-      message: error?.data?.message || "Could not update wishlist.",
-      severity: "error",
-    });
-  }
-};
+
+    try {
+      if (wishlistCourseIds.has(courseId)) {
+        await removeFromWishlist({ courseId }).unwrap();
+        setSnackbar({
+          open: true,
+          message: "Removed from wishlist",
+          severity: "error",
+        });
+      } else {
+        await addToWishlist({ courseId }).unwrap();
+        setSnackbar({
+          open: true,
+          message: "Added to wishlist",
+          severity: "success",
+        });
+      }
+    } catch (error: any) {
+      setSnackbar({
+        open: true,
+        message: error?.data?.message || "Could not update wishlist.",
+        severity: "error",
+      });
+    }
+  };
 
   return (
     <Box
@@ -407,256 +412,282 @@ const handleFavorite = async (courseId: number) => {
     >
       {/* HERO SECTION */}
       <Box
-  component="section"
-  sx={{ bgcolor: "rgb(229, 233, 247)", py: { xs: 3, md: 4 } }}
->
-  <Container maxWidth="lg">
-    <Grid container spacing={4} alignItems="center">
-      {/* LEFT */}
-      <Grid item xs={12} md={7}>
-        <Typography
-          sx={{
-            mb: 1.5,
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#5b3cff",
-          }}
-        >
-          Built for the next generation of learners
-        </Typography>
+        component="section"
+        sx={{ bgcolor: "rgb(229, 233, 247)", py: { xs: 3, md: 4 } }}
+      >
+        <Container maxWidth="lg">
+          <Grid container spacing={4} alignItems="center">
+            {/* LEFT */}
+            <Grid item xs={12} md={7}>
+              <Typography
+                sx={{
+                  mb: 1.5,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "#5b3cff",
+                }}
+              >
+                Built for the next generation of learners
+              </Typography>
 
-        {/* HEADING - 3 LINES */}
-        <Typography
-          variant="h2"
-          sx={{
-            fontWeight: 800,
-            lineHeight: 1.15,
-            fontSize: { xs: "2rem", sm: "2.6rem", md: "3.25rem" },
-            color: "#104731",
-          }}
-        >
-          <Box component="span" display="block">
-            Master Skills Faster
-          </Box>
-          <Box component="span" display="block">
-            With AI Powered
-          </Box>
-          <Box component="span" display="block" sx={{ color: "#0b56ff" }}>
-             Learnings
-          </Box>
-        </Typography>
+              {/* HEADING - 3 LINES */}
+              <Typography
+                variant="h2"
+                sx={{
+                  fontWeight: 800,
+                  lineHeight: 1.15,
+                  fontSize: { xs: "2rem", sm: "2.6rem", md: "3.25rem" },
+                  color: "#0f1f4d",
+                }}
+              >
+                <Box component="span" display="block">
+                  Master Skills Faster
+                </Box>
+                <Box component="span" display="block" sx={{ color: "#1d3fbf" }}>
+                  With AI Powered
+                </Box>
+                <Box
+                  component="span"
+                  display="block"
+                  sx={{
+                    background: "linear-gradient(90deg, #2563EB, #6D4AFF)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    width: "fit-content",
+                  }}
+                >
+                  Learning
+                </Box>
+              </Typography>
 
-        <Typography sx={{ mt: 2, color: "#556080", maxWidth: 620 }}>
-          Learn with personalized courses, intelligent quizzes, practical
-          assignments, and hands-on practice — all in one learning
-          platform designed to help you learn by doing, not by
-          memorizing.
-        </Typography>
+              <Typography sx={{ mt: 2, color: "#556080", maxWidth: 620 }}>
+                Learn with personalized courses, intelligent quizzes, practical
+                assignments, and hands-on practice — all in one learning
+                platform designed to help you learn by doing, not by memorizing.
+              </Typography>
 
-        <Stack direction="row" spacing={2} mt={4}>
-          <Button
-            variant="contained"
-            size="large"
-            sx={{ bgcolor: "#5b3cff" }}
-            onClick={() => navigate("/browse-course/free")}
-          >
-            Start Learning Free
-          </Button>
+              <Stack direction="row" spacing={2} mt={4}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  sx={{ bgcolor: "#5b3cff" }}
+                  onClick={() => navigate("/browse-course/free")}
+                >
+                  Start Learning Free
+                </Button>
 
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={() => navigate("/browse-courses")}
-          >
-            Explore Courses
-          </Button>
-        </Stack>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => navigate("/browse-courses")}
+                >
+                  Explore Courses
+                </Button>
+              </Stack>
 
-        {/* Search */}
-        <Paper
-          component="form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSearch(query);
-          }}
-          sx={{
-            mt: 3,
-            p: "6px 10px",
-            display: "flex",
-            alignItems: "center",
-            width: { xs: "100%", sm: 520 },
-          }}
-        >
-          <IconButton type="submit" sx={{ p: "10px" }}>
-            <SearchIcon />
-          </IconButton>
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Search courses, skills, topics..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <Button
-            onClick={() => onSearch(query)}
-            variant="contained"
-            size="small"
-          >
-            Search
-          </Button>
-        </Paper>
+              {/* Search */}
+              <Paper
+                component="form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  onSearch(query);
+                }}
+                sx={{
+                  mt: 3,
+                  p: "6px 10px",
+                  display: "flex",
+                  alignItems: "center",
+                  width: { xs: "100%", sm: 520 },
+                }}
+              >
+                <IconButton type="submit" sx={{ p: "10px" }}>
+                  <SearchIcon />
+                </IconButton>
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder="Search courses, skills, topics..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+                <Button
+                  onClick={() => onSearch(query)}
+                  variant="contained"
+                  size="small"
+                >
+                  Search
+                </Button>
+              </Paper>
 
-        {/* Hero Stats - UPDATED with icons */}
-        <Box
-          sx={{
-            mt: 3,
-            display: "flex",
-            gap: 3,
-            flexWrap: "wrap",
-            color: "text.secondary",
-          }}
-        >
-          {[
-            { icon: <AssignmentTurnedInIcon sx={{ fontSize: 18 }} />, label: "Practice" },
-            { icon: <RecordVoiceOverIcon sx={{ fontSize: 18 }} />, label: "Mock Interview" },
-            { icon: <BusinessCenterIcon sx={{ fontSize: 18 }} />, label: "Learn for Industries" },
-            { icon: <HelpOutlineIcon sx={{ fontSize: 18 }} />, label: "Ask When You're Stuck" },
-          ].map((s, i) => (
-            <Box
-              key={i}
-              sx={{ display: "flex", alignItems: "center", gap: 0.7 }}
-            >
-              <Box sx={{ color: theme.palette.primary.main, display: "flex" }}>
-                {s.icon}
+              {/* Hero Stats - UPDATED with icons */}
+              <Box
+                sx={{
+                  mt: 3,
+                  display: "flex",
+                  gap: 3,
+                  flexWrap: "wrap",
+                  color: "text.secondary",
+                }}
+              >
+                {[
+                  {
+                    icon: <AssignmentTurnedInIcon sx={{ fontSize: 18 }} />,
+                    label: "Practice",
+                  },
+                  {
+                    icon: <RecordVoiceOverIcon sx={{ fontSize: 18 }} />,
+                    label: "Mock Interview",
+                  },
+                  {
+                    icon: <BusinessCenterIcon sx={{ fontSize: 18 }} />,
+                    label: "Learn for Industries",
+                  },
+                  {
+                    icon: <HelpOutlineIcon sx={{ fontSize: 18 }} />,
+                    label: "Ask When You're Stuck",
+                  },
+                ].map((s, i) => (
+                  <Box
+                    key={i}
+                    sx={{ display: "flex", alignItems: "center", gap: 0.7 }}
+                  >
+                    <Box
+                      sx={{
+                        color: theme.palette.primary.main,
+                        display: "flex",
+                      }}
+                    >
+                      {s.icon}
+                    </Box>
+                    <Typography variant="body2">{s.label}</Typography>
+                  </Box>
+                ))}
               </Box>
-              <Typography variant="body2">{s.label}</Typography>
+            </Grid>
+
+            {/* RIGHT - Image Section (BIGGER) */}
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                component="img"
+                src="/heroSetion.png"
+                alt="AI Learning"
+                sx={{
+                  width: "100%",
+                  maxWidth: "900px",
+                  mixBlendMode: "multiply",
+                }}
+              />
+            </Grid>
+          </Grid>
+
+          {/* SKILLS STRIP */}
+          <Box sx={{ mt: { xs: 5, md: 7 } }}>
+            <Typography
+              component="h3"
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: 16, md: 18 },
+                color: "#0f1724 !important",
+                mb: 2,
+              }}
+            >
+              Everything You Need to Become a Better Developer
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexWrap: { xs: "wrap", lg: "nowrap" },
+                columnGap: "6px",
+                rowGap: 1.5,
+              }}
+            >
+              {skillChips.map(({ label, icon }) => (
+                <Box
+                  key={label}
+                  component="button"
+                  type="button"
+                  onClick={() => onSearch(label)}
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    px: "10px",
+                    py: "9px",
+                    flexShrink: 0,
+                    bgcolor: "#f8f9ff",
+                    border: "1px solid",
+                    borderColor: alpha("#5b3cff", 0.1),
+                    borderRadius: "12px",
+                    fontFamily: "inherit",
+                    fontSize: 12.5,
+                    fontWeight: 500,
+                    lineHeight: 1,
+                    color: "#0f1724",
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      bgcolor: "#ffffff",
+                      borderColor: "#5b3cff",
+                      boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.15)}`,
+                      transform: "translateY(-2px)",
+                    },
+                    "&:focus-visible": {
+                      outline: "2px solid #5b3cff",
+                      outlineOffset: 2,
+                    },
+                  }}
+                >
+                  {icon}
+                  {label}
+                </Box>
+              ))}
+
+              <Box
+                component="button"
+                type="button"
+                onClick={() => navigate("/browse-courses")}
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  flexShrink: 0,
+                  ml: { xs: 0, lg: "auto" },
+                  p: 0,
+                  bgcolor: "transparent",
+                  border: 0,
+                  fontFamily: "inherit",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "#5b3cff",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  "&:hover .arrow": { transform: "translateX(4px)" },
+                }}
+              >
+                Explore All Courses
+                <ArrowForwardIcon
+                  className="arrow"
+                  sx={{ fontSize: 18, transition: "transform 0.2s ease" }}
+                />
+              </Box>
             </Box>
-          ))}
-        </Box>
-      </Grid>
-
-      {/* RIGHT - Image Section (BIGGER) */}
-      <Grid
-        item
-        xs={12}
-        md={5}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box
-          component="img"
-          src="/heroSetion.png"
-          alt="AI Learning"
-          sx={{
-            width: "100%",
-            maxWidth: "900px",
-            mixBlendMode: "multiply",
-          }}
-        />
-      </Grid>
-    </Grid>
-
-    {/* SKILLS STRIP */}
-    <Box sx={{ mt: { xs: 5, md: 7 } }}>
-      <Typography
-        component="h3"
-        sx={{
-          fontWeight: 700,
-          fontSize: { xs: 16, md: 18 },
-          color: "#0f1724 !important",
-          mb: 2,
-        }}
-      >
-        Everything You Need to Become a Better Developer
-      </Typography>
-
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          flexWrap: { xs: "wrap", lg: "nowrap" },
-          columnGap: "6px",
-          rowGap: 1.5,
-        }}
-      >
-        {skillChips.map(({ label, icon }) => (
-          <Box
-            key={label}
-            component="button"
-            type="button"
-            onClick={() => onSearch(label)}
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              px: "10px",
-              py: "9px",
-              flexShrink: 0,
-              bgcolor: "#f8f9ff",
-              border: "1px solid",
-              borderColor: alpha("#5b3cff", 0.1),
-              borderRadius: "12px",
-              fontFamily: "inherit",
-              fontSize: 12.5,
-              fontWeight: 500,
-              lineHeight: 1,
-              color: "#0f1724",
-              whiteSpace: "nowrap",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-              "&:hover": {
-                bgcolor: "#ffffff",
-                borderColor: "#5b3cff",
-                boxShadow: `0 4px 12px ${alpha("#5b3cff", 0.15)}`,
-                transform: "translateY(-2px)",
-              },
-              "&:focus-visible": {
-                outline: "2px solid #5b3cff",
-                outlineOffset: 2,
-              },
-            }}
-          >
-            {icon}
-            {label}
           </Box>
-        ))}
-
-        <Box
-          component="button"
-          type="button"
-          onClick={() => navigate("/browse-courses")}
-          sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            flexShrink: 0,
-            ml: { xs: 0, lg: "auto" },
-            p: 0,
-            bgcolor: "transparent",
-            border: 0,
-            fontFamily: "inherit",
-            fontSize: 14,
-            fontWeight: 600,
-            color: "#5b3cff",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            "&:hover .arrow": { transform: "translateX(4px)" },
-          }}
-        >
-          Explore All Courses
-          <ArrowForwardIcon
-            className="arrow"
-            sx={{ fontSize: 18, transition: "transform 0.2s ease" }}
-          />
-        </Box>
+        </Container>
       </Box>
-    </Box>
-  </Container>
-</Box>
 
       {/* -------------------------------------- */}
       {/* CATEGORIES */}
@@ -685,7 +716,6 @@ const handleFavorite = async (courseId: number) => {
               </Grid>
             ))}
           </Grid>
-          
         </Container>
       </Box>
 
@@ -795,344 +825,395 @@ const handleFavorite = async (courseId: number) => {
               }}
               style={{ paddingBottom: 40 }}
             >
-           {sortedFeaturedCourses?.map((course) => {
-  const rating = Number(course.averageRating) || 0;
-  const reviewCount = Number(course.totalRatings) || 0;
+              {sortedFeaturedCourses?.map((course) => {
+                const rating = Number(course.averageRating) || 0;
+                const reviewCount = Number(course.totalRatings) || 0;
 
-  const isCourseInCart =
-    cartData?.data?.items?.some(
-      (item) => item.courseId === Number(course.id),
-    ) || false;
+                const isCourseInCart =
+                  cartData?.data?.items?.some(
+                    (item) => item.courseId === Number(course.id),
+                  ) || false;
 
-const rawOrgName =
-  course.createdBy?.trim() ||
-  `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
-  "Organization";
+                const rawOrgName =
+                  course.createdBy?.trim() ||
+                  `${course.createdByUser?.firstName || ""} ${course.createdByUser?.lastName || ""}`.trim() ||
+                  "Organization";
 
-const orgName = rawOrgName.replace(/^./, (c) => c.toUpperCase());
+                const orgName = rawOrgName.replace(/^./, (c) =>
+                  c.toUpperCase(),
+                );
 
-
-
-  // ORG | INSTRUCTOR
-  const orgWithInstructor = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
-  return (
-    <SwiperSlide key={course.id}>
-      <CourseCardWrapper
-        id={course.id}
-        thumbnailSrc={course.image}
-        tags={course.tags}
-        title={course.title}
-        chapters={course.totalChapters}
-        rating={rating}
-        reviewCount={reviewCount}
-        instructor={orgWithInstructor}
-        categories={course.categories}
-        price={course.price}
-        navigatePath={(id) => `/course-glossary/${id}`}
-        isCourseInCart={isCourseInCart}
-        onAddToCart={handleAddToCart}
-        isLoadingCart={isAddingToCart}
-        onFavorite={handleFavorite}
-        isFavorite={wishlistCourseIds.has(Number(course.id))}
-      />
-    </SwiperSlide>
-  );
-})}
+                // ORG | INSTRUCTOR
+                const orgWithInstructor = `${course.instructor?.trim() || "Instructor"} | ${orgName}`;
+                return (
+                  <SwiperSlide key={course.id}>
+                    <CourseCardWrapper
+                      id={course.id}
+                      thumbnailSrc={course.image}
+                      tags={course.tags}
+                      title={course.title}
+                      chapters={course.totalChapters}
+                      rating={rating}
+                      reviewCount={reviewCount}
+                      instructor={orgWithInstructor}
+                      categories={course.categories}
+                      price={course.price}
+                      navigatePath={(id) => `/course-glossary/${id}`}
+                      isCourseInCart={isCourseInCart}
+                      onAddToCart={handleAddToCart}
+                      isLoadingCart={isAddingToCart}
+                      onFavorite={handleFavorite}
+                      isFavorite={wishlistCourseIds.has(Number(course.id))}
+                    />
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
           )}
         </Container>
       </Box>
 
       {/* ================= TRENDING COURSES SECTION ================= */}
-  <Box
-  component="section"
-  sx={{ py: 6, bgcolor: alpha(theme.palette.grey[50], 0.5) }}
->
-  <Container maxWidth="lg">
-    <Typography
-      variant="h5"
-      fontWeight={700}
-      sx={{
-        fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
-        color: "#0f1724",
-        mb: 4,
-      }}
-    >
-      Trending courses
-    </Typography>
-
-    {(() => {
-      const allCourses = featuredCoursesData || [];
-
-      const getOrgName = (course) => {
-        const u = course.createdByUser;
-        if (u && (u.firstName || u.lastName)) {
-          return `${u.firstName || ""} ${u.lastName || ""}`.trim();
-        }
-        return course.createdBy || "Tiiron";
-      };
-
-      const getOrgPicture = (course) =>
-        course.createdByUser?.profile?.picture || null;
-
-      const getRating = (course) =>
-        Number(course.averageRating ?? course.rating) || 0;
-
-      // ----- Most popular ->
-      const mostPopular = [...allCourses]
-        .sort((a, b) => getRating(b) - getRating(a))
-        .slice(0, 3);
-
-      // ----- Weekly spotlight -> 
-   const weeklySpotlight = [...allCourses]
-  .sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  )
-  .slice(0, 3);
-
-      // ----- In-demand AI skills ->
-      const isAIRelated = (course) => {
-        const haystack = [
-          course.categories,
-          course.instructor,
-          ...(course.tags || []),
-          course.title,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-        return (
-          haystack.includes("ai") ||
-          haystack.includes("ml") ||
-          haystack.includes("artificial intelligence") ||
-          haystack.includes("machine learning")
-        );
-      };
-
-      const inDemandAI = allCourses.filter(isAIRelated).slice(0, 3);
-
-      // ---------- reusable card ----------
-      const CourseCard = ({ course, badgeColor }) => {
-        const rating = getRating(course);
-        const orgName = getOrgName(course);
-        const orgPicture = getOrgPicture(course);
-
-        return (
-          <Card
-            key={course.id}
-            elevation={0}
+      <Box
+        component="section"
+        sx={{ py: 6, bgcolor: alpha(theme.palette.grey[50], 0.5) }}
+      >
+        <Container maxWidth="lg">
+          <Typography
+            variant="h5"
+            fontWeight={700}
             sx={{
-              bgcolor: "#ffffff",
-              borderRadius: 2,
-              overflow: "hidden",
-              cursor: "pointer",
-              mb: 2,
-              transition: "all 0.3s ease",
-              border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
-              "&:hover": {
-                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
-                transform: "translateY(-2px)",
-              },
+              fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+              color: "#0f1724",
+              mb: 4,
             }}
-            onClick={() => navigate(`/course-glossary/${course.id}`)}
           >
-            <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
-              {/* IMAGE */}
-              <Box
-                sx={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 1.5,
-                  overflow: "hidden",
-                  flexShrink: 0,
-                  bgcolor: theme.palette.grey[200],
-                }}
-              >
-                {course.image ? (
-                  <CardMedia
-                    component="img"
-                    image={course.image}
-                    alt={course.title}
-                    sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: theme.palette.text.secondary,
-                      fontSize: "0.75rem",
-                    }}
-                  >
-                    No Image
-                  </Box>
-                )}
-              </Box>
+            Trending courses
+          </Typography>
 
-              {/* CONTENT */}
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                {/* ORG NAME */}
-                <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
-                  {orgPicture ? (
+          {(() => {
+            const allCourses = featuredCoursesData || [];
+
+            const getOrgName = (course) => {
+              const u = course.createdByUser;
+              if (u && (u.firstName || u.lastName)) {
+                return `${u.firstName || ""} ${u.lastName || ""}`.trim();
+              }
+              return course.createdBy || "Tiiron";
+            };
+
+            const getOrgPicture = (course) =>
+              course.createdByUser?.profile?.picture || null;
+
+            const getRating = (course) =>
+              Number(course.averageRating ?? course.rating) || 0;
+
+            // ----- Most popular ->
+            const mostPopular = [...allCourses]
+              .sort((a, b) => getRating(b) - getRating(a))
+              .slice(0, 3);
+
+            // ----- Weekly spotlight ->
+            const weeklySpotlight = [...allCourses]
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime(),
+              )
+              .slice(0, 3);
+
+            // ----- In-demand AI skills ->
+            const isAIRelated = (course) => {
+              const haystack = [
+                course.categories,
+                course.instructor,
+                ...(course.tags || []),
+                course.title,
+              ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+              return (
+                haystack.includes("ai") ||
+                haystack.includes("ml") ||
+                haystack.includes("artificial intelligence") ||
+                haystack.includes("machine learning")
+              );
+            };
+
+            const inDemandAI = allCourses.filter(isAIRelated).slice(0, 3);
+
+            // ---------- reusable card ----------
+            const CourseCard = ({ course, badgeColor }) => {
+              const rating = getRating(course);
+              const orgName = getOrgName(course);
+              const orgPicture = getOrgPicture(course);
+
+              return (
+                <Card
+                  key={course.id}
+                  elevation={0}
+                  sx={{
+                    bgcolor: "#ffffff",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    cursor: "pointer",
+                    mb: 2,
+                    transition: "all 0.3s ease",
+                    border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                    "&:hover": {
+                      boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                  onClick={() => navigate(`/course-glossary/${course.id}`)}
+                >
+                  <Stack direction="row" spacing={2} sx={{ p: 1.5 }}>
+                    {/* IMAGE */}
                     <Box
-                      component="img"
-                      src={orgPicture}
-                      alt={orgName}
                       sx={{
-                        width: 16,
-                        height: 16,
-                        borderRadius: "50%",
-                        objectFit: "cover",
+                        width: 80,
+                        height: 80,
+                        borderRadius: 1.5,
+                        overflow: "hidden",
                         flexShrink: 0,
-                      }}
-                    />
-                  ) : (
-                    <Box
-                      sx={{
-                        width: 16,
-                        height: 16,
-                        borderRadius: "50%",
-                        bgcolor: badgeColor,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.625rem",
-                        color: "#ffffff",
-                        fontWeight: 700,
-                        flexShrink: 0,
+                        bgcolor: theme.palette.grey[200],
                       }}
                     >
-                      {orgName?.[0]?.toUpperCase() || "T"}
+                      {course.image ? (
+                        <CardMedia
+                          component="img"
+                          image={course.image}
+                          alt={course.title}
+                          sx={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : (
+                        <Box
+                          sx={{
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: theme.palette.text.secondary,
+                            fontSize: "0.75rem",
+                          }}
+                        >
+                          No Image
+                        </Box>
+                      )}
                     </Box>
-                  )}
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      color: "#556080",
-                      fontSize: "0.75rem",
-                      fontWeight: 500,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {orgName}
-                  </Typography>
-                </Stack>
 
-                {/* TITLE */}
-                <Typography
-                  variant="body2"
+                    {/* CONTENT */}
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      {/* ORG NAME */}
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        spacing={0.5}
+                        sx={{ mb: 0.5 }}
+                      >
+                        {orgPicture ? (
+                          <Box
+                            component="img"
+                            src={orgPicture}
+                            alt={orgName}
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                              flexShrink: 0,
+                            }}
+                          />
+                        ) : (
+                          <Box
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: "50%",
+                              bgcolor: badgeColor,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: "0.625rem",
+                              color: "#ffffff",
+                              fontWeight: 700,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {orgName?.[0]?.toUpperCase() || "T"}
+                          </Box>
+                        )}
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "#556080",
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {orgName}
+                        </Typography>
+                      </Stack>
+
+                      {/* TITLE */}
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontWeight: 600,
+                          color: "#0f1724",
+                          fontSize: "0.875rem",
+                          mb: 0.5,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          lineHeight: 1.3,
+                        }}
+                      >
+                        {course.title}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "#556080",
+                          fontSize: "0.6875rem",
+                          mb: 0.5,
+                          display: "block",
+                        }}
+                      >
+                        {course.instructor?.trim() || "Instructor"}
+                      </Typography>
+
+                      {/* CATEGORY */}
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: "#556080",
+                          fontSize: "0.6875rem",
+                          mb: 0.5,
+                          display: "block",
+                        }}
+                      >
+                        {course.categories ||
+                          course.tags?.[0] ||
+                          "More Skills "}
+                      </Typography>
+
+                      {/* RATING */}
+                      <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <Rating
+                          value={rating}
+                          precision={0.1}
+                          readOnly
+                          size="small"
+                          sx={{
+                            "& .MuiRating-iconFilled": { color: "#FFB400" },
+                            "& .MuiRating-iconEmpty": { color: "#E2E8F0" },
+                            "& .MuiRating-icon": { fontSize: "0.875rem" },
+                          }}
+                        />
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "#556080",
+                            fontSize: "0.75rem",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {rating.toFixed(1)}
+                        </Typography>
+                      </Stack>
+                    </Box>
+                  </Stack>
+                </Card>
+              );
+            };
+
+            const ColumnBox = ({ title, courses, badgeColor }) => (
+              <Grid item xs={12} md={4}>
+                <Box
                   sx={{
-                    fontWeight: 600,
-                    color: "#0f1724",
-                    fontSize: "0.875rem",
-                    mb: 0.5,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    lineHeight: 1.3,
+                    bgcolor: alpha(theme.palette.primary.main, 0.04),
+                    borderRadius: 3,
+                    p: 3,
+                    height: "100%",
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
                   }}
                 >
-                  {course.title}
-                </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
-                >
-                  {course.instructor?.trim() || "Instructor"}
-                </Typography>
-
-                {/* CATEGORY */}
-                <Typography
-                  variant="caption"
-                  sx={{ color: "#556080", fontSize: "0.6875rem", mb: 0.5, display: "block" }}
-                >
-                  {course.categories || course.tags?.[0] || "More Skills "}
-                </Typography>
-
-                {/* RATING */}
-                <Stack direction="row" alignItems="center" spacing={0.5}>
-                  <Rating
-                    value={rating}
-                    precision={0.1}
-                    readOnly
-                    size="small"
-                    sx={{
-                      "& .MuiRating-iconFilled": { color: "#FFB400" },
-                      "& .MuiRating-iconEmpty": { color: "#E2E8F0" },
-                      "& .MuiRating-icon": { fontSize: "0.875rem" },
-                    }}
-                  />
-                  <Typography
-                    variant="caption"
-                    sx={{ color: "#556080", fontSize: "0.75rem", fontWeight: 600 }}
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{ mb: 3 }}
                   >
-                    {rating.toFixed(1)}
-                  </Typography>
-                </Stack>
-              </Box>
-            </Stack>
-          </Card>
-        );
-      };
+                    <Typography
+                      variant="h6"
+                      fontWeight={700}
+                      sx={{ color: "#0f1724", fontSize: "1.125rem" }}
+                    >
+                      {title}
+                    </Typography>
+                    <ArrowForwardIcon
+                      sx={{
+                        fontSize: "1.25rem",
+                        color: theme.palette.primary.main,
+                        cursor: "pointer",
+                        "&:hover": { transform: "translateX(4px)" },
+                        transition: "transform 0.3s ease",
+                      }}
+                    />
+                  </Stack>
 
-      const ColumnBox = ({ title, courses, badgeColor }) => (
-        <Grid item xs={12} md={4}>
-          <Box
-            sx={{
-              bgcolor: alpha(theme.palette.primary.main, 0.04),
-              borderRadius: 3,
-              p: 3,
-              height: "100%",
-              border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-            }}
-          >
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
-              <Typography variant="h6" fontWeight={700} sx={{ color: "#0f1724", fontSize: "1.125rem" }}>
-                {title}
-              </Typography>
-              <ArrowForwardIcon
-                sx={{
-                  fontSize: "1.25rem",
-                  color: theme.palette.primary.main,
-                  cursor: "pointer",
-                  "&:hover": { transform: "translateX(4px)" },
-                  transition: "transform 0.3s ease",
-                }}
-              />
-            </Stack>
+                  {courses.length === 0 ? (
+                    <Typography variant="caption" color="text.secondary">
+                      No courses available
+                    </Typography>
+                  ) : (
+                    courses.map((course) => (
+                      <CourseCard
+                        key={course.id}
+                        course={course}
+                        badgeColor={badgeColor}
+                      />
+                    ))
+                  )}
+                </Box>
+              </Grid>
+            );
 
-            {courses.length === 0 ? (
-              <Typography variant="caption" color="text.secondary">
-                No courses available
-              </Typography>
-            ) : (
-              courses.map((course) => (
-                <CourseCard key={course.id} course={course} badgeColor={badgeColor} />
-              ))
-            )}
-          </Box>
-        </Grid>
-      );
-
-      return (
-        <Grid container spacing={3}>
-          <ColumnBox title="Most popular" courses={mostPopular} badgeColor="#2563EB" />
-          <ColumnBox title="Weekly spotlight" courses={weeklySpotlight} badgeColor="#16A34A" />
-          <ColumnBox title="In-demand AI skills" courses={inDemandAI} badgeColor="#9333EA" />
-        </Grid>
-      );
-    })()}
-  </Container>
-</Box>
+            return (
+              <Grid container spacing={3}>
+                <ColumnBox
+                  title="Most popular"
+                  courses={mostPopular}
+                  badgeColor="#2563EB"
+                />
+                <ColumnBox
+                  title="Weekly spotlight"
+                  courses={weeklySpotlight}
+                  badgeColor="#16A34A"
+                />
+                <ColumnBox
+                  title="In-demand AI skills"
+                  courses={inDemandAI}
+                  badgeColor="#9333EA"
+                />
+              </Grid>
+            );
+          })()}
+        </Container>
+      </Box>
 
       {/* -------------------------------------- */}
       {/* LEARNING PATHS */}
@@ -1426,7 +1507,7 @@ const orgName = rawOrgName.replace(/^./, (c) => c.toUpperCase());
         </Card>
       </Container>
 
-         <Snackbar
+      <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={() => setSnackbar((current) => ({ ...current, open: false }))}
@@ -1435,7 +1516,9 @@ const orgName = rawOrgName.replace(/^./, (c) => c.toUpperCase());
         <Alert
           severity={snackbar.severity}
           variant="filled"
-          onClose={() => setSnackbar((current) => ({ ...current, open: false }))}
+          onClose={() =>
+            setSnackbar((current) => ({ ...current, open: false }))
+          }
         >
           {snackbar.message}
         </Alert>

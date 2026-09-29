@@ -49,7 +49,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ data }) => {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl px-5 pb-8 pt-16 text-white shadow-sm sm:px-8 sm:py-9"
+      className="relative overflow-hidden rounded-2xl px-5 pb-8 pt-16 text-white shadow-sm sm:px-8 sm:py-6"
       style={{
         backgroundImage: `url(${ProfileBanner})`,
         backgroundSize: "cover",
@@ -81,10 +81,10 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ data }) => {
         </button>
       </div>
 
-      <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-sm text-slate-300">Hi, I'm</p>
-          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl lg:text-4xl">
+          <h1 className="mt-1 text-2xl  py-3 font-extrabold sm:text-3xl lg:text-4xl">
             {data.name || "Coming soon"}
           </h1>
           <p className="mt-1 text-sm font-medium text-slate-300">
@@ -100,13 +100,9 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ data }) => {
             {data.tags?.length > 0 ? (
               data.tags.map((tag) => <Tag key={tag} icon={GraduationCap} text={tag} />)
             ) : (
-              <Tag icon={GraduationCap} text="Software Engineer" />
+              <Tag icon={GraduationCap} text={data.program || "Software Engineer"} />
             )}
-            <Tag icon={MapPin} text="TiironTechnologies" />
-          </div>
-
-          <div className="mt-5 flex max-w-max gap-2 rounded-xl bg-white/5 p-3 backdrop-blur">
-            <div className="w-px bg-white/10" />
+            <Tag icon={MapPin} text={data.address || "TiironTechnologies"} />
           </div>
         </div>
       </div>
