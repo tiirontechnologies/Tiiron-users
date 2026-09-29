@@ -67,5 +67,7 @@ return {
   microStats: [],
   achievements: [],
   socialLinks: buildSocialLinks(profile),
+   address: profile.address || '',
+  program: profile.Program || '',
 };
 }

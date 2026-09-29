@@ -43,28 +43,53 @@ const TabsSection: React.FC = () => {
       </div>
 
       {/* Content — apna alag container */}
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-        {activeTab === "Overview" && (
-          <div className="grid grid-cols-1 gap-5 p-4 sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.85fr)]">
-            <CurrentlyLearningCard />
-            <AchievementsCard />
-            <div className="flex flex-col gap-5 lg:col-span-1">
-              <LearningJourneyCard />
-              <SkillsCard />
+      {/* ============================================================
+          CONTENT AREA — same padding for every tab
+      ============================================================ */}
+
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="p-4 sm:p-5 lg:p-6">
+
+          {/* ======================================================
+              OVERVIEW TAB
+          ======================================================= */}
+          {activeTab === "Overview" && (
+            <div>
+              {/* TOP ROW: Currently Learning + Recent Activities */}
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:items-start">
+                <div className="min-w-0">
+                  <CurrentlyLearningCard />
+                </div>
+                <div className="min-w-0">
+                  <AchievementsCard />
+                </div>
+              </div>
+
+              {/* BOTTOM ROW: Learning Journey + Course Coverage */}
+              <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2 lg:items-start">
+                <div className="min-w-0">
+                  <LearningJourneyCard />
+                </div>
+                <div className="min-w-0">
+                  <SkillsCard />
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === "My Courses" && <MyCoursesTab />}
-        {activeTab === "Certificates" && <CertificatesTab />}
-        {activeTab === "Wishlist" && <WishlistTab />}
-        {activeTab === "Activity" && <ActivityTab />}
+          {/* ====================================================== */}
+          {activeTab === "My Courses" && <MyCoursesTab />}
+          {activeTab === "Certificates" && <CertificatesTab />}
+          {activeTab === "Wishlist" && <WishlistTab />}
+          {activeTab === "Activity" && <ActivityTab />}
 
-        {activeTab !== "Overview" &&
-          activeTab !== "My Courses" &&
-          activeTab !== "Certificates" &&
-          activeTab !== "Wishlist" &&
-          activeTab !== "Activity" && <ComingSoon />}
+          {activeTab !== "Overview" &&
+            activeTab !== "My Courses" &&
+            activeTab !== "Certificates" &&
+            activeTab !== "Wishlist" &&
+            activeTab !== "Activity" && <ComingSoon />}
+
+        </div>
       </div>
     </div>
   );

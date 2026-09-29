@@ -110,6 +110,7 @@ export default function WishlistTab() {
           justifyContent: "center",
           textAlign: "center",
           px: 3,
+          mt:2.5,
         }}
       >
         <Box
