@@ -54,7 +54,7 @@ import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
 import { useAuth } from "../hooks/useAuth";
 import Skeleton from "@mui/material/Skeleton";
-import heroSetion from "../assets/images/heroSetion.png";
+import glossaryOrganizationImage from "../assets/Glossary_Organization_Img.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -200,12 +200,25 @@ const Landing = () => {
   );
 
   // 🔹 Categories  "AI/ML", "Web Development", "Data Science", "More Skills"
-  const CATEGORIES = [
-    { id: "DataScience", title: "Data Science", count: 3 },
-    { id: "WebDevelopment", title: "Web Development", count: 5 },
-    { id: "AI/ML", title: "AI & Machine Learning", count: 2 },
-    { id: "MoreSkills", title: "More Skills ", count: 1 },
+  const normalizeCategory = (value: unknown) =>
+    String(value ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const categoryDefinitions = [
+    { id: "DataScience", title: "Data Science", match: "datascience" },
+    { id: "WebDevelopment", title: "Web Development", match: "webdevelopment" },
+    { id: "AI/ML", title: "AI & Machine Learning", match: "aimachinelearning" },
+    { id: "MoreSkills", title: "More Skills", match: "" },
   ];
+  const CATEGORIES = categoryDefinitions.map((category) => ({
+    ...category,
+    count: featuredCoursesData.filter((course) => {
+      const value = normalizeCategory(course.categories);
+      if (category.id === "AI/ML") return value.includes("ai") || value.includes("machinelearning");
+      if (category.id === "MoreSkills") return value && !categoryDefinitions.slice(0, 3).some((known) =>
+        value.includes(known.match) || (known.id === "AI/ML" && (value.includes("ai") || value.includes("machinelearning"))),
+      );
+      return value.includes(category.match);
+    }).length,
+  }));
 
   // 🔹 Learning Paths
   const paths = [
@@ -583,8 +596,9 @@ const Landing = () => {
                 src="/heroSetion.png"
                 alt="AI Learning"
                 sx={{
-                  width: "100%",
-                  maxWidth: "900px",
+                  width: { xs: "100%", md: "130%" },
+                  height: "auto",
+                  maxWidth: "750px",
                   mixBlendMode: "multiply",
                 }}
               />
@@ -903,7 +917,7 @@ const Landing = () => {
             };
 
             const getOrgPicture = (course) =>
-              course.createdByUser?.profile?.picture || null;
+              course.createdByUser?.profile?.picture || glossaryOrganizationImage;
 
             const getRating = (course) =>
               Number(course.averageRating ?? course.rating) || 0;
@@ -1018,38 +1032,22 @@ const Landing = () => {
                         spacing={0.5}
                         sx={{ mb: 0.5 }}
                       >
-                        {orgPicture ? (
-                          <Box
-                            component="img"
-                            src={orgPicture}
-                            alt={orgName}
-                            sx={{
-                              width: 16,
-                              height: 16,
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                              flexShrink: 0,
-                            }}
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              width: 16,
-                              height: 16,
-                              borderRadius: "50%",
-                              bgcolor: badgeColor,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontSize: "0.625rem",
-                              color: "#ffffff",
-                              fontWeight: 700,
-                              flexShrink: 0,
-                            }}
-                          >
-                            {orgName?.[0]?.toUpperCase() || "T"}
-                          </Box>
-                        )}
+                        <Box
+                          component="img"
+                          src={orgPicture}
+                          alt={orgName}
+                          onError={(event) => {
+                            event.currentTarget.onerror = null;
+                            event.currentTarget.src = glossaryOrganizationImage;
+                          }}
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            flexShrink: 0,
+                          }}
+                        />
                         <Typography
                           variant="caption"
                           sx={{

@@ -20,7 +20,6 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import AddAlertOutlinedIcon from "@mui/icons-material/AddAlertOutlined";
 import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import NotificationsOffOutlinedIcon from "@mui/icons-material/NotificationsOffOutlined";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
@@ -520,32 +519,6 @@ const NotificationPanel = () => {
               })
             )}
           </List>
-          <Divider />
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 1 }}>
-            <Tooltip title="Refresh">
-              <span>
-                <IconButton
-                  aria-label="Refresh notifications"
-                  onClick={() => void fetchNotifications(showHistory)}
-                  disabled={isLoading}
-                  size="small"
-                  sx={{
-                    color: "#0f766e",
-                    border: "1px solid #dbe7e5",
-                    width: 34,
-                    height: 34,
-                    "&:hover": { backgroundColor: "#f0fdfa" },
-                  }}
-                >
-                  {isLoading ? (
-                    <CircularProgress size={18} sx={{ color: "#0f766e" }} />
-                  ) : (
-                    <RefreshIcon fontSize="small" />
-                  )}
-                </IconButton>
-              </span>
-            </Tooltip>
-          </Box>
         </Box>
       </Popover>
     </>
