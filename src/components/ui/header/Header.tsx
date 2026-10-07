@@ -99,7 +99,7 @@ const Header = ({
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        {/* <NotificationPanel /> */}
+        <NotificationPanel />
 
         <ProfilePopup></ProfilePopup>
       </Box>

@@ -1,5 +1,5 @@
 import { Box, Typography,Alert ,Snackbar } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
 import {
@@ -58,6 +58,7 @@ const CourseCardWithRating = ({
   isAddingToCart,
   handleFavorite,
   isFavorite,
+  isFavoriteBusy,
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
 
@@ -91,6 +92,7 @@ const orgName =
       isLoadingCart={isAddingToCart}
       onFavorite={handleFavorite}
       isFavorite={isFavorite}
+      isFavoriteBusy={isFavoriteBusy}
     />
   );
 };
@@ -107,7 +109,7 @@ export default function FreeCourses() {
   const [snackbar, setSnackbar] = useState({
   open: false,
   message: "",
-  severity: "success" as "success" | "error",
+  severity: "success" as "success" | "error" | "info",
 });
   // Cart data for checking if course is in cart
   const { data: cartData } = useGetCartQuery(undefined, {
@@ -116,13 +118,24 @@ export default function FreeCourses() {
 
   const [addToCartServer, { isLoading: isAddingToCart }] =
     useAddToCartServerMutation();
-  const { data: wishlistData } = useGetWishlistQuery();
+  const { data: wishlistData, refetch: refreshWishlist } = useGetWishlistQuery();
+  const [pendingWishlist, setPendingWishlist] = useState<Record<number, boolean>>({});
   const [addToWishlist] = useAddToWishlistMutation();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
   const wishlistItems = Array.isArray(wishlistData?.data)
     ? wishlistData.data
     : wishlistData?.data?.items ?? [];
   const wishlistCourseIds = new Set(wishlistItems.map((item) => Number(item.courseId)));
+  const wishlistSnapshot = [...wishlistCourseIds].sort((a, b) => a - b).join(",");
+  useEffect(() => {
+    setPendingWishlist((current) => {
+      const next = { ...current };
+      Object.entries(current).forEach(([id, shouldBeWishlisted]) => {
+        if (wishlistCourseIds.has(Number(id)) === shouldBeWishlisted) delete next[Number(id)];
+      });
+      return next;
+    });
+  }, [wishlistSnapshot]);
 
   // Handler for adding to cart - passed to reusable component
   const handleAddToCart = async (courseId: number) => {
@@ -137,29 +150,48 @@ export default function FreeCourses() {
   //   }
   // };
   const handleFavorite = async (courseId: number) => {
+  const isRemoving = wishlistCourseIds.has(courseId);
+  const shouldBeWishlisted = !isRemoving;
+  setPendingWishlist((current) => ({ ...current, [courseId]: shouldBeWishlisted }));
+  let mutationSucceeded = false;
   try {
-    if (wishlistCourseIds.has(courseId)) {
+    if (isRemoving) {
       await removeFromWishlist({ courseId }).unwrap();
-
+    } else {
+      await addToWishlist({ courseId }).unwrap();
+    }
+    mutationSucceeded = true;
+    const refreshed = await refreshWishlist().unwrap();
+    const refreshedItems = Array.isArray(refreshed?.data)
+      ? refreshed.data
+      : refreshed?.data?.items ?? [];
+    const isConfirmed = refreshedItems.some((item: any) => Number(item.courseId) === courseId);
+    if (isConfirmed === shouldBeWishlisted) {
+      setPendingWishlist((current) => {
+        const next = { ...current };
+        delete next[courseId];
+        return next;
+      });
       setSnackbar({
         open: true,
-        message: "Removed from wishlist",
+        message: isRemoving ? "Removed from wishlist" : "Added to wishlist",
         severity: "success",
       });
     } else {
-      await addToWishlist({ courseId }).unwrap();
-
-      setSnackbar({
-        open: true,
-        message: "Added to wishlist",
-        severity: "success",
-      });
+      setSnackbar({ open: true, message: "Wishlist update is still syncing.", severity: "info" });
     }
   } catch (err: any) {
+    if (!mutationSucceeded) {
+      setPendingWishlist((current) => {
+        const next = { ...current };
+        delete next[courseId];
+        return next;
+      });
+    }
     const message =
       err?.data?.errors?.[0]?.message ||
       err?.data?.message ||
-      "Something went wrong";
+      (mutationSucceeded ? "Wishlist update is still syncing." : "Something went wrong");
 
     setSnackbar({
       open: true,
@@ -278,6 +310,7 @@ export default function FreeCourses() {
       isAddingToCart={isAddingToCart}
       handleFavorite={handleFavorite}
       isFavorite={wishlistCourseIds.has(courseId)}
+      isFavoriteBusy={Object.prototype.hasOwnProperty.call(pendingWishlist, courseId)}
     />
   );
 })}

@@ -15,14 +15,28 @@ import {
     CircularProgress,
     Alert,
 } from '@mui/material';
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useGetCartQuery } from '../../course-browse/api/courseApi';
-import { useGetCheckoutCourseQuery, useCreateOrderMutation } from '../api/checkoutapi';
+import {
+    useGetCheckoutCourseQuery,
+    useGetCheckoutQuoteMutation,
+    useValidateCourseCouponMutation,
+    useCreateOrderMutation,
+    useVerifyPaymentMutation,
+} from '../api/checkoutapi';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import HomeIcon from '@mui/icons-material/Home';
 
 export default function CheckoutPage() {
+    const [couponCode, setCouponCode] = useState("");
+    const [appliedCoupon, setAppliedCoupon] = useState("");
+    const [quote, setQuote] = useState<any>(null);
+    const [couponError, setCouponError] = useState("");
+    const [quoteError, setQuoteError] = useState("");
+    const [paymentMessage, setPaymentMessage] = useState("");
     const location = useLocation();
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { data: cartData } = useGetCartQuery();
 
@@ -73,15 +87,48 @@ export default function CheckoutPage() {
     const totalLectures = course?.totalLectures ?? course?.lecturesCount ?? course?.lectures ?? 0;
     const totalHours = course?.totalHours ?? course?.duration ?? 0;
 
-    const price = Number(course?.price ?? 0);
-    const discount = Number(course?.discount ?? 0);
-    const tax = Number(course?.tax ?? 0);
-    const total = price - discount + tax;
+    const price = Number(quote?.originalPrice ?? 0);
+    const discount = Number(quote?.discountAmount ?? 0);
+    const total = Number(quote?.finalPrice ?? 0);
 
     const formatCurrency = (value: number) =>
         `₹${(isNaN(value) ? 0 : value).toFixed(2)}`;
 
     const [createOrder, { isLoading: isPlacingOrder }] = useCreateOrderMutation();
+    const [verifyPayment] = useVerifyPaymentMutation();
+    const [getCheckoutQuote, { isLoading: isQuoteLoading }] = useGetCheckoutQuoteMutation();
+    const [validateCourseCoupon, { isLoading: isApplyingCoupon }] = useValidateCourseCouponMutation();
+
+    useEffect(() => {
+        let active = true;
+        setQuote(null);
+        setQuoteError("");
+        getCheckoutQuote({ courseId })
+            .unwrap()
+            .then((response: any) => {
+                if (active) setQuote(response?.data?.data ?? response?.data ?? response);
+            })
+            .catch((error: any) => {
+                if (active) setQuoteError(error?.data?.message || "Could not load the checkout price.");
+            });
+        return () => { active = false; };
+    }, [courseId, getCheckoutQuote]);
+
+    const handleApplyCoupon = async () => {
+        const code = couponCode.trim();
+        if (!code) {
+            setCouponError("Enter a coupon code.");
+            return;
+        }
+        setCouponError("");
+        try {
+            const response: any = await validateCourseCoupon({ courseId, couponCode: code }).unwrap();
+            setQuote(response?.data?.data ?? response?.data ?? response);
+            setAppliedCoupon(code);
+        } catch (error: any) {
+            setCouponError(error?.data?.message || error?.data?.errors?.[0]?.message || "This coupon could not be applied.");
+        }
+    };
 
     // 🔴 Load Razorpay checkout.js
     const loadRazorpayScript = () =>
@@ -99,47 +146,63 @@ export default function CheckoutPage() {
 
     // 🔴 Buy Now -> create order -> open Razorpay
     const handleBuyNow = async () => {
-        const scriptLoaded = await loadRazorpayScript();
-        if (!scriptLoaded) {
-            alert("Razorpay SDK failed to load. Check your internet connection.");
-            return;
-        }
-
         try {
             const orderResponse: any = await createOrder({
                 courseId,
-                amount: total,
+                ...((quote?.coupon?.code || appliedCoupon)
+                    ? { couponCode: quote?.coupon?.code || appliedCoupon }
+                    : {}),
             }).unwrap();
-
-            // Adjust these keys once your /payment/create-order response shape is final
             const order = orderResponse?.data ?? orderResponse;
 
+            if (order?.free) {
+                navigate(`/course-practice/${courseId}`, { state: { paymentVerified: true } });
+                return;
+            }
+
+            const razorpayKeyId = order?.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID;
+            if (!razorpayKeyId || !order?.orderId || !Number(order?.amount)) {
+                throw new Error("The payment order response is missing its Razorpay key or order details.");
+            }
+
+            const scriptLoaded = await loadRazorpayScript();
+            if (!scriptLoaded) {
+                throw new Error("Razorpay Checkout could not load. Check your connection and try again.");
+            }
+
             const options = {
-                key: order?.key, // Razorpay key id from backend
+                key: razorpayKeyId,
                 amount: order?.amount,
-                currency: order?.currency ?? "INR",
+                currency: order?.currency,
                 name: "Tiiron Academy",
                 description: courseTitle,
-                order_id: order?.orderId ?? order?.id,
-                handler: function (response: any) {
-                    console.log("Payment success:", response);
-                    // TODO: call verify-payment API here
+                order_id: order?.orderId,
+                handler: async (checkoutResponse: {
+                    razorpay_order_id: string;
+                    razorpay_payment_id: string;
+                    razorpay_signature: string;
+                }) => {
+                    try {
+                        const verification: any = await verifyPayment(checkoutResponse).unwrap();
+                        if (verification?.success === false) {
+                            throw new Error(verification?.message || "Payment verification failed.");
+                        }
+                        navigate(`/course-practice/${courseId}`, { state: { paymentVerified: true } });
+                    } catch (error: any) {
+                        setPaymentMessage(
+                            error?.data?.message || error?.message ||
+                            "We couldn't verify this payment. Please contact support before trying again.",
+                        );
+                    }
                 },
-                prefill: {
-                    name: "",
-                    email: "",
-                    contact: "",
-                },
-                theme: {
-                    color: "#4F39F6",
-                },
+                prefill: { name: "", email: "", contact: "" },
+                theme: { color: "#4F39F6" },
             };
 
             const razorpay = new (window as any).Razorpay(options);
             razorpay.open();
-        } catch (err) {
-            console.error("Create order failed:", err);
-            alert("Something went wrong while creating the order.");
+        } catch (error: any) {
+            setPaymentMessage(error?.data?.message || error?.message || "Could not start checkout. Please try again.");
         }
     };
 
@@ -582,38 +645,29 @@ export default function CheckoutPage() {
                                 </Paper>
 
                                 {/* Apply Coupon */}
-                                <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        p: { xs: 2, md: 2.5 },
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 1.5,
-                                        borderRadius: 2,
-                                        cursor: 'pointer',
-                                        bgcolor: "#fff",
-                                        border: '1px solid #E2E8F0',
-                                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                                        transition: 'all 0.2s ease',
-                                        '&:hover': {
-                                            borderColor: '#4F39F6',
-                                            boxShadow: "0 4px 12px rgba(79, 57, 246, 0.15)",
-                                        },
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            fontSize: '14px',
-                                            fontWeight: 600,
-                                            color: '#0F172A',
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "10px"
-                                        }}
-                                    >
-                                        <img src="icons/coupon.svg" alt="" />
+                                <Paper variant="outlined" sx={{ p: { xs: 2, md: 2.5 }, borderRadius: 2, bgcolor: "#fff" }}>
+                                    <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#0F172A', mb: 1.5 }}>
                                         APPLY COUPON CODE
                                     </Typography>
+                                    <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            value={couponCode}
+                                            onChange={(event) => setCouponCode(event.target.value)}
+                                            placeholder="Enter coupon code"
+                                            inputProps={{ "aria-label": "Coupon code" }}
+                                        />
+                                        <Button
+                                            variant="outlined"
+                                            onClick={() => void handleApplyCoupon()}
+                                            disabled={isApplyingCoupon || isQuoteLoading}
+                                        >
+                                            {isApplyingCoupon ? <CircularProgress size={18} /> : "Apply"}
+                                        </Button>
+                                    </Stack>
+                                    {appliedCoupon && <Typography variant="caption" color="success.main">{appliedCoupon} applied</Typography>}
+                                    {couponError && <Alert severity="error" sx={{ mt: 1 }}>{couponError}</Alert>}
                                 </Paper>
 
                                 {/* Price Summary — now dynamic */}
@@ -637,11 +691,6 @@ export default function CheckoutPage() {
                                             {discount > 0 ? `- ${formatCurrency(discount)}` : formatCurrency(0)}
                                         </Typography>
                                     </Box>
-                                    <Box display="flex" justifyContent="space-between" mb={2.5}>
-                                        <Typography sx={{ fontSize: '16px', color: '#64748B', fontWeight: 400 }}>Tax</Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: "18px", color: '#0F172A' }}>{formatCurrency(tax)}</Typography>
-                                    </Box>
-
                                     <Divider sx={{ my: 2.5, borderColor: '#E2E8F0' }} />
 
                                     <Box display="flex" justifyContent="space-between">
@@ -654,7 +703,7 @@ export default function CheckoutPage() {
                                 <Button
                                     fullWidth
                                     variant="contained"
-                                    disabled={isPlacingOrder}
+                                    disabled={isPlacingOrder || isQuoteLoading || !quote || Boolean(quoteError)}
                                     onClick={handleBuyNow}
                                     sx={{
                                         bgcolor: '#0F172A',
@@ -675,6 +724,9 @@ export default function CheckoutPage() {
                                 >
                                     {isPlacingOrder ? "Processing..." : "Buy Now"}
                                 </Button>
+                                {isQuoteLoading && <CircularProgress size={20} sx={{ mx: "auto" }} />}
+                                {quoteError && <Alert severity="error">{quoteError}</Alert>}
+                                {paymentMessage && <Alert severity="info">{paymentMessage}</Alert>}
                             </Box>
                         </Box>
                     )}

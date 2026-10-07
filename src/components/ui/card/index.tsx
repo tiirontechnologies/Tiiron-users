@@ -31,6 +31,7 @@ interface ReusableCourseCardProps extends ICourseCardProps {
   onFavorite?: (courseId: number) => void;
   onArchive?: (courseId: number) => void;
   isFavorite?: boolean;
+  isFavoriteBusy?: boolean;
   categories?: string;
   onCardClick?: () => void;
   onDeleteClick?: () => void;
@@ -58,6 +59,7 @@ export default function CourseCard({
   onFavorite,
   onArchive,
   isFavorite = false,
+  isFavoriteBusy = false,
   onAddToCartClick,
   onCardClick,
   onDeleteClick,
@@ -638,6 +640,7 @@ export default function CourseCard({
             {price > 0 && (
               <IconButton
                 onClick={handleFavorite}
+                disabled={isFavoriteBusy}
                 size="small"
                sx={{
   width: 34,

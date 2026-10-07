@@ -28,6 +28,7 @@ interface CourseCardWrapperProps extends ICourseCardProps {
   onFavorite?: (courseId: number) => void;
   onArchive?: (courseId: number) => void;
   isFavorite?: boolean;
+  isFavoriteBusy?: boolean;
    categories?: string;
 }
 
@@ -57,6 +58,7 @@ export default function CourseCardWrapper({
   onFavorite,
   onArchive,
   isFavorite = false,
+  isFavoriteBusy = false,
 }: CourseCardWrapperProps) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -201,6 +203,7 @@ const capitalizeFirstLetter = (value?: string) => {
         onFavorite={onFavorite}
         onArchive={onArchive}
         isFavorite={isFavorite}
+        isFavoriteBusy={isFavoriteBusy}
          categories={categories}
          
       />
