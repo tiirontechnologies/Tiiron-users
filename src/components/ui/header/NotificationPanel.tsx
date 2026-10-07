@@ -432,7 +432,14 @@ const NotificationPanel = () => {
           </Tabs>
           <Divider />
           {error && <Alert severity="error" onClose={() => setError("")} sx={{ mx: 1.5, mt: 1.5 }}>{error}</Alert>}
-          <List disablePadding sx={{ maxHeight: { xs: "min(60vh, 440px)", sm: 440 }, overflowY: "auto" }}>
+          <List
+            disablePadding
+            sx={{
+              maxHeight: { xs: "min(60vh, 320px)", sm: 340 },
+              overflowY: "auto",
+              overscrollBehavior: "contain",
+            }}
+          >
             {isLoading && notifications.length === 0 ? (
               <Stack alignItems="center" justifyContent="center" sx={{ py: 5 }}>
                 <CircularProgress size={24} sx={{ color: "#0f766e" }} />

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { SiReact, SiNodedotjs, SiOpenai, SiLeetcode } from "react-icons/si";
 import { FaJava, FaPython, FaDatabase, FaGithub } from "react-icons/fa";
@@ -188,7 +188,8 @@ const Landing = () => {
     useAddToCartServerMutation();
 
   // 🔹 Wishlist
-  const { data: wishlistData } = useGetWishlistQuery();
+  const { data: wishlistData, refetch: refreshWishlist } = useGetWishlistQuery();
+  const [pendingWishlist, setPendingWishlist] = useState<Record<number, boolean>>({});
   const [addToWishlist] = useAddToWishlistMutation();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
@@ -198,6 +199,16 @@ const Landing = () => {
   const wishlistCourseIds = new Set(
     wishlistItems.map((item: any) => Number(item.courseId)),
   );
+  const wishlistSnapshot = [...wishlistCourseIds].sort((a, b) => a - b).join(",");
+  useEffect(() => {
+    setPendingWishlist((current) => {
+      const next = { ...current };
+      Object.entries(current).forEach(([id, shouldBeWishlisted]) => {
+        if (wishlistCourseIds.has(Number(id)) === shouldBeWishlisted) delete next[Number(id)];
+      });
+      return next;
+    });
+  }, [wishlistSnapshot]);
 
   // 🔹 Categories  "AI/ML", "Web Development", "Data Science", "More Skills"
   const normalizeCategory = (value: unknown) =>
@@ -388,16 +399,39 @@ const Landing = () => {
       return;
     }
 
+    const isRemoving = wishlistCourseIds.has(courseId);
+    const shouldBeWishlisted = !isRemoving;
+    setPendingWishlist((current) => ({ ...current, [courseId]: shouldBeWishlisted }));
+    let mutationSucceeded = false;
     try {
-      if (wishlistCourseIds.has(courseId)) {
+      if (isRemoving) {
         await removeFromWishlist({ courseId }).unwrap();
+        mutationSucceeded = true;
+      } else {
+        await addToWishlist({ courseId }).unwrap();
+        mutationSucceeded = true;
+      }
+
+      const refreshed = await refreshWishlist().unwrap();
+      const refreshedItems = Array.isArray(refreshed?.data)
+        ? refreshed.data
+        : refreshed?.data?.items ?? [];
+      const isConfirmed = refreshedItems.some((item: any) => Number(item.courseId) === courseId);
+      if (isConfirmed === shouldBeWishlisted) {
+        setPendingWishlist((current) => {
+          const next = { ...current };
+          delete next[courseId];
+          return next;
+        });
+      }
+
+      if (isRemoving) {
         setSnackbar({
           open: true,
           message: "Removed from wishlist",
           severity: "error",
         });
       } else {
-        await addToWishlist({ courseId }).unwrap();
         setSnackbar({
           open: true,
           message: "Added to wishlist",
@@ -405,10 +439,19 @@ const Landing = () => {
         });
       }
     } catch (error: any) {
+      if (!mutationSucceeded) {
+        setPendingWishlist((current) => {
+          const next = { ...current };
+          delete next[courseId];
+          return next;
+        });
+      }
       setSnackbar({
         open: true,
-        message: error?.data?.message || "Could not update wishlist.",
-        severity: "error",
+        message: mutationSucceeded
+          ? "Wishlist updated; waiting for it to sync."
+          : error?.data?.message || "Could not update wishlist.",
+        severity: mutationSucceeded ? "info" : "error",
       });
     }
   };
@@ -878,6 +921,7 @@ const Landing = () => {
                       isLoadingCart={isAddingToCart}
                       onFavorite={handleFavorite}
                       isFavorite={wishlistCourseIds.has(Number(course.id))}
+                      isFavoriteBusy={Object.prototype.hasOwnProperty.call(pendingWishlist, Number(course.id))}
                     />
                   </SwiperSlide>
                 );
@@ -1036,7 +1080,7 @@ const Landing = () => {
                           component="img"
                           src={orgPicture}
                           alt={orgName}
-                          onError={(event) => {
+                          onError={(event: React.SyntheticEvent<HTMLImageElement>) => {
                             event.currentTarget.onerror = null;
                             event.currentTarget.src = glossaryOrganizationImage;
                           }}

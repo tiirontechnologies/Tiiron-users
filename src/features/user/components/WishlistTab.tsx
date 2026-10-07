@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
@@ -40,7 +40,7 @@ function getGradient(title: string) {
 
 export default function WishlistTab() {
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useGetWishlistQuery();
+  const { data, isLoading, isError, refetch } = useGetWishlistQuery();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
   const [snackbar, setSnackbar] = useState({
@@ -52,6 +52,12 @@ export default function WishlistTab() {
 
   const items = getWishlistItems(data);
 
+  useEffect(() => {
+    if (removingId !== null && !items.some((item) => item.courseId === removingId)) {
+      setRemovingId(null);
+    }
+  }, [items, removingId]);
+
   const showSnackbar = (message: string, severity: "success" | "error") =>
     setSnackbar({ open: true, message, severity });
 
@@ -59,10 +65,16 @@ export default function WishlistTab() {
     setRemovingId(courseId);
     try {
       await removeFromWishlist({ courseId }).unwrap();
+      const refreshed = await refetch().unwrap();
+      const refreshedItems = getWishlistItems(refreshed);
+      if (refreshedItems.some((item) => item.courseId === courseId)) {
+        showSnackbar("Wishlist update is still syncing.", "error");
+        return;
+      }
       showSnackbar("Removed from wishlist", "success");
+      setRemovingId(null);
     } catch (error: any) {
       showSnackbar(error?.data?.message || "Could not remove this course.", "error");
-    } finally {
       setRemovingId(null);
     }
   };

@@ -1,6 +1,6 @@
 import { Alert, Box, Snackbar, Typography } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CourseCardWrapper from "@components/ui/card/CourseCardWrapper";
 import PageToolbarLayout from "@components/ui/PageToolbarLayout";
@@ -57,6 +57,7 @@ const CourseCardWithRating = ({
   isAddingToCart,
   handleFavorite,
   isFavorite,
+  isFavoriteBusy,
 }: any) => {
   const { data: ratingData } = useGetCourseRatingQuery(course.id);
 
@@ -87,6 +88,7 @@ const orgName =
       isLoadingCart={isAddingToCart}
       onFavorite={handleFavorite}
       isFavorite={isFavorite}
+      isFavoriteBusy={isFavoriteBusy}
     />
   );
 };
@@ -158,13 +160,24 @@ export default function Courses() {
 
   const [addToCartServer, { isLoading: isAddingToCart }] =
     useAddToCartServerMutation();
-  const { data: wishlistData } = useGetWishlistQuery();
+  const { data: wishlistData, refetch: refreshWishlist } = useGetWishlistQuery();
+  const [pendingWishlist, setPendingWishlist] = useState<Record<number, boolean>>({});
   const [addToWishlist] = useAddToWishlistMutation();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
   const wishlistItems = Array.isArray(wishlistData?.data)
     ? wishlistData.data
     : wishlistData?.data?.items ?? [];
   const wishlistCourseIds = new Set(wishlistItems.map((item) => Number(item.courseId)));
+  const wishlistSnapshot = [...wishlistCourseIds].sort((a, b) => a - b).join(",");
+  useEffect(() => {
+    setPendingWishlist((current) => {
+      const next = { ...current };
+      Object.entries(current).forEach(([id, shouldBeWishlisted]) => {
+        if (wishlistCourseIds.has(Number(id)) === shouldBeWishlisted) delete next[Number(id)];
+      });
+      return next;
+    });
+  }, [wishlistSnapshot]);
 
   // =====================================================
   // ADD TO CART
@@ -185,19 +198,48 @@ export default function Courses() {
       return;
     }
 
+    const isRemoving = wishlistCourseIds.has(courseId);
+    const shouldBeWishlisted = !isRemoving;
+    setPendingWishlist((current) => ({ ...current, [courseId]: shouldBeWishlisted }));
+    let mutationSucceeded = false;
     try {
-      if (wishlistCourseIds.has(courseId)) {
+      if (isRemoving) {
         await removeFromWishlist({ courseId }).unwrap();
-        setSnackbar({ open: true, message: "Removed from wishlist", severity: "error" });
       } else {
         await addToWishlist({ courseId }).unwrap();
-        setSnackbar({ open: true, message: "Added to wishlist", severity: "success" });
+      }
+      mutationSucceeded = true;
+      const refreshed = await refreshWishlist().unwrap();
+      const refreshedItems = Array.isArray(refreshed?.data)
+        ? refreshed.data
+        : refreshed?.data?.items ?? [];
+      const isConfirmed = refreshedItems.some((item: any) => Number(item.courseId) === courseId);
+      if (isConfirmed === shouldBeWishlisted) {
+        setPendingWishlist((current) => {
+          const next = { ...current };
+          delete next[courseId];
+          return next;
+        });
+        setSnackbar({
+          open: true,
+          message: isRemoving ? "Removed from wishlist" : "Added to wishlist",
+          severity: isRemoving ? "error" : "success",
+        });
+      } else {
+        setSnackbar({ open: true, message: "Wishlist update is still syncing.", severity: "info" });
       }
     } catch (error: any) {
+      if (!mutationSucceeded) {
+        setPendingWishlist((current) => {
+          const next = { ...current };
+          delete next[courseId];
+          return next;
+        });
+      }
       setSnackbar({
         open: true,
-        message: error?.data?.message || "Could not update wishlist.",
-        severity: "error",
+        message: mutationSucceeded ? "Wishlist update is still syncing." : error?.data?.message || "Could not update wishlist.",
+        severity: mutationSucceeded ? "info" : "error",
       });
     }
   };
@@ -404,6 +446,7 @@ export default function Courses() {
                   isAddingToCart={isAddingToCart}
                   handleFavorite={handleFavorite}
                   isFavorite={wishlistCourseIds.has(courseId)}
+                  isFavoriteBusy={Object.prototype.hasOwnProperty.call(pendingWishlist, courseId)}
                 />
               );
             })}
