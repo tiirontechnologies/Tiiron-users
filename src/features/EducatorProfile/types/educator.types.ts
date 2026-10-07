@@ -59,7 +59,8 @@ export interface EducatorProfileData {
   featuredCourses: FeaturedCourse[];
   reviews: Review[];
   achievements: Achievement[];
-  
+  address?: string;
+  program?: string;
 }
 
 export interface RawApiProfile {
@@ -81,7 +82,7 @@ export interface RawApiProfile {
   createdAt: string;
   updatedAt: string;
   address?: string;
-program?: string;
+  program?: string;
 }
 
 export interface RawApiUser {
