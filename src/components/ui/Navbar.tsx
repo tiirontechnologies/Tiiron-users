@@ -15,7 +15,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 
 import SearchBox from "./header/SearchBox";
@@ -836,20 +835,7 @@ const renderDesktopNavItem = (item: NavItem) => {
                       </Badge>
                     </IconButton>
 
-                    <IconButton
-                      aria-label="Notifications"
-                      sx={{
-                        color: "#0f172a",
-                        transition: "all 0.2s ease",
-                        "&:hover": {
-                          backgroundColor: alpha("#F59E0B", 0.1),
-                          color: "#F59E0B",
-                          transform: "scale(1.1)",
-                        },
-                      }}
-                    >
-                      <NotificationPanel />
-                    </IconButton>
+                    <NotificationPanel />
                   </Box>
 
                   <ProfilePopup />
@@ -1025,11 +1011,7 @@ const renderDesktopNavItem = (item: NavItem) => {
                       <ShoppingCartIcon />
                     </Badge>
                   </IconButton>
-                  <IconButton
-                    sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}
-                  >
-                    <NotificationsIcon />
-                  </IconButton>
+                  <NotificationPanel />
                   <IconButton
                     sx={{ border: "1px solid #e5e7eb", borderRadius: 1 }}
                   >
