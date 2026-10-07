@@ -2,6 +2,7 @@ import { Avatar, Box, Typography } from "@mui/material";
 import { ICourse } from "../../../types/course.types";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import glossaryOrganizationImage from "../../../assets/Glossary_Organization_Img.png";
 
 interface CourseGlossaryHeaderProps {
   course: ICourse | undefined;
@@ -66,7 +67,7 @@ export default function CourseGlossaryHeader({
     setIsExpanded(false);
   }, [course?.description]);
 
-  const DEFAULT_AVATAR = "/images/avatarUser.png";
+  const DEFAULT_AVATAR = glossaryOrganizationImage;
   const instructorAvatar =
     course?.createdByUser?.profile?.picture || DEFAULT_AVATAR;
 
