@@ -2,7 +2,7 @@
  * @author Vishal
  */
 import CustomTextField from "@components/ui/textfields/CustomTextField";
-import LoginPng from "@images/login.png";
+import LoginPng from "../../../../assets/user-login-img.jpg.jpeg";
 import AuthLayout from "@layouts/AuthLayout";
 import {
   Alert,
