@@ -11,7 +11,7 @@ const LABEL_TO_TAB: Record<string, TabName> = {
   "Wishlist": "Wishlist",
   "My Quiz History": "Quiz History",
   "Activity": "Activity",
-};
+} as const;
 
 const QuickLinksCard: React.FC = () => {
   const { setActiveTab } = useTabContext();
