@@ -3,9 +3,6 @@ import {
     Box,
     Typography,
     TextField,
-    Radio,
-    FormControl,
-    FormLabel,
     Stack,
     Paper,
     Button,
@@ -16,7 +13,7 @@ import {
     Alert,
 } from '@mui/material';
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGetCartQuery } from '../../course-browse/api/courseApi';
 import {
     useGetCheckoutCourseQuery,
@@ -27,6 +24,8 @@ import {
 } from '../api/checkoutapi';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import HomeIcon from '@mui/icons-material/Home';
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 
 export default function CheckoutPage() {
     const [couponCode, setCouponCode] = useState("");
@@ -35,6 +34,9 @@ export default function CheckoutPage() {
     const [couponError, setCouponError] = useState("");
     const [quoteError, setQuoteError] = useState("");
     const [paymentMessage, setPaymentMessage] = useState("");
+    const [paymentMessageType, setPaymentMessageType] = useState<"error" | "success" | "info">("info");
+    const paymentInProgress = useRef(false);
+    const paymentVerificationStarted = useRef(false);
     const location = useLocation();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -68,7 +70,7 @@ export default function CheckoutPage() {
 
     const courseId = getCourseId();
 
-    // 🔴 Dynamic fetch — hits GET /course/:id via checkoutapi.ts
+    // ðŸ”´ Dynamic fetch â€” hits GET /course/:id via checkoutapi.ts
     const {
         data: courseResponse,
         isLoading: isCourseLoading,
@@ -81,7 +83,7 @@ export default function CheckoutPage() {
     const course = courseResponse?.data ?? courseResponse;
 
     // ---- Derive display values from the fetched course (with safe fallbacks) ----
-    const courseTitle = course?.title ?? course?.name ?? "—";
+    const courseTitle = course?.title ?? course?.name ?? "â€”";
     const courseCategory = course?.category?.name ?? course?.category ?? course?.tag ?? "";
     const courseImage = course?.thumbnail ?? course?.image ?? "images/chekoutPage_image.png";
     const totalLectures = course?.totalLectures ?? course?.lecturesCount ?? course?.lectures ?? 0;
@@ -92,7 +94,7 @@ export default function CheckoutPage() {
     const total = Number(quote?.finalPrice ?? 0);
 
     const formatCurrency = (value: number) =>
-        `₹${(isNaN(value) ? 0 : value).toFixed(2)}`;
+        new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }).format(Number.isFinite(value) ? value : 0);
 
     const [createOrder, { isLoading: isPlacingOrder }] = useCreateOrderMutation();
     const [verifyPayment] = useVerifyPaymentMutation();
@@ -130,22 +132,39 @@ export default function CheckoutPage() {
         }
     };
 
-    // 🔴 Load Razorpay checkout.js
+    // ðŸ”´ Load Razorpay checkout.js
     const loadRazorpayScript = () =>
-        new Promise((resolve) => {
+        new Promise<boolean>((resolve) => {
             if ((window as any).Razorpay) {
                 resolve(true);
                 return;
             }
             const script = document.createElement("script");
             script.src = "https://checkout.razorpay.com/v1/checkout.js";
-            script.onload = () => resolve(true);
-            script.onerror = () => resolve(false);
+            script.async = true;
+            const timeout = window.setTimeout(() => {
+                script.remove();
+                resolve(false);
+            }, 15000);
+            script.onload = () => {
+                window.clearTimeout(timeout);
+                resolve(true);
+            };
+            script.onerror = () => {
+                window.clearTimeout(timeout);
+                script.remove();
+                resolve(false);
+            };
             document.body.appendChild(script);
         });
 
-    // 🔴 Buy Now -> create order -> open Razorpay
+    // ðŸ”´ Buy Now -> create order -> open Razorpay
     const handleBuyNow = async () => {
+        if (paymentInProgress.current) return;
+        paymentInProgress.current = true;
+        paymentVerificationStarted.current = false;
+        setPaymentMessage("");
+        setPaymentMessageType("info");
         try {
             const orderResponse: any = await createOrder({
                 courseId,
@@ -182,26 +201,52 @@ export default function CheckoutPage() {
                     razorpay_payment_id: string;
                     razorpay_signature: string;
                 }) => {
+                    paymentVerificationStarted.current = true;
                     try {
                         const verification: any = await verifyPayment(checkoutResponse).unwrap();
-                        if (verification?.success === false) {
-                            throw new Error(verification?.message || "Payment verification failed.");
+                        const verificationResult = verification?.data ?? verification;
+                        if (verification?.success === false || verificationResult?.success === false) {
+                            throw new Error(verificationResult?.message || verification?.message || "Payment verification failed.");
                         }
+                        setPaymentMessageType("success");
+                        setPaymentMessage("Payment verified. Opening your course...");
                         navigate(`/course-practice/${courseId}`, { state: { paymentVerified: true } });
                     } catch (error: any) {
+                        setPaymentMessageType("error");
                         setPaymentMessage(
                             error?.data?.message || error?.message ||
-                            "We couldn't verify this payment. Please contact support before trying again.",
+                            "Payment verification is pending. Please check your enrollment before trying the payment again.",
                         );
+                    } finally {
+                        paymentInProgress.current = false;
                     }
                 },
                 prefill: { name: "", email: "", contact: "" },
                 theme: { color: "#4F39F6" },
+                modal: {
+                    ondismiss: () => {
+                        if (!paymentInProgress.current || paymentVerificationStarted.current) return;
+                        paymentInProgress.current = false;
+                        setPaymentMessageType("info");
+                        setPaymentMessage("Checkout closed before payment was confirmed. You can try again when you're ready.");
+                    },
+                },
             };
 
             const razorpay = new (window as any).Razorpay(options);
+            razorpay.on("payment.failed", (response: any) => {
+                paymentInProgress.current = false;
+                setPaymentMessageType("error");
+                setPaymentMessage(
+                    response?.error?.description ||
+                    response?.error?.reason ||
+                    "Payment failed. No enrollment was confirmed. Please try another payment method or try again.",
+                );
+            });
             razorpay.open();
         } catch (error: any) {
+            paymentInProgress.current = false;
+            setPaymentMessageType("error");
             setPaymentMessage(error?.data?.message || error?.message || "Could not start checkout. Please try again.");
         }
     };
@@ -231,503 +276,72 @@ export default function CheckoutPage() {
                         alignItems: "center",
                     }}
                 >
-                    {/* Header */}
-                    <Box
-                        sx={{
-                            mb: { xs: 4, md: 6 },
-                            width: "100%",
-                            maxWidth: { xs: "100%", md: "1280px" },
-                        }}
-                    >
-                        <BreadCrumb
-                            items={[
-                                { label: "Home", path: "/", icon: <HomeIcon sx={{ fontSize: 18 }} /> },
-                                { label: "Course Glossary", path: `/course-glossary/${courseId}` },
-                                { label: "Checkout", path: "#" }
-                            ]}
-                        />
-                        <Typography
-                            sx={{
-                                fontSize: { xs: '20px', md: '28px', lg: '32px' },
-                                fontWeight: 700,
-                                color: '#0F172A',
-                                mt: { xs: 2, md: 3 }
-                            }}
-                        >
-                            Checkout Page
-                        </Typography>
+                    <Box sx={{ width: "100%", maxWidth: 1120, mb: 3 }}>
+                        <BreadCrumb items={[
+                            { label: "Home", path: "/", icon: <HomeIcon sx={{ fontSize: 18 }} /> },
+                            { label: "Course Glossary", path: `/course-glossary/${courseId}` },
+                            { label: "Checkout", path: "#" },
+                        ]} />
+                        <Typography sx={{ mt: 2, color: "#171827", fontSize: { xs: 25, sm: 30 }, fontWeight: 750, letterSpacing: "-0.04em" }}>Checkout</Typography>
+                        <Typography sx={{ mt: 0.5, color: "#73778A", fontSize: 14 }}>Review your course and payment details.</Typography>
                     </Box>
 
-                    {/* Loading / Error states */}
-                    {isCourseLoading && (
-                        <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
-                            <CircularProgress sx={{ color: '#4F39F6' }} />
-                        </Box>
-                    )}
-
-                    {isCourseError && (
-                        <Box sx={{ width: "100%", maxWidth: { xs: "100%", md: "1280px" }, mb: 3 }}>
-                            <Alert severity="error">
-                                Couldn't load course details{courseId ? ` for course #${courseId}` : ""}. Please try again.
-                            </Alert>
-                        </Box>
-                    )}
+                    {isCourseLoading && <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}><CircularProgress sx={{ color: "#4F39F6" }} /></Box>}
+                    {isCourseError && <Box sx={{ width: "100%", maxWidth: 1120, mb: 3 }}><Alert severity="error">Couldn't load course details{courseId ? ` for course #${courseId}` : ""}. Please try again.</Alert></Box>}
 
                     {!isCourseLoading && !isCourseError && (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: { xs: 3, md: 5 },
-                                flexDirection: {
-                                    xs: 'column',
-                                    md: 'row',
-                                },
-                                alignItems: { xs: 'stretch', md: 'flex-start' },
-                                justifyContent: "center",
-                                width: "100%",
-                                maxWidth: { xs: "100%", md: "1280px" },
-                            }}
-                        >
-                            {/* Left: Form */}
-                            <Box
-                                component="form"
-                                sx={{
-                                    bgcolor: 'white',
-                                    border: '1px solid #E2E8F0',
-                                    borderRadius: 3,
-                                    p: { xs: 3, md: 4, lg: 5 },
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: { xs: 3, md: 4 },
-                                    width: { xs: "100%", md: "calc(60% - 20px)", lg: "820px" },
-                                    maxWidth: "100%",
-                                    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                {/* Country & State */}
-                                <Box
-                                    sx={{
-                                        display: 'grid',
-                                        gap: { xs: 2, md: 3 },
-                                        gridTemplateColumns: {
-                                            xs: '1fr',
-                                            sm: '1fr 1fr',
-                                        },
-                                    }}
-                                >
-                                    <Box>
-                                        <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, mb: 1.5, color: '#0F172A' }}>
-                                            Country
-                                        </Typography>
-                                        <TextField
-                                            fullWidth
-                                            placeholder="Enter Country"
-                                            size="medium"
-                                            variant="outlined"
-                                            InputProps={{
-                                                sx: {
-                                                    borderRadius: 2,
-                                                    bgcolor: '#fff',
-                                                    '& .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: '#E2E8F0',
-                                                    },
-                                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: '#CBD5E1',
-                                                    },
-                                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: '#4F39F6',
-                                                    },
-                                                },
-                                            }}
-                                        />
+                        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "minmax(0, 1.35fr) minmax(320px, 0.85fr)" }, alignItems: "start", gap: { xs: 2, md: 3 }, width: "100%", maxWidth: 1120 }}>
+                            <Box sx={{ display: "grid", gap: 2 }}>
+                                <Paper elevation={0} sx={{ display: "flex", alignItems: "center", gap: 2, p: { xs: 2, sm: 2.5 }, border: "1px solid #E8EAF2", borderRadius: 3, boxShadow: "0 8px 24px rgba(25,30,60,.05)" }}>
+                                    <Box component="img" src={courseImage} alt={courseTitle} sx={{ width: { xs: 76, sm: 104 }, height: { xs: 76, sm: 104 }, borderRadius: 2, objectFit: "cover", bgcolor: "#F1F2F8", flexShrink: 0 }} />
+                                    <Box sx={{ minWidth: 0, flex: 1 }}>
+                                        {courseCategory && <Typography sx={{ mb: 0.5, color: "#5B4BDB", fontSize: 12, fontWeight: 700 }}>{courseCategory}</Typography>}
+                                        <Typography sx={{ color: "#171827", fontSize: { xs: 16, sm: 19 }, lineHeight: 1.35, fontWeight: 750, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{courseTitle}</Typography>
+                                        <Typography sx={{ mt: 0.75, color: "#73778A", fontSize: 12 }}>{totalLectures} lessons <Box component="span" sx={{ px: 0.5 }}>Â·</Box> {totalHours} hours</Typography>
                                     </Box>
-                                    <Box>
-                                        <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, mb: 1.5, color: '#0F172A' }}>
-                                            State/Union Territory
-                                        </Typography>
-                                        <TextField
-                                            fullWidth
-                                            placeholder="Enter State"
-                                            size="medium"
-                                            variant="outlined"
-                                            InputProps={{
-                                                sx: {
-                                                    borderRadius: 2,
-                                                    bgcolor: '#fff',
-                                                    '& .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: '#E2E8F0',
-                                                    },
-                                                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: '#CBD5E1',
-                                                    },
-                                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                        borderColor: '#4F39F6',
-                                                    },
-                                                },
-                                            }}
-                                        />
-                                    </Box>
-                                </Box>
-
-                                {/* Payment */}
-                                <FormControl component="fieldset" sx={{ width: '100%', bgcolor: '#F8FAFC', borderRadius: 2, p: { xs: 2, md: 3 } }}>
-                                    <FormLabel component="legend" sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, color: '#0F172A', mb: 3 }}>
-                                        Payment Method
-                                    </FormLabel>
-
-                                    {/* Card Option */}
-                                    <Paper
-                                        sx={{
-                                            p: 2.5,
-                                            bgcolor: '#fff',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            border: '1px solid #E2E8F0',
-                                            borderRadius: 2,
-                                            boxShadow: 'none',
-                                            flexWrap: 'wrap',
-                                            gap: 1,
-                                            mb: 3,
-                                        }}
-                                    >
-                                        <Box display="flex" alignItems="center" gap={1.5}>
-                                            <Radio
-                                                defaultChecked
-                                                value="card"
-                                                sx={{
-                                                    p: 0.5,
-                                                    color: '#4F39F6',
-                                                    '&.Mui-checked': {
-                                                        color: '#4F39F6',
-                                                    },
-                                                }}
-                                            />
-                                            <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, color: '#0F172A' }}>
-                                                Credit/Debit Card
-                                            </Typography>
-                                        </Box>
-                                        <Box
-                                            component="img"
-                                            src="images/visa.png"
-                                            alt="Visa/Mastercard"
-                                            height={28.5}
-                                            width={72.25}
-                                            sx={{ ml: { xs: 0, sm: 2 } }}
-                                        />
-                                    </Paper>
-
-                                    {/* Card Fields */}
-                                    <Stack spacing={2.5} px={0.5}>
-                                        <Box>
-                                            <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
-                                                Name of Card
-                                            </Typography>
-                                            <TextField
-                                                fullWidth
-                                                placeholder="Name of card"
-                                                size="medium"
-                                                InputProps={{
-                                                    sx: {
-                                                        borderRadius: 2,
-                                                        bgcolor: '#fff',
-                                                        '& .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#E2E8F0',
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#CBD5E1',
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#4F39F6',
-                                                        },
-                                                    },
-                                                }}
-                                            />
-                                        </Box>
-                                        <Box>
-                                            <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
-                                                Card Number
-                                            </Typography>
-                                            <TextField
-                                                fullWidth
-                                                placeholder="Card Number"
-                                                size="medium"
-                                                InputProps={{
-                                                    sx: {
-                                                        borderRadius: 2,
-                                                        bgcolor: '#fff',
-                                                        '& .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#E2E8F0',
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#CBD5E1',
-                                                        },
-                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: '#4F39F6',
-                                                        },
-                                                    },
-                                                }}
-                                            />
-                                        </Box>
-                                        <Box
-                                            sx={{
-                                                display: 'grid',
-                                                gridTemplateColumns: {
-                                                    xs: '1fr',
-                                                    sm: '1fr 1fr',
-                                                },
-                                                gap: 2.5,
-                                            }}
-                                        >
-                                            <Box>
-                                                <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
-                                                    Expiry Date
-                                                </Typography>
-                                                <TextField
-                                                    fullWidth
-                                                    placeholder="MM/YY"
-                                                    size="medium"
-                                                    InputProps={{
-                                                        sx: {
-                                                            borderRadius: 2,
-                                                            bgcolor: '#fff',
-                                                            '& .MuiOutlinedInput-notchedOutline': {
-                                                                borderColor: '#E2E8F0',
-                                                            },
-                                                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                                borderColor: '#CBD5E1',
-                                                            },
-                                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                                borderColor: '#4F39F6',
-                                                            },
-                                                        },
-                                                    }}
-                                                />
-                                            </Box>
-                                            <Box>
-                                                <Typography sx={{ fontSize: '14px', mb: 1, color: '#334155', fontWeight: 500 }}>
-                                                    CVC/CVV
-                                                </Typography>
-                                                <TextField
-                                                    fullWidth
-                                                    placeholder="CVC"
-                                                    size="medium"
-                                                    InputProps={{
-                                                        sx: {
-                                                            borderRadius: 2,
-                                                            bgcolor: '#fff',
-                                                            '& .MuiOutlinedInput-notchedOutline': {
-                                                                borderColor: '#E2E8F0',
-                                                            },
-                                                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                                borderColor: '#CBD5E1',
-                                                            },
-                                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                                borderColor: '#4F39F6',
-                                                            },
-                                                        },
-                                                    }}
-                                                />
-                                            </Box>
-                                        </Box>
-                                    </Stack>
-
-                                    {/* PayPal Option */}
-                                    <Paper
-                                        sx={{
-                                            mt: 3,
-                                            p: 2.5,
-                                            bgcolor: '#fff',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            border: '1px solid #E2E8F0',
-                                            borderRadius: 2,
-                                            boxShadow: 'none',
-                                            flexWrap: 'wrap',
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <Box display="flex" alignItems="center" gap={1.5}>
-                                            <Radio
-                                                value="paypal"
-                                                sx={{
-                                                    p: 0.5,
-                                                    color: '#4F39F6',
-                                                    '&.Mui-checked': {
-                                                        color: '#4F39F6',
-                                                    },
-                                                }}
-                                            />
-                                            <Typography sx={{ fontWeight: 600, fontSize: { xs: '16px', md: '18px' }, color: '#0F172A' }}>
-                                                PayPal
-                                            </Typography>
-                                        </Box>
-                                        <Box
-                                            component="img"
-                                            src="icons/paypal.svg"
-                                            alt="PayPal logo"
-                                            height={28.5}
-                                            width={72.25}
-                                            sx={{ ml: { xs: 0, sm: 2 } }}
-                                        />
-                                    </Paper>
-                                </FormControl>
-                            </Box>
-
-                            {/* Right: Sidebar */}
-                            <Box
-                                sx={{
-                                    fontFamily: 'Inter, sans-serif',
-                                    width: { xs: "100%", md: "calc(40% - 20px)", lg: "400px" },
-                                    display: "grid",
-                                    gap: { xs: 2.5, md: 3 },
-                                    flexShrink: 0,
-                                }}
-                            >
-                                {/* Order Header */}
-                                <Typography sx={{ fontWeight: 700, fontSize: { xs: '18px', md: '22px' }, color: '#0F172A' }}>
-                                    Order Details
-                                </Typography>
-
-                                {/* Course Card — now dynamic */}
-                                <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: { xs: 'column', sm: 'row' },
-                                        p: { xs: 2, md: 2.5 },
-                                        borderRadius: 2,
-                                        maxWidth: "100%",
-                                        bgcolor: "#fff",
-                                        border: '1px solid #E2E8F0',
-                                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                                        gap: 2,
-                                    }}
-                                >
-                                    <Box
-                                        component="img"
-                                        src={courseImage}
-                                        alt={courseTitle}
-                                        sx={{
-                                            width: 131,
-                                            height: 131,
-                                            borderRadius: 1,
-                                            objectFit: 'cover',
-                                            my: "auto",
-                                            bgcolor: "#F8FAFC"
-                                        }}
-                                    />
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'space-between',
-                                            gap: 1,
-                                        }}
-                                    >
-                                        {courseCategory && (
-                                            <Typography sx={{ fontSize: '14px', color: '#4F39F6', fontWeight: 600 }}>
-                                                {courseCategory}
-                                            </Typography>
-                                        )}
-                                        <Typography sx={{ fontSize: { xs: '16px', md: '18px' }, fontWeight: 600, lineHeight: 1.4, color: '#0F172A' }}>
-                                            {courseTitle}
-                                        </Typography>
-                                        <Typography sx={{ fontSize: '14px', color: '#64748B', fontWeight: 400 }}>
-                                            {totalLectures} Lectures · {totalHours} Total Hours
-                                        </Typography>
-                                        <Typography sx={{ fontSize: { xs: '18px', md: '20px' }, fontWeight: 700, color: '#0F172A' }}>
-                                            {formatCurrency(price)}
-                                        </Typography>
+                                    <Box sx={{ textAlign: "right", flexShrink: 0 }}>
+                                        {discount > 0 && <Typography sx={{ color: "#9295A3", fontSize: 12, textDecoration: "line-through" }}>{formatCurrency(price)}</Typography>}
+                                        <Typography sx={{ color: "#171827", fontSize: { xs: 19, sm: 22 }, fontWeight: 800 }}>{formatCurrency(total)}</Typography>
+                                        {discount > 0 && <Typography sx={{ mt: 0.4, px: 1, py: 0.25, borderRadius: 5, bgcolor: "#E9F7E9", color: "#287A32", fontSize: 11, fontWeight: 800 }}>{Math.round((discount / (price || 1)) * 100)}% OFF</Typography>}
                                     </Box>
                                 </Paper>
 
-                                {/* Apply Coupon */}
-                                <Paper variant="outlined" sx={{ p: { xs: 2, md: 2.5 }, borderRadius: 2, bgcolor: "#fff" }}>
-                                    <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#0F172A', mb: 1.5 }}>
-                                        APPLY COUPON CODE
-                                    </Typography>
-                                    <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            value={couponCode}
-                                            onChange={(event) => setCouponCode(event.target.value)}
-                                            placeholder="Enter coupon code"
-                                            inputProps={{ "aria-label": "Coupon code" }}
-                                        />
-                                        <Button
-                                            variant="outlined"
-                                            onClick={() => void handleApplyCoupon()}
-                                            disabled={isApplyingCoupon || isQuoteLoading}
-                                        >
-                                            {isApplyingCoupon ? <CircularProgress size={18} /> : "Apply"}
-                                        </Button>
+                                <Paper elevation={0} sx={{ display: "flex", alignItems: "center", gap: 1.5, p: 2, border: "1px solid #E8EAF2", borderRadius: 3, bgcolor: "#fff" }}>
+                                    <Box sx={{ width: 38, height: 38, display: "grid", placeItems: "center", borderRadius: 2, bgcolor: "#EEF0FF", color: "#5141C8", flexShrink: 0 }}><VerifiedUserOutlinedIcon fontSize="small" /></Box>
+                                    <Box>
+                                        <Typography sx={{ color: "#222438", fontSize: 14, fontWeight: 750 }}>Learn with confidence</Typography>
+                                        <Typography sx={{ color: "#73778A", fontSize: 12 }}>Refund requests are handled under our <Link to="/refund-policy" style={{ color: "#5141C8", fontWeight: 650 }}>refund policy</Link>.</Typography>
+                                    </Box>
+                                </Paper>
+
+                                <Paper elevation={0} sx={{ p: 2, border: "1px solid #E8EAF2", borderRadius: 3, bgcolor: "#fff" }}>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.25, color: "#25263A" }}><LocalOfferOutlinedIcon sx={{ color: "#5141C8", fontSize: 19 }} /><Typography sx={{ fontSize: 13, fontWeight: 750 }}>Have a coupon code?</Typography></Box>
+                                    <Stack direction="row" spacing={1}>
+                                        <TextField fullWidth size="small" value={couponCode} onChange={(event) => setCouponCode(event.target.value)} placeholder="Enter coupon code" inputProps={{ "aria-label": "Coupon code" }} sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2, bgcolor: "#FAFAFC" } }} />
+                                        <Button onClick={() => void handleApplyCoupon()} disabled={isApplyingCoupon || isQuoteLoading} variant="outlined" sx={{ minWidth: 92, borderRadius: 2, borderColor: "#DADCE8", color: "#5141C8", fontWeight: 700, textTransform: "none" }}>{isApplyingCoupon ? <CircularProgress size={18} /> : "Apply"}</Button>
                                     </Stack>
-                                    {appliedCoupon && <Typography variant="caption" color="success.main">{appliedCoupon} applied</Typography>}
+                                    {appliedCoupon && <Typography sx={{ mt: 1, color: "#287A32", fontSize: 12 }}>{appliedCoupon} applied</Typography>}
                                     {couponError && <Alert severity="error" sx={{ mt: 1 }}>{couponError}</Alert>}
                                 </Paper>
 
-                                {/* Price Summary — now dynamic */}
-                                <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        p: { xs: 2.5, md: 3 },
-                                        borderRadius: 2,
-                                        bgcolor: "#fff",
-                                        border: '1px solid #E2E8F0',
-                                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                                    }}
-                                >
-                                    <Box display="flex" justifyContent="space-between" mb={2.5}>
-                                        <Typography sx={{ fontSize: '16px', color: '#64748B', fontWeight: 400 }}>Price</Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: "18px", color: '#0F172A' }}>{formatCurrency(price)}</Typography>
-                                    </Box>
-                                    <Box display="flex" justifyContent="space-between" mb={2.5}>
-                                        <Typography sx={{ fontSize: '16px', color: '#64748B', fontWeight: 400 }}>Discount</Typography>
-                                        <Typography sx={{ fontWeight: 600, fontSize: "18px", color: '#10B981' }}>
-                                            {discount > 0 ? `- ${formatCurrency(discount)}` : formatCurrency(0)}
-                                        </Typography>
-                                    </Box>
-                                    <Divider sx={{ my: 2.5, borderColor: '#E2E8F0' }} />
-
-                                    <Box display="flex" justifyContent="space-between">
-                                        <Typography sx={{ fontSize: { xs: '18px', md: '20px' }, fontWeight: 700, color: '#0F172A' }}>Total</Typography>
-                                        <Typography sx={{ fontSize: { xs: '18px', md: '20px' }, fontWeight: 700, color: '#0F172A' }}>{formatCurrency(total)}</Typography>
-                                    </Box>
-                                </Paper>
-
-                                {/* Checkout Button */}
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    disabled={isPlacingOrder || isQuoteLoading || !quote || Boolean(quoteError)}
-                                    onClick={handleBuyNow}
-                                    sx={{
-                                        bgcolor: '#0F172A',
-                                        color: '#fff',
-                                        textTransform: 'none',
-                                        borderRadius: 2,
-                                        fontWeight: 600,
-                                        py: { xs: 1.5, md: 1.75 },
-                                        fontSize: { xs: '16px', md: '18px' },
-                                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.2)',
-                                        transition: 'all 0.2s ease',
-                                        '&:hover': {
-                                            bgcolor: '#1E293B',
-                                            boxShadow: '0 6px 16px rgba(15, 23, 42, 0.3)',
-                                            transform: 'translateY(-1px)',
-                                        },
-                                    }}
-                                >
-                                    {isPlacingOrder ? "Processing..." : "Buy Now"}
-                                </Button>
-                                {isQuoteLoading && <CircularProgress size={20} sx={{ mx: "auto" }} />}
-                                {quoteError && <Alert severity="error">{quoteError}</Alert>}
-                                {paymentMessage && <Alert severity="info">{paymentMessage}</Alert>}
                             </Box>
+
+                            <Paper elevation={0} sx={{ overflow: "hidden", border: "1px solid #E8EAF2", borderRadius: 3, boxShadow: "0 10px 30px rgba(25,30,60,.07)", position: { md: "sticky" }, top: { md: 24 } }}>
+                                <Box sx={{ px: 2.5, py: 1.8, borderBottom: "1px solid #F0F0F4", color: "#222438" }}><Typography sx={{ fontSize: 15, fontWeight: 750 }}>Order summary</Typography></Box>
+                                <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, mb: 1.75 }}><Typography sx={{ color: "#666A7A", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{courseTitle}</Typography><Typography sx={{ color: "#222438", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>{formatCurrency(price)}</Typography></Box>
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.75 }}><Typography sx={{ color: "#666A7A", fontSize: 13 }}>Discount</Typography><Typography sx={{ color: discount > 0 ? "#37833B" : "#666A7A", fontSize: 13, fontWeight: 700 }}>{discount > 0 ? `âˆ’${formatCurrency(discount)}` : formatCurrency(0)}</Typography></Box>
+                                    {quote?.coupon?.code && <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.75 }}><Typography sx={{ color: "#666A7A", fontSize: 13 }}>Coupon</Typography><Typography sx={{ color: "#37833B", fontSize: 13, fontWeight: 700 }}>{quote.coupon.code} applied</Typography></Box>}
+                                    <Divider sx={{ my: 1.75, borderStyle: "dashed", borderColor: "#DADCE5" }} />
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.75 }}><Typography sx={{ color: "#222438", fontSize: 16, fontWeight: 800 }}>Total payment</Typography><Typography sx={{ color: "#222438", fontSize: 20, fontWeight: 850 }}>{formatCurrency(total)}</Typography></Box>
+                                    {discount > 0 && <Typography sx={{ mb: 1.75, color: "#37833B", fontSize: 12, fontWeight: 600 }}>You save {formatCurrency(discount)}</Typography>}
+                                    <Button fullWidth variant="contained" disabled={isPlacingOrder || isQuoteLoading || !quote || Boolean(quoteError)} onClick={handleBuyNow} sx={{ py: 1.35, borderRadius: 2, bgcolor: "#5141C8", color: "#fff", textTransform: "none", fontSize: 15, fontWeight: 750, boxShadow: "none", "&:hover": { bgcolor: "#4132AE", boxShadow: "none" } }}>{isPlacingOrder ? "Processing..." : `Pay ${formatCurrency(total)}`}</Button>
+                                    {isQuoteLoading && <CircularProgress size={20} sx={{ display: "block", mx: "auto", mt: 1.5 }} />}
+                                    {quoteError && <Alert severity="error" sx={{ mt: 1.5 }}>{quoteError}</Alert>}
+                                    {paymentMessage && <Alert severity={paymentMessageType} sx={{ mt: 1.5 }}>{paymentMessage}</Alert>}
+                                    <Typography sx={{ mt: 1.25, color: "#858898", fontSize: 10, textAlign: "center" }}>Secure payment powered by Razorpay</Typography>
+                                </Box>
+                            </Paper>
                         </Box>
                     )}
                 </Box>
