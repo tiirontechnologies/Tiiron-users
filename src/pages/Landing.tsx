@@ -376,7 +376,7 @@ const Landing = () => {
   };
 
   const handleAddToCart = async (courseId: number) => {
-    if (!isLoggedIn) return navigate("/sign-up");
+    if (!isLoggedIn) return navigate("/login");
     try {
       await addToCartServer({ courseId }).unwrap();
     } catch (error) {
@@ -385,7 +385,7 @@ const Landing = () => {
   };
 
   const handleFavorite = async (courseId: number) => {
-    if (!isLoggedIn) return navigate("/sign-up");
+    if (!isLoggedIn) return navigate("/login");
 
     const course = featuredCoursesData.find(
       (item) => Number(item.id) === courseId,

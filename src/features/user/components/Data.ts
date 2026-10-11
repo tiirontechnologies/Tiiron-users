@@ -6,8 +6,8 @@ import {
   ClipboardCheck,
   Boxes,
   BookOpen,
-  Award,
   Heart,
+  Activity,
 } from "lucide-react";
 import type {
   StatItem,
@@ -71,7 +71,7 @@ export const journey: JourneyPoint[] = [
 export const quickLinks: QuickLink[] = [
   { icon: BookOpen, label: "My Courses" },
   { icon: FileEdit, label: "Certificates" },
-  { icon: Heart, label: "Wishlist" },
   { icon: ClipboardCheck, label: "My Quiz History" },
-  { icon: Award, label: "Achievements" },
+  { icon: Heart, label: "Wishlist" },
+  { icon: Activity, label: "Activity" },
 ];
