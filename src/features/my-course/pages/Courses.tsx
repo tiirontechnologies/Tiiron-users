@@ -160,7 +160,8 @@ export default function Courses({ onCourseClick }: CoursesProps) {
                   progress={mockProgress}
                   learnerRating={mockLearnerRating}
                   variant="my-course"
-                  navigatePath={(id) => `/course-practice/${id}`}
+                  navigatePath={(id) => `/course-glossary/${id}`}
+                  onCardClick={(id) => navigate(`/course-glossary/${id}`)}
                   onStartCourse={handleStartCourse}
                   onShare={handleShare}
                   onArchive={handleArchive}

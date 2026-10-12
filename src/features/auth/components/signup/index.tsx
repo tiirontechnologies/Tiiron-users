@@ -1,5 +1,5 @@
 import CustomTextField from "@components/ui/textfields/CustomTextField";
-import LoginPng from "@images/login.png";
+import SignupImage from "../../../../assets/user-login-img.jpg.jpeg";
 import AuthLayout from "@layouts/AuthLayout";
 import { Alert, Box, Snackbar } from "@mui/material";
 import { useRegisterUserMutation } from "../../api/authApi";
@@ -47,7 +47,7 @@ const Index = () => {
 
   return (
     <AuthLayout
-      imageSrc={LoginPng}
+      imageSrc={SignupImage}
       imageOnLeft={true}
       titleText="Create your account"
       submitButtonText="Create Account →"
