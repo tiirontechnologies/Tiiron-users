@@ -85,10 +85,10 @@ const enrollments: Enrollment[] = data?.data || [];
           gridTemplateColumns: {
             xs: "1fr",
             sm: "repeat(2, 1fr)",
-            md: "repeat(3, 1fr)",
-            lg: "repeat(4, 1fr)",
+            md: "repeat(2, minmax(0, 1fr))",
+            lg: "repeat(3, minmax(0, 1fr))",
           },
-          gap: 2.5,
+          gap: { xs: 2, md: 2.5 },
           py: 3,
           // px:1,
           // p:2,
@@ -213,10 +213,10 @@ const enrollments: Enrollment[] = data?.data || [];
         gridTemplateColumns: {
           xs: "1fr",
           sm: "repeat(2, 1fr)",
-          md: "repeat(3, 1fr)",
-          lg: "repeat(4, 1fr)",
+          md: "repeat(2, minmax(0, 1fr))",
+          lg: "repeat(3, minmax(0, 1fr))",
         },
-        gap: 2.5,
+        gap: { xs: 2, md: 2.5 },
         py: 3,
         p:2,
       }}
@@ -230,6 +230,10 @@ const enrollments: Enrollment[] = data?.data || [];
             key={enrollment.id}
             elevation={0}
             sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              height: "100%",
               borderRadius: 3,
               border: "1px solid",
               borderColor: "divider",
@@ -242,9 +246,9 @@ const enrollments: Enrollment[] = data?.data || [];
               },
             }}
           >
-            <CardActionArea>
+            <CardActionArea sx={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }}>
               {/* Thumbnail */}
-              <Box sx={{ position: "relative", height: 140 }}>
+              <Box sx={{ position: "relative", height: 140, flexShrink: 0 }}>
                 {course.image ? (
                   <Box
                     component="img"
@@ -303,7 +307,7 @@ const enrollments: Enrollment[] = data?.data || [];
                 />
               </Box>
 
-              <CardContent sx={{ p: 2 }}>
+              <CardContent sx={{ p: 2, width: "100%", flex: 1, display: "flex", flexDirection: "column" }}>
                 <Typography
                   variant="subtitle1"
                   fontWeight={700}
@@ -389,7 +393,8 @@ const enrollments: Enrollment[] = data?.data || [];
                  onClick={() => handleCourseNavigate(course.id)}
                   startIcon={<PlayArrowRoundedIcon />}
                   sx={{
-                    mt: 1.5,
+                    mt: "auto",
+                    pt: 1.5,
                     borderRadius: 2,
                     textTransform: "none",
                     fontWeight: 700,

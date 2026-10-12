@@ -78,10 +78,6 @@ const capitalizeFirstLetter = (value?: string) => {
 
   // Card click handler - use parent's handler or navigatePath
   const handleCardClick = () => {
-    if (variant === "my-course" && onStartCourse) {
-      // For my-course variant, START COURSE button handles navigation
-      return;
-    }
     if (onCardClick) {
       onCardClick(id);
     } else if (navigatePath) {

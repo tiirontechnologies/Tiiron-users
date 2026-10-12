@@ -193,7 +193,7 @@ export default function CheckoutPage() {
                 key: razorpayKeyId,
                 amount: order?.amount,
                 currency: order?.currency,
-                name: "Tiiron Academy",
+                name: "Tiiron AI Powered LMS",
                 description: courseTitle,
                 order_id: order?.orderId,
                 handler: async (checkoutResponse: {
@@ -330,7 +330,7 @@ export default function CheckoutPage() {
                                 <Box sx={{ px: 2.5, py: 1.8, borderBottom: "1px solid #F0F0F4", color: "#222438" }}><Typography sx={{ fontSize: 15, fontWeight: 750 }}>Order summary</Typography></Box>
                                 <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2, mb: 1.75 }}><Typography sx={{ color: "#666A7A", fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{courseTitle}</Typography><Typography sx={{ color: "#222438", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>{formatCurrency(price)}</Typography></Box>
-                                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.75 }}><Typography sx={{ color: "#666A7A", fontSize: 13 }}>Discount</Typography><Typography sx={{ color: discount > 0 ? "#37833B" : "#666A7A", fontSize: 13, fontWeight: 700 }}>{discount > 0 ? `âˆ’${formatCurrency(discount)}` : formatCurrency(0)}</Typography></Box>
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.75 }}><Typography sx={{ color: "#666A7A", fontSize: 13 }}>Discount</Typography><Typography sx={{ color: discount > 0 ? "#37833B" : "#666A7A", fontSize: 13, fontWeight: 700 }}>{discount > 0 ? `−${formatCurrency(discount)}` : formatCurrency(0)}</Typography></Box>
                                     {quote?.coupon?.code && <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1.75 }}><Typography sx={{ color: "#666A7A", fontSize: 13 }}>Coupon</Typography><Typography sx={{ color: "#37833B", fontSize: 13, fontWeight: 700 }}>{quote.coupon.code} applied</Typography></Box>}
                                     <Divider sx={{ my: 1.75, borderStyle: "dashed", borderColor: "#DADCE5" }} />
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.75 }}><Typography sx={{ color: "#222438", fontSize: 16, fontWeight: 800 }}>Total payment</Typography><Typography sx={{ color: "#222438", fontSize: 20, fontWeight: 850 }}>{formatCurrency(total)}</Typography></Box>
