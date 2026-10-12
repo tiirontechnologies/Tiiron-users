@@ -122,7 +122,7 @@ export default function WishlistTab() {
           justifyContent: "center",
           textAlign: "center",
           px: 3,
-          mt:2.5,
+          mt: 2.5,
         }}
       >
         <Box
@@ -206,7 +206,6 @@ export default function WishlistTab() {
               key={item.id}
               elevation={0}
               sx={{
-                widht: 280,
                 borderRadius: 3,
                 overflow: "hidden",
                 border: "1px solid #eef0f3",

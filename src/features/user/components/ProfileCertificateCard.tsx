@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   LinearProgress,
   Stack,
   Typography,
@@ -108,12 +109,21 @@ export default function ProfileCertificateCard({
       <Card
         elevation={0}
         sx={{
-          minHeight: 170,
+          minHeight: 220,
           borderRadius: 3,
-          bgcolor: "#F8FAFC",
+          bgcolor: "#fff",
           border: "1px solid #E2E8F0",
+          width: "100%",
+          display: "grid",
+          placeItems: "center",
         }}
-      />
+      >
+        <CardContent sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 1.25, textAlign: "center" }}>
+          <CircularProgress size={32} thickness={4} sx={{ color: "#4F46E5" }} />
+          <Typography fontWeight={800} color="#334155">Loading certificate</Typography>
+          <Typography variant="body2" color="text.secondary">Checking your course progress and certificate status…</Typography>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -126,12 +136,18 @@ export default function ProfileCertificateCard({
       elevation={0}
       sx={{
         border: "1px solid",
-        borderColor: earned ? "#BBF7D0" : "#E2E8F0",
+        borderColor: earned ? "#C7D2FE" : "#E2E8F0",
         borderRadius: 3,
         overflow: "hidden",
-        mt:3.5,
+        minWidth: 0,
+        width: "100%",
+        height: "100%",
+        bgcolor: "#fff",
+        transition: "transform .18s ease, box-shadow .18s ease, border-color .18s ease",
+        "&:hover": { transform: "translateY(-2px)", borderColor: "#A5B4FC", boxShadow: "0 12px 26px rgba(79,70,229,.09)" },
       }}
     >
+      <Box sx={{ height: 5, background: earned ? "linear-gradient(90deg,#4F46E5,#8B5CF6)" : "linear-gradient(90deg,#CBD5E1,#E2E8F0)" }} />
       <CardContent sx={{ p: 2.5 }}>
         <Stack direction="row" spacing={1.5} alignItems="flex-start">
           <Box
@@ -142,11 +158,11 @@ export default function ProfileCertificateCard({
               borderRadius: 2,
               display: "grid",
               placeItems: "center",
-              bgcolor: earned ? "#ECFDF5" : "#FFF7ED",
+              bgcolor: earned ? "#EEF2FF" : "#F8FAFC",
             }}
           >
             {earned ? (
-              <WorkspacePremiumRoundedIcon sx={{ color: "#059669" }} />
+              <WorkspacePremiumRoundedIcon sx={{ color: "#4F46E5" }} />
             ) : (
               <LockOutlinedIcon sx={{ color: "#D97706" }} />
             )}
@@ -167,8 +183,8 @@ export default function ProfileCertificateCard({
               sx={{
                 mt: 0.8,
                 fontWeight: 700,
-                bgcolor: earned ? "#DCFCE7" : "#FFF7ED",
-                color: earned ? "#047857" : "#B45309",
+                bgcolor: earned ? "#EEF2FF" : templateUnavailable ? "#FEF2F2" : "#FFF7ED",
+                color: earned ? "#4338CA" : templateUnavailable ? "#B91C1C" : "#B45309",
               }}
             />
           </Box>
@@ -202,6 +218,8 @@ export default function ProfileCertificateCard({
                 fontWeight: 800,
                 borderRadius: 2,
                 boxShadow: "none",
+                background: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+                "&:hover": { background: "linear-gradient(135deg, #4338ca 0%, #6d28d9 100%)", boxShadow: "0 6px 16px rgba(79,70,229,.2)" },
               }}
             >
               View certificate
@@ -231,10 +249,10 @@ export default function ProfileCertificateCard({
               sx={{
                 height: 7,
                 borderRadius: 5,
-                bgcolor: "#E2E8F0",
+                  bgcolor: "#E2E8F0",
                 "& .MuiLinearProgress-bar": {
                   borderRadius: 5,
-                  bgcolor: "#F59E0B",
+                  bgcolor: "#6366F1",
                 },
               }}
             />
