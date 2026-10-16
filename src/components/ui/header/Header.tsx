@@ -8,9 +8,10 @@ import ProfilePopup from "./profilePopup";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import NotificationPanel from "./NotificationPanel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CartModal } from "../cart/cartModal";
 import { useGetCartQuery } from "../../../features/course-browse/api/courseApi";
+import { OPEN_CART_EVENT } from "../cart/cartEvents";
 
 const Header = ({
   onHamburgerClick,
@@ -24,6 +25,11 @@ const Header = ({
   const isSm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [isCartOpen, setIsCartOpen] = useState(false);
+  useEffect(() => {
+    const openCartFromCard = () => setIsCartOpen(true);
+    window.addEventListener(OPEN_CART_EVENT, openCartFromCard);
+    return () => window.removeEventListener(OPEN_CART_EVENT, openCartFromCard);
+  }, []);
 
   const { data: cartData } = useGetCartQuery(undefined, {
     pollingInterval: 30000,

@@ -247,7 +247,7 @@ export default function FreeCourses() {
           <Box
             sx={{
               display: "grid",
-              gap: { xs: 3, md: 4 },
+              gap: { xs: 3, md: 4, lg: 3 },
               width: "100%",
               maxWidth: "1440px",
               mx: "auto",
@@ -255,7 +255,7 @@ export default function FreeCourses() {
                 xs: "repeat(auto-fill, minmax(260px, 1fr))",
                 sm: "repeat(2, minmax(260px, 1fr))",
                 md: "repeat(3, minmax(260px, 1fr))",
-                lg: "repeat(4, minmax(260px, 1fr))",
+                lg: "repeat(auto-fit, minmax(280px, 1fr))",
               },
               justifyItems: "center",
               alignItems: "stretch",

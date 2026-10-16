@@ -276,6 +276,18 @@ const CourseProgress: React.FC = () => {
   /* ---------- Normalize Data ---------- */
   const course = (courseData as any)?.data ?? courseData;
   const courseName = course?.title;
+  const organizationName =
+    course?.organization?.name ||
+    course?.orgName ||
+    course?.createdByUser?.organization?.name ||
+    course?.createdBy?.trim() ||
+    course?.orgCode?.trim() ||
+    "Course Organization";
+  const organizationLogo =
+    course?.organization?.logo ||
+    course?.orgLogo ||
+    course?.createdByUser?.profile?.picture ||
+    "";
 
   // Get selected unit name dynamically
   const chapterInfo = useMemo(() => {
@@ -290,6 +302,18 @@ const CourseProgress: React.FC = () => {
       }
     }
     return "";
+  }, [selectedUnitId, course?.chapters]);
+
+  const selectedUnit = useMemo(() => {
+    if (!selectedUnitId || !course?.chapters) return undefined;
+
+    for (const chapter of course.chapters) {
+      const unit = chapter.units?.find(
+        (item: any) => String(item.id) === String(selectedUnitId)
+      );
+      if (unit) return unit;
+    }
+    return undefined;
   }, [selectedUnitId, course?.chapters]);
 
   const courseDataForSidebar = course?.chapters ? course : { chapters: [] };
@@ -408,7 +432,13 @@ const CourseProgress: React.FC = () => {
           background: COLORS.background.light,
         }}
       >
-        <CoursePracticeContent data={practiceData} unitId={selectedUnitId} />
+        <CoursePracticeContent
+          data={practiceData}
+          unitId={selectedUnitId}
+          unitData={selectedUnit}
+          organizationName={organizationName}
+          organizationLogo={organizationLogo}
+        />
       </Box>
     </Box>
   );

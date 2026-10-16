@@ -1,4 +1,3 @@
-import Navbar from '../../../components/ui/Navbar';
 import {
     Box,
     Typography,
@@ -252,16 +251,14 @@ export default function CheckoutPage() {
     };
 
     return (
-        <Box sx={{ minHeight: "100vh", bgcolor: "#F7F7F7" }}>
-            <Navbar />
+        <Box sx={{ bgcolor: "#F7F7F7" }}>
             <Container
                 maxWidth="xl"
                 sx={{
                     backgroundColor: "transparent",
-                    minHeight: "calc(100vh - 72px)",
                     px: { xs: 2, sm: 3, md: 4, lg: 6, xl: 8 },
                     pt: 0,
-                    pb: { xs: 3, md: 4, lg: 5 },
+                    pb: { xs: 2, md: 3 },
                     boxSizing: "border-box",
                 }}
             >
@@ -297,7 +294,7 @@ export default function CheckoutPage() {
                                     <Box sx={{ minWidth: 0, flex: 1 }}>
                                         {courseCategory && <Typography sx={{ mb: 0.5, color: "#5B4BDB", fontSize: 12, fontWeight: 700 }}>{courseCategory}</Typography>}
                                         <Typography sx={{ color: "#171827", fontSize: { xs: 16, sm: 19 }, lineHeight: 1.35, fontWeight: 750, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{courseTitle}</Typography>
-                                        <Typography sx={{ mt: 0.75, color: "#73778A", fontSize: 12 }}>{totalLectures} lessons <Box component="span" sx={{ px: 0.5 }}>Â·</Box> {totalHours} hours</Typography>
+                                        <Typography sx={{ mt: 0.75, color: "#73778A", fontSize: 12 }}>{totalLectures} lessons <Box component="span" sx={{ px: 0.5 }}>•</Box> {totalHours} hours</Typography>
                                     </Box>
                                     <Box sx={{ textAlign: "right", flexShrink: 0 }}>
                                         {discount > 0 && <Typography sx={{ color: "#9295A3", fontSize: 12, textDecoration: "line-through" }}>{formatCurrency(price)}</Typography>}
