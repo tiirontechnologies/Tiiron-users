@@ -12,7 +12,7 @@ const StudentProfile: React.FC = () => {
   return (
     <TabProvider>
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
-      <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1400px] px-4 pb-6 pt-10 sm:px-6 sm:py-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mb-4 flex items-center gap-1.5 text-sm text-slate-500">
           <span className="cursor-pointer hover:text-indigo-600">Home</span>
@@ -27,7 +27,7 @@ const StudentProfile: React.FC = () => {
           <div className="order-2 lg:col-start-1 lg:row-start-1 lg:row-span-2">
             <ProfileSidebar />
           </div>
-          <section className="order-3 lg:col-start-2">
+          <section className="order-3 min-w-0 lg:col-start-2">
             {/* <StatsBar /> */}
             <TabsSection />
           </section>

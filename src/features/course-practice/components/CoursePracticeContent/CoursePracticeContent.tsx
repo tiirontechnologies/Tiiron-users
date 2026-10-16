@@ -12,7 +12,10 @@ import {
   Card,
   CardContent,
   Dialog,
+  Avatar,
+  IconButton,
 } from "@mui/material";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { styled } from "@mui/material/styles";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -42,6 +45,7 @@ import CodingQuestionPage from "../../../coding-question/CodingQuestion";
 import NotesSection from "../Notes/Notes"
 import InteractiveVideoPlayer from "../InteractiveVideoPlayer/InteractiveVideoPlayer";
 import AssignmentTab from "../Assignment/AssignmentTab";
+import EmptyState from "../UI/EmptyState";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTimeOutlined";
 
@@ -51,6 +55,9 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 interface Props {
   data: CoursePracticeApiResponse["data"];
   unitId: string;
+  unitData?: any;
+  organizationName?: string;
+  organizationLogo?: string;
 }
 
 interface UserAnswers {
@@ -151,19 +158,35 @@ export const QuestionComponent = ({
 ===================================================== */
 
 const TutorialVideosSection = ({ 
-  videoContentType, 
+  videoContentTypes,
   getUserAnswer, 
   handleAnswerChange,
   courseId,
-  navigate
+  navigate,
+  organizationName,
+  organizationLogo,
 }: any) => {
+  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  useEffect(() => setActiveVideoIndex(0), [videoContentTypes]);
+  const videoContentType = videoContentTypes?.[activeVideoIndex];
   if (!videoContentType?.video) return null;
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: videoContentType.video.title || "Course lecture", url });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+      }
+    } catch (error: any) {
+      if (error?.name !== "AbortError") console.error("Could not share this lecture", error);
+    }
+  };
+
   return (
-    <Box sx={{ 
-      mb: { xs: 1.5, sm: 2, md: 2 },
-      px: 0
-    }}>
+    <Box sx={{ mb: { xs: 1.5, sm: 2, md: 2 }, px: 0 }}>
+      <Box sx={{ p: { xs: 0.75, sm: 1 }, border: "1px solid #DCE2EA", borderRadius: 2.5, bgcolor: "#fff", boxShadow: "0 4px 14px rgba(15,23,42,0.06)" }}>
       <InteractiveVideoPlayer
         videoContentType={videoContentType}
         getUserAnswer={getUserAnswer}
@@ -183,6 +206,55 @@ const TutorialVideosSection = ({
             />
         )}
       />
+      <Typography sx={{ px: { xs: 0.75, sm: 1 }, color: "#202124", fontSize: 16, fontWeight: 700, lineHeight: 1.35 }}>
+        {videoContentType.video.title || videoContentType.title || "Course lecture"}
+      </Typography>
+      {(videoContentType.video.description || videoContentType.description) && (
+        <Typography sx={{ px: { xs: 0.75, sm: 1 }, mt: 0.4, color: "#64748B", fontSize: 12 }}>
+          {videoContentType.video.description || videoContentType.description}
+        </Typography>
+      )}
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, px: { xs: 0.5, sm: 1 }, pt: 1.25, pb: 0.5 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}>
+          <Avatar src={organizationLogo || undefined} alt={organizationName || "Organization"} sx={{ width: 38, height: 38, bgcolor: "#4F39F6", fontSize: 14, fontWeight: 700 }}>
+            {(organizationName || "O").slice(0, 1).toUpperCase()}
+          </Avatar>
+          <Typography sx={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#202124", fontSize: { xs: 14, sm: 15 }, fontWeight: 700 }}>
+            {organizationName || "Course Organization"}
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, flexShrink: 0 }}>
+          <IconButton aria-label="Share lecture" onClick={() => void handleShare()} size="small" sx={{ border: "1px solid #E5E7EB", borderRadius: "50%", width: 36, height: 36 }}>
+            <ShareOutlinedIcon fontSize="small" />
+          </IconButton>
+        </Box>
+      </Box>
+      </Box>
+      {videoContentTypes.length > 1 && (
+        <Box sx={{ mt: 1.5, p: { xs: 1.25, sm: 1.75 }, border: "1px solid #E2E8F0", borderRadius: 2.5, bgcolor: "#fff" }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1.25 }}>
+            <Typography sx={{ fontSize: 13, fontWeight: 700, color: "#273142" }}>Unit videos</Typography>
+            <Typography sx={{ px: 1, py: 0.25, borderRadius: 5, bgcolor: "#F1F5F9", color: "#475569", fontSize: 11, fontWeight: 600 }}>{videoContentTypes.length} lectures</Typography>
+          </Box>
+          <Box sx={{ display: "flex", gap: 1, overflowX: "auto", pb: 0.25, scrollbarWidth: "thin" }}>
+          {videoContentTypes.map((item: any, index: number) => {
+            const video = item.video;
+            const videoId = video.url?.match(/(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/)?.[1];
+            const thumbnail = video.thumbnailUrl || video.thumbnail || video.image ||
+              (videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : undefined);
+            return (
+              <Box key={`${item.id}-${index}`} onClick={() => setActiveVideoIndex(index)} role="button" tabIndex={0}
+                onKeyDown={(event) => event.key === "Enter" && setActiveVideoIndex(index)}
+                sx={{ flex: "0 0 112px", cursor: "pointer", borderRadius: 1.5, overflow: "hidden", border: activeVideoIndex === index ? "2px solid #4F39F6" : "1px solid #D8DCE5", bgcolor: "#fff", textAlign: "left" }}>
+                {thumbnail ? <Box component="img" src={thumbnail} alt={`Lecture ${index + 1}`} sx={{ display: "block", width: "100%", height: 62, objectFit: "cover", bgcolor: "#EEF0F5" }} /> : <Box sx={{ height: 62, bgcolor: "#EEF0F5" }} />}
+                <Typography sx={{ px: 0.75, pt: 0.5, fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>Lecture {index + 1}</Typography>
+                <Typography sx={{ px: 0.75, pb: 0.5, fontSize: 10, color: "#64748B", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.video.title || `Video ${index + 1}`}</Typography>
+              </Box>
+            );
+          })}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };
@@ -337,7 +409,7 @@ if (!questions?.length) {
    MAIN COMPONENT (Responsive)
 ===================================================== */
 
-const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
+const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organizationName, organizationLogo }) => {
   const { courseId = "" } = useParams();
   const navigate = useNavigate();
 
@@ -387,9 +459,66 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
      TUTORIAL VIDEOS
   ======================== */
 
-  const videoContentType = useMemo(() => {
-    return data?.contentTypes?.find((ct) => ct.id === 1);
-  }, [data]);
+  const videoContentTypes = useMemo(() => {
+    const collected: any[] = [];
+    const addVideos = (value: any, parent: any = {}) => {
+      if (!value) return;
+      if (Array.isArray(value)) {
+        value.forEach((entry) => addVideos(entry, parent));
+        return;
+      }
+      if (Array.isArray(value.videos)) {
+        addVideos(value.videos, { ...parent, ...value });
+        return;
+      }
+
+      const rawVideo = value.video ?? value;
+      const rawUrl = typeof rawVideo === "string" ? rawVideo : rawVideo?.url;
+      if (!rawUrl) {
+        if (Array.isArray(value.contents)) addVideos(value.contents, { ...parent, ...value });
+        return;
+      }
+
+      const markdownUrl = rawUrl.match(/\]\((https?:\/\/[^)]+)\)/)?.[1];
+      const url = markdownUrl || rawUrl.replace(/^\[|\]$/g, "");
+      const video = typeof rawVideo === "string" ? { url, title: value.title } : { ...rawVideo, url };
+      if (!collected.some((item) => item.video.url === url)) {
+        collected.push({
+          ...parent,
+          ...value,
+          video,
+          questions: value.questions ?? parent.questions,
+        });
+      }
+    };
+
+    const contentTypes = data?.contentTypes ?? [];
+    contentTypes
+      .filter((contentType: any) => contentType.id === 1 || contentType.name?.trim().toLowerCase() === "video")
+      .forEach((contentType: any) => {
+        if (contentType.video) addVideos(contentType.video, contentType);
+        if (contentType.videos) addVideos(contentType.videos, contentType);
+        if (contentType.contents) addVideos(contentType.contents, contentType);
+        (contentType.questions ?? []).forEach((question: any) => {
+          if (question.video?.url) {
+            addVideos({ ...question.video, title: question.video.title || question.title, questions: [{ timestamp: question.timestamp, questions: [question] }] }, contentType);
+          }
+        });
+      });
+
+    addVideos(data?.videos);
+    addVideos(data?.unitVideos);
+    addVideos(data?.unit?.videos);
+    addVideos(unitData?.videos);
+    addVideos(unitData?.unitVideos);
+    addVideos(unitData?.content?.videos);
+    addVideos(unitData?.contents);
+    (unitData?.contentTypes ?? unitData?.contents?.contentTypes ?? [])
+      .filter((contentType: any) => contentType.id === 1 || contentType.name?.trim().toLowerCase() === "video")
+      .forEach((contentType: any) => addVideos(contentType.video ?? contentType.videos ?? contentType.contents, contentType));
+
+    return collected;
+  }, [data, unitData]);
 
   /* ========================
      TABS DATA (exclude Video content type, id === 1)
@@ -399,7 +528,7 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
     if (!data?.contentTypes) return [];
 
     return data.contentTypes
-      .filter((ct) => ct.id !== 1)
+      .filter((ct) => ct.id !== 1 && ct.name?.trim().toLowerCase() !== "video")
       .map((ct) => {
         const questions = ct.questions ?? [];
         return {
@@ -506,6 +635,15 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
     }
   };
 
+  const hasUnitContent = videoContentTypes.length > 0 || hasPractice;
+  if (!isCheckingSections && !hasUnitContent && !hasNotes && !hasAssignments) {
+    return (
+      <Box sx={{ width: "100%", px: { xs: 1, sm: 2 }, py: { xs: 2, md: 3 } }}>
+        <EmptyState />
+      </Box>
+    );
+  }
+
   /* ========================
      RENDER
   ======================== */
@@ -518,7 +656,9 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId }) => {
     }}>
       {/* Video always on top */}
       <TutorialVideosSection 
-        videoContentType={videoContentType} 
+        videoContentTypes={videoContentTypes}
+        organizationName={organizationName}
+        organizationLogo={organizationLogo}
         getUserAnswer={getUserAnswer}
         handleAnswerChange={handleAnswerChange}
         courseId={courseId}

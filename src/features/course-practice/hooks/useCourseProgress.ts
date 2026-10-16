@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from "react";
 import {
   useGetLessonAndTopicByCourseIdQuery,
   useGetContentByTopicIdQuery,
+  useGetQuestionsByUnitIdQuery,
   useGetPracticeProgressQuery, 
 } from "../api/courseProgressApi";
 import { useParams } from "react-router-dom";
@@ -34,6 +35,13 @@ export const useCourseProgress = () => {
     { skip: !selectedUnitId || !courseId }
   );
 
+  // This endpoint returns every question in the selected unit, including each
+  // video as a separate question record.
+  const { data: unitQuestionsResponse } = useGetQuestionsByUnitIdQuery(
+    { unitId: selectedUnitId },
+    { skip: !selectedUnitId }
+  );
+
   // 3. Practice Progress Query (Fix: Pass both IDs if API expects them)
   const {
     data: practiceProgressData,
@@ -44,7 +52,49 @@ export const useCourseProgress = () => {
     { courseId: courseId!}, 
     { skip: !courseId }
   );
-  const unitsData = useMemo(() => transformApiResponse(unitsDataRaw), [unitsDataRaw]);
+  const unitsData = useMemo(() => {
+    const practiceResponse = transformApiResponse(unitsDataRaw);
+    const unitQuestions = Array.isArray(unitQuestionsResponse?.data)
+      ? unitQuestionsResponse.data
+      : Array.isArray(unitQuestionsResponse)
+        ? unitQuestionsResponse
+        : null;
+
+    if (!unitQuestions) return practiceResponse;
+
+    const groupedQuestions = new Map<number, any[]>();
+    unitQuestions.forEach((question: any) => {
+      const contentTypeId = Number(question.content?.contentTypeId ?? question.contentTypeId);
+      if (!Number.isFinite(contentTypeId)) return;
+      const questions = groupedQuestions.get(contentTypeId) ?? [];
+      questions.push(question);
+      groupedQuestions.set(contentTypeId, questions);
+    });
+
+    const existingContentTypes = practiceResponse?.contentTypes ?? [];
+    const existingById = new Map(existingContentTypes.map((contentType: any) => [contentType.id, contentType]));
+    const contentTypes = Array.from(groupedQuestions.entries()).map(([id, questions]) => {
+      const existing: any = existingById.get(id);
+      const isVideo = id === 1 || questions.some(
+        (question) => question.questiontypecon?.name?.trim().toLowerCase() === "video"
+      );
+      return {
+        ...(existing ?? {}),
+        id,
+        name: existing?.name ?? (isVideo ? "Video" : "Quiz"),
+        icon: existing?.icon ?? "",
+        order: existing?.order ?? id,
+        questions,
+        status: existing?.status ?? { isCompleted: false, totalScore: 0 },
+      };
+    });
+
+    return {
+      ...(practiceResponse ?? {}),
+      contentTypes,
+      unitStatus: practiceResponse?.unitStatus ?? { isCompleted: false },
+    };
+  }, [unitsDataRaw, unitQuestionsResponse]);
 
   // 4. Practice Data Logic (Handling API structure)
   const practiceData = useMemo(() => {

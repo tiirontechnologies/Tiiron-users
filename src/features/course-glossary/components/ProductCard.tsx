@@ -33,13 +33,15 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
 
   // Check if user is enrolled in this course
   useEffect(() => {
-    if (course?.id && enrollmentData?.data) {
+    if (course?.isEnrolled !== undefined) {
+      setIsEnrolled(course.isEnrolled);
+    } else if (course?.id && enrollmentData?.data) {
       const enrolled = enrollmentData.data.some(
         (enrollment) => enrollment.courseId === course.id
       );
       setIsEnrolled(enrolled);
     }
-  }, [course?.id, enrollmentData]);
+  }, [course?.id, course?.isEnrolled, enrollmentData]);
 
   // Enrollment mutation
   const [initiateCheckout] = useInitiateCheckoutMutation();
@@ -196,11 +198,11 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
   return (
     <Box
       sx={{
-        maxWidth: { xs: "100%", md: "400px" },
-        width: { xs: "100%", md: "400px" },
+        maxWidth: { xs: "100%", md: "360px" },
+        width: { xs: "100%", md: "360px" },
         borderRadius: 3,
         border: "1px solid #E2E8F0",
-        p: { xs: 2.5, md: 3 },
+        p: { xs: 2, md: 2.25 },
         bgcolor: "white",
         mx: { xs: "auto", md: 0 },
         boxSizing: "border-box",
@@ -221,10 +223,10 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
           alt={course.title || "Course image"}
           sx={{
             width: "100%",
-            height: { xs: 180, md: 220 },
+            height: { xs: 150, md: 170 },
             objectFit: "cover",
             borderRadius: 2,
-            mb: 2.5,
+            mb: 1.75,
             border: "1px solid #E2E8F0",
           }}
         />
@@ -292,7 +294,7 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
       <Box
         sx={{
           borderTop: "1px solid #E2E8F0",
-          pt: 2.5,
+          pt: 1.75,
           mt: "auto",
         }}
       >
@@ -315,8 +317,8 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
               border: "1px solid #E2E8F0",
               bgcolor: "white",
               color: "#1877F2",
-              width: 44,
-              height: 44,
+              width: 38,
+              height: 38,
               transition: "all 0.2s ease",
               "&:hover": {
                 bgcolor: "#EFF6FF",
@@ -335,8 +337,8 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
               border: "1px solid #E2E8F0",
               bgcolor: "white",
               color: "#1DA1F2",
-              width: 44,
-              height: 44,
+              width: 38,
+              height: 38,
               transition: "all 0.2s ease",
               "&:hover": {
                 bgcolor: "#EFF6FF",
@@ -355,8 +357,8 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
               border: "1px solid #E2E8F0",
               bgcolor: "white",
               color: "#0A66C2",
-              width: 44,
-              height: 44,
+              width: 38,
+              height: 38,
               transition: "all 0.2s ease",
               "&:hover": {
                 bgcolor: "#EFF6FF",
@@ -384,8 +386,8 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
               border: "1px solid #E2E8F0",
               bgcolor: "white",
               color: "#64748B",
-              width: 44,
-              height: 44,
+              width: 38,
+              height: 38,
               transition: "all 0.2s ease",
               "&:hover": {
                 bgcolor: "#F1F5F9",

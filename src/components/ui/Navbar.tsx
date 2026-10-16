@@ -24,6 +24,7 @@ import { GenerateQuizModal } from "./quiz/GenerateQuizModal";
 import { useGetCartQuery } from "../../features/course-browse/api/courseApi";
 import { useAuth } from "../../hooks/useAuth";
 import NotificationPanel from "./header/NotificationPanel";
+import { OPEN_CART_EVENT } from "./cart/cartEvents";
 // generate quiz
 
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
@@ -165,6 +166,11 @@ const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  useEffect(() => {
+    const openCartFromCard = () => setIsCartOpen(true);
+    window.addEventListener(OPEN_CART_EVENT, openCartFromCard);
+    return () => window.removeEventListener(OPEN_CART_EVENT, openCartFromCard);
+  }, []);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();

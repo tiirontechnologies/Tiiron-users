@@ -39,6 +39,7 @@ interface ICourse {
   rating?: number;
   categories:string;
   instructor:string
+  isEnrolled?: boolean;
 
   difficulty?: string;
   courseLevel?: string;

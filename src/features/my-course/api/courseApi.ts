@@ -24,7 +24,7 @@ export const myCourseApiSlice = baseApi.injectEndpoints({
         method: "GET",
         params: {
           page: 1,
-          limit: 10,
+          limit: 100,
         },
       }),
       providesTags: ["Enrollment"],

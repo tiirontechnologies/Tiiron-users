@@ -23,6 +23,14 @@ export const courseProgressApiSlice = baseApi.injectEndpoints({
       providesTags: ['Unit'],
     }),
 
+    getQuestionsByUnitId: builder.query<any, { unitId: string }>({
+      query: ({ unitId }) => ({
+        url: `/question/unit/${unitId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Unit'],
+    }),
+
     getPracticeProgress: builder.query<{ data?: any } | any, { courseId: string }>({
       query: ({ courseId }) => ({
         url: `/practice/course/${courseId}/progress`,
@@ -196,6 +204,7 @@ getUnitNotes: builder.query<
 export const {
   useGetLessonAndTopicByCourseIdQuery,
   useGetContentByTopicIdQuery,
+  useGetQuestionsByUnitIdQuery,
   useGetQuestionByIdQuery,
   useGetCodeLanguagesQuery,
   useGetPracticeProgressQuery,

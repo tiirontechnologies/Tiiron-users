@@ -15,6 +15,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import { ENV } from "../../../config/env";
 import { ICourseCardProps } from "types/course.types";
+import { openCart } from "../cart/cartEvents";
 
 interface ReusableCourseCardProps extends ICourseCardProps {
   price?: number;
@@ -118,6 +119,7 @@ export default function CourseCard({
   if (variant === "my-course") {
     return (
       <Box
+        onClick={onCardClick}
         sx={{
           width: "100%",
           maxWidth: 320,
@@ -274,7 +276,7 @@ export default function CourseCard({
           <Box
             sx={{
               display: "flex",
-              justifyContent: "left",
+              justifyContent: "flex-start",
               mb: 1.8,
               mt: 0.5,
             }}
@@ -283,7 +285,7 @@ export default function CourseCard({
               variant="contained"
               onClick={handleStartCourse}
               sx={{
-                width: "54%",
+                width: "100%",
                 backgroundColor: "#4F39F6",
                 color: "#fff",
                 textTransform: "none",
@@ -376,7 +378,7 @@ export default function CourseCard({
       onClick={onCardClick}
       sx={{
         width: "100%",
-        maxWidth: 350,
+        maxWidth: 370,
         minHeight: 400,
         display: "flex",
         flexDirection: "column",
@@ -630,6 +632,8 @@ export default function CourseCard({
               fontWeight: 700,
               fontSize: "18px",
               color: price > 0 ? "#1e293b" : "#64748b",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
             }}
           >
             {price === 0 ? "FREE" : `₹${price.toFixed(0)}`}
@@ -668,27 +672,33 @@ export default function CourseCard({
                   !isLoadingCart && (
                     <ShoppingCartIcon
                       sx={{
-                        color: isInCart ? "#94A3B8" : "#FFFFFF",
+                        color: "#FFFFFF",
                         transition: "color 0.2s ease",
                       }}
                     />
                   )
                 }
-                disabled={isInCart || isLoadingCart}
+                disabled={!isInCart && isLoadingCart}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onAddToCartClick(e);
+                  if (isInCart) {
+                    openCart();
+                  } else {
+                    onAddToCartClick(e);
+                  }
                 }}
                 sx={{
                   textTransform: "none",
                   borderRadius: "10px",
-                  px: 2.4,
+                  px: 1.75,
                   py: 0.8,
                   fontSize: "13.5px",
                   fontWeight: 600,
-                  color: isInCart ? "#94A3B8" : "#FFFFFF",
+                  color: "#FFFFFF",
                   backgroundColor: "#4F39F6",
                   border: "1px solid #4F39F6",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
                   boxShadow: "none",
                   transition:
                     "background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease",
@@ -698,9 +708,9 @@ export default function CourseCard({
                     color: "#FFFFFF",
                   },
                   "&:disabled": {
-                    backgroundColor: "#F1F5F9",
-                    borderColor: "rgba(148,163,184,0.4)",
-                    color: "#94A3B8",
+                    backgroundColor: isInCart ? "#4F39F6" : "#F1F5F9",
+                    borderColor: isInCart ? "#4F39F6" : "rgba(148,163,184,0.4)",
+                    color: isInCart ? "#FFFFFF" : "#94A3B8",
                     boxShadow: "none",
                   },
                 }}
@@ -708,7 +718,7 @@ export default function CourseCard({
                 {isLoadingCart
                   ? "Adding..."
                   : isInCart
-                    ? "In Cart"
+                    ? "Go to Cart"
                     : "Add to Cart"}
               </Button>
             )}

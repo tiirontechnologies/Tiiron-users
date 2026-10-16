@@ -469,12 +469,16 @@ const Landing = () => {
       {/* HERO SECTION */}
       <Box
         component="section"
-        sx={{ bgcolor: "rgb(229, 233, 247)", py: { xs: 3, md: 4 } }}
+        sx={{
+          bgcolor: "rgb(229, 233, 247)",
+          py: { xs: 3, md: 4 },
+          pt: { xs: 2.5, md: 4 },
+        }}
       >
         <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
             {/* LEFT */}
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={7} sx={{ mt: { xs: "20px", md: 0 } }}>
               <Typography
                 sx={{
                   mb: 1.5,
