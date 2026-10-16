@@ -461,6 +461,11 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organi
 
   const videoContentTypes = useMemo(() => {
     const collected: any[] = [];
+    const videoData = data as (typeof data & {
+      videos?: any;
+      unitVideos?: any;
+      unit?: { videos?: any };
+    });
     const addVideos = (value: any, parent: any = {}) => {
       if (!value) return;
       if (Array.isArray(value)) {
@@ -506,9 +511,9 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organi
         });
       });
 
-    addVideos(data?.videos);
-    addVideos(data?.unitVideos);
-    addVideos(data?.unit?.videos);
+    addVideos(videoData?.videos);
+    addVideos(videoData?.unitVideos);
+    addVideos(videoData?.unit?.videos);
     addVideos(unitData?.videos);
     addVideos(unitData?.unitVideos);
     addVideos(unitData?.content?.videos);
