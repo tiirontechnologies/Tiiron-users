@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Box, Typography, Dialog, DialogContent, DialogActions, Button, CircularProgress } from '@mui/material';
 import { COLORS, SHADOWS } from '../../constants';
 import { transformApiQuestion } from '../../utils/transformApiResponse';
@@ -107,11 +107,35 @@ export default function InteractiveVideoPlayer({
   const [submitPracticeSingle, { isLoading: isSubmitting }] = useSubmitPracticeSingleMutation();
   const [feedback, setFeedback] = useState<{ isCorrect: boolean, score: number, correctAnswer?: any } | null>(null);
 
+  useEffect(() => {
+    setActiveGroupIndex(null);
+    setCurrentQuestionIndex(0);
+    setShownGroups(new Set());
+    setFeedback(null);
+  }, [videoUrl]);
+
+  // Timed knowledge checks are grouped as { timestamp, questions: [...] }.
+  // Unit video records can also arrive in this array as flat question objects;
+  // ignore those records here because they are lectures, not popup groups.
+  const questionGroups = useMemo(
+    () => Array.isArray(videoContentType?.questions)
+      ? videoContentType.questions.filter(
+          (group: any) =>
+            group?.timestamp !== null &&
+            group?.timestamp !== undefined &&
+            String(group.timestamp).trim() !== "" &&
+            Array.isArray(group?.questions) &&
+            group.questions.some((question: any) => question?.questiontypeId !== 6)
+        )
+      : [],
+    [videoContentType?.questions]
+  );
+
   // Check if we reached a timestamp
   useEffect(() => {
-    if (!videoContentType?.questions || !player) return;
+    if (!questionGroups.length || !player) return;
 
-    videoContentType.questions.forEach((group: any, idx: number) => {
+    questionGroups.forEach((group: any, idx: number) => {
       if (shownGroups.has(idx)) return; // already solved/shown
       
       const targetTime = timeStringToSeconds(group.timestamp);
@@ -127,9 +151,9 @@ export default function InteractiveVideoPlayer({
         setShownGroups(prev => new Set(prev).add(idx));
       }
     });
-  }, [currentTime, videoContentType?.questions, player, shownGroups]);
+  }, [currentTime, questionGroups, player, shownGroups]);
 
-  const activeGroup = activeGroupIndex !== null ? videoContentType.questions[activeGroupIndex] : null;
+  const activeGroup = activeGroupIndex !== null ? questionGroups[activeGroupIndex] ?? null : null;
 
   const handleContinue = useCallback(() => {
     setActiveGroupIndex(null);
@@ -233,7 +257,7 @@ export default function InteractiveVideoPlayer({
             overflowX: 'hidden',
           }}
         >
-          {activeGroup && activeGroup.questions[currentQuestionIndex] && (
+          {activeGroup?.questions?.[currentQuestionIndex] && (
             <Box>
                 <Typography variant="h6" sx={{ mb: { xs: 2, sm: 3 }, textAlign: 'center', fontWeight: 'bold', fontSize: { xs: "1rem", sm: "1.25rem" } }}>
                     Knowledge Check ({currentQuestionIndex + 1} of {activeGroup.questions.length})

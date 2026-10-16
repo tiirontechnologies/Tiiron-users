@@ -18,6 +18,7 @@ import {
 
 import { ICourse } from "types/course.types";
 import Loader from "@components/ui/Spinner";
+import { useGetMyEnrolledCoursesQuery } from "../../my-course/api/courseApi";
 
 const PAGE_LAYOUT_SX = {
   width: "100%",
@@ -100,6 +101,8 @@ export default function Courses() {
     severity: "success" | "info" | "error";
   }>({ open: false, message: "", severity: "success" });
   const [searchParams] = useSearchParams();
+  const { data: enrollmentData, isFetching: fetchingEnrollments } = useGetMyEnrolledCoursesQuery();
+  const enrolledCourseIds = new Set((enrollmentData?.data ?? []).map((enrollment) => Number(enrollment.courseId ?? enrollment.course?.id)));
 
   // =====================================================
   // URL PARAMETERS
@@ -321,9 +324,9 @@ export default function Courses() {
   // ALL COURSES
   // =====================================================
 
-  const allCourses: ICourse[] = hasSearchQuery
+  const allCourses: ICourse[] = (hasSearchQuery
     ? searchCourses
-    : typedBrowseData?.data?.courses || [];
+    : typedBrowseData?.data?.courses || []).filter((course) => !enrolledCourseIds.has(Number(course.id)));
 
   // =====================================================
   // CATEGORY FILTER
@@ -344,9 +347,7 @@ export default function Courses() {
   // LOADING / ERROR
   // =====================================================
 
-  const isFetching = hasSearchQuery
-    ? fetchingSearch
-    : fetchingBrowse;
+  const isFetching = (hasSearchQuery ? fetchingSearch : fetchingBrowse) || fetchingEnrollments;
 
   const isError = hasSearchQuery
     ? errorSearch
@@ -407,7 +408,7 @@ export default function Courses() {
           <Box
             sx={{
               display: "grid",
-              gap: { xs: 3, md: 4 },
+              gap: { xs: 3, md: 4, lg: 3 },
               width: "100%",
               maxWidth: "1440px",
               mx: "auto",
@@ -416,7 +417,7 @@ export default function Courses() {
                 xs: "repeat(auto-fill, minmax(260px, 1fr))",
                 sm: "repeat(2, minmax(260px, 1fr))",
                 md: "repeat(3, minmax(260px, 1fr))",
-                lg: "repeat(4, minmax(260px, 1fr))",
+                lg: "repeat(auto-fit, minmax(280px, 1fr))",
               },
 
               justifyItems: "center",

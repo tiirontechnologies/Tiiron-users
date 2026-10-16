@@ -85,11 +85,11 @@ if (!notes.length) {
       }}
     >
       {/* Header */}
-      <Box sx={{ px: 3,pb: 2 }}>
-        <Typography variant="h6" fontWeight={700} sx={{ color: "#1f2937" }}>
+      <Box sx={{ px: 3, pb: 2, width: "100%", textAlign: "left" }}>
+        <Typography variant="h6" fontWeight={700} sx={{ color: "#1f2937", textAlign: "left" }}>
           Study Notes
         </Typography>
-        <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5 }}>
+        <Typography variant="body2" sx={{ color: "#6b7280", mt: 0.5, textAlign: "left" }}>
           Access downloadable PDF materials for this unit
         </Typography>
       </Box>
@@ -164,18 +164,19 @@ if (!notes.length) {
   return (
     <Box sx={{ p: 2 }}>
       {/* Header */}
-      <Box sx={{ mb: 3 }}>
+      <Box sx={{ mb: 3, width: "100%", textAlign: "left" }}>
         <Typography
           variant="h6"
           sx={{
             fontWeight: 800,
             color: "#111827",
+            textAlign: "left",
           }}
         >
           Study Notes
         </Typography>
 
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: "left" }}>
           Access downloadable PDF materials for this unit
         </Typography>
       </Box>

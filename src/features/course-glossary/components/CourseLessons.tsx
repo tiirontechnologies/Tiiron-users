@@ -107,6 +107,8 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
               sx={{
                 px: { xs: 2, md: 3 },
                 py: { xs: 1.5, md: 2 },
+                textAlign: "left",
+                justifyContent: "flex-start",
                 "&.Mui-expanded": {
                   minHeight: 56,
                 },
@@ -122,13 +124,13 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "center",
                   width: "100%",
                   flexDirection: { xs: "column", sm: "row" },
+                  alignItems: { xs: "flex-start", sm: "center" },
                   gap: { xs: 1, sm: 0 },
                 }}
               >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, textAlign: "left" }}>
                   <Box
                     sx={{
                       width: 32,
@@ -160,6 +162,7 @@ export default function CourseLessons({ chapters }: CourseLessonsProps) {
                     color: "#64748B",
                     fontSize: { xs: "12px", md: "14px" },
                     fontWeight: 500,
+                    textAlign: "left",
                   }}
                 >
                   {chapter?.units?.length || 0} {chapter?.units?.length === 1 ? "Lesson" : "Lessons"}

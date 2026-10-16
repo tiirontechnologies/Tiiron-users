@@ -15,11 +15,11 @@ const TabsSection: React.FC = () => {
   const { activeTab, setActiveTab } = useTabContext();
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 w-full space-y-4">
       {/* Tabs nav — apna alag hi bar, sirf bottom line */}
       <div className="border-b border-slate-200">
         <div
-          className="flex snap-x snap-mandatory gap-6 overflow-x-auto text-sm [scrollbar-width:none] sm:gap-10 sm:text-[15px] [&::-webkit-scrollbar]:hidden"
+          className="flex w-full flex-row flex-nowrap items-center snap-x snap-mandatory gap-4 overflow-x-auto text-sm [scrollbar-width:none] sm:gap-10 sm:text-[15px] [&::-webkit-scrollbar]:hidden"
           role="tablist"
           aria-label="Profile sections"
         >

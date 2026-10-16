@@ -185,7 +185,7 @@ export default function CourseGlossary() {
 
               <Box
                 sx={{
-                  width: { xs: "100%", lg: "400px" },
+                  width: { xs: "100%", lg: "360px" },
                   flexShrink: 0,
                 }}
               >

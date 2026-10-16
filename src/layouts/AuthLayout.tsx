@@ -62,7 +62,7 @@ const AuthLayout = ({
   );
 
   return (
-    <Grid container sx={{ minHeight: "100vh" }}>
+    <Grid container sx={{ minHeight: "100vh", alignItems: { xs: "center", md: "stretch" } }}>
       {!isSmallScreen && imageOnLeft && ImageSection}
 
       <Grid
@@ -70,13 +70,14 @@ const AuthLayout = ({
         md={6}
         xs={12}
         sx={{
-          p: 4,
+          p: { xs: 2, sm: 4 },
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Box maxWidth="750px" mx="auto" width="100%">
+        <Box maxWidth={{ xs: 520, md: 750 }} mx="auto" width="100%">
           {/* Title */}
           <Typography
             variant="h4"
