@@ -7,7 +7,7 @@ type CustomTextFieldProps = TextFieldProps & {
 };
 
 const CustomTextField = React.forwardRef<HTMLDivElement, CustomTextFieldProps>(
-  ({ name, value, onChange, placeholder, type = "text", labelText, onKeyDown, inputSx, ...rest }, ref) => {
+  ({ name, value, onChange, placeholder, type = "text", labelText, onKeyDown, inputSx, InputProps, ...rest }, ref) => {
     return (
       <Box mb={2}>
         {labelText && (
@@ -32,6 +32,7 @@ const CustomTextField = React.forwardRef<HTMLDivElement, CustomTextFieldProps>(
           variant="outlined"
           ref={ref} 
           InputProps={{
+            ...InputProps,
             sx: {
               py: "10px", 
               backgroundColor: "#fff",
@@ -50,6 +51,7 @@ const CustomTextField = React.forwardRef<HTMLDivElement, CustomTextFieldProps>(
                 opacity: 1,
               },
               ...inputSx,
+              ...InputProps?.sx,
             },
           }}
         />

@@ -1,7 +1,9 @@
 import CustomTextField from "@components/ui/textfields/CustomTextField";
 import SignupImage from "../../../../assets/user-login-img.jpg.jpeg";
 import AuthLayout from "@layouts/AuthLayout";
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Alert, Box, IconButton, InputAdornment, Snackbar } from "@mui/material";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { useRegisterUserMutation } from "../../api/authApi";
 import { useForm, Controller } from "react-hook-form";
 import { IOrganisationRegister } from "types/user.types";
@@ -17,6 +19,8 @@ const Index = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "success"
   );
@@ -147,9 +151,23 @@ const Index = () => {
                 render={({ field }) => (
                   <CustomTextField
                     {...field}
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     labelText="Password"
                     placeholder="Password"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            onClick={() => setShowPassword((visible) => !visible)}
+                            edge="end"
+                            size="small"
+                          >
+                            {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 )}
               />
@@ -171,9 +189,23 @@ const Index = () => {
                 render={({ field }) => (
                   <CustomTextField
                     {...field}
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     labelText="Confirm Password"
                     placeholder="Confirm Password"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                            onClick={() => setShowConfirmPassword((visible) => !visible)}
+                            edge="end"
+                            size="small"
+                          >
+                            {showConfirmPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 )}
               />

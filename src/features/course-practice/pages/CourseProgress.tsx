@@ -288,6 +288,11 @@ const CourseProgress: React.FC = () => {
     course?.orgLogo ||
     course?.createdByUser?.profile?.picture ||
     "";
+  const organizationId = Number(
+    course?.createdByUser?.id ?? course?.createdByUserId ?? course?.instructorId ?? course?.organization?.userId,
+  );
+  const organizationUsername =
+    course?.createdByUser?.username ?? course?.organization?.username ?? "";
 
   // Get selected unit name dynamically
   const chapterInfo = useMemo(() => {
@@ -438,6 +443,8 @@ const CourseProgress: React.FC = () => {
           unitData={selectedUnit}
           organizationName={organizationName}
           organizationLogo={organizationLogo}
+          organizationId={Number.isFinite(organizationId) && organizationId > 0 ? organizationId : undefined}
+          organizationUsername={organizationUsername}
         />
       </Box>
     </Box>
