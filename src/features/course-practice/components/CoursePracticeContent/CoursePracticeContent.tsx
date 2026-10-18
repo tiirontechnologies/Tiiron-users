@@ -210,13 +210,23 @@ const TutorialVideosSection = ({
         {videoContentType.video.title || videoContentType.title || "Course lecture"}
       </Typography>
       {(videoContentType.video.description || videoContentType.description) && (
-        <Typography sx={{ px: { xs: 0.75, sm: 1 }, mt: 0.4, color: "#64748B", fontSize: 12 }}>
-          {videoContentType.video.description || videoContentType.description}
-        </Typography>
+        <Box
+          sx={{
+            px: { xs: 0.75, sm: 1 },
+            mt: 0.4,
+            color: "#64748B",
+            fontSize: 11,
+            lineHeight: 1.5,
+            "& p": { m: 0 },
+          }}
+          dangerouslySetInnerHTML={{
+            __html: videoContentType.video.description || videoContentType.description,
+          }}
+        />
       )}
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, px: { xs: 0.5, sm: 1 }, pt: 1.25, pb: 0.5 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}>
-          <Avatar src={organizationLogo || undefined} alt={organizationName || "Organization"} sx={{ width: 38, height: 38, bgcolor: "#4F39F6", fontSize: 14, fontWeight: 700 }}>
+          <Avatar src={organizationLogo || undefined} alt={organizationName || "Organization"} sx={{ width: 38, height: 38, bgcolor: "#F5F5F5", color: "#475569", border: "1px solid #E5E7EB", fontSize: 14, fontWeight: 700 }}>
             {(organizationName || "O").slice(0, 1).toUpperCase()}
           </Avatar>
           <Typography sx={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#202124", fontSize: { xs: 14, sm: 15 }, fontWeight: 700 }}>
@@ -506,7 +516,12 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organi
         if (contentType.contents) addVideos(contentType.contents, contentType);
         (contentType.questions ?? []).forEach((question: any) => {
           if (question.video?.url) {
-            addVideos({ ...question.video, title: question.video.title || question.title, questions: [{ timestamp: question.timestamp, questions: [question] }] }, contentType);
+            addVideos({
+              ...question.video,
+              title: question.video.title || question.title,
+              description: question.description,
+              questions: [{ timestamp: question.timestamp, questions: [question] }],
+            }, contentType);
           }
         });
       });

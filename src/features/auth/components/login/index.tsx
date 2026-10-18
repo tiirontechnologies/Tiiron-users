@@ -4,7 +4,9 @@
 import CustomTextField from "@components/ui/textfields/CustomTextField";
 import LoginPng from "../../../../assets/user-login-img.jpg.jpeg";
 import AuthLayout from "@layouts/AuthLayout";
-import { Alert, Box, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, IconButton, InputAdornment, Snackbar, Typography } from "@mui/material";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { useLoginMutation } from "../../api/authApi";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -20,6 +22,7 @@ const Login = () => {
     "success"
   );
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [authLogin, { isLoading }] = useLoginMutation();
   const {
     control,
@@ -109,9 +112,23 @@ const Login = () => {
               render={({ field }) => (
                 <CustomTextField
                   {...field}
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   labelText="Password"
                   placeholder="Password"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label={showPassword ? "Hide password" : "Show password"}
+                          onClick={() => setShowPassword((visible) => !visible)}
+                          edge="end"
+                          size="small"
+                        >
+                          {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               )}
             />

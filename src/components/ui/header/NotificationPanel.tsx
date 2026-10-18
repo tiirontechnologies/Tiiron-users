@@ -137,7 +137,7 @@ const NotificationPanel = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMarkingAll, setIsMarkingAll] = useState(false);
-  const [markingId, setMarkingId] = useState<number | string | null>(null);
+  const [markingIds, setMarkingIds] = useState<Set<number | string>>(() => new Set());
   const [desktopPermission, setDesktopPermission] = useState(getDesktopPermission);
   const [error, setError] = useState("");
 
@@ -260,8 +260,8 @@ const NotificationPanel = () => {
   };
 
   const markAsRead = async (notification: AppNotification) => {
-    if (notification.readAt || markingId !== null) return;
-    setMarkingId(notification.id);
+    if (notification.readAt || markingIds.has(notification.id)) return;
+    setMarkingIds((current) => new Set(current).add(notification.id));
     setError("");
     try {
       const response = await fetch(
@@ -278,7 +278,11 @@ const NotificationPanel = () => {
     } catch (markError) {
       setError(markError instanceof Error ? markError.message : "Could not update notification.");
     } finally {
-      setMarkingId(null);
+      setMarkingIds((current) => {
+        const next = new Set(current);
+        next.delete(notification.id);
+        return next;
+      });
     }
   };
 
@@ -465,6 +469,14 @@ const NotificationPanel = () => {
                     <Box
                       component="article"
                       onClick={() => void markAsRead(notification)}
+                      role={isUnread ? "button" : undefined}
+                      tabIndex={isUnread ? 0 : undefined}
+                      onKeyDown={isUnread ? (event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          void markAsRead(notification);
+                        }
+                      } : undefined}
                       sx={{
                         display: "flex",
                         alignItems: "flex-start",
@@ -472,6 +484,8 @@ const NotificationPanel = () => {
                         px: 2,
                         py: 1.5,
                         cursor: isUnread ? "pointer" : "default",
+                        outline: "none",
+                        "&:focus-visible": { boxShadow: "inset 0 0 0 2px #0f766e" },
                         backgroundColor: isUnread ? "#f7fbfa" : "#fff",
                         transition: "background-color 150ms ease",
                         "&:hover": { backgroundColor: isUnread ? "#eff8f6" : "#f8fafc" },
@@ -504,14 +518,14 @@ const NotificationPanel = () => {
                               <IconButton
                                 aria-label={`Mark ${notification.title} as read`}
                                 size="small"
-                                disabled={markingId !== null}
+                                disabled={markingIds.has(notification.id)}
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   void markAsRead(notification);
                                 }}
                                 sx={{ p: 0.4, color: "#64748b", "&:hover": { color: "#0f766e" } }}
                               >
-                                {markingId === notification.id
+                                {markingIds.has(notification.id)
                                   ? <CircularProgress size={15} />
                                   : <CheckCircleOutlineIcon sx={{ fontSize: 17 }} />}
                               </IconButton>

@@ -25,6 +25,8 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
+import { useGetChaptersQuery } from '../../course-glossary/api/courseApi';
+import { useCheckAuthQuery } from '../../../api/api.routes';
 
 export default function CheckoutPage() {
     const [couponCode, setCouponCode] = useState("");
@@ -40,6 +42,8 @@ export default function CheckoutPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { data: cartData } = useGetCartQuery();
+    const { data: currentUserResponse } = useCheckAuthQuery();
+    const currentUser = currentUserResponse?.data;
 
     // Get course ID from multiple sources (priority order)
     const getCourseId = (): number => {
@@ -68,6 +72,8 @@ export default function CheckoutPage() {
     };
 
     const courseId = getCourseId();
+    const { data: chaptersResponse } = useGetChaptersQuery({ id: courseId, page: 1, limit: 100 });
+    const chapters = chaptersResponse?.data?.chapters ?? [];
 
     // ðŸ”´ Dynamic fetch â€” hits GET /course/:id via checkoutapi.ts
     const {
@@ -85,7 +91,10 @@ export default function CheckoutPage() {
     const courseTitle = course?.title ?? course?.name ?? "â€”";
     const courseCategory = course?.category?.name ?? course?.category ?? course?.tag ?? "";
     const courseImage = course?.thumbnail ?? course?.image ?? "images/chekoutPage_image.png";
-    const totalLectures = course?.totalLectures ?? course?.lecturesCount ?? course?.lectures ?? 0;
+    const totalLectures = chapters.reduce(
+        (total: number, chapter: any) => total + (Array.isArray(chapter?.units) ? chapter.units.length : 0),
+        0,
+    );
     const totalHours = course?.totalHours ?? course?.duration ?? 0;
 
     const price = Number(quote?.originalPrice ?? 0);
@@ -157,7 +166,7 @@ export default function CheckoutPage() {
             document.body.appendChild(script);
         });
 
-    // ðŸ”´ Buy Now -> create order -> open Razorpay
+    //  Buy Now -> create order -> open Razorpay
     const handleBuyNow = async () => {
         if (paymentInProgress.current) return;
         paymentInProgress.current = true;
@@ -172,6 +181,16 @@ export default function CheckoutPage() {
                     : {}),
             }).unwrap();
             const order = orderResponse?.data ?? orderResponse;
+
+            if (orderResponse?.success === false || order?.success === false) {
+                throw new Error(
+                    order?.errors?.[0]?.message ||
+                    orderResponse?.errors?.[0]?.message ||
+                    order?.message ||
+                    orderResponse?.message ||
+                    "Could not start checkout. Please try again.",
+                );
+            }
 
             if (order?.free) {
                 navigate(`/course-practice/${courseId}`, { state: { paymentVerified: true } });
@@ -220,7 +239,11 @@ export default function CheckoutPage() {
                         paymentInProgress.current = false;
                     }
                 },
-                prefill: { name: "", email: "", contact: "" },
+                prefill: {
+                    name: [currentUser?.firstName, currentUser?.lastName].filter(Boolean).join(" "),
+                    email: currentUser?.email ?? "",
+                    contact: "",
+                },
                 theme: { color: "#4F39F6" },
                 modal: {
                     ondismiss: () => {
@@ -246,7 +269,12 @@ export default function CheckoutPage() {
         } catch (error: any) {
             paymentInProgress.current = false;
             setPaymentMessageType("error");
-            setPaymentMessage(error?.data?.message || error?.message || "Could not start checkout. Please try again.");
+            setPaymentMessage(
+                error?.data?.errors?.[0]?.message ||
+                error?.data?.message ||
+                error?.message ||
+                "Could not start checkout. Please try again.",
+            );
         }
     };
 
@@ -257,8 +285,8 @@ export default function CheckoutPage() {
                 sx={{
                     backgroundColor: "transparent",
                     px: { xs: 2, sm: 3, md: 4, lg: 6, xl: 8 },
-                    pt: 0,
-                    pb: { xs: 2, md: 3 },
+                    // Keep the page's top and bottom breathing room balanced.
+                    py: { xs: 3, sm: 4, md: 4 },
                     boxSizing: "border-box",
                 }}
             >
