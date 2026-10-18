@@ -14,10 +14,13 @@ import {
   Dialog,
   Avatar,
   IconButton,
+  Button,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { styled } from "@mui/material/styles";
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 import CustomTabPanel from "../../../../components/ui/CustomTabPanel";
 import { transformApiQuestion } from "../../utils/transformApiResponse";
@@ -46,6 +49,11 @@ import NotesSection from "../Notes/Notes"
 import InteractiveVideoPlayer from "../InteractiveVideoPlayer/InteractiveVideoPlayer";
 import AssignmentTab from "../Assignment/AssignmentTab";
 import EmptyState from "../UI/EmptyState";
+import {
+  useIsSubscribedQuery,
+  useSubscribeToEducatorMutation,
+  useUnsubscribeFromEducatorMutation,
+} from "../../../EducatorProfile/api/profileApiSlice";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTimeOutlined";
 
@@ -58,6 +66,8 @@ interface Props {
   unitData?: any;
   organizationName?: string;
   organizationLogo?: string;
+  organizationId?: number;
+  organizationUsername?: string;
 }
 
 interface UserAnswers {
@@ -165,11 +175,35 @@ const TutorialVideosSection = ({
   navigate,
   organizationName,
   organizationLogo,
+  organizationId,
+  organizationUsername,
 }: any) => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
   useEffect(() => setActiveVideoIndex(0), [videoContentTypes]);
   const videoContentType = videoContentTypes?.[activeVideoIndex];
+  const { data: isSubscribed = false, isLoading: isSubscriptionLoading, isFetching: isSubscriptionFetching } = useIsSubscribedQuery(organizationId ?? 0, {
+    skip: !organizationId,
+  });
+  const [subscribeToEducator, { isLoading: isSubscribing }] = useSubscribeToEducatorMutation();
+  const [unsubscribeFromEducator, { isLoading: isUnsubscribing }] = useUnsubscribeFromEducatorMutation();
+  const [subscriptionError, setSubscriptionError] = useState("");
   if (!videoContentType?.video) return null;
+
+  const handleSubscribe = async () => {
+    if (!organizationId || isSubscriptionLoading || isSubscriptionFetching || isSubscribing || isUnsubscribing) return;
+    setSubscriptionError("");
+    try {
+      if (isSubscribed) {
+        await unsubscribeFromEducator(organizationId).unwrap();
+      } else {
+        await subscribeToEducator(organizationId).unwrap();
+      }
+    } catch (error) {
+      console.error("Could not update organization subscription", error);
+      const apiError = error as { data?: { message?: string }; message?: string };
+      setSubscriptionError(apiError.data?.message || apiError.message || "Could not update subscription. Please try again.");
+    }
+  };
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -210,25 +244,55 @@ const TutorialVideosSection = ({
         {videoContentType.video.title || videoContentType.title || "Course lecture"}
       </Typography>
       {(videoContentType.video.description || videoContentType.description) && (
-        <Typography sx={{ px: { xs: 0.75, sm: 1 }, mt: 0.4, color: "#64748B", fontSize: 12 }}>
-          {videoContentType.video.description || videoContentType.description}
-        </Typography>
+        <Box
+          sx={{
+            px: { xs: 0.75, sm: 1 },
+            mt: 0.4,
+            color: "#64748B",
+            fontSize: 11,
+            lineHeight: 1.5,
+            "& p": { m: 0 },
+          }}
+          dangerouslySetInnerHTML={{
+            __html: videoContentType.video.description || videoContentType.description,
+          }}
+        />
       )}
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, px: { xs: 0.5, sm: 1 }, pt: 1.25, pb: 0.5 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0 }}>
-          <Avatar src={organizationLogo || undefined} alt={organizationName || "Organization"} sx={{ width: 38, height: 38, bgcolor: "#4F39F6", fontSize: 14, fontWeight: 700 }}>
+          <Avatar src={organizationLogo || undefined} alt={organizationName || "Organization"} sx={{ width: 38, height: 38, bgcolor: "#F5F5F5", color: "#475569", border: "1px solid #E5E7EB", fontSize: 14, fontWeight: 700 }}>
             {(organizationName || "O").slice(0, 1).toUpperCase()}
           </Avatar>
-          <Typography sx={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#202124", fontSize: { xs: 14, sm: 15 }, fontWeight: 700 }}>
-            {organizationName || "Course Organization"}
-          </Typography>
+          {organizationUsername ? (
+            <Typography component={Link} to={`/instructor/${encodeURIComponent(organizationUsername)}`} sx={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#202124", fontSize: { xs: 14, sm: 15 }, fontWeight: 700, textDecoration: "none" }}>
+              {organizationName || "Course Organization"}
+            </Typography>
+          ) : (
+            <Typography sx={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#202124", fontSize: { xs: 14, sm: 15 }, fontWeight: 700 }}>
+              {organizationName || "Course Organization"}
+            </Typography>
+          )}
+          {organizationId && (
+            <Button
+              size="small"
+              variant={isSubscribed ? "outlined" : "contained"}
+              onClick={() => void handleSubscribe()}
+              disabled={isSubscriptionLoading || isSubscriptionFetching || isSubscribing || isUnsubscribing}
+              sx={{ minWidth: 88, px: 1.25, py: 0.35, borderRadius: 5, textTransform: "none", fontSize: 12, flexShrink: 0 }}
+            >
+              {isSubscriptionLoading || isSubscriptionFetching || isSubscribing || isUnsubscribing
+                ? <CircularProgress size={14} color="inherit" />
+                : isSubscribed ? "Unsubscribe" : "Subscribe"}
+            </Button>
+          )}
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, flexShrink: 0 }}>
-          <IconButton aria-label="Share lecture" onClick={() => void handleShare()} size="small" sx={{ border: "1px solid #E5E7EB", borderRadius: "50%", width: 36, height: 36 }}>
-            <ShareOutlinedIcon fontSize="small" />
+          <IconButton aria-label="Share lecture" onClick={() => void handleShare()} sx={{ border: "1px solid #E5E7EB", borderRadius: "50%", width: 46, height: 46, color: "#4F39F6", "&:hover": { bgcolor: "#F3F1FF", borderColor: "#C7BFFF" } }}>
+            <ShareOutlinedIcon sx={{ fontSize: 24 }} />
           </IconButton>
         </Box>
       </Box>
+      {subscriptionError && <Alert severity="error" onClose={() => setSubscriptionError("")} sx={{ mt: 1 }}>{subscriptionError}</Alert>}
       </Box>
       {videoContentTypes.length > 1 && (
         <Box sx={{ mt: 1.5, p: { xs: 1.25, sm: 1.75 }, border: "1px solid #E2E8F0", borderRadius: 2.5, bgcolor: "#fff" }}>
@@ -409,7 +473,7 @@ if (!questions?.length) {
    MAIN COMPONENT (Responsive)
 ===================================================== */
 
-const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organizationName, organizationLogo }) => {
+const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organizationName, organizationLogo, organizationId, organizationUsername }) => {
   const { courseId = "" } = useParams();
   const navigate = useNavigate();
 
@@ -506,7 +570,12 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organi
         if (contentType.contents) addVideos(contentType.contents, contentType);
         (contentType.questions ?? []).forEach((question: any) => {
           if (question.video?.url) {
-            addVideos({ ...question.video, title: question.video.title || question.title, questions: [{ timestamp: question.timestamp, questions: [question] }] }, contentType);
+            addVideos({
+              ...question.video,
+              title: question.video.title || question.title,
+              description: question.description,
+              questions: [{ timestamp: question.timestamp, questions: [question] }],
+            }, contentType);
           }
         });
       });
@@ -664,6 +733,8 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organi
         videoContentTypes={videoContentTypes}
         organizationName={organizationName}
         organizationLogo={organizationLogo}
+        organizationId={organizationId}
+        organizationUsername={organizationUsername}
         getUserAnswer={getUserAnswer}
         handleAnswerChange={handleAnswerChange}
         courseId={courseId}

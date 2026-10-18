@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, List, ListItemButton, ListItemText, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore, PlayArrow, CheckCircle } from '@mui/icons-material';
 import { Chapter } from '../../types';
@@ -23,6 +23,14 @@ const NavigationList: React.FC<NavigationListProps> = ({
   practiceData
 }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  useEffect(() => {
+    if (!selectedUnitId || !Array.isArray(chapters)) return;
+    const activeChapterIndex = chapters.findIndex((chapter: any) =>
+      chapter?.units?.some((unit: any) => String(unit.id) === String(selectedUnitId)),
+    );
+    if (activeChapterIndex >= 0) setOpenIndex(activeChapterIndex);
+  }, [chapters, selectedUnitId]);
+
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -33,6 +41,10 @@ const NavigationList: React.FC<NavigationListProps> = ({
       {chapters?.map((chapter, index) => {
         const hasChildren = chapter?.units && chapter?.units?.length > 0;
         const isOpen = openIndex === index;
+        const hasSelectedUnit = chapter?.units?.some(
+          (unit: any) => String(unit.id) === String(selectedUnitId),
+        );
+        const isActiveChapter = isOpen || hasSelectedUnit;
 
         return (
           <React.Fragment key={chapter?.id}>
@@ -49,20 +61,20 @@ const NavigationList: React.FC<NavigationListProps> = ({
                 mb: 1,
                 py: 1,
                 px: 1.25,
-                background: isOpen
+                background: isActiveChapter
                   ? "linear-gradient(135deg, rgba(79, 57, 246, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%)"
                   : COLORS.background.white,
                 color: COLORS.text.primary,
-                border: isOpen
+                border: isActiveChapter
                   ? `1.5px solid ${COLORS.primary}`
                   : `1px solid ${COLORS.border.light}`,
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: isOpen
+                boxShadow: isActiveChapter
                   ? "0 2px 8px rgba(79, 57, 246, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08)"
                   : "0 1px 2px rgba(0, 0, 0, 0.04)",
                 position: "relative",
                 overflow: "hidden",
-                "&::before": isOpen ? {
+                "&::before": isActiveChapter ? {
                   content: '""',
                   position: "absolute",
                   left: 0,
@@ -73,11 +85,11 @@ const NavigationList: React.FC<NavigationListProps> = ({
                   borderRadius: "0 4px 4px 0",
                 } : {},
                 "&:hover": {
-                  background: isOpen
+                  background: isActiveChapter
                     ? "linear-gradient(135deg, rgba(79, 57, 246, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%)"
                     : "linear-gradient(135deg, #FAFBFC 0%, #F5F7FA 100%)",
-                  borderColor: isOpen ? COLORS.primary : COLORS.primaryLight,
-                  boxShadow: isOpen
+                  borderColor: isActiveChapter ? COLORS.primary : COLORS.primaryLight,
+                  boxShadow: isActiveChapter
                     ? "0 4px 12px rgba(79, 57, 246, 0.16), 0 2px 4px rgba(0, 0, 0, 0.08)"
                     : "0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05)",
                   transform: "translateY(-1px)",
@@ -96,17 +108,17 @@ const NavigationList: React.FC<NavigationListProps> = ({
                     width: 30,
                     height: 30,
                     borderRadius: "8px",
-                    background: isOpen
+                    background: isActiveChapter
                       ? GRADIENTS.primary
                       : "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%)",
-                    color: isOpen ? "white" : COLORS.primary,
+                    color: isActiveChapter ? "white" : COLORS.primary,
                     fontSize: "13px",
                     fontWeight: 700,
-                    boxShadow: isOpen
+                    boxShadow: isActiveChapter
                       ? "0 2px 8px rgba(79, 57, 246, 0.3)"
                       : "0 1px 3px rgba(79, 57, 246, 0.15)",
                     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    border: isOpen ? "none" : `1px solid rgba(79, 57, 246, 0.2)`,
+                    border: isActiveChapter ? "none" : `1px solid rgba(79, 57, 246, 0.2)`,
                   }}
                 >
                   {index + 1}
@@ -114,14 +126,14 @@ const NavigationList: React.FC<NavigationListProps> = ({
                 <ListItemText
                   primary={chapter?.title}
                   sx={{
-                    color: isOpen ? COLORS.text.primary : COLORS.text.secondary,
+                    color: isActiveChapter ? COLORS.text.primary : COLORS.text.secondary,
                     fontSize: "14px",
-                    fontWeight: isOpen ? 600 : 500,
+                    fontWeight: isActiveChapter ? 600 : 500,
                     letterSpacing: "-0.01em",
                     "& .MuiListItemText-primary": {
                       fontSize: "14px",
-                      fontWeight: isOpen ? 600 : 500,
-                      color: isOpen ? COLORS.text.primary : COLORS.text.secondary,
+                      fontWeight: isActiveChapter ? 600 : 500,
+                      color: isActiveChapter ? COLORS.text.primary : COLORS.text.secondary,
                       letterSpacing: "-0.01em",
                       lineHeight: 1.4,
                     }
@@ -137,7 +149,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
                       width: 24,
                       height: 24,
                       borderRadius: "6px",
-                      background: isOpen
+                      background: isActiveChapter
                         ? "rgba(79, 57, 246, 0.1)"
                         : "transparent",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -181,7 +193,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
                       top: 0,
                       bottom: 0,
                       width: "2px",
-                      background: isOpen ? GRADIENTS.primary : "transparent",
+                      background: isActiveChapter ? GRADIENTS.primary : "transparent",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     }
                   }}

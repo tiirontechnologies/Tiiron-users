@@ -44,6 +44,8 @@ interface ICourse {
   difficulty?: string;
   courseLevel?: string;
 createdByUser?: {
+  id?: number;
+  username?: string;
   firstName?: string;
   lastName?: string;
   profile?: {

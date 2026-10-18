@@ -93,11 +93,24 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             }}
           />
         </Box>
+        {question.contentType === "video" && question.description?.html && (
+          <Box
+            sx={{
+              mt: -0.75,
+              ml: 5,
+              color: COLORS.text.muted,
+              fontSize: 12,
+              lineHeight: 1.5,
+              "& p": { my: 0 },
+            }}
+            dangerouslySetInnerHTML={{ __html: question.description.html }}
+          />
+        )}
       </Box>
 
       {/* Question Content */}
       <Box sx={{ p: 3 }}>
-        <Typography
+        {question.contentType !== "video" && <Typography
           sx={{
             fontWeight: 600,
             fontSize: "16px",
@@ -107,9 +120,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           }}
         >
           <span dangerouslySetInnerHTML={{ __html: question.text }} />
-        </Typography>
+        </Typography>}
 
-        {question.description?.html && question.contentType !== "coding" && (
+        {question.description?.html && question.contentType !== "coding" && question.contentType !== "video" && (
           <Box
             sx={{
               mb: 3,

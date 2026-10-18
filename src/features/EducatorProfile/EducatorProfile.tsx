@@ -62,7 +62,9 @@ export default function EducatorProfile({
 
   const data = mapApiToEducatorProfileData(apiUser);
   //  const courses = coursesData?.data?.courses ?? [];
-  const courses = coursesData ?? [];
+  const courses = Array.isArray(coursesData)
+    ? coursesData
+    : coursesData?.data?.courses ?? [];
   return (
     <Box sx={{ bgcolor: "#F8FAFC", minHeight: "100vh", pb: 8 }}>
       <Container

@@ -47,7 +47,7 @@ const TabsSection: React.FC = () => {
           CONTENT AREA — same padding for every tab
       ============================================================ */}
 
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="min-h-[560px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:min-h-[640px]">
         <div className="p-4 sm:p-5 lg:p-6">
 
           {/* ======================================================

@@ -51,15 +51,15 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
 
     if (!course?.id) return;
 
-    // If paid course, redirect to checkout
-    if (!isFreeCourse) {
-      navigate(`/checkout?courseId=${course.id}`);
+    // Enrolled users should continue learning instead of being sent to checkout.
+    if (isEnrolled) {
+      navigate(`/course-practice/${course.id}`);
       return;
     }
 
-    // If already enrolled, redirect to practice
-    if (isEnrolled) {
-      navigate(`/course-practice/${course.id}`);
+    // If paid course, redirect to checkout
+    if (!isFreeCourse) {
+      navigate(`/checkout?courseId=${course.id}`);
       return;
     }
 
@@ -135,7 +135,7 @@ export default function ProductCard({ course, averageRating, totalRatings }: Pro
 
   // Determine button text and behavior
   const getButtonConfig = () => {
-    if (isFreeCourse && isEnrolled) {
+    if (isEnrolled) {
       return {
         text: "Practice Course",
         onClick: handlePracticeCourse,
