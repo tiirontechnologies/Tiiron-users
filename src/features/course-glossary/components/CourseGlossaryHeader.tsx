@@ -97,7 +97,7 @@ export default function CourseGlossaryHeader({
 
   const handleInstructorNavigate = (username?: string) => {
     if (!username) return;
-    navigate(`/Instructor/${username}`);
+    navigate(`/instructor/${encodeURIComponent(username)}`);
   };
 
   const showClamp = isTruncated && !isExpanded;
@@ -328,7 +328,7 @@ export default function CourseGlossaryHeader({
               flexWrap: "wrap",
               cursor: "pointer",
             }}
-            onClick={() => handleInstructorNavigate(course?.createdBy)}
+            onClick={() => handleInstructorNavigate(course?.createdByUser?.username)}
           >
             <Avatar
               alt={course?.createdBy || "Instructor"}
