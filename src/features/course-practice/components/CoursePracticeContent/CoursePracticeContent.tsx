@@ -220,7 +220,7 @@ const TutorialVideosSection = ({
 
   return (
     <Box sx={{ mb: { xs: 1.5, sm: 2, md: 2 }, px: 0 }}>
-      <Box sx={{ p: { xs: 0.75, sm: 1 }, border: "1px solid #DCE2EA", borderRadius: 2.5, bgcolor: "#fff", boxShadow: "0 4px 14px rgba(15,23,42,0.06)" }}>
+      <Box sx={{ p: { xs: 0.75, sm: 1 }, minWidth: 0, overflow: "hidden", border: "1px solid #DCE2EA", borderRadius: 2.5, bgcolor: "#fff", boxShadow: "0 4px 14px rgba(15,23,42,0.06)" }}>
       <InteractiveVideoPlayer
         videoContentType={videoContentType}
         getUserAnswer={getUserAnswer}
@@ -251,7 +251,13 @@ const TutorialVideosSection = ({
             color: "#64748B",
             fontSize: 11,
             lineHeight: 1.5,
-            "& p": { m: 0 },
+            minWidth: 0,
+            maxWidth: "100%",
+            overflowWrap: "anywhere",
+            wordBreak: "break-word",
+            "& p": { m: 0, maxWidth: "100%" },
+            "& img, & video, & iframe": { maxWidth: "100%" },
+            "& table": { display: "block", maxWidth: "100%", overflowX: "auto" },
           }}
           dangerouslySetInnerHTML={{
             __html: videoContentType.video.description || videoContentType.description,
@@ -825,10 +831,10 @@ const CoursePracticeContent: React.FC<Props> = ({ data, unitId, unitData, organi
 
       {/* Practice Tab Content */}
 {activeSection === "practice" && (
-  <Box>
+  <Box sx={{ px: { xs: 1, sm: 2, md: 0 }, py: { xs: 1.5, sm: 2, md: 3 }, minWidth: 0 }}>
     {tabsData.length > 0 ? (
       <>
-        <Box sx={{ mb: { xs: 1, sm: 1.5 } , pt:3.75 }}>
+        <Box sx={{ mb: { xs: 1, sm: 1.5 }, pt: { xs: 0, sm: 0.5 } }}>
           <Typography variant="h6" fontWeight={800} sx={{ color: "#4F46E5" }}>
             Practice
           </Typography>

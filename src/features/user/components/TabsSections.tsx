@@ -17,9 +17,9 @@ const TabsSection: React.FC = () => {
   return (
     <div className="min-w-0 w-full space-y-4">
       {/* Tabs nav — apna alag hi bar, sirf bottom line */}
-      <div className="border-b border-slate-200">
+      <div className="min-w-0 border-b border-slate-200">
         <div
-          className="flex w-full flex-row flex-nowrap items-center snap-x snap-mandatory gap-4 overflow-x-auto text-sm [scrollbar-width:none] sm:gap-10 sm:text-[15px] [&::-webkit-scrollbar]:hidden"
+          className="flex w-full min-w-0 flex-row flex-nowrap items-center justify-start snap-x snap-mandatory gap-1 overflow-x-auto text-[0.78rem] [scrollbar-width:none] sm:gap-2 sm:text-[15px] [&::-webkit-scrollbar]:hidden"
           role="tablist"
           aria-label="Profile sections"
         >
@@ -30,7 +30,7 @@ const TabsSection: React.FC = () => {
               onClick={() => setActiveTab(tab)}
               role="tab"
               aria-selected={activeTab === tab}
-              className={`snap-start cursor-pointer whitespace-nowrap border-b-2 px-0.5 pb-3 font-semibold transition-colors ${
+              className={`snap-start cursor-pointer whitespace-nowrap border-b-2 px-2.5 pb-3 pt-3 font-semibold transition-colors ${
                 activeTab === tab
                   ? "border-indigo-600 text-indigo-600"
                   : "border-transparent text-slate-700 hover:text-slate-900"
