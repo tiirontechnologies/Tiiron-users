@@ -47,7 +47,11 @@ const TabsSection: React.FC = () => {
           CONTENT AREA — same padding for every tab
       ============================================================ */}
 
-      <div className="min-h-[560px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:min-h-[640px]">
+      <div className={`overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm ${
+        ["My Courses", "Certificates", "Wishlist", "Activity", "Quiz History"].includes(activeTab)
+          ? "min-h-[320px]"
+          : ""
+      }`}>
         <div className="p-4 sm:p-5 lg:p-6">
 
           {/* ======================================================
