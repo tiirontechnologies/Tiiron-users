@@ -42,8 +42,23 @@ export default function CheckoutPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { data: cartData } = useGetCartQuery();
-    const { data: currentUserResponse } = useCheckAuthQuery();
-    const currentUser = currentUserResponse?.data;
+    const {
+        data: currentUserResponse,
+        isLoading: isCurrentUserLoading,
+        isFetching: isCurrentUserFetching,
+    } = useCheckAuthQuery();
+    const currentUser = currentUserResponse?.data as any;
+    const accountEmail = [
+        currentUser?.email,
+        currentUser?.data?.email,
+        currentUser?.user?.email,
+        currentUser?.user?.data?.email,
+        currentUser?.profile?.email,
+    ].find((value) => typeof value === "string" && value.trim())?.trim() ?? "";
+    const accountName = [
+        currentUser?.firstName ?? currentUser?.user?.firstName,
+        currentUser?.lastName ?? currentUser?.user?.lastName,
+    ].filter(Boolean).join(" ");
 
     // Get course ID from multiple sources (priority order)
     const getCourseId = (): number => {
@@ -169,6 +184,16 @@ export default function CheckoutPage() {
     //  Buy Now -> create order -> open Razorpay
     const handleBuyNow = async () => {
         if (paymentInProgress.current) return;
+        if (isCurrentUserLoading || isCurrentUserFetching) {
+            setPaymentMessageType("info");
+            setPaymentMessage("Loading your account email. Please try again in a moment.");
+            return;
+        }
+        if (!accountEmail) {
+            setPaymentMessageType("error");
+            setPaymentMessage("Your account email could not be loaded from /profile/me. Please sign in again or add an email to your profile before paying.");
+            return;
+        }
         paymentInProgress.current = true;
         paymentVerificationStarted.current = false;
         setPaymentMessage("");
@@ -240,8 +265,8 @@ export default function CheckoutPage() {
                     }
                 },
                 prefill: {
-                    name: [currentUser?.firstName, currentUser?.lastName].filter(Boolean).join(" "),
-                    email: currentUser?.email ?? "",
+                    name: accountName,
+                    email: accountEmail,
                     contact: "",
                 },
                 theme: { color: "#4F39F6" },
@@ -360,7 +385,7 @@ export default function CheckoutPage() {
                                     <Divider sx={{ my: 1.75, borderStyle: "dashed", borderColor: "#DADCE5" }} />
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.75 }}><Typography sx={{ color: "#222438", fontSize: 16, fontWeight: 800 }}>Total payment</Typography><Typography sx={{ color: "#222438", fontSize: 20, fontWeight: 850 }}>{formatCurrency(total)}</Typography></Box>
                                     {discount > 0 && <Typography sx={{ mb: 1.75, color: "#37833B", fontSize: 12, fontWeight: 600 }}>You save {formatCurrency(discount)}</Typography>}
-                                    <Button fullWidth variant="contained" disabled={isPlacingOrder || isQuoteLoading || !quote || Boolean(quoteError)} onClick={handleBuyNow} sx={{ py: 1.35, borderRadius: 2, bgcolor: "#5141C8", color: "#fff", textTransform: "none", fontSize: 15, fontWeight: 750, boxShadow: "none", "&:hover": { bgcolor: "#4132AE", boxShadow: "none" } }}>{isPlacingOrder ? "Processing..." : `Pay ${formatCurrency(total)}`}</Button>
+                                    <Button fullWidth variant="contained" disabled={isPlacingOrder || isQuoteLoading || !quote || Boolean(quoteError) || isCurrentUserLoading || isCurrentUserFetching} onClick={handleBuyNow} sx={{ py: 1.35, borderRadius: 2, bgcolor: "#5141C8", color: "#fff", textTransform: "none", fontSize: 15, fontWeight: 750, boxShadow: "none", "&:hover": { bgcolor: "#4132AE", boxShadow: "none" } }}>{isPlacingOrder ? "Processing..." : `Pay ${formatCurrency(total)}`}</Button>
                                     {isQuoteLoading && <CircularProgress size={20} sx={{ display: "block", mx: "auto", mt: 1.5 }} />}
                                     {quoteError && <Alert severity="error" sx={{ mt: 1.5 }}>{quoteError}</Alert>}
                                     {paymentMessage && <Alert severity={paymentMessageType} sx={{ mt: 1.5 }}>{paymentMessage}</Alert>}

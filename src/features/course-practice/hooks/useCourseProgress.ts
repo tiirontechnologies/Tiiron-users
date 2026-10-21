@@ -119,7 +119,9 @@ export const useCourseProgress = () => {
 
   const course = (courseData as any)?.data ?? courseData;
   const hasData = !!courseData;
-  const hasUnits = !!(course?.chapters?.length);
+  const hasUnits = !!course?.chapters?.some(
+    (chapter: any) => chapter?.units?.length > 0,
+  );
 
   const selectUnit = useCallback((unitId: string) => {
     setSelectedUnitId(unitId);
