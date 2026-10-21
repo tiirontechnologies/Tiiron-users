@@ -7,12 +7,13 @@ interface CourseGlossaryTabsProps {
   onTabChange: (tab: number) => void;
   courseId?: string;
   courseName?: string;
+  showCertificates: boolean;
 }
 
-export default function CourseGlossaryTabs({ activeTab, onTabChange }: CourseGlossaryTabsProps) {
+export default function CourseGlossaryTabs({ activeTab, onTabChange, showCertificates }: CourseGlossaryTabsProps) {
   return (
     <Tabs
-      value={activeTab}
+      value={activeTab === 2 && !showCertificates ? 0 : activeTab}
       onChange={(_, newValue) => onTabChange(newValue)}
       variant="scrollable"
       scrollButtons="auto"
@@ -47,11 +48,11 @@ export default function CourseGlossaryTabs({ activeTab, onTabChange }: CourseGlo
         },
       }}
     >
-      <Tab label="Overview" />
-      <Tab label="Lessons" />
-      <Tab label="Certificates" />
-      <Tab label="Comments" />
-      <Tab label="Reviews" />
+      <Tab value={0} label="Overview" />
+      <Tab value={1} label="Lessons" />
+      {showCertificates && <Tab value={2} label="Certificates" />}
+      <Tab value={3} label="Comments" />
+      <Tab value={4} label="Reviews" />
     </Tabs>
   );
 }

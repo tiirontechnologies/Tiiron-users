@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useGetChaptersQuery, useGetCourseByIdQuery } from "../api/courseApi";
 import Loader from "@components/ui/Spinner";
 import Navbar from "../../../components/ui/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CourseGlossaryHeader from "./CourseGlossaryHeader";
 import ProductCard from "./ProductCard";
 import CourseGlossaryTabs from "./CourseGlossaryTabs";
@@ -12,6 +12,7 @@ import CourseLessons from "./CourseLessons";
 import CourseReviews from "./CourseReviews";
 import { CourseCertificate } from "@features/course-certificate";
 import Comment from "@features/Comments";
+import { useGetCourseCertificateTemplateQuery } from "@features/course-certificate";
 
 export default function CourseGlossary() {
   const { courseId } = useParams<{ courseId: string }>();
@@ -39,6 +40,29 @@ export default function CourseGlossary() {
     { id: numericCourseId },
     { skip: !isValidCourseId },
   );
+
+  const {
+    data: certificateTemplateResponse,
+    isLoading: certificateTemplateLoading,
+    isFetching: certificateTemplateFetching,
+  } = useGetCourseCertificateTemplateQuery(numericCourseId, {
+    skip: !isValidCourseId,
+  });
+  const hasCertificate = Boolean(
+    certificateTemplateResponse?.data ?? certificateTemplateResponse?.certificate,
+  );
+
+  useEffect(() => {
+    if (
+      searchParams.get("tab") === "certificates" &&
+      !certificateTemplateLoading &&
+      !certificateTemplateFetching &&
+      !hasCertificate
+    ) {
+      setActiveTab(0);
+      setSearchParams({}, { replace: true });
+    }
+  }, [certificateTemplateLoading, certificateTemplateFetching, hasCertificate, searchParams, setSearchParams]);
 
   // Chapters API
   const {
@@ -212,6 +236,7 @@ export default function CourseGlossary() {
                 <CourseGlossaryTabs
                   activeTab={activeTab}
                   onTabChange={handleTabChange}
+                  showCertificates={hasCertificate}
                   courseId={String(numericCourseId)}
                   courseName={course?.title ?? ""}
                 />
@@ -227,7 +252,7 @@ export default function CourseGlossary() {
 
                 {activeTab === 1 && <CourseLessons chapters={chapters} />}
 
-                {activeTab === 2 && (
+                {activeTab === 2 && hasCertificate && (
                   <CourseCertificate
                     courseId={String(numericCourseId)}
                     courseName={course?.title ?? ""}

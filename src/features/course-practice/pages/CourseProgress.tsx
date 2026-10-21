@@ -260,6 +260,8 @@ const CourseProgress: React.FC = () => {
     isUnitsLoading,
     isUnitsError,
     unitsError,
+    isCourseLoading,
+    hasUnits,
     practiceStats = EMPTY_STATS,
   } = useCourseProgress();
 
@@ -331,8 +333,9 @@ const CourseProgress: React.FC = () => {
     }
   };
 
-  if (isUnitsLoading) return <CenteredLoader />;
+  if (isCourseLoading || isUnitsLoading) return <CenteredLoader />;
   if (isUnitsError) return <CenteredError />;
+  if (courseData && !hasUnits) return <EmptyContent />;
   if (!practiceData) return <EmptyContent />;
 
   return (
@@ -354,6 +357,7 @@ const CourseProgress: React.FC = () => {
         <Sidebar
           data={courseDataForSidebar}
           onUnitSelect={selectUnit}
+          selectedUnitId={selectedUnitId}
           courseId={courseId}
           practiceStats={practiceStats}
         />
@@ -411,6 +415,7 @@ const CourseProgress: React.FC = () => {
           <Sidebar
             data={courseDataForSidebar}
             onUnitSelect={handleSidebarSelect} 
+            selectedUnitId={selectedUnitId}
             courseId={courseId}
             practiceStats={practiceStats}
             showBackButton={false}
