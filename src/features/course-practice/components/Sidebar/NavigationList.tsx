@@ -49,6 +49,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
         return (
           <React.Fragment key={chapter?.id}>
             <ListItemButton
+              selected={isActiveChapter}
               onClick={() => {
                 if (hasChildren) {
                   handleToggle(index);
@@ -66,7 +67,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
                   : COLORS.background.white,
                 color: COLORS.text.primary,
                 border: isActiveChapter
-                  ? `1.5px solid ${COLORS.primary}`
+                  ? `2px solid ${COLORS.primary}`
                   : `1px solid ${COLORS.border.light}`,
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 boxShadow: isActiveChapter
@@ -74,6 +75,10 @@ const NavigationList: React.FC<NavigationListProps> = ({
                   : "0 1px 2px rgba(0, 0, 0, 0.04)",
                 position: "relative",
                 overflow: "hidden",
+                "&.Mui-selected, &.Mui-selected:hover": {
+                  background: "linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%)",
+                  borderColor: COLORS.primary,
+                },
                 "&::before": isActiveChapter ? {
                   content: '""',
                   position: "absolute",
@@ -126,6 +131,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
                 <ListItemText
                   primary={chapter?.title}
                   sx={{
+                    minWidth: 0,
                     color: isActiveChapter ? COLORS.text.primary : COLORS.text.secondary,
                     fontSize: "14px",
                     fontWeight: isActiveChapter ? 600 : 500,
@@ -136,6 +142,9 @@ const NavigationList: React.FC<NavigationListProps> = ({
                       color: isActiveChapter ? COLORS.text.primary : COLORS.text.secondary,
                       letterSpacing: "-0.01em",
                       lineHeight: 1.4,
+                      whiteSpace: "normal",
+                      overflowWrap: "anywhere",
+                      wordBreak: "break-word",
                     }
                   }}
                 />
@@ -184,64 +193,48 @@ const NavigationList: React.FC<NavigationListProps> = ({
                     mt: 0.5,
                     mb: 1,
                     pl: 1,
-                    borderLeft: `2px solid ${COLORS.border.light}`,
                     position: "relative",
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      left: "-2px",
-                      top: 0,
-                      bottom: 0,
-                      width: "2px",
-                      background: isActiveChapter ? GRADIENTS.primary : "transparent",
-                      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    }
                   }}
                 >
                   {chapter?.units &&
                     chapter?.units?.map((unit, unitIndex) => {
-                      const isSelected = selectedUnitId === unit.id.toString();
+                      const isSelected = String(selectedUnitId) === String(unit.id);
                       // Show as completed if this is the selected unit and practiceData indicates completion
                       const isCompleted = isSelected && practiceData?.isCompleted === true;
 
                       return (
                         <ListItemButton
-                          key={unit.title}
+                          key={unit.id ?? unit.title}
+                          selected={isSelected}
                           sx={{
                             pl: 1.75,
                             py: 0.9,
                             borderRadius: "9px",
                             mb: 0.6,
                             background: isSelected
-                              ? "linear-gradient(135deg, rgba(79, 57, 246, 0.1) 0%, rgba(139, 92, 246, 0.06) 100%)"
+                              ? "linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%)"
                               : isCompleted
                                 ? "linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%)"
                                 : COLORS.background.white,
                             border: isSelected
-                              ? `1.5px solid ${COLORS.primary}`
+                              ? `2px solid ${COLORS.primary}`
                               : isCompleted
                                 ? `1.5px solid rgba(16, 185, 129, 0.4)`
                                 : `1px solid ${COLORS.border.light}`,
                             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                            boxShadow: isSelected || isCompleted
-                              ? "0 2px 6px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)"
+                            boxShadow: isSelected
+                              ? "0 2px 8px rgba(79, 57, 246, 0.18)"
+                              : isCompleted
+                                ? "0 2px 6px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)"
                               : "0 1px 2px rgba(0, 0, 0, 0.03)",
                             position: "relative",
-                            "&::before": isSelected ? {
-                              content: '""',
-                              position: "absolute",
-                              left: "-13px",
-                              top: "50%",
-                              transform: "translateY(-50%)",
-                              width: "6px",
-                              height: "6px",
-                              borderRadius: "50%",
-                              background: COLORS.primary,
-                              boxShadow: `0 0 0 3px ${COLORS.background.white}, 0 0 0 5px ${COLORS.primary}20`,
-                            } : {},
+                            "&.Mui-selected, &.Mui-selected:hover": {
+                              background: "linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%)",
+                              borderColor: COLORS.primary,
+                            },
                             "&:hover": {
                               background: isSelected
-                                ? "linear-gradient(135deg, rgba(79, 57, 246, 0.14) 0%, rgba(139, 92, 246, 0.1) 100%)"
+                                ? "linear-gradient(135deg, #e4ddff 0%, #ede9fe 100%)"
                                 : isCompleted
                                   ? "linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%)"
                                   : "linear-gradient(135deg, #FAFBFC 0%, #F5F7FA 100%)",
@@ -264,7 +257,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
                             onUnitSelect(unit.id)
                           }}
                         >
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, width: "100%" }}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, width: "100%", minWidth: 0 }}>
                             <Box
                               sx={{
                                 display: "flex",
@@ -292,6 +285,7 @@ const NavigationList: React.FC<NavigationListProps> = ({
                             </Box>
                             <ListItemText
                               sx={{
+                                minWidth: 0,
                                 color: isSelected
                                   ? COLORS.text.primary
                                   : isCompleted
@@ -310,6 +304,9 @@ const NavigationList: React.FC<NavigationListProps> = ({
                                       : COLORS.text.secondary,
                                   letterSpacing: "-0.01em",
                                   lineHeight: 1.4,
+                                  whiteSpace: "normal",
+                                  overflowWrap: "anywhere",
+                                  wordBreak: "break-word",
                                 }
                               }}
                               primary={unit.title}

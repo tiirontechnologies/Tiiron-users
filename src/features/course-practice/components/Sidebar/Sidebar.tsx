@@ -20,6 +20,7 @@ interface SidebarProps {
   onUnitSelect: (unitId: string) => void;
   courseId?: string;
   practiceStats: PracticeStats;
+  selectedUnitId?: string;
   showBackButton?: boolean;
 }
 
@@ -28,6 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onUnitSelect,
   courseId,
   practiceStats,
+  selectedUnitId,
   showBackButton = true,
 }) => {
   const navigate = useNavigate();
@@ -143,6 +145,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <NavigationList 
         chapters={data?.chapters || []} 
         onUnitSelect={onUnitSelect} 
+        selectedUnitId={selectedUnitId}
       />
     </Box>
   );

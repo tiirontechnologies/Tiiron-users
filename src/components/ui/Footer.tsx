@@ -265,7 +265,7 @@ useEffect(() => {
     {
       title: "Our Solutions",
       links: [
-        { name: "Tiiron ERP", href: "#",external:true },
+        { name: "Tiiron ERP", href: "https://erp.tiiron.com/",external:true },
         { name: "Inacademic", href: "https://inacademic.com/" , external: true},
         { name: "Tiiron Academy", href: "https://academy.tiiron.com/",external:true },
         { name: "Tiiron Technologies", href: "https://tiirontechnologies.com/" , external: true},

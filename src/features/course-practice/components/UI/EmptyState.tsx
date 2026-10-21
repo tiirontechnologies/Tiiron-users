@@ -2,8 +2,12 @@ import React from 'react';
 import { Box, Typography, Paper, Button } from '@mui/material';
 import { School, PlayArrow } from '@mui/icons-material';
 import { COLORS, GRADIENTS, SHADOWS } from '../../constants';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EmptyState: React.FC = () => {
+  const navigate = useNavigate();
+  const { courseId } = useParams<{ courseId: string }>();
+
   return (
     <Paper
       elevation={0}
@@ -41,7 +45,7 @@ const EmptyState: React.FC = () => {
           fontSize: "28px",
         }}
       >
-        Welcome to Your Learning Journey
+        No lessons available yet
       </Typography>
       <Typography
         sx={{
@@ -53,11 +57,12 @@ const EmptyState: React.FC = () => {
           lineHeight: 1.6,
         }}
       >
-        Select a unit from the sidebar to start learning and practicing. Each unit contains interactive content designed to enhance your understanding.
+        You are enrolled, but this course does not have any chapters or lessons yet. Practice will be available after course content is added.
       </Typography>
       <Button
         variant="contained"
         startIcon={<PlayArrow />}
+        onClick={() => navigate(courseId ? `/course-glossary/${courseId}` : "/")}
         sx={{
           background: GRADIENTS.primary,
           borderRadius: "12px",
@@ -72,7 +77,7 @@ const EmptyState: React.FC = () => {
           },
         }}
       >
-        Get Started
+        Back to course
       </Button>
     </Paper>
   );
