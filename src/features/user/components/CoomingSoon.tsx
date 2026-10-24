@@ -13,6 +13,7 @@ const ComingSoon: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        minHeight:420
       }}
     >
       {/* Icon badge */}

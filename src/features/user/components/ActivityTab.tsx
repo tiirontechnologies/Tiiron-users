@@ -40,7 +40,7 @@ export default function ActivityTab() {
 
   if (!enrollments.length) {
     return (
-      <Box sx={{ p: { xs: 5, sm: 7 }, textAlign: "center" }}>
+      <Box sx={{ p: { xs: 5, sm: 7 }, textAlign: "center",minHeight:420 }}>
         <MenuBookRoundedIcon sx={{ fontSize: 46, color: "#818CF8" }} />
         <Typography fontWeight={800} mt={1}>Your activity will appear here</Typography>
         <Typography variant="body2" color="text.secondary" mt={0.5}>
@@ -58,7 +58,7 @@ export default function ActivityTab() {
   const hasMore = sortedEnrollments.length > VISIBLE_COUNT;
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+    <Box sx={{ p: { xs: 2, sm: 3, md: 4 },minHeight:420 }}>
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2.5 }}>
         <Typography variant="h6" fontWeight={800}>Recent Activity</Typography>
         {hasMore && (

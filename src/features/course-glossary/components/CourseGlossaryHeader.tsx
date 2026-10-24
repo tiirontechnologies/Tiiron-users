@@ -298,13 +298,18 @@ export default function CourseGlossaryHeader({
               </>
             )}
 
-            {/* <Box component="span" sx={{ color: "#64748B" }}>
-              22 Total Hours
+            <Box component="span" sx={{ color: "#64748B" }}>
+              {/* 22 Total Hours */}
+              {course?.duration && (
+                <Typography variant="body2" sx={{ color: "#64748B" }}>
+                  {(course.duration / 3600).toFixed(0)} Total Hours
+                </Typography>
+              )}
             </Box>
 
             <Box component="span" sx={{ color: "#64748B" }}>
               |
-            </Box> */}
+            </Box>
 
             <Box component="span" sx={{ color: "#64748B" }}>
               {totalLessons} Lessons
@@ -328,7 +333,9 @@ export default function CourseGlossaryHeader({
               flexWrap: "wrap",
               cursor: "pointer",
             }}
-            onClick={() => handleInstructorNavigate(course?.createdByUser?.username)}
+            onClick={() =>
+              handleInstructorNavigate(course?.createdByUser?.username)
+            }
           >
             <Avatar
               alt={course?.createdBy || "Instructor"}

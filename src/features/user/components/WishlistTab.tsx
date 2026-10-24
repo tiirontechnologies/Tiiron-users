@@ -115,7 +115,7 @@ export default function WishlistTab() {
     return (
       <Box
         sx={{
-          minHeight: 360,
+          minHeight: 420,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
