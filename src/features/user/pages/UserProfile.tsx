@@ -327,14 +327,15 @@ const StudentProfile: React.FC = () => {
             </div>
 
             {/* Tabs */}
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <div className="flex gap-6 overflow-x-auto border-b border-slate-100 px-6 pt-3 text-sm">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="overflow-x-auto border-b border-slate-100 px-3 sm:px-4">
+                <div className="grid min-w-[620px] grid-cols-7 gap-1 text-sm">
                 {tabs.map((tab) => (
                   <button
                     type="button"
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`whitespace-nowrap border-b-2 pb-3 font-medium transition-colors ${
+                    className={`flex h-11 items-center justify-center whitespace-nowrap border-b-2 px-2 text-xs font-medium transition-colors sm:text-sm ${
                       activeTab === tab
                         ? "border-indigo-600 text-indigo-600"
                         : "border-transparent text-slate-500 hover:text-slate-700"
@@ -343,9 +344,10 @@ const StudentProfile: React.FC = () => {
                     {tab}
                   </button>
                 ))}
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-5 p-6 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 p-4 lg:grid-cols-2">
                 {/* Currently Learning */}
                 <Card title="Currently Learning" cta="View all">
                   <div className="flex gap-4">

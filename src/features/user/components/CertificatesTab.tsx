@@ -100,7 +100,7 @@ export default function CertificatesTab() {
     );
   if (!visibleEnrollments.length)
     return (
-      <Box sx={{ p: 6, textAlign: "center" }}>
+      <Box sx={{ p: 6, textAlign: "center" ,minHeight: 450 }}>
         <WorkspacePremiumRoundedIcon sx={{ fontSize: 40, color: "#818CF8" }} />
         <Typography fontWeight={800} mt={1}>
           No certificates available yet
@@ -115,7 +115,7 @@ export default function CertificatesTab() {
   const gridEnrollments = visibleEnrollments.slice(0, VISIBLE_COUNT);
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3 } }}>
+    <Box sx={{ p: { xs: 2, sm: 3 },minHeight: 420 }}>
       <Box
         sx={{
           mb: 2.5,

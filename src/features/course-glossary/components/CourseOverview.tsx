@@ -157,7 +157,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
               <Typography sx={smallLabel}>Duration</Typography>
             </Box>
             <Typography sx={valueStyle}>
-              {typeof duration === "number" ? `${duration} Hours` : duration}
+              {typeof duration === "number" ? `${(duration / 3600).toFixed(0)} Hours` : duration}
             </Typography>
           </Box>
 
