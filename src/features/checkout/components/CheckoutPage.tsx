@@ -110,7 +110,7 @@ export default function CheckoutPage() {
         (total: number, chapter: any) => total + (Array.isArray(chapter?.units) ? chapter.units.length : 0),
         0,
     );
-    const totalHours = course?.totalHours ?? course?.duration ?? 0;
+    const totalHours =  (course?.duration/3600).toFixed(0) ?? 0;
 
     const price = Number(quote?.originalPrice ?? 0);
     const discount = Number(quote?.discountAmount ?? 0);
